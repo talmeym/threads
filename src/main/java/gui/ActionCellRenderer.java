@@ -17,7 +17,7 @@ import data.ThreadGroupHelper;
 
 public class ActionCellRenderer extends DefaultTableCellRenderer
 {
-    public static final DateFormat s_dateFormat = new SimpleDateFormat("EEE dd MMM yy HH:mm");
+	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
     
     private final ThreadGroup o_threadGroup;
     
