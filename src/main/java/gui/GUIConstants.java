@@ -1,0 +1,30 @@
+package gui;
+
+import java.awt.Dimension;
+
+class GUIConstants
+{
+    public static final int s_creationDateWidth = 130;
+    
+    public static final int s_itemColumnWidth = 350;
+    
+    public static final int s_typeWidth = 120;
+    
+    public static final int s_threadWidth = 140;
+    
+    public static final int s_dateStatusWidth = 90;
+    
+    public static final Dimension s_threadGroupWindowSize = new Dimension(850, 600);
+
+    public static final Dimension s_threadWindowSize = new Dimension(700, 400);
+    
+    public static final int s_newWindowOffset = 50;
+    
+    public static final int s_windowOffset = 50;
+
+    public static int s_tableRowHeight = 25;
+
+    public static final Dimension s_itemWindowSize = new Dimension(600, 370);
+    
+    public static final Dimension s_reminderWindowSize = new Dimension(500, 168);
+}

@@ -1,0 +1,144 @@
+package data;
+
+import java.io.FileOutputStream;
+import java.util.Date;
+
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+
+public class Saver
+{
+    public static void saveDocument(ThreadGroup p_topThreadGroup, String p_xmlPath)
+    {
+        try
+        {
+            Element x_rootElem = new Element(XmlConstants.s_DOCUMENT);
+            x_rootElem.addContent(addThreadGroup(p_topThreadGroup));
+            
+            Document x_doc = new Document(x_rootElem);                        
+            addSchema(x_doc, "threads.xsd");
+            
+            XMLOutputter x_outputter = new XMLOutputter(Format.getPrettyFormat());
+            x_outputter.output(x_doc, new FileOutputStream(p_xmlPath));
+        }        
+        catch(Exception ioe)
+        {
+            System.err.println("Error loading threads file: " + ioe);
+            System.exit(1);
+        }
+    }
+
+    static Element addThreadGroup(ThreadGroup p_threadGroup)
+    {
+        Element x_threadGroupElem = new Element(XmlConstants.s_THREAD_GROUP);
+        addComponentData(x_threadGroupElem, p_threadGroup);
+    
+        for(int i = 0; i < p_threadGroup.getThreadGroupItemCount(); i++)
+        {
+            ThreadGroupItem x_item = p_threadGroup.getThreadGroupItem(i);
+            
+            if(x_item instanceof ThreadGroup)
+            {
+                x_threadGroupElem.addContent(addThreadGroup((ThreadGroup) x_item));
+            }
+            else
+            {
+                x_threadGroupElem.addContent(addThread((Thread) x_item));
+            }
+        }
+        
+        addDocFolder(x_threadGroupElem, p_threadGroup);
+        
+        return x_threadGroupElem;
+    }
+    
+    private static Element addThread(Thread p_thread)
+    {        
+        Element x_threadElem = new Element(XmlConstants.s_THREAD);
+        addComponentData(x_threadElem, p_thread);
+        
+        for(int i = 0; i < p_thread.getItemCount(); i++)
+        {
+            x_threadElem.addContent(addItem(p_thread.getItem(i)));
+        }
+        
+        addDocFolder(x_threadElem, p_thread);       
+        
+        return x_threadElem;
+    }
+    
+    private static Element addItem(Item p_item)
+    {
+        Element x_itemElem = new Element(XmlConstants.s_ITEM);
+        addComponentData(x_itemElem, p_item);
+        
+        if(p_item.getDeadline() != null)
+        {
+            x_itemElem.addContent(addDeadline(p_item.getDeadline()));
+        }
+        
+        return x_itemElem;
+    }
+    
+    private static Element addDeadline(Deadline p_deadline)
+    {
+        Element x_deadlineElem = new Element(XmlConstants.s_DEADLINE);
+        addComponentData(x_deadlineElem, p_deadline);
+        addContent(x_deadlineElem, XmlConstants.s_DUE, addDateTime(p_deadline.getDueDate()));
+        
+        for(int i = 0; i < p_deadline.getReminderCount(); i++)
+        {
+            x_deadlineElem.addContent(addReminder(p_deadline.getReminder(i)));
+        }
+        
+        return x_deadlineElem;
+    }
+    
+    private static Element addReminder(Reminder p_reminder)
+    {
+        Element x_reminderElem = new Element(XmlConstants.s_REMINDER);
+        addComponentData(x_reminderElem, p_reminder);        
+        addContent(x_reminderElem, XmlConstants.s_REM_DATE, addDateTime(p_reminder.getDate()));        
+        return x_reminderElem;
+    }
+
+    private static void addComponentData(Element p_element, Component p_component)
+    {
+        p_element.setAttribute(XmlConstants.s_CREATED, addDateTime(p_component.getCreationDate()));
+        p_element.setAttribute(XmlConstants.s_ACTIVE, addBoolean(p_component.isActive()));
+        addContent(p_element, XmlConstants.s_TEXT, p_component.getText());
+    }
+
+    private static void addContent(Element p_element, String p_name, String p_value)
+    {
+        p_element.addContent(new Element(p_name).setText(p_value));
+    }
+    
+    private static String addDateTime(Date p_date)
+    {
+        return XmlConstants.s_DATE_TIME_FORMAT.format(p_date);
+    }
+
+    private static String addBoolean(boolean p_boolean)
+    {
+        return String.valueOf(p_boolean);
+    }
+    
+    private static void addSchema(Document p_document, String p_schemaName)
+    {
+        Namespace x_nameSpace = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        p_document.getRootElement().addNamespaceDeclaration(x_nameSpace);
+        p_document.getRootElement().setAttribute("noNamespaceSchemaLocation", "threads.xsd", x_nameSpace);
+    }
+    
+    private static void addDocFolder(Element p_element, ThreadGroupItem p_item)
+    {
+        if(p_item.getDocFolder() != null)
+        {
+            p_element.addContent(new Element(XmlConstants.s_DOC_FOLDER).setText(p_item.getDocFolder().getAbsolutePath()));
+        }
+    }
+}
