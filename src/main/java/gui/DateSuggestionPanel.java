@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 
 class DateSuggestionPanel extends JPanel
 {   
-    private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
+    private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
     
     private static DateItem[] s_timeItems = new DateItem[]{new DateItem("9 AM", 9), 
                                                            new DateItem("Midday", 12), 
@@ -48,7 +48,7 @@ class DateSuggestionPanel extends JPanel
     {
         super(new GridLayout(1, 0, 5, 5));
         o_textField = p_textField;
-        
+
         o_suggestButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e)
             {

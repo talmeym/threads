@@ -26,7 +26,7 @@ import data.Thread;
 
 class ItemPanel extends TablePanel implements DocumentListener, ActionListener
 {
-    private static final DateFormat o_dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");     
+    private static final DateFormat o_dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
     private static final Dimension o_dueFieldSize = new Dimension(130, 25);
     
     private final Item o_item;
