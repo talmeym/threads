@@ -35,6 +35,7 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
         o_textField.setText(p_component.getText());
         o_textField.addActionListener(this);
         
+		o_activeCheckBox.setEnabled(o_component.getParentComponent() != null);
         o_activeCheckBox.setSelected(p_component.isActive());
         o_activeCheckBox.addActionListener(this);
         
