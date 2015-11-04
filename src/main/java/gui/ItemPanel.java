@@ -287,7 +287,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
         }
     }
     
-    void tableRowDoubleClicked(int col, int row)
+    void tableRowClicked(int col, int row)
     {
         showReminder(row);
     }

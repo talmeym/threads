@@ -70,12 +70,13 @@ public class ThreadReminderPanel extends TablePanel
         }
     }
     
-    void tableRowDoubleClicked(int col, int row)
+    void tableRowClicked(int col, int row)
     {
         switch(col)
         {
-        case 1: showThread(row); break;
-        default: showReminder(row); break;
+			case 0: break;
+			case 1: showThread(row); break;
+			default: showReminder(row); break;
         }
     }
 }

@@ -129,8 +129,11 @@ public class ThreadComponentPanel extends TablePanel
         }
     }
     
-    void tableRowDoubleClicked(int col, int row)
+    void tableRowClicked(int col, int row)
     {
-        showComponent(col, row);
+		switch (col) {
+			case 0: break;
+			default: showComponent(col, row);
+		}
     }
 }

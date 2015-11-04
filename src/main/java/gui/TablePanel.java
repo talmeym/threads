@@ -22,11 +22,10 @@ abstract class TablePanel extends JPanel
         o_table.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent e)
             {
-                if(e.getClickCount() == 2)
+                if(e.getClickCount() == 1)
                 {
-                    tableRowDoubleClicked(o_table.getSelectedColumn(), o_table.getSelectedRow());
+                    tableRowClicked(o_table.getSelectedColumn(), o_table.getSelectedRow());
                 }
-                
             }
         });
 
@@ -47,5 +46,5 @@ abstract class TablePanel extends JPanel
         return o_table.getSelectedRow();
     }
     
-    abstract void tableRowDoubleClicked(int col, int row);
+    abstract void tableRowClicked(int col, int row);
 }

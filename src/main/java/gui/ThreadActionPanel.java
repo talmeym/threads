@@ -23,7 +23,11 @@ public class ThreadActionPanel extends TablePanel
         if(p_index != -1)
         {
             Item x_threadItem = (Item) ThreadHelper.getAllActiveActions(o_thread).get(p_index);
-            WindowManager.getInstance().openComponentWindow(x_threadItem.getThread(), false, 0);
+			Thread x_thread = x_threadItem.getThread();
+
+			if(x_thread != o_thread) {
+				WindowManager.getInstance().openComponentWindow(x_thread, false, 0);
+			}
         }
     }
 
@@ -36,15 +40,12 @@ public class ThreadActionPanel extends TablePanel
         }
     }
     
-    void tableRowDoubleClicked(int col, int row)
+    void tableRowClicked(int col, int row)
     {
-        if(col == 1)
-        {
-            showThread(row);
-        }
-        else
-        {
-            showItem(row);
+		switch(col) {
+			case 0: break;
+			case 1: showThread(row); break;
+			default: showItem(row);
         }
     }
 }
