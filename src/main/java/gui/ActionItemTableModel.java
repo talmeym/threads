@@ -1,7 +1,7 @@
 package gui;
 
 import data.*;
-import data.ThreadGroup;
+import data.Thread;
 import util.*;
 
 import java.util.*;
@@ -10,23 +10,23 @@ class ActionItemTableModel extends ComponentTableModel
 {
     private List o_actionItems;
     
-    ActionItemTableModel(ThreadGroup p_threadGroup)
+    ActionItemTableModel(Thread p_thread)
     {
-        super(p_threadGroup, 
+        super(p_thread,
               new String[] {"Creation Date", "Thread", "Name", "Due Date", "Due"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
     
     public int getRowCount()
     {
-        ThreadGroup x_threadGroup = (ThreadGroup) getComponent();
+        Thread x_thread = (Thread) getComponent();
         
-        if(x_threadGroup == null)
+        if(x_thread == null)
         {
             return 0;
         }
         
-        o_actionItems = ThreadGroupHelper.getAllActiveActions(x_threadGroup);
+        o_actionItems = ThreadHelper.getAllActiveActions(x_thread);
         
         return o_actionItems.size();
     }
@@ -48,7 +48,7 @@ class ActionItemTableModel extends ComponentTableModel
         switch(col)
         {
         case 0: return x_item.getCreationDate();
-        case 1: return x_item.getThreadGroup().getText();
+        case 1: return x_item.getThread().getText();
         case 2: return x_item.getText();
         case 3: return x_item.getDueDate();
         default: return DateHelper.getDateStatus(x_item.getDueDate());

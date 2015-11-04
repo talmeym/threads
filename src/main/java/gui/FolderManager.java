@@ -1,6 +1,6 @@
 package gui;
 
-import data.ThreadGroupItem;
+import data.ThreadItem;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -10,7 +10,7 @@ public class FolderManager
 {
     private static final String s_explorerCommand = "c:\\WINDOWS\\explorer.exe";
     
-    public static void openDocFolder(ThreadGroupItem p_item)
+    public static void openDocFolder(ThreadItem p_item)
     {
         if(p_item.getDocFolder() != null)
         {
@@ -29,15 +29,15 @@ public class FolderManager
         }
     }
     
-    public static void setDocFolder(ThreadGroupItem p_item)
+    public static void setDocFolder(ThreadItem p_item)
     {
         JFileChooser x_chooser;
         
         if(p_item.getDocFolder() == null)
         {
-            if(p_item.getThreadGroup() != null && p_item.getThreadGroup().getDocFolder() != null)
+            if(p_item.getThread() != null && p_item.getThread().getDocFolder() != null)
             {
-                x_chooser = new JFileChooser(p_item.getThreadGroup().getDocFolder());
+                x_chooser = new JFileChooser(p_item.getThread().getDocFolder());
             }
             else
             {

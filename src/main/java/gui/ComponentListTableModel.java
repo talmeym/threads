@@ -1,28 +1,28 @@
 package gui;
 
-import data.ThreadGroup;
+import data.Thread;
 import data.*;
 
 import java.util.Date;
 
 class ComponentListTableModel extends ComponentTableModel
 {
-    ComponentListTableModel(ThreadGroup p_threadGroup)
+    ComponentListTableModel(Thread p_thread)
     {
-        super(p_threadGroup, 
+        super(p_thread,
               new String[]{"Creation Date", "Type", "Name", "Threads", "Updates", "Actions"});
     }
 
     public int getRowCount()
     {
-        ThreadGroup x_threadGroup = (ThreadGroup) getComponent();
+        Thread x_thread = (Thread) getComponent();
         
-        if(x_threadGroup == null)
+        if(x_thread == null)
         {
             return 0;
         }
         
-        return x_threadGroup.getThreadGroupItemCount();
+        return x_thread.getThreadItemCount();
     }
 
     public Class getColumnClass(int col)
@@ -36,17 +36,17 @@ class ComponentListTableModel extends ComponentTableModel
 
     public Object getValueAt(int row, int col)
     {
-        ThreadGroup x_threadGroup = (ThreadGroup) getComponent();
-        ThreadGroupItem x_threadGroupItem = x_threadGroup.getThreadGroupItem(row);
+        Thread x_thread = (Thread) getComponent();
+        ThreadItem x_threadItem = x_thread.getThreadItem(row);
         
         switch(col)
         {
-			case 0: return x_threadGroupItem.getCreationDate();
-        	case 1: return x_threadGroupItem.getType();
-			case 2: return x_threadGroupItem.getText();
-			case 3: return x_threadGroupItem instanceof ThreadGroup ? ThreadGroupHelper.getAllActiveThreadGroups((ThreadGroup)x_threadGroupItem).size() : "";
-			case 4: return x_threadGroupItem instanceof ThreadGroup ? ThreadGroupHelper.getAllActiveUpdates((ThreadGroup)x_threadGroupItem).size() : "";
-			default: return x_threadGroupItem instanceof ThreadGroup ? ThreadGroupHelper.getAllActiveActions((ThreadGroup)x_threadGroupItem).size() : "";
+			case 0: return x_threadItem.getCreationDate();
+        	case 1: return x_threadItem.getType();
+			case 2: return x_threadItem.getText();
+			case 3: return x_threadItem instanceof Thread ? ThreadHelper.getAllActiveThreads((Thread) x_threadItem).size() : "";
+			case 4: return x_threadItem instanceof Thread ? ThreadHelper.getAllActiveUpdates((Thread) x_threadItem).size() : "";
+			default: return x_threadItem instanceof Thread ? ThreadHelper.getAllActiveActions((Thread) x_threadItem).size() : "";
         }
     }
 }

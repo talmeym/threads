@@ -1,17 +1,17 @@
 package gui;
 
 import data.*;
-import data.ThreadGroup;
+import data.Thread;
 
-public class ThreadGroupActionPanel extends TablePanel
+public class ThreadActionPanel extends TablePanel
 {
-    private final ThreadGroup o_threadGroup;
+    private final Thread o_thread;
     
-    ThreadGroupActionPanel(ThreadGroup p_threadGroup)
+    ThreadActionPanel(Thread p_thread)
     {
-        super(new ActionItemTableModel(p_threadGroup), 
-              new ActionCellRenderer(p_threadGroup));
-        o_threadGroup = p_threadGroup;
+        super(new ActionItemTableModel(p_thread),
+              new ActionCellRenderer(p_thread));
+        o_thread = p_thread;
         fixColumnWidth(0, GUIConstants.s_creationDateWidth);
         fixColumnWidth(1, GUIConstants.s_threadWidth);
         fixColumnWidth(3, GUIConstants.s_creationDateWidth);
@@ -22,8 +22,8 @@ public class ThreadGroupActionPanel extends TablePanel
     {
         if(p_index != -1)
         {
-            Item x_threadItem = (Item) ThreadGroupHelper.getAllActiveActions(o_threadGroup).get(p_index);
-            WindowManager.getInstance().openComponentWindow(x_threadItem.getThreadGroup(), false, 0);
+            Item x_threadItem = (Item) ThreadHelper.getAllActiveActions(o_thread).get(p_index);
+            WindowManager.getInstance().openComponentWindow(x_threadItem.getThread(), false, 0);
         }
     }
 
@@ -31,7 +31,7 @@ public class ThreadGroupActionPanel extends TablePanel
     {
         if(p_index != -1)
         {
-            Item x_threadItem = (Item) ThreadGroupHelper.getAllActiveActions(o_threadGroup).get(p_index);
+            Item x_threadItem = (Item) ThreadHelper.getAllActiveActions(o_thread).get(p_index);
             WindowManager.getInstance().openComponentWindow(x_threadItem, false, 0);
         }
     }

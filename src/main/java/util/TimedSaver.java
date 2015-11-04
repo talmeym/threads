@@ -1,11 +1,9 @@
 package util;
 
 import data.*;
-import data.ThreadGroup;
+import data.Thread;
 
-import java.lang.Thread;
-
-public class TimedSaver extends Thread
+public class TimedSaver extends java.lang.Thread
 {
     private static TimedSaver s_INSTANCE = null;
 
@@ -21,7 +19,7 @@ public class TimedSaver extends Thread
         return s_INSTANCE;
     }
     
-    private ThreadGroup o_topThreadGroup;
+    private Thread o_topThread;
     
     private String o_saveLocation;
     
@@ -39,11 +37,11 @@ public class TimedSaver extends Thread
         {
             try
             {
-                Thread.sleep(s_updateFrequency);
+                java.lang.Thread.sleep(s_updateFrequency);
                 
-                if(o_topThreadGroup != null)
+                if(o_topThread != null)
                 {
-                    Saver.saveDocument(o_topThreadGroup, o_saveLocation);
+                    Saver.saveDocument(o_topThread, o_saveLocation);
                 }
                 
             } catch (InterruptedException e)
@@ -53,9 +51,9 @@ public class TimedSaver extends Thread
         }
     }
     
-    public synchronized void setThreadGroup(ThreadGroup p_topThreadGroup, String p_saveLocation)
+    public synchronized void setThread(Thread p_topThread, String p_saveLocation)
     {
-        o_topThreadGroup = p_topThreadGroup;
+        o_topThread = p_topThread;
         o_saveLocation = p_saveLocation;
     }
     

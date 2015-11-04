@@ -1,7 +1,7 @@
 package gui;
 
 import data.*;
-import data.ThreadGroup;
+import data.Thread;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -15,11 +15,11 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 {
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
     
-    private final ThreadGroup o_threadGroup;
+    private final Thread o_thread;
     
-    ActionCellRenderer(ThreadGroup p_threadGroup)    
+    ActionCellRenderer(Thread p_thread)
     {
-        o_threadGroup = p_threadGroup;
+        o_thread = p_thread;
     }
     
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
@@ -42,7 +42,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 		x_component.setForeground(Color.BLACK);
 		x_component.setBackground(Color.WHITE);
 
-		List x_actionItems = ThreadGroupHelper.getAllActiveActions(o_threadGroup);
+		List x_actionItems = ThreadHelper.getAllActiveActions(o_thread);
         
         Item x_item = (Item) x_actionItems.get(row);
         

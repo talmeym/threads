@@ -2,7 +2,7 @@ package gui;
 
 import data.Component;
 import data.*;
-import data.ThreadGroup;
+import data.Thread;
 import util.GUIUtil;
 
 import javax.swing.*;
@@ -79,11 +79,7 @@ public class WindowManager extends WindowAdapter
         
         StringBuffer x_title = new StringBuffer("Threads - ");
         
-        if(p_component instanceof ThreadGroup)
-        {
-            x_title.append("ThreadGroup - ");
-        }
-        else if(p_component instanceof Item)
+		if(p_component instanceof Item)
         {
             x_title.append("Item - ");
             
@@ -92,20 +88,16 @@ public class WindowManager extends WindowAdapter
         {
             x_title.append("Reminder - ");
         }
-        else
-        {
-            throw new IllegalArgumentException("Invalid window component type:" + p_component);
-        }
-        
+
         x_title.append(p_component.getText());
         x_window.setTitle(x_title.toString());
     }
     
     private void sizeWindow(Component p_component, Window p_window)
     {
-        if(p_component instanceof ThreadGroup)
+        if(p_component instanceof Thread)
         {
-            p_window.setSize(GUIConstants.s_threadGroupWindowSize);
+            p_window.setSize(GUIConstants.s_threadWindowSize);
         }
         else if(p_component instanceof Item)
         {
@@ -124,9 +116,9 @@ public class WindowManager extends WindowAdapter
     
     private JPanel getComponentPanel(Component p_component, boolean p_new, int tabIndex)
     {
-        if(p_component instanceof ThreadGroup)
+        if(p_component instanceof Thread)
         {
-            return new ThreadGroupPanel((ThreadGroup)p_component, tabIndex);
+            return new ThreadPanel((Thread)p_component, tabIndex);
         }
         else if(p_component instanceof Item)
         {

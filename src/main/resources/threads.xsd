@@ -4,35 +4,18 @@
 	<xs:element name="threads">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="thread_group" type="thread_group"/>
+				<xs:element name="thread" type="thread"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="thread_group">
+	<xs:complexType name="thread">
 		<xs:complexContent>
 			<xs:extension base="component">
 				<xs:sequence>
 					<xs:choice minOccurs="0" maxOccurs="unbounded">
 						<xs:element name="thread" type="thread" minOccurs="0"/>
-						<xs:element name="thread_group" type="thread_group" minOccurs="0"/>
 						<xs:element name="item" type="item" minOccurs="0"/>
 					</xs:choice>
-					<xs:element name="doc_folder" minOccurs="0">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:minLength value="1"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="thread">
-		<xs:complexContent>
-			<xs:extension base="component">
-				<xs:sequence>
-					<xs:element name="item" type="item" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="doc_folder" minOccurs="0">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">

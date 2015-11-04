@@ -2,7 +2,7 @@ package gui;
 
 import data.Component;
 import data.*;
-import data.ThreadGroup;
+import data.Thread;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -46,11 +46,11 @@ class CellRenderer extends DefaultTableCellRenderer
 		x_component.setForeground(Color.BLACK);
 		x_component.setBackground(Color.WHITE);
 
-        if(o_component instanceof ThreadGroup)
+        if(o_component instanceof Thread)
         {
-            ThreadGroup x_threadGroup = (ThreadGroup) o_component;
+            Thread x_thread = (Thread) o_component;
             
-            ThreadGroupItem x_item = x_threadGroup.getThreadGroupItem(row);
+            ThreadItem x_item = x_thread.getThreadItem(row);
             
             if(!x_item.isActive())
             {

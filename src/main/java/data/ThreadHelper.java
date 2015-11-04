@@ -4,29 +4,29 @@ import util.*;
 
 import java.util.*;
 
-public class ThreadGroupHelper
+public class ThreadHelper
 {
-    public static List getAllActiveUpdates(ThreadGroup p_threadGroup)
+    public static List getAllActiveUpdates(Thread p_thread)
     {
         List x_result = new ArrayList();
 
-		Item latestUpdate = getLatestUpdate(p_threadGroup);
+		Item latestUpdate = getLatestUpdate(p_thread);
 
 		if(latestUpdate != null) {
 			x_result.add(latestUpdate);
 		}
 
-		ThreadGroupItem[] x_groupItems = p_threadGroup.getThreadGroupItems();
+		ThreadItem[] x_groupItems = p_thread.getThreadItems();
         
         for(int i = 0; i < x_groupItems.length; i++)
         {
-            ThreadGroupItem x_groupItem = x_groupItems[i];
+            ThreadItem x_groupItem = x_groupItems[i];
             
             if(x_groupItem.isActive())
             {
-                if(x_groupItem instanceof ThreadGroup)
+                if(x_groupItem instanceof Thread)
                 {
-                    x_result.addAll(ThreadGroupHelper.getAllActiveUpdates((ThreadGroup) x_groupItem));
+                    x_result.addAll(ThreadHelper.getAllActiveUpdates((Thread) x_groupItem));
                 }
             }
         }
@@ -35,22 +35,22 @@ public class ThreadGroupHelper
         return x_result;
     }
     
-    public static List getAllActiveActions(ThreadGroup p_threadGroup)
+    public static List getAllActiveActions(Thread p_thread)
     {
         List x_result = new ArrayList();
-		x_result.addAll(getActionItems(p_threadGroup));
+		x_result.addAll(getActionItems(p_thread));
 
-		ThreadGroupItem[] x_groupItems = p_threadGroup.getThreadGroupItems();
+		ThreadItem[] x_groupItems = p_thread.getThreadItems();
         
         for(int i = 0; i < x_groupItems.length; i++)
         {
-            ThreadGroupItem x_groupItem = x_groupItems[i];
+            ThreadItem x_groupItem = x_groupItems[i];
             
             if(x_groupItem.isActive())
             {
-                if(x_groupItem instanceof ThreadGroup)
+                if(x_groupItem instanceof Thread)
                 {
-                    x_result.addAll(ThreadGroupHelper.getAllActiveActions((ThreadGroup) x_groupItem));
+                    x_result.addAll(ThreadHelper.getAllActiveActions((Thread) x_groupItem));
                 }
             }
         }
@@ -59,21 +59,21 @@ public class ThreadGroupHelper
         return x_result;
     }
     
-    public static List getAllActiveThreadGroups(ThreadGroup p_threadGroup)
+    public static List getAllActiveThreads(Thread p_thread)
     {
         List x_result = new ArrayList();        
-        ThreadGroupItem[] x_groupItems = p_threadGroup.getThreadGroupItems();
+        ThreadItem[] x_groupItems = p_thread.getThreadItems();
         
         for(int i = 0; i < x_groupItems.length; i++)
         {
-            ThreadGroupItem x_groupItem = x_groupItems[i];
+            ThreadItem x_groupItem = x_groupItems[i];
             
             if(x_groupItem.isActive())
             {
-                if(x_groupItem instanceof ThreadGroup)
+                if(x_groupItem instanceof Thread)
                 {
                     x_result.add(x_groupItem);
-                    x_result.addAll(ThreadGroupHelper.getAllActiveThreadGroups((ThreadGroup) x_groupItem));
+                    x_result.addAll(ThreadHelper.getAllActiveThreads((Thread) x_groupItem));
                 }
             }
         }
@@ -82,21 +82,21 @@ public class ThreadGroupHelper
         return x_result;
     }
     
-    public static List getAllReminders(ThreadGroup p_threadGroup)
+    public static List getAllReminders(Thread p_thread)
     {
         List x_result = new ArrayList();
-		x_result.addAll(getReminders(p_threadGroup));
-        ThreadGroupItem[] x_groupItems = p_threadGroup.getThreadGroupItems();
+		x_result.addAll(getReminders(p_thread));
+        ThreadItem[] x_groupItems = p_thread.getThreadItems();
         
         for(int i = 0; i < x_groupItems.length; i++)
         {
-            ThreadGroupItem x_groupItem = x_groupItems[i];
+            ThreadItem x_groupItem = x_groupItems[i];
             
             if(x_groupItem.isActive())
             {
-                if(x_groupItem instanceof ThreadGroup)
+                if(x_groupItem instanceof Thread)
                 {
-                    x_result.addAll(ThreadGroupHelper.getAllReminders((ThreadGroup) x_groupItem));
+                    x_result.addAll(ThreadHelper.getAllReminders((Thread) x_groupItem));
                 }
             }
         }
@@ -105,11 +105,11 @@ public class ThreadGroupHelper
         return x_result;
     }
 
-	static Item getLatestUpdate(ThreadGroup p_threadGroup)
+	static Item getLatestUpdate(Thread p_thread)
 	{
-		for(int i = 0; i < p_threadGroup.getThreadGroupItemCount(); i++)
+		for(int i = 0; i < p_thread.getThreadItemCount(); i++)
 		{
-			ThreadGroupItem x_groupItem = p_threadGroup.getThreadGroupItem(i);
+			ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
 			if(x_groupItem instanceof Item) {
 				Item x_item = (Item) x_groupItem;
@@ -124,12 +124,12 @@ public class ThreadGroupHelper
 		return null;
 	}
 
-	public static List getUpdateItems(ThreadGroup p_threadGroup)
+	public static List getUpdateItems(Thread p_thread)
 	{
 		List x_updateItems = new ArrayList();
-		for(int i = 0; i < p_threadGroup.getThreadGroupItemCount(); i++)
+		for(int i = 0; i < p_thread.getThreadItemCount(); i++)
 		{
-			ThreadGroupItem x_groupItem = p_threadGroup.getThreadGroupItem(i);
+			ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
 			if(x_groupItem instanceof Item) {
 				Item x_item = (Item) x_groupItem;
@@ -144,13 +144,13 @@ public class ThreadGroupHelper
 		return x_updateItems;
 	}
 
-	public static List getActionItems(ThreadGroup p_threadGroup)
+	public static List getActionItems(Thread p_thread)
 	{
 		List x_actionItems = new ArrayList();
 
-		for(int i = 0; i < p_threadGroup.getThreadGroupItemCount(); i++)
+		for(int i = 0; i < p_thread.getThreadItemCount(); i++)
 		{
-			ThreadGroupItem x_groupItem = p_threadGroup.getThreadGroupItem(i);
+			ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
 			if(x_groupItem instanceof Item) {
 				Item x_item = (Item) x_groupItem;
@@ -166,13 +166,13 @@ public class ThreadGroupHelper
 		return x_actionItems;
 	}
 
-	public static List getReminders(ThreadGroup p_threadGroup)
+	public static List getReminders(Thread p_thread)
 	{
 		List x_reminders = new ArrayList();
 
-		for(int i = 0; i < p_threadGroup.getThreadGroupItemCount(); i++)
+		for(int i = 0; i < p_thread.getThreadItemCount(); i++)
 		{
-			ThreadGroupItem x_groupItem = p_threadGroup.getThreadGroupItem(i);
+			ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
 			if(x_groupItem instanceof Item) {
 				Item x_item = (Item) x_groupItem;

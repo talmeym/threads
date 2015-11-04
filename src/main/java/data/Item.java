@@ -4,7 +4,7 @@ import util.TextComparator;
 
 import java.util.Date;
 
-public class Item extends ThreadGroupItem
+public class Item extends ThreadItem
 {
     private Date o_dueDate;
     
@@ -19,9 +19,9 @@ public class Item extends ThreadGroupItem
 		o_dueDate = p_dueDate;
     }
     
-    public ThreadGroup getThreadGroup()
+    public Thread getThread()
     {
-        return (ThreadGroup) getParentComponent();
+        return (Thread) getParentComponent();
     }
 
 	public int getReminderCount()

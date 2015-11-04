@@ -8,12 +8,12 @@ import java.util.Date;
 
 public class Saver
 {
-    public static void saveDocument(ThreadGroup p_topThreadGroup, String p_xmlPath)
+    public static void saveDocument(Thread p_topThread, String p_xmlPath)
     {
         try
         {
             Element x_rootElem = new Element(XmlConstants.s_THREADS);
-            x_rootElem.addContent(addThreadGroup(p_topThreadGroup));
+            x_rootElem.addContent(addThread(p_topThread));
             
             Document x_doc = new Document(x_rootElem);                        
             addSchema(x_doc, "threads.xsd");
@@ -28,28 +28,28 @@ public class Saver
         }
     }
 
-    static Element addThreadGroup(ThreadGroup p_threadGroup)
+    static Element addThread(Thread p_thread)
     {
-        Element x_threadGroupElem = new Element(XmlConstants.s_THREAD_GROUP);
-        addComponentData(x_threadGroupElem, p_threadGroup);
+        Element x_threadElem = new Element(XmlConstants.s_THREAD);
+        addComponentData(x_threadElem, p_thread);
     
-        for(int i = 0; i < p_threadGroup.getThreadGroupItemCount(); i++)
+        for(int i = 0; i < p_thread.getThreadItemCount(); i++)
         {
-            ThreadGroupItem x_groupItem = p_threadGroup.getThreadGroupItem(i);
+            ThreadItem x_groupItem = p_thread.getThreadItem(i);
             
-            if(x_groupItem instanceof ThreadGroup)
+            if(x_groupItem instanceof Thread)
             {
-                x_threadGroupElem.addContent(addThreadGroup((ThreadGroup) x_groupItem));
+                x_threadElem.addContent(addThread((Thread) x_groupItem));
             }
             if(x_groupItem instanceof Item)
             {
-                x_threadGroupElem.addContent(addItem((Item) x_groupItem));
+                x_threadElem.addContent(addItem((Item) x_groupItem));
             }
         }
         
-        addDocFolder(x_threadGroupElem, p_threadGroup);
+        addDocFolder(x_threadElem, p_thread);
         
-        return x_threadGroupElem;
+        return x_threadElem;
     }
     
     private static Element addItem(Item p_item)
@@ -106,7 +106,7 @@ public class Saver
         p_document.getRootElement().setAttribute("noNamespaceSchemaLocation", "threads.xsd", x_nameSpace);
     }
     
-    private static void addDocFolder(Element p_element, ThreadGroupItem p_item)
+    private static void addDocFolder(Element p_element, ThreadItem p_item)
     {
         if(p_item.getDocFolder() != null)
         {

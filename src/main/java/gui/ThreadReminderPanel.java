@@ -1,23 +1,23 @@
 package gui;
 
 import data.*;
-import data.ThreadGroup;
+import data.Thread;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ThreadGroupReminderPanel extends TablePanel
+public class ThreadReminderPanel extends TablePanel
 {
-    private final ThreadGroup o_threadGroup;
+    private final Thread o_thread;
     
     private JButton o_dismissButton = new JButton("Dismiss");
     
-    ThreadGroupReminderPanel(ThreadGroup p_threadGroup)
+    ThreadReminderPanel(Thread p_thread)
     {
-        super(new ReminderTableModel(p_threadGroup), 
+        super(new ReminderTableModel(p_thread),
               new CellRenderer(null));
-        o_threadGroup = p_threadGroup;
+        o_thread = p_thread;
         fixColumnWidth(0, GUIConstants.s_creationDateWidth);
         fixColumnWidth(1, GUIConstants.s_threadWidth);
         fixColumnWidth(3, GUIConstants.s_creationDateWidth);
@@ -30,7 +30,7 @@ public class ThreadGroupReminderPanel extends TablePanel
                 
                 if(x_index != -1)
                 {
-                    Reminder x_reminder = (Reminder) ThreadGroupHelper.getAllReminders(o_threadGroup).get(x_index);
+                    Reminder x_reminder = (Reminder) ThreadHelper.getAllReminders(o_thread).get(x_index);
                     x_reminder.setActive(false);
                 }
             }            
@@ -47,7 +47,7 @@ public class ThreadGroupReminderPanel extends TablePanel
     {
         if(p_index != -1)
         {
-            Reminder x_reminder = (Reminder) ThreadGroupHelper.getAllReminders(o_threadGroup).get(p_index);
+            Reminder x_reminder = (Reminder) ThreadHelper.getAllReminders(o_thread).get(p_index);
             WindowManager.getInstance().openComponentWindow(x_reminder, false, 0);
         }
     }
@@ -56,7 +56,7 @@ public class ThreadGroupReminderPanel extends TablePanel
     {
         if(p_index != -1)
         {
-            Reminder x_reminder = (Reminder) ThreadGroupHelper.getAllReminders(o_threadGroup).get(p_index);
+            Reminder x_reminder = (Reminder) ThreadHelper.getAllReminders(o_thread).get(p_index);
             WindowManager.getInstance().openComponentWindow(x_reminder.getItem(), false, 0);
         }
     }
@@ -65,8 +65,8 @@ public class ThreadGroupReminderPanel extends TablePanel
     {
         if(p_index != -1)
         {
-            Reminder x_reminder = (Reminder) ThreadGroupHelper.getAllReminders(o_threadGroup).get(p_index);
-            WindowManager.getInstance().openComponentWindow(x_reminder.getItem().getThreadGroup(), false, 0);
+            Reminder x_reminder = (Reminder) ThreadHelper.getAllReminders(o_thread).get(p_index);
+            WindowManager.getInstance().openComponentWindow(x_reminder.getItem().getThread(), false, 0);
         }
     }
     

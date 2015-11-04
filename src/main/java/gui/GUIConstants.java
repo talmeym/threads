@@ -14,7 +14,7 @@ class GUIConstants
 
 	public static final int s_statsWidth = 90;
 
-    public static final Dimension s_threadGroupWindowSize = new Dimension(850, 600);
+    public static final Dimension s_threadWindowSize = new Dimension(850, 600);
 
     public static final int s_windowOffset = 50;
 

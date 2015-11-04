@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Loader
 {
-    public static ThreadGroup loadDocument(String p_xmlPath)
+    public static Thread loadDocument(String p_xmlPath)
     {
         SAXBuilder x_builder = new SAXBuilder(true);
         x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
@@ -26,7 +26,7 @@ public class Loader
         try
         {        
             Document x_doc = x_builder.build(p_xmlPath);            
-            return loadThreadGroup(x_doc.getRootElement().getChild(XmlConstants.s_THREAD_GROUP));
+            return loadThread(x_doc.getRootElement().getChild(XmlConstants.s_THREAD));
         }        
         catch(Exception ioe)
         {
@@ -37,7 +37,7 @@ public class Loader
         return null;
     }
     
-    private static ThreadGroup loadThreadGroup(Element p_element)
+    private static Thread loadThread(Element p_element)
     {
         Date x_creationDate = loadCreatedDate(p_element);
         boolean x_active = loadActiveFlag(p_element);        
@@ -52,9 +52,9 @@ public class Loader
         {
             Element x_element = (Element) x_iterator.next();
             
-            if(x_element.getName().equals(XmlConstants.s_THREAD_GROUP))
+            if(x_element.getName().equals(XmlConstants.s_THREAD))
             {
-                x_itemList.add(loadThreadGroup(x_element));
+                x_itemList.add(loadThread(x_element));
             }
             if(x_element.getName().equals(XmlConstants.s_ITEM))
             {
@@ -64,10 +64,10 @@ public class Loader
         
         File x_docFolder = loadDocFolder(p_element);
         
-        return new ThreadGroup(x_creationDate,
+        return new Thread(x_creationDate,
                                x_active,
                                x_text,
-                               (ThreadGroupItem[])x_itemList.toArray(new ThreadGroupItem[0]), 
+                               (ThreadItem[])x_itemList.toArray(new ThreadItem[0]),
                                x_docFolder);
     }
 

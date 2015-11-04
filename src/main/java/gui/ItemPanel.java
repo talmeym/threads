@@ -1,7 +1,7 @@
 package gui;
 
 import data.*;
-import data.ThreadGroup;
+import data.Thread;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -189,11 +189,11 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
                     {
                         if(JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION)
                         {
-                            ThreadGroup x_threadGroup = o_item.getThreadGroup();
+                            Thread x_thread = o_item.getThread();
                             
-                            for(int i = 0; i < x_threadGroup.getThreadGroupItemCount(); i++)
+                            for(int i = 0; i < x_thread.getThreadItemCount(); i++)
                             {
-                                ThreadGroupItem x_groupItem = x_threadGroup.getThreadGroupItem(i);
+                                ThreadItem x_groupItem = x_thread.getThreadItem(i);
 
 								if(x_groupItem instanceof Item)  {
 									Item x_item = (Item) x_groupItem;
@@ -238,7 +238,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
             {
                 if(o_new)
                 {
-                    o_item.getThreadGroup().removeItem(o_item);
+                    o_item.getThread().removeItem(o_item);
                 }
                 
                 WindowManager.getInstance().closeComponentWindow(o_item);
