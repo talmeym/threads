@@ -126,7 +126,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
         {
             if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0)
             {
-                Date x_date = o_dateFormat.parse(o_dueDateField.getText());
+                o_dateFormat.parse(o_dueDateField.getText());
             }
             
             JTextField x_textFields = o_compInfoPanel.getTextField();

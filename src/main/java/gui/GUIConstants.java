@@ -20,7 +20,7 @@ class GUIConstants
 
     public static int s_tableRowHeight = 25;
 
-    public static final Dimension s_itemWindowSize = new Dimension(600, 370);
+    public static final Dimension s_itemWindowSize = new Dimension(700, 370);
     
     public static final Dimension s_reminderWindowSize = new Dimension(500, 168);
 }
