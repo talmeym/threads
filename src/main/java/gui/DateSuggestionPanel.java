@@ -49,14 +49,43 @@ class DateSuggestionPanel extends JPanel
                 suggest();
             }
         });
-        
-        add(o_timeBox);        
+
+		setUpDropDowns();
+
+		add(o_timeBox);
         add(o_weekBox);
         add(o_dayBox);
         add(o_suggestButton);
     }
-    
-    private void suggest()
+
+	private void setUpDropDowns() {
+		Calendar now = Calendar.getInstance();
+		int x_dayIndex = now.get(Calendar.DAY_OF_WEEK) - 2;
+		o_dayBox.setSelectedIndex(x_dayIndex < 0 ? x_dayIndex + 7 : x_dayIndex);
+
+		int x_hour = now.get(Calendar.HOUR_OF_DAY);
+
+		if(x_hour > 9) {
+			o_timeBox.setSelectedIndex(1);
+		}
+
+		if(x_hour > 12) {
+			o_timeBox.setSelectedIndex(2);
+		}
+
+		if(x_hour > 18) {
+			o_timeBox.setSelectedIndex(0);
+
+			if(o_dayBox.getSelectedIndex() == 6) {
+				o_weekBox.setSelectedIndex(1);
+				o_dayBox.setSelectedIndex(0);
+			} else {
+				o_dayBox.setSelectedIndex(o_dayBox.getSelectedIndex() + 1);
+			}
+		}
+	}
+
+	private void suggest()
     {
         Calendar x_calendar = Calendar.getInstance();
         

@@ -289,7 +289,10 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
     
     void tableRowClicked(int col, int row)
     {
-        showReminder(row);
+		switch(col) {
+			case 0: break;
+			default: showReminder(row);
+		}
     }
     
     
