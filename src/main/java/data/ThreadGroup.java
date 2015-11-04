@@ -1,9 +1,9 @@
 package data;
 
+import util.TextComparator;
+
 import java.io.File;
 import java.util.Date;
-
-import util.TextComparator;
 
 public class ThreadGroup extends ThreadGroupItem
 {

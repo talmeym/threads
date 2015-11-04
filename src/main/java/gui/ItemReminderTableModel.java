@@ -1,10 +1,9 @@
 package gui;
 
-import java.util.Date;
-
+import data.*;
 import util.DateHelper;
-import data.Item;
-import data.Reminder;
+
+import java.util.Date;
 
 public class ItemReminderTableModel extends ComponentTableModel
 {
@@ -18,12 +17,12 @@ public class ItemReminderTableModel extends ComponentTableModel
     {
         Item x_item = (Item) getComponent();
         
-        if(x_item == null || x_item.getDeadline() == null)
+        if(x_item == null || x_item.getDueDate() == null)
         {
             return 0;
         }
         
-        return x_item.getDeadline().getReminderCount();
+        return x_item.getReminderCount();
     }
 
     public Class getColumnClass(int col)
@@ -39,14 +38,14 @@ public class ItemReminderTableModel extends ComponentTableModel
     public Object getValueAt(int row, int col)
     {
         Item x_item = (Item) getComponent();
-        Reminder x_reminder = x_item.getDeadline().getReminder(row);
+        Reminder x_reminder = x_item.getReminder(row);
         
         switch(col)
         {
         case 0: return x_reminder.getCreationDate(); 
         case 1: return x_reminder.getText();
         case 2: return x_reminder.getDate();
-        default: return DateHelper.getDateStatus(x_reminder.getDate(), x_reminder.getDeadline().getDueDate());
+        default: return DateHelper.getDateStatus(x_reminder.getDate(), x_reminder.getItem().getDueDate());
         }
     }    
 }

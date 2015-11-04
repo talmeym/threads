@@ -1,19 +1,13 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Date;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 import data.Thread;
 import data.ThreadGroup;
-import data.ThreadGroupItem;
+import data.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Date;
 
 public class ThreadGroupComponentPanel extends TablePanel
 {

@@ -1,17 +1,12 @@
 package gui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
-
-import data.Item;
+import data.*;
 import data.Thread;
 import data.ThreadGroup;
+
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.*;
+import java.util.*;
 
 public class ThreadGroupTreeModel implements TreeModel, Observer
 {

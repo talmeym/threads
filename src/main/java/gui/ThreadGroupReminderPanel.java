@@ -1,16 +1,11 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import data.Reminder;
+import data.*;
 import data.ThreadGroup;
-import data.ThreadGroupHelper;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class ThreadGroupReminderPanel extends TablePanel
 {

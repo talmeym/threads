@@ -1,8 +1,7 @@
 package gui;
 
-import data.Item;
+import data.*;
 import data.ThreadGroup;
-import data.ThreadGroupHelper;
 
 public class ThreadGroupActionPanel extends TablePanel
 {

@@ -1,9 +1,8 @@
 package gui;
 
-import data.Item;
+import data.*;
 import data.Thread;
 import data.ThreadGroup;
-import data.ThreadGroupHelper;
 
 public class ThreadGroupUpdatePanel extends TablePanel
 {
@@ -25,7 +24,7 @@ public class ThreadGroupUpdatePanel extends TablePanel
         if(p_index != -1)
         {
             Item x_threadItem = (Item) ThreadGroupHelper.getLatestUpdateItems(o_threadGroup).get(p_index); 
-            WindowManager.getInstance().openComponentWindow((Thread)x_threadItem.getThread(), false);
+            WindowManager.getInstance().openComponentWindow(x_threadItem.getThread(), false);
         }
     }
 

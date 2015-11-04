@@ -1,11 +1,8 @@
 package data;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
 import util.DueDateComparator;
+
+import java.util.*;
 
 public class ThreadHelper
 {
@@ -15,7 +12,7 @@ public class ThreadHelper
         {
             Item x_item = p_thread.getItem(i);
             
-            if(x_item.isActive() && x_item.getDeadline() == null)
+            if(x_item.isActive() && x_item.getDueDate() == null)
             {
                 return x_item;
             }
@@ -32,7 +29,7 @@ public class ThreadHelper
         {
             Item x_item = p_thread.getItem(i);
             
-            if(x_item.isActive() && x_item.getDeadline() == null)
+            if(x_item.isActive() && x_item.getDueDate() == null)
             {
                 x_updateItems.add(x_item);
             }
@@ -50,7 +47,7 @@ public class ThreadHelper
         {
             Item x_item = p_thread.getItem(i);
             
-            if(x_item.isActive() && x_item.getDeadline() != null)
+            if(x_item.isActive() && x_item.getDueDate() != null)
             {
                 x_actionItems.add(x_item);
             }

@@ -1,9 +1,9 @@
 package data;
 
+import util.CreationDateComparator;
+
 import java.io.File;
 import java.util.Date;
-
-import util.CreationDateComparator;
 
 public class Thread extends ThreadGroupItem
 {    

@@ -1,18 +1,12 @@
 package gui;
 
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import data.Reminder;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.*;
+import java.util.Date;
 
 public class RemindDateSuggestionPanel extends JPanel
 {
@@ -101,7 +95,7 @@ public class RemindDateSuggestionPanel extends JPanel
         x_timeToSubtract += ((DateItem)o_hourBox.getSelectedItem()).o_value;
         x_timeToSubtract += ((DateItem)o_minBox.getSelectedItem()).o_value;
         
-        Date x_dueDate = o_reminder.getDeadline().getDueDate();
+        Date x_dueDate = o_reminder.getItem().getDueDate();
         
         o_textField.setText(s_dateFormat.format(new Date(x_dueDate.getTime() - x_timeToSubtract)));
     }

@@ -1,53 +1,57 @@
 package data;
 
+import util.TextComparator;
+
 import java.util.Date;
 
-public class Item extends Component
+public class Item extends ThreadGroupItem
 {
-    private Deadline o_deadline;
+    private Date o_dueDate;
     
     public Item()
     {
-        this(new Date(), true, "New Item", null);
+        this(new Date(), true, "New Item", null, null);
     }
     
-    public Item(Date p_creationDate, boolean p_active, String p_text, Deadline p_deadline)
+    public Item(Date p_creationDate, boolean p_active, String p_text, Date p_dueDate, Reminder[] p_reminders)
     {
-        super(p_creationDate, p_active, p_text);        
-        o_deadline = p_deadline;
-        
-        if(o_deadline != null)
-        {
-            startObserve(o_deadline);
-            o_deadline.setParentComponent(this);
-        }
+        super(p_creationDate, p_active, p_text, p_reminders, new TextComparator(), null);
+		o_dueDate = p_dueDate;
     }
     
     public Thread getThread()
     {
         return (Thread) getParentComponent();
     }
-    
-    public Deadline getDeadline()
+
+	public int getReminderCount()
+	{
+		return getComponentCount();
+	}
+
+	public Reminder getReminder(int p_index)
+	{
+		return (Reminder) getComponent(p_index);
+	}
+
+	public void addReminder(Reminder p_reminder)
+	{
+		addComponent(p_reminder);
+	}
+
+	public void removeReminder(Reminder p_reminder)
+	{
+		removeComponent(p_reminder);
+	}
+
+	public Date getDueDate()
     {
-        return o_deadline;
+        return o_dueDate;
     }
     
-    public void setDeadline(Deadline p_deadline)
+    public void setDueDate(Date p_dueDate)
     {
-        if(p_deadline == null)
-        {
-            stopObserve(o_deadline);
-        }
-        
-        o_deadline = p_deadline;
-        
-        if(o_deadline != null)
-        {
-            o_deadline.setParentComponent(this);
-            startObserve(o_deadline);
-        }
-
+        o_dueDate = p_dueDate;
         changed();
     }
 }

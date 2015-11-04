@@ -1,13 +1,10 @@
 package data;
 
+import org.jdom.*;
+import org.jdom.output.*;
+
 import java.io.FileOutputStream;
 import java.util.Date;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
 
 public class Saver
 {
@@ -15,7 +12,7 @@ public class Saver
     {
         try
         {
-            Element x_rootElem = new Element(XmlConstants.s_DOCUMENT);
+            Element x_rootElem = new Element(XmlConstants.s_THREADS);
             x_rootElem.addContent(addThreadGroup(p_topThreadGroup));
             
             Document x_doc = new Document(x_rootElem);                        
@@ -74,27 +71,14 @@ public class Saver
     {
         Element x_itemElem = new Element(XmlConstants.s_ITEM);
         addComponentData(x_itemElem, p_item);
-        
-        if(p_item.getDeadline() != null)
-        {
-            x_itemElem.addContent(addDeadline(p_item.getDeadline()));
-        }
-        
-        return x_itemElem;
-    }
-    
-    private static Element addDeadline(Deadline p_deadline)
-    {
-        Element x_deadlineElem = new Element(XmlConstants.s_DEADLINE);
-        addComponentData(x_deadlineElem, p_deadline);
-        addContent(x_deadlineElem, XmlConstants.s_DUE, addDateTime(p_deadline.getDueDate()));
-        
-        for(int i = 0; i < p_deadline.getReminderCount(); i++)
-        {
-            x_deadlineElem.addContent(addReminder(p_deadline.getReminder(i)));
-        }
-        
-        return x_deadlineElem;
+		addContent(x_itemElem, XmlConstants.s_DUE, addDateTime(p_item.getDueDate()));
+
+		for(int i = 0; i < p_item.getReminderCount(); i++)
+		{
+			x_itemElem.addContent(addReminder(p_item.getReminder(i)));
+		}
+
+		return x_itemElem;
     }
     
     private static Element addReminder(Reminder p_reminder)

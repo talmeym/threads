@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2006 U (http://www.altova.com) by Miles Talmey (N/A) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xs:element name="document">
+	<xs:element name="threads">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="thread_group" type="thread_group"/>
@@ -44,15 +44,6 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="item">
-		<xs:complexContent>
-			<xs:extension base="component">
-				<xs:sequence>
-					<xs:element name="deadline" type="deadline" minOccurs="0"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="deadline">
 		<xs:complexContent>
 			<xs:extension base="component">
 				<xs:sequence>

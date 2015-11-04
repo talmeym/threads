@@ -1,12 +1,10 @@
 package gui;
 
-import java.util.Observable;
-import java.util.Observer;
+import data.Component;
+import util.TimeUpdateListener;
 
 import javax.swing.table.DefaultTableModel;
-
-import util.TimeUpdateListener;
-import data.Component;
+import java.util.*;
 
 class ComponentTableModel extends DefaultTableModel implements TimeUpdateListener, Observer
 {

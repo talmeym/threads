@@ -1,13 +1,10 @@
 package gui;
 
-import java.util.Date;
-import java.util.List;
-
-import util.DateHelper;
-import util.TimeUpdater;
-import data.Item;
+import data.*;
 import data.ThreadGroup;
-import data.ThreadGroupHelper;
+import util.*;
+
+import java.util.*;
 
 class ActionItemTableModel extends ComponentTableModel
 {
@@ -53,8 +50,8 @@ class ActionItemTableModel extends ComponentTableModel
         case 0: return x_actionItem.getCreationDate(); 
         case 1: return x_actionItem.getThread().getText();
         case 2: return x_actionItem.getText();
-        case 3: return x_actionItem.getDeadline().getDueDate();
-        default: return DateHelper.getDateStatus(x_actionItem.getDeadline().getDueDate());
+        case 3: return x_actionItem.getDueDate();
+        default: return DateHelper.getDateStatus(x_actionItem.getDueDate());
         }
     }
 }

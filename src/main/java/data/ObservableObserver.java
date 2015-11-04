@@ -1,7 +1,6 @@
 package data;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 class ObservableObserver extends Observable implements Observer
 {

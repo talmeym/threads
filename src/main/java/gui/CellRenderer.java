@@ -1,20 +1,15 @@
 package gui;
 
-import java.awt.Color;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import data.Component;
-import data.Item;
-import data.Reminder;
+import data.*;
 import data.Thread;
 import data.ThreadGroup;
-import data.ThreadGroupItem;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.text.*;
+import java.util.*;
 
 class CellRenderer extends DefaultTableCellRenderer
 {
@@ -62,9 +57,9 @@ class CellRenderer extends DefaultTableCellRenderer
             {
                 x_component.setBackground(Color.LIGHT_GRAY);
             }        
-            else if(x_item.getDeadline() != null)
+            else if(x_item.getDueDate() != null)
             {
-                Date x_dueDate = x_item.getDeadline().getDueDate();
+                Date x_dueDate = x_item.getDueDate();
                 Date x_now = new Date();
                 Date x_eightPmToday = getEightPmToday();
                 Date x_eightPmTomorrow = getEightPmTomorrow();
@@ -116,7 +111,7 @@ class CellRenderer extends DefaultTableCellRenderer
         {
             Item x_item = (Item) o_component;
             
-            Reminder x_reminder = x_item.getDeadline().getReminder(row);
+            Reminder x_reminder = x_item.getReminder(row);
             
             if(!x_reminder.isActive())
             {

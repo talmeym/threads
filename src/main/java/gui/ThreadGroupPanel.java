@@ -1,17 +1,12 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-
-import util.TimeUpdateListener;
-import util.TimeUpdater;
 import data.ThreadGroup;
-import data.ThreadGroupHelper;
+import data.*;
+import util.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.*;
 
 public class ThreadGroupPanel extends JPanel implements TimeUpdateListener, Observer
 {

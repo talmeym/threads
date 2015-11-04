@@ -1,13 +1,10 @@
 package gui;
 
-import java.util.Date;
-import java.util.List;
-
-import util.DateHelper;
-import util.TimeUpdater;
-import data.Reminder;
+import data.*;
 import data.ThreadGroup;
-import data.ThreadGroupHelper;
+import util.*;
+
+import java.util.*;
 
 class ReminderTableModel extends ComponentTableModel
 {
@@ -29,7 +26,7 @@ class ReminderTableModel extends ComponentTableModel
             return 0;
         }
         
-        o_dueReminders = ThreadGroupHelper.getReminders((ThreadGroup)x_threadGroup);
+        o_dueReminders = ThreadGroupHelper.getReminders(x_threadGroup);
         
         return o_dueReminders.size();
     }

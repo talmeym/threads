@@ -1,13 +1,12 @@
 package data;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.text.*;
 
 public class XmlConstants
 {
     public static final DateFormat s_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-    public static final String s_DOCUMENT = "document";
+    public static final String s_THREADS = "threads";
     
     public static final String s_THREAD = "thread";
     

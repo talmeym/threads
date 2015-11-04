@@ -1,8 +1,6 @@
 package data;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class ItemHelper
 {
@@ -10,13 +8,11 @@ public class ItemHelper
     {
         List x_dueActiveReminders = new ArrayList();
         
-        if(p_item.getDeadline() != null)
+        if(p_item.getDueDate() != null)
         {
-            Deadline x_deadline = p_item.getDeadline();
-            
-            for(int i = 0; i < x_deadline.getReminderCount(); i++)
+            for(int i = 0; i < p_item.getReminderCount(); i++)
             {
-                Reminder x_reminder = x_deadline.getReminder(i);
+                Reminder x_reminder = p_item.getReminder(i);
                 
                 if(x_reminder.isActive() && x_reminder.getDate().before(new Date()))
                 {

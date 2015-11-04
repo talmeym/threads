@@ -1,12 +1,8 @@
 package data;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import util.*;
 
-import util.CreationDateComparator;
-import util.DueDateComparator;
-import util.TextComparator;
+import java.util.*;
 
 public class ThreadGroupHelper
 {

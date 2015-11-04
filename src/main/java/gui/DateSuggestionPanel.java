@@ -1,16 +1,10 @@
 package gui;
 
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.*;
 import java.util.Calendar;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 class DateSuggestionPanel extends JPanel
 {   

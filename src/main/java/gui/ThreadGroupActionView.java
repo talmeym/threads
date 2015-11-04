@@ -1,8 +1,8 @@
 package gui;
 
-import java.util.Date;
-
 import data.ThreadGroup;
+
+import java.util.Date;
 
 public class ThreadGroupActionView extends ComponentView
 {

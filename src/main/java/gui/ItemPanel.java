@@ -1,28 +1,14 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import data.Deadline;
-import data.Item;
-import data.Reminder;
+import data.*;
 import data.Thread;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.*;
+import java.util.Date;
 
 class ItemPanel extends TablePanel implements DocumentListener, ActionListener
 {
@@ -59,9 +45,9 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
 
         o_saveButton.setEnabled(false);
         
-        if(o_item.getDeadline() != null)
+        if(o_item.getDueDate() != null)
         {
-            o_dueDateField.setText(o_dateFormat.format(o_item.getDeadline().getDueDate()));            
+            o_dueDateField.setText(o_dateFormat.format(o_item.getDueDate()));
         }
         
         if(p_new)
@@ -175,26 +161,25 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
                     
                     if(x_due != null && x_due.length() > 0)
                     {
-                        if(o_item.getDeadline() == null)
+                        if(o_item.getDueDate() == null)
                         {
-                            o_item.setDeadline(new Deadline(new Date(), true, "Deadline", o_dateFormat.parse(x_due), null));
+                            o_item.setDueDate(o_dateFormat.parse(x_due));
                         }
                         else
                         {
                             Date x_dueDate = o_dateFormat.parse(x_due);
                             
-                            if(!o_item.getDeadline().getDueDate().equals(x_dueDate))
+                            if(!o_item.getDueDate().equals(x_dueDate))
                             {
-                                o_item.getDeadline().setActive(true);
-                                o_item.getDeadline().setDueDate(x_dueDate);
+                                o_item.setDueDate(x_dueDate);
                             }
                         }
                     }
                     else
                     {
-                        if(o_item.getDeadline() != null)
+                        if(o_item.getDueDate() != null)
                         {
-                            o_item.setDeadline(null);
+                            o_item.setDueDate(null);
                         }
                     }
                     
@@ -210,7 +195,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
                             {
                                 Item x_item = x_thread.getItem(i);
                                 
-                                if(x_item != o_item && x_item.getDeadline() == null && x_item.isActive())
+                                if(x_item != o_item && x_item.getDueDate() == null && x_item.isActive())
                                 {
                                     x_item.setActive(false);
                                 }
@@ -227,21 +212,21 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
                     {
                         Date x_dueDate = o_dateFormat.parse(o_dueDateField.getText()); 
                     
-                        if(o_item.getDeadline() != null)
+                        if(o_item.getDueDate() != null)
                         {
-                            if(!x_dueDate.equals(o_item.getDeadline().getDueDate()))
+                            if(!x_dueDate.equals(o_item.getDueDate()))
                             {
-                                o_item.getDeadline().setDueDate(x_dueDate);
+                                o_item.setDueDate(x_dueDate);
                             }
                         }
                         else
                         {
-                            o_item.setDeadline(new Deadline(new Date(), true, "Deadline", x_dueDate, null));
+                            o_item.setDueDate(x_dueDate);
                         }
                     }
                     else
                     {
-                        o_item.setDeadline(null);
+                        o_item.setDueDate(null);
                     }
                 }
             }
@@ -263,28 +248,28 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
     
     private void addReminder()
     {
-        if(o_item.getDeadline() != null)
+        if(o_item.getDueDate() != null)
         {
             Reminder x_reminder = new Reminder(o_item);
-            o_item.getDeadline().addReminder(x_reminder);
+            o_item.addReminder(x_reminder);
             WindowManager.getInstance().openComponentWindow(x_reminder, true);
         }
     }
     
     private void removeReminder()
     {
-        if(o_item.getDeadline() != null)
+        if(o_item.getDueDate() != null)
         {
             int x_index = getSelectedRow();
             
             if(x_index != -1)
             {
-                Reminder x_reminder = o_item.getDeadline().getReminder(x_index);
+                Reminder x_reminder = o_item.getReminder(x_index);
                 
                 if(JOptionPane.showConfirmDialog(null, "Remove Reminder '" + x_reminder.getText() + "' ?") == JOptionPane.YES_OPTION)
                 {
                     WindowManager.getInstance().closeComponentWindow(x_reminder);
-                    o_item.getDeadline().removeReminder(x_reminder);
+                    o_item.removeReminder(x_reminder);
                 }
             }
         }
@@ -294,7 +279,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
     {
         if(p_index != -1)
         {
-            WindowManager.getInstance().openComponentWindow(o_item.getDeadline().getReminder(p_index), false);
+            WindowManager.getInstance().openComponentWindow(o_item.getReminder(p_index), false);
         }
     }
     

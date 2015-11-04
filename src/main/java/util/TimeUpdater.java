@@ -1,7 +1,6 @@
 package util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TimeUpdater extends java.lang.Thread
 {

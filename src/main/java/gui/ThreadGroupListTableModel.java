@@ -1,9 +1,9 @@
 package gui;
 
-import java.util.List;
-
 import data.ThreadGroup;
-import data.ThreadGroupHelper;
+import data.*;
+
+import java.util.List;
 
 class ThreadGroupListTableModel extends ComponentTableModel
 {
@@ -44,8 +44,8 @@ class ThreadGroupListTableModel extends ComponentTableModel
         case 0: return x_threadGroup.getCreationDate(); 
         case 1: return x_threadGroup.getThreadGroup().getText();
         case 2: return x_threadGroup.getText();
-        case 3: return new Integer(ThreadGroupHelper.getActiveThreads(x_threadGroup).size());
-        default: return new Integer(ThreadGroupHelper.getActiveThreadGroups(x_threadGroup).size());
+        case 3: return ThreadGroupHelper.getActiveThreads(x_threadGroup).size();
+        default: return ThreadGroupHelper.getActiveThreadGroups(x_threadGroup).size();
         }
     }
 }

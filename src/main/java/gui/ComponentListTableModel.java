@@ -1,10 +1,10 @@
 package gui;
 
-import java.util.Date;
-
 import data.Thread;
 import data.ThreadGroup;
-import data.ThreadGroupItem;
+import data.*;
+
+import java.util.Date;
 
 class ComponentListTableModel extends ComponentTableModel
 {
@@ -38,7 +38,7 @@ class ComponentListTableModel extends ComponentTableModel
     public Object getValueAt(int row, int col)
     {
         ThreadGroup x_threadGroup = (ThreadGroup) getComponent();
-        ThreadGroupItem x_threadGroupItem = (ThreadGroupItem) x_threadGroup.getThreadGroupItem(row); 
+        ThreadGroupItem x_threadGroupItem = x_threadGroup.getThreadGroupItem(row);
         
         switch(col)
         {

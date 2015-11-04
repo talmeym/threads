@@ -8,7 +8,7 @@ public class Reminder extends Component
     
     public Reminder(Item p_item)
     {
-        this(new Date(), true, "New Reminder", p_item.getDeadline().getDueDate());
+        this(new Date(), true, "New Reminder", p_item.getDueDate());
     }
     
     public Reminder(Date p_creationDate, boolean p_active, String p_text, Date p_date)
@@ -17,14 +17,9 @@ public class Reminder extends Component
         o_date = p_date;
     }
     
-    public Deadline getDeadline()
-    {
-        return (Deadline) getParentComponent();
-    }
-    
     public Item getItem()
     {
-        return (Item) getParentComponent().getParentComponent();
+        return (Item) getParentComponent();
     }
     
     public Date getDate()

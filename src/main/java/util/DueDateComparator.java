@@ -1,9 +1,8 @@
 package util;
 
-import java.util.Comparator;
+import data.*;
 
-import data.Item;
-import data.Reminder;
+import java.util.Comparator;
 
 public class DueDateComparator implements Comparator
 {
@@ -14,9 +13,9 @@ public class DueDateComparator implements Comparator
             Item x_item1 = (Item) obj1;
             Item x_item2 = (Item) obj2;
         
-            if(x_item1.getDeadline() != null)
+            if(x_item1.getDueDate() != null)
             {
-                return x_item1.getDeadline().getDueDate().compareTo(x_item2.getDeadline().getDueDate());
+                return x_item1.getDueDate().compareTo(x_item2.getDueDate());
             }
 
             throw new IllegalArgumentException("Can only due date compare action items");

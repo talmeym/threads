@@ -1,8 +1,8 @@
 package util;
 
-import java.util.Comparator;
-
 import data.Component;
+
+import java.util.Comparator;
 
 public class TextComparator implements Comparator
 {

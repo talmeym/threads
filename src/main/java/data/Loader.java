@@ -1,18 +1,12 @@
 package data;
 
-import java.io.*;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
-import org.jdom.Document;
-import org.jdom.Element;
+import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.*;
 
-import javax.xml.transform.stream.StreamSource;
+import java.io.*;
+import java.text.ParseException;
+import java.util.*;
 
 public class Loader
 {
@@ -107,42 +101,24 @@ public class Loader
         boolean x_active = loadActiveFlag(p_element);        
         String x_text = loadText(p_element);        
         
-        Deadline x_deadline = null;
-        
-        if(p_element.getChild(XmlConstants.s_DEADLINE) != null)
-        {            
-            x_deadline = loadDeadline(p_element.getChild(XmlConstants.s_DEADLINE));
-        }
-        
-        return new Item(x_creationDate,
+		Date x_dueDate = loadDateTime(p_element.getChildText(XmlConstants.s_DUE));
+
+		List x_reminders = p_element.getChildren(XmlConstants.s_REMINDER);
+		List x_reminderList = new ArrayList();
+		Iterator x_reminderIterator = x_reminders.iterator();
+
+		while(x_reminderIterator.hasNext())
+		{
+			Element x_reminderElem = (Element) x_reminderIterator.next();
+			x_reminderList.add(loadReminder(x_reminderElem));
+		}
+
+		return new Item(x_creationDate,
                         x_active,
                         x_text, 
-                        x_deadline);
-    }
-
-    private static Deadline loadDeadline(Element p_element)
-    {
-        Date x_creationDate = loadCreatedDate(p_element);
-        boolean x_active = loadActiveFlag(p_element);        
-        String x_text = loadText(p_element);
-        
-        Date x_dueDate = loadDateTime(p_element.getChildText(XmlConstants.s_DUE));
-        
-        List x_reminders = p_element.getChildren(XmlConstants.s_REMINDER);
-        List x_reminderList = new ArrayList();
-        Iterator x_reminderIterator = x_reminders.iterator();
-        
-        while(x_reminderIterator.hasNext())
-        {
-            Element x_reminderElem = (Element) x_reminderIterator.next();
-            x_reminderList.add(loadReminder(x_reminderElem));            
-        }
-        
-        return new Deadline(x_creationDate,
-                            x_active,
-                            x_text,
-                            x_dueDate,
-                            (Reminder[])x_reminderList.toArray(new Reminder[0]));
+                        x_dueDate,
+						(Reminder[])x_reminderList.toArray(new Reminder[0])
+				);
     }
 
     private static Reminder loadReminder(Element p_element)

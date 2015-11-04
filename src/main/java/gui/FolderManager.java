@@ -1,12 +1,10 @@
 package gui;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-
 import data.ThreadGroupItem;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.io.*;
 
 public class FolderManager
 {
@@ -33,7 +31,7 @@ public class FolderManager
     
     public static void setDocFolder(ThreadGroupItem p_item)
     {
-        JFileChooser x_chooser = null;
+        JFileChooser x_chooser;
         
         if(p_item.getDocFolder() == null)
         {

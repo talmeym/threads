@@ -1,11 +1,10 @@
 package gui;
 
-import java.util.List;
-
 import data.Thread;
 import data.ThreadGroup;
-import data.ThreadGroupHelper;
-import data.ThreadHelper;
+import data.*;
+
+import java.util.List;
 
 class ThreadListTableModel extends ComponentTableModel
 {
@@ -46,8 +45,8 @@ class ThreadListTableModel extends ComponentTableModel
         case 0: return x_thread.getCreationDate(); 
         case 1: return x_thread.getThreadGroup().getText();
         case 2: return x_thread.getText();
-        case 3: return new Integer(ThreadHelper.getUpdateItems(x_thread).size());
-        default: return new Integer(ThreadHelper.getActionItems(x_thread).size());
+        case 3: return ThreadHelper.getUpdateItems(x_thread).size();
+        default: return ThreadHelper.getActionItems(x_thread).size();
         }
     }
 }

@@ -1,10 +1,10 @@
 package gui;
 
-import java.util.Date;
-
-import util.DateHelper;
-import data.Item;
+import data.*;
 import data.Thread;
+import util.DateHelper;
+
+import java.util.Date;
 
 class ThreadItemTableModel extends ComponentTableModel
 {
@@ -46,14 +46,14 @@ class ThreadItemTableModel extends ComponentTableModel
         case 0: return x_item.getCreationDate(); 
         case 1: return x_item.getText();
         case 2:
-            if(x_item.getDeadline() != null)
+            if(x_item.getDueDate() != null)
             {
-                return x_item.getDeadline().getDueDate();
+                return x_item.getDueDate();
             }
         default:
-            if(x_item.getDeadline() != null)
+            if(x_item.getDueDate() != null)
             {
-                return DateHelper.getDateStatus(x_item.getDeadline().getDueDate());
+                return DateHelper.getDateStatus(x_item.getDueDate());
             }
         }
         

@@ -1,29 +1,17 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import data.Reminder;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.*;
+import java.util.Date;
 
 public class ReminderPanel extends JPanel implements ActionListener, DocumentListener
 {
-    private static final DateFormat o_dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private static final DateFormat o_dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
     private static final Dimension o_dueFieldSize = new Dimension(130, 25);
     
     private final Reminder o_reminder;
@@ -138,7 +126,7 @@ public class ReminderPanel extends JPanel implements ActionListener, DocumentLis
             {
                 if(o_new)
                 {
-                    o_reminder.getDeadline().removeReminder(o_reminder);
+                    o_reminder.getItem().removeReminder(o_reminder);
                 }
                 
                 WindowManager.getInstance().closeComponentWindow(o_reminder);

@@ -1,23 +1,15 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreeModel;
-
 import data.Component;
-import data.Item;
+import data.*;
 import data.Thread;
 import data.ThreadGroup;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.tree.TreeModel;
+import java.awt.*;
+import java.awt.event.*;
 
 public class ThreadGroupTreePanel extends JPanel implements TreeSelectionListener, ActionListener
 {

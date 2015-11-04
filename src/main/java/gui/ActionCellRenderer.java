@@ -1,19 +1,15 @@
 package gui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
-import data.Item;
+import data.*;
 import data.ThreadGroup;
-import data.ThreadGroupHelper;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.awt.Component;
+import java.text.*;
+import java.util.*;
+import java.util.List;
 
 public class ActionCellRenderer extends DefaultTableCellRenderer
 {
@@ -50,7 +46,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
         
         Item x_item = (Item) x_actionItems.get(row);
         
-        Date x_dueDate = x_item.getDeadline().getDueDate();
+        Date x_dueDate = x_item.getDueDate();
         Date x_now = new Date();
         Date x_eightPmToday = getEightPmToday();
         Date x_eightPmTomorrow = getEightPmTomorrow();        

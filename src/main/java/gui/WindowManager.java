@@ -1,21 +1,15 @@
 package gui;
 
-import java.awt.Point;
-import java.awt.Window;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import util.GUIUtil;
 import data.Component;
-import data.Item;
-import data.Reminder;
+import data.*;
 import data.Thread;
 import data.ThreadGroup;
+import util.GUIUtil;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
 public class WindowManager extends WindowAdapter
 {
@@ -84,7 +78,7 @@ public class WindowManager extends WindowAdapter
     {
         JFrame x_window = (JFrame) o_componentWindows.get(p_component);
         
-        StringBuffer x_title = new StringBuffer("MyWorld - ");
+        StringBuffer x_title = new StringBuffer("Threads - ");
         
         if(p_component instanceof ThreadGroup)
         {

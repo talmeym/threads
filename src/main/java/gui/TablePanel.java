@@ -1,25 +1,16 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Date;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 
 abstract class TablePanel extends JPanel
 {
     private final JTable o_table;
     
-    private int o_lastSelection;
-    
-    protected TablePanel(TableModel p_tableModel, 
+    protected TablePanel(TableModel p_tableModel,
                          TableCellRenderer p_cellRenderer)
     {
         super(new BorderLayout());
