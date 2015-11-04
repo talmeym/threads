@@ -22,8 +22,8 @@ public class ThreadGroupActionPanel extends TablePanel
     {
         if(p_index != -1)
         {
-            Item x_threadItem = (Item) ThreadGroupHelper.getActionItems(o_threadGroup).get(p_index); 
-            WindowManager.getInstance().openComponentWindow(x_threadItem.getThread(), false);
+            Item x_threadItem = (Item) ThreadGroupHelper.getAllActiveActions(o_threadGroup).get(p_index);
+            WindowManager.getInstance().openComponentWindow(x_threadItem.getThreadGroup(), false, 0);
         }
     }
 
@@ -31,8 +31,8 @@ public class ThreadGroupActionPanel extends TablePanel
     {
         if(p_index != -1)
         {
-            Item x_threadItem = (Item) ThreadGroupHelper.getActionItems(o_threadGroup).get(p_index); 
-            WindowManager.getInstance().openComponentWindow(x_threadItem, false);
+            Item x_threadItem = (Item) ThreadGroupHelper.getAllActiveActions(o_threadGroup).get(p_index);
+            WindowManager.getInstance().openComponentWindow(x_threadItem, false, 0);
         }
     }
     

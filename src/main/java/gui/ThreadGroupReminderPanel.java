@@ -30,7 +30,7 @@ public class ThreadGroupReminderPanel extends TablePanel
                 
                 if(x_index != -1)
                 {
-                    Reminder x_reminder = (Reminder) ThreadGroupHelper.getReminders(o_threadGroup).get(x_index);
+                    Reminder x_reminder = (Reminder) ThreadGroupHelper.getAllReminders(o_threadGroup).get(x_index);
                     x_reminder.setActive(false);
                 }
             }            
@@ -47,8 +47,8 @@ public class ThreadGroupReminderPanel extends TablePanel
     {
         if(p_index != -1)
         {
-            Reminder x_reminder = (Reminder) ThreadGroupHelper.getReminders(o_threadGroup).get(p_index); 
-            WindowManager.getInstance().openComponentWindow(x_reminder, false);
+            Reminder x_reminder = (Reminder) ThreadGroupHelper.getAllReminders(o_threadGroup).get(p_index);
+            WindowManager.getInstance().openComponentWindow(x_reminder, false, 0);
         }
     }
 
@@ -56,8 +56,8 @@ public class ThreadGroupReminderPanel extends TablePanel
     {
         if(p_index != -1)
         {
-            Reminder x_reminder = (Reminder) ThreadGroupHelper.getReminders(o_threadGroup).get(p_index); 
-            WindowManager.getInstance().openComponentWindow(x_reminder.getItem(), false);
+            Reminder x_reminder = (Reminder) ThreadGroupHelper.getAllReminders(o_threadGroup).get(p_index);
+            WindowManager.getInstance().openComponentWindow(x_reminder.getItem(), false, 0);
         }
     }
     
@@ -65,8 +65,8 @@ public class ThreadGroupReminderPanel extends TablePanel
     {
         if(p_index != -1)
         {
-            Reminder x_reminder = (Reminder) ThreadGroupHelper.getReminders(o_threadGroup).get(p_index); 
-            WindowManager.getInstance().openComponentWindow(x_reminder.getItem().getThread(), false);
+            Reminder x_reminder = (Reminder) ThreadGroupHelper.getAllReminders(o_threadGroup).get(p_index);
+            WindowManager.getInstance().openComponentWindow(x_reminder.getItem().getThreadGroup(), false, 0);
         }
     }
     

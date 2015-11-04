@@ -41,4 +41,18 @@ public class ThreadGroup extends ThreadGroupItem
     {
         removeComponent(p_threadGroupItem);
     }
+
+	public void addItem(Item p_item)
+	{
+		addComponent(p_item);
+	}
+
+	public void removeItem(Item p_item)
+	{
+		removeComponent(p_item);
+	}
+
+	public String getType() {
+		return "Thread";
+	}
 }

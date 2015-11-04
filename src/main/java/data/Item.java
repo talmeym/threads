@@ -19,9 +19,9 @@ public class Item extends ThreadGroupItem
 		o_dueDate = p_dueDate;
     }
     
-    public Thread getThread()
+    public ThreadGroup getThreadGroup()
     {
-        return (Thread) getParentComponent();
+        return (ThreadGroup) getParentComponent();
     }
 
 	public int getReminderCount()
@@ -54,4 +54,8 @@ public class Item extends ThreadGroupItem
         o_dueDate = p_dueDate;
         changed();
     }
+
+	public String getType() {
+		return "Item";
+	}
 }

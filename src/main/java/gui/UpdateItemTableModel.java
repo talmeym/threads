@@ -26,7 +26,7 @@ class UpdateItemTableModel extends ComponentTableModel
             return 0;
         }
 
-        o_updateItems = ThreadGroupHelper.getLatestUpdateItems(x_threadGroup);
+        o_updateItems = ThreadGroupHelper.getAllActiveUpdates(x_threadGroup);
         
         return o_updateItems.size();
     }
@@ -47,7 +47,7 @@ class UpdateItemTableModel extends ComponentTableModel
         switch(col)
         {
         case 0: return x_updateItem.getCreationDate(); 
-        case 1: return x_updateItem.getThread().getText();
+        case 1: return x_updateItem.getThreadGroup().getText();
         case 2: return x_updateItem.getText();
         default: return DateHelper.getDateStatus(x_updateItem.getCreationDate());
         }

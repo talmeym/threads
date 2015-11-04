@@ -2,7 +2,6 @@ package gui;
 
 import data.Component;
 import data.*;
-import data.Thread;
 import data.ThreadGroup;
 
 import javax.swing.*;
@@ -67,9 +66,7 @@ public class ThreadGroupTreePanel extends JPanel implements TreeSelectionListene
             return false;
         }
         
-        return ((p_obj1 instanceof Item && p_obj2 instanceof Thread) || 
-                (p_obj1 instanceof Thread && p_obj2 instanceof ThreadGroup) ||
-                (p_obj1 instanceof ThreadGroup && p_obj2 instanceof ThreadGroup));
+        return ((p_obj1 instanceof ThreadGroup && p_obj2 instanceof ThreadGroup));
     }
 
     public void actionPerformed(ActionEvent e)
@@ -80,17 +77,9 @@ public class ThreadGroupTreePanel extends JPanel implements TreeSelectionListene
         if(x_fromObj instanceof Item)
         {
             Item x_toMove = (Item) x_fromObj;
-            x_toMove.getThread().removeItem(x_toMove);
-            Thread x_thread = (Thread) x_toObj;
-            x_thread.addItem(x_toMove);            
-        }
-        
-        if(x_fromObj instanceof Thread)
-        {
-            Thread x_toMove = (Thread) x_fromObj;
-            x_toMove.getThreadGroup().removeThreadGroupItem(x_toMove);
+            x_toMove.getThreadGroup().removeItem(x_toMove);
             ThreadGroup x_threadGroup = (ThreadGroup) x_toObj;
-            x_threadGroup.addThreadGroupItem(x_toMove);
+            x_threadGroup.addItem(x_toMove);
         }
         
         if(x_fromObj instanceof ThreadGroup)

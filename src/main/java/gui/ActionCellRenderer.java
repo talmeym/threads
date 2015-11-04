@@ -42,7 +42,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 		x_component.setForeground(Color.BLACK);
 		x_component.setBackground(Color.WHITE);
 
-		List x_actionItems = ThreadGroupHelper.getActionItems(o_threadGroup);
+		List x_actionItems = ThreadGroupHelper.getAllActiveActions(o_threadGroup);
         
         Item x_item = (Item) x_actionItems.get(row);
         

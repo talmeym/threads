@@ -72,7 +72,7 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
         
         if(e.getSource() == o_parentButton)
         {
-            WindowManager.getInstance().openComponentWindow(o_component.getParentComponent(), false);
+            WindowManager.getInstance().openComponentWindow(o_component.getParentComponent(), false, 0);
         }
     }
 }

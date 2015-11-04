@@ -23,7 +23,7 @@ public class Saver
         }        
         catch(Exception ioe)
         {
-            System.err.println("Error loading threads file: " + ioe);
+            System.err.println("Error saving threads file: " + ioe);
             System.exit(1);
         }
     }
@@ -35,15 +35,15 @@ public class Saver
     
         for(int i = 0; i < p_threadGroup.getThreadGroupItemCount(); i++)
         {
-            ThreadGroupItem x_item = p_threadGroup.getThreadGroupItem(i);
+            ThreadGroupItem x_groupItem = p_threadGroup.getThreadGroupItem(i);
             
-            if(x_item instanceof ThreadGroup)
+            if(x_groupItem instanceof ThreadGroup)
             {
-                x_threadGroupElem.addContent(addThreadGroup((ThreadGroup) x_item));
+                x_threadGroupElem.addContent(addThreadGroup((ThreadGroup) x_groupItem));
             }
-            else
+            if(x_groupItem instanceof Item)
             {
-                x_threadGroupElem.addContent(addThread((Thread) x_item));
+                x_threadGroupElem.addContent(addItem((Item) x_groupItem));
             }
         }
         
@@ -52,30 +52,18 @@ public class Saver
         return x_threadGroupElem;
     }
     
-    private static Element addThread(Thread p_thread)
-    {        
-        Element x_threadElem = new Element(XmlConstants.s_THREAD);
-        addComponentData(x_threadElem, p_thread);
-        
-        for(int i = 0; i < p_thread.getItemCount(); i++)
-        {
-            x_threadElem.addContent(addItem(p_thread.getItem(i)));
-        }
-        
-        addDocFolder(x_threadElem, p_thread);       
-        
-        return x_threadElem;
-    }
-    
     private static Element addItem(Item p_item)
     {
         Element x_itemElem = new Element(XmlConstants.s_ITEM);
         addComponentData(x_itemElem, p_item);
-		addContent(x_itemElem, XmlConstants.s_DUE, addDateTime(p_item.getDueDate()));
 
-		for(int i = 0; i < p_item.getReminderCount(); i++)
-		{
-			x_itemElem.addContent(addReminder(p_item.getReminder(i)));
+		if(p_item.getDueDate() != null) {
+			addContent(x_itemElem, XmlConstants.s_DUE, addDateTime(p_item.getDueDate()));
+
+			for(int i = 0; i < p_item.getReminderCount(); i++)
+			{
+				x_itemElem.addContent(addReminder(p_item.getReminder(i)));
+			}
 		}
 
 		return x_itemElem;

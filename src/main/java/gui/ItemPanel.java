@@ -1,7 +1,7 @@
 package gui;
 
 import data.*;
-import data.Thread;
+import data.ThreadGroup;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -189,16 +189,20 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
                     {
                         if(JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION)
                         {
-                            Thread x_thread = o_item.getThread();
+                            ThreadGroup x_threadGroup = o_item.getThreadGroup();
                             
-                            for(int i = 0; i < x_thread.getItemCount(); i++)
+                            for(int i = 0; i < x_threadGroup.getThreadGroupItemCount(); i++)
                             {
-                                Item x_item = x_thread.getItem(i);
-                                
-                                if(x_item != o_item && x_item.getDueDate() == null && x_item.isActive())
-                                {
-                                    x_item.setActive(false);
-                                }
+                                ThreadGroupItem x_groupItem = x_threadGroup.getThreadGroupItem(i);
+
+								if(x_groupItem instanceof Item)  {
+									Item x_item = (Item) x_groupItem;
+
+									if(x_item != o_item && x_item.getDueDate() == null && x_item.isActive())
+									{
+										x_item.setActive(false);
+									}
+								}
                             }
                         }
                     }
@@ -234,7 +238,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
             {
                 if(o_new)
                 {
-                    o_item.getThread().removeItem(o_item);
+                    o_item.getThreadGroup().removeItem(o_item);
                 }
                 
                 WindowManager.getInstance().closeComponentWindow(o_item);
@@ -252,7 +256,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
         {
             Reminder x_reminder = new Reminder(o_item);
             o_item.addReminder(x_reminder);
-            WindowManager.getInstance().openComponentWindow(x_reminder, true);
+            WindowManager.getInstance().openComponentWindow(x_reminder, true, 0);
         }
     }
     
@@ -279,7 +283,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
     {
         if(p_index != -1)
         {
-            WindowManager.getInstance().openComponentWindow(o_item.getReminder(p_index), false);
+            WindowManager.getInstance().openComponentWindow(o_item.getReminder(p_index), false, 0);
         }
     }
     

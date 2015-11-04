@@ -12,7 +12,7 @@ class ThreadGroupListTableModel extends ComponentTableModel
     ThreadGroupListTableModel(ThreadGroup p_threadGroup)
     {
         super(p_threadGroup,
-              new String[]{"Creation Date", "Parent", "Name", "Threads", "ThreadGroups"});
+              new String[]{"Creation Date", "Parent", "Name", "Threads", "Updates", "Actions"});
         
     }
     
@@ -25,7 +25,7 @@ class ThreadGroupListTableModel extends ComponentTableModel
             return 0;
         }
         
-        o_activeThreadGroups = ThreadGroupHelper.getActiveThreadGroups(x_threadGroup);
+        o_activeThreadGroups = ThreadGroupHelper.getAllActiveThreadGroups(x_threadGroup);
         
         return o_activeThreadGroups.size();
     }
@@ -44,8 +44,9 @@ class ThreadGroupListTableModel extends ComponentTableModel
         case 0: return x_threadGroup.getCreationDate(); 
         case 1: return x_threadGroup.getThreadGroup().getText();
         case 2: return x_threadGroup.getText();
-        case 3: return ThreadGroupHelper.getActiveThreads(x_threadGroup).size();
-        default: return ThreadGroupHelper.getActiveThreadGroups(x_threadGroup).size();
+        case 3: return ThreadGroupHelper.getAllActiveThreadGroups(x_threadGroup).size();
+		case 4: return ThreadGroupHelper.getUpdateItems(x_threadGroup).size();
+		default: return ThreadGroupHelper.getActionItems(x_threadGroup).size();
         }
     }
 }

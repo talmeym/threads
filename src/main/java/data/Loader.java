@@ -52,13 +52,13 @@ public class Loader
         {
             Element x_element = (Element) x_iterator.next();
             
-            if(x_element.getName().equals(XmlConstants.s_THREAD))
-            {
-                x_itemList.add(loadThread(x_element));
-            }
-            else if(x_element.getName().equals(XmlConstants.s_THREAD_GROUP))
+            if(x_element.getName().equals(XmlConstants.s_THREAD_GROUP))
             {
                 x_itemList.add(loadThreadGroup(x_element));
+            }
+            if(x_element.getName().equals(XmlConstants.s_ITEM))
+            {
+                x_itemList.add(loadItem(x_element));
             }
         }
         
@@ -71,47 +71,28 @@ public class Loader
                                x_docFolder);
     }
 
-    private static Thread loadThread(Element p_element)
-    {
-        Date x_creationDate = loadCreatedDate(p_element);
-        boolean x_active = loadActiveFlag(p_element);        
-        String x_text = loadText(p_element);               
-        
-        List x_items = p_element.getChildren(XmlConstants.s_ITEM);
-        List x_itemList = new ArrayList();
-        Iterator x_itemIterator = x_items.iterator();
-        
-        while(x_itemIterator.hasNext())
-        {
-            Element x_itemElem = (Element) x_itemIterator.next();
-            x_itemList.add(loadItem(x_itemElem));
-        }
-        
-        File x_docFolder = loadDocFolder(p_element);
-        
-        return new Thread(x_creationDate,
-                          x_active,
-                          x_text,
-                          (Item[]) x_itemList.toArray(new Item[0]), x_docFolder);
-    }
-    
     private static Item loadItem(Element p_element)
     {
         Date x_creationDate = loadCreatedDate(p_element);
         boolean x_active = loadActiveFlag(p_element);        
-        String x_text = loadText(p_element);        
-        
-		Date x_dueDate = loadDateTime(p_element.getChildText(XmlConstants.s_DUE));
+        String x_text = loadText(p_element);
 
-		List x_reminders = p_element.getChildren(XmlConstants.s_REMINDER);
+		String x_dueDateStr = p_element.getChildText(XmlConstants.s_DUE);
+		Date x_dueDate = null;
 		List x_reminderList = new ArrayList();
-		Iterator x_reminderIterator = x_reminders.iterator();
 
-		while(x_reminderIterator.hasNext())
-		{
-			Element x_reminderElem = (Element) x_reminderIterator.next();
-			x_reminderList.add(loadReminder(x_reminderElem));
+		if(x_dueDateStr != null) {
+			x_dueDate = loadDateTime(x_dueDateStr);
+			List x_reminders = p_element.getChildren(XmlConstants.s_REMINDER);
+			Iterator x_reminderIterator = x_reminders.iterator();
+
+			while(x_reminderIterator.hasNext())
+			{
+				Element x_reminderElem = (Element) x_reminderIterator.next();
+				x_reminderList.add(loadReminder(x_reminderElem));
+			}
 		}
+
 
 		return new Item(x_creationDate,
                         x_active,

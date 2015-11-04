@@ -26,7 +26,7 @@ class ReminderTableModel extends ComponentTableModel
             return 0;
         }
         
-        o_dueReminders = ThreadGroupHelper.getReminders(x_threadGroup);
+        o_dueReminders = ThreadGroupHelper.getAllReminders(x_threadGroup);
         
         return o_dueReminders.size();
     }
@@ -48,7 +48,7 @@ class ReminderTableModel extends ComponentTableModel
         switch(col)
         {
         case 0: return x_dueReminder.getCreationDate(); 
-        case 1: return x_dueReminder.getItem().getThread().getText();
+        case 1: return x_dueReminder.getItem().getThreadGroup().getText();
         case 2: return x_dueReminder.getText();
         case 3: return x_dueReminder.getDate();
         default: return DateHelper.getDateStatus(x_dueReminder.getDate());

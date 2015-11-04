@@ -1,6 +1,5 @@
 package gui;
 
-import data.Thread;
 import data.ThreadGroup;
 import data.*;
 
@@ -11,7 +10,7 @@ class ComponentListTableModel extends ComponentTableModel
     ComponentListTableModel(ThreadGroup p_threadGroup)
     {
         super(p_threadGroup, 
-              new String[]{"Creation Date", "Type", "Name"});
+              new String[]{"Creation Date", "Type", "Name", "Threads", "Updates", "Actions"});
     }
 
     public int getRowCount()
@@ -42,9 +41,12 @@ class ComponentListTableModel extends ComponentTableModel
         
         switch(col)
         {
-        case 0: return x_threadGroupItem.getCreationDate(); 
-        case 1: return x_threadGroupItem instanceof Thread ? "Thread" : "Thread Group"; 
-        default: return x_threadGroupItem.getText();
+			case 0: return x_threadGroupItem.getCreationDate();
+        	case 1: return x_threadGroupItem.getType();
+			case 2: return x_threadGroupItem.getText();
+			case 3: return x_threadGroupItem instanceof ThreadGroup ? ThreadGroupHelper.getAllActiveThreadGroups((ThreadGroup)x_threadGroupItem).size() : "";
+			case 4: return x_threadGroupItem instanceof ThreadGroup ? ThreadGroupHelper.getAllActiveUpdates((ThreadGroup)x_threadGroupItem).size() : "";
+			default: return x_threadGroupItem instanceof ThreadGroup ? ThreadGroupHelper.getAllActiveActions((ThreadGroup)x_threadGroupItem).size() : "";
         }
     }
 }

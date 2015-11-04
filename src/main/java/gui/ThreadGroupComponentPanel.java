@@ -1,8 +1,7 @@
 package gui;
 
-import data.Thread;
-import data.ThreadGroup;
 import data.*;
+import data.ThreadGroup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,9 +12,9 @@ public class ThreadGroupComponentPanel extends TablePanel
 {
     private final ThreadGroup o_threadGroup;
     
-    private final JButton o_addThreadButton = new JButton("Add Thread");
+    private final JButton o_addItemButton = new JButton("Add Item");
     
-    private final JButton o_addGroupButton = new JButton("Add Thread Group");
+    private final JButton o_addGroupButton = new JButton("Add Thread");
     
     private final JButton o_removeButton = new JButton("Remove Selected");
     
@@ -31,14 +30,16 @@ public class ThreadGroupComponentPanel extends TablePanel
         
         fixColumnWidth(0, GUIConstants.s_creationDateWidth);
         fixColumnWidth(1, GUIConstants.s_typeWidth);
-        
-        o_addThreadButton.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e)
-            {
-                addNewThread();
-            }            
-        }
-        );
+        fixColumnWidth(3, GUIConstants.s_statsWidth);
+        fixColumnWidth(4, GUIConstants.s_statsWidth);
+        fixColumnWidth(5, GUIConstants.s_statsWidth);
+
+        o_addItemButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addItem();
+			}
+		}
+		);
         
         o_addGroupButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e)
@@ -74,7 +75,7 @@ public class ThreadGroupComponentPanel extends TablePanel
         });
         
         JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
-        x_buttonPanel.add(o_addThreadButton);
+        x_buttonPanel.add(o_addItemButton);
         x_buttonPanel.add(o_addGroupButton);
         x_buttonPanel.add(o_removeButton);
         x_buttonPanel.add(o_openDocFolderButton);
@@ -83,18 +84,13 @@ public class ThreadGroupComponentPanel extends TablePanel
         
         add(x_buttonPanel, BorderLayout.SOUTH);
     }
-    
-    private void addNewThread()
-    {
-        String x_name = JOptionPane.showInputDialog(this, "Enter Thread Name");
-        
-        if(x_name != null)
-        {
-            Thread x_thread = new Thread(new Date(), true, x_name, null, null);
-            o_threadGroup.addThreadGroupItem(x_thread);
-            WindowManager.getInstance().openComponentWindow(x_thread, true);
-        }
-    }
+
+	protected void addItem()
+	{
+		Item x_item = new Item();
+		o_threadGroup.addThreadGroupItem(x_item);
+		WindowManager.getInstance().openComponentWindow(x_item, true, 0);
+	}
     
     private void addNewThreadGroup()
     {
@@ -104,7 +100,7 @@ public class ThreadGroupComponentPanel extends TablePanel
         {
             ThreadGroup x_threadGroup = new ThreadGroup(new Date(), true, x_name, null, null);
             o_threadGroup.addThreadGroupItem(x_threadGroup);
-            WindowManager.getInstance().openComponentWindow(x_threadGroup, true);
+            WindowManager.getInstance().openComponentWindow(x_threadGroup, true, 0);
         }
     }
     
@@ -114,27 +110,27 @@ public class ThreadGroupComponentPanel extends TablePanel
         
         if(x_index != -1)
         {
-            ThreadGroupItem x_item = o_threadGroup.getThreadGroupItem(x_index);
-            String x_message = "Remove Thread" + ((x_item instanceof Thread ? " " : "Group ") + "'" + x_item.getText() + "' ?");
+            ThreadGroupItem x_groupItem = o_threadGroup.getThreadGroupItem(x_index);
+            String x_message = "Remove " + x_groupItem.getType() + " '" + x_groupItem.getText() + "' ?";
             
             if(JOptionPane.showConfirmDialog(null, x_message) == JOptionPane.YES_OPTION)
             {
-                WindowManager.getInstance().closeComponentWindow(x_item);
-                o_threadGroup.removeThreadGroupItem(x_item);
+                WindowManager.getInstance().closeComponentWindow(x_groupItem);
+                o_threadGroup.removeThreadGroupItem(x_groupItem);
             }
         }
     }
     
-    private void showComponent(int p_index)
+    private void showComponent(int p_col, int p_row)
     {
-        if(p_index != -1)
+        if(p_row != -1)
         {
-            WindowManager.getInstance().openComponentWindow(o_threadGroup.getThreadGroupItem(p_index), false);
+			WindowManager.getInstance().openComponentWindow(o_threadGroup.getThreadGroupItem(p_row), false, p_col > 2 ? p_col - 2 : 0);
         }
     }
     
     void tableRowDoubleClicked(int col, int row)
     {
-        showComponent(row);
+        showComponent(col, row);
     }
 }

@@ -1,7 +1,6 @@
 package gui;
 
 import data.*;
-import data.Thread;
 import data.ThreadGroup;
 
 import javax.swing.event.TreeModelListener;
@@ -30,11 +29,6 @@ public class ThreadGroupTreeModel implements TreeModel, Observer
         if(parent instanceof ThreadGroup)
         {
             return ((ThreadGroup)parent).getThreadGroupItemCount();
-        }
-        
-        if(parent instanceof Thread)
-        {
-            return ((Thread)parent).getItemCount();
         }
         
         if(parent instanceof Item)
@@ -67,12 +61,7 @@ public class ThreadGroupTreeModel implements TreeModel, Observer
             return ((ThreadGroup)parent).getThreadGroupItem(index);
         }
         
-        if(parent instanceof Thread)
-        {
-            return ((Thread)parent).getItem(index);
-        }
-
-        throw new IllegalStateException("Asking about invalid parent: " + parent); 
+        throw new IllegalStateException("Asking about invalid parent: " + parent);
     }
 
     public int getIndexOfChild(Object parent, Object child)
@@ -84,19 +73,6 @@ public class ThreadGroupTreeModel implements TreeModel, Observer
             for(int i = 0; i < x_threadGroup.getThreadGroupItemCount(); i++)
             {
                 if(x_threadGroup.getThreadGroupItem(i) == child)
-                {
-                    return i;
-                }
-            }
-        }
-        
-        if(parent instanceof Thread)
-        {
-            Thread x_thread = (Thread) parent;
-            
-            for(int i = 0; i < x_thread.getItemCount(); i++)
-            {
-                if(x_thread.getItem(i) == child)
                 {
                     return i;
                 }

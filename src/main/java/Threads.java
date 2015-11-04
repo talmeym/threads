@@ -14,7 +14,7 @@ public class Threads
         TimeUpdater.getInstance().start();
 		final String filePath = args.length > 0 ? args[0] : "threads.xml";
 		final ThreadGroup x_topThreadGroup = args.length > 0 ? Loader.loadDocument(filePath) : new ThreadGroup(new Date(), true, "Welcome to Threads", null, null);
-        Window x_window = WindowManager.getInstance().openComponentWindow(x_topThreadGroup, false);
+        Window x_window = WindowManager.getInstance().openComponentWindow(x_topThreadGroup, false, 0);
         
         x_window.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent we)

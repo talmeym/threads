@@ -29,4 +29,6 @@ public abstract class ThreadGroupItem extends CollectionComponent
         o_docFolder = p_docFolder;
         changed();
     }
+
+	public abstract String getType();
 }

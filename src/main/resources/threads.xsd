@@ -15,6 +15,7 @@
 					<xs:choice minOccurs="0" maxOccurs="unbounded">
 						<xs:element name="thread" type="thread" minOccurs="0"/>
 						<xs:element name="thread_group" type="thread_group" minOccurs="0"/>
+						<xs:element name="item" type="item" minOccurs="0"/>
 					</xs:choice>
 					<xs:element name="doc_folder" minOccurs="0">
 						<xs:simpleType>
@@ -47,7 +48,7 @@
 		<xs:complexContent>
 			<xs:extension base="component">
 				<xs:sequence>
-					<xs:element name="due_dt" type="xs:dateTime"/>
+					<xs:element name="due_dt" type="xs:dateTime" minOccurs="0"/>
 					<xs:element name="reminder" type="reminder" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>

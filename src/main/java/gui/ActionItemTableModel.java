@@ -26,7 +26,7 @@ class ActionItemTableModel extends ComponentTableModel
             return 0;
         }
         
-        o_actionItems = ThreadGroupHelper.getActionItems(x_threadGroup);
+        o_actionItems = ThreadGroupHelper.getAllActiveActions(x_threadGroup);
         
         return o_actionItems.size();
     }
@@ -43,15 +43,15 @@ class ActionItemTableModel extends ComponentTableModel
 
     public Object getValueAt(int row, int col)
     {
-        Item x_actionItem = (Item) o_actionItems.get(row); 
+        Item x_item = (Item) o_actionItems.get(row);
         
         switch(col)
         {
-        case 0: return x_actionItem.getCreationDate(); 
-        case 1: return x_actionItem.getThread().getText();
-        case 2: return x_actionItem.getText();
-        case 3: return x_actionItem.getDueDate();
-        default: return DateHelper.getDateStatus(x_actionItem.getDueDate());
+        case 0: return x_item.getCreationDate();
+        case 1: return x_item.getThreadGroup().getText();
+        case 2: return x_item.getText();
+        case 3: return x_item.getDueDate();
+        default: return DateHelper.getDateStatus(x_item.getDueDate());
         }
     }
 }

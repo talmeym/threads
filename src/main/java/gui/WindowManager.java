@@ -2,7 +2,6 @@ package gui;
 
 import data.Component;
 import data.*;
-import data.Thread;
 import data.ThreadGroup;
 import util.GUIUtil;
 
@@ -30,11 +29,11 @@ public class WindowManager extends WindowAdapter
         o_windowComponents = new HashMap();
     }
     
-    public Window openComponentWindow(Component p_component, boolean p_new)
+    public Window openComponentWindow(Component p_component, boolean p_new, int tabIndex)
     {
         if(!o_componentWindows.containsKey(p_component))
         {
-            JPanel x_panel = getComponentPanel(p_component, p_new);
+            JPanel x_panel = getComponentPanel(p_component, p_new, tabIndex);
             JFrame x_window = new JFrame();
             sizeWindow(p_component, x_window);
             x_window.setContentPane(x_panel);
@@ -84,10 +83,6 @@ public class WindowManager extends WindowAdapter
         {
             x_title.append("ThreadGroup - ");
         }
-        else if(p_component instanceof Thread)
-        {
-            x_title.append("Thread - ");
-        }     
         else if(p_component instanceof Item)
         {
             x_title.append("Item - ");
@@ -112,10 +107,6 @@ public class WindowManager extends WindowAdapter
         {
             p_window.setSize(GUIConstants.s_threadGroupWindowSize);
         }
-        else if(p_component instanceof Thread)
-        {
-            p_window.setSize(GUIConstants.s_threadWindowSize);
-        }            
         else if(p_component instanceof Item)
         {
             p_window.setSize(GUIConstants.s_itemWindowSize);
@@ -131,16 +122,12 @@ public class WindowManager extends WindowAdapter
 
     }
     
-    private JPanel getComponentPanel(Component p_component, boolean p_new)
+    private JPanel getComponentPanel(Component p_component, boolean p_new, int tabIndex)
     {
         if(p_component instanceof ThreadGroup)
         {
-            return new ThreadGroupPanel((ThreadGroup)p_component);
+            return new ThreadGroupPanel((ThreadGroup)p_component, tabIndex);
         }
-        else if(p_component instanceof Thread)
-        {
-            return new ThreadPanel((Thread)p_component);
-        }            
         else if(p_component instanceof Item)
         {
             return new ItemPanel((Item)p_component, p_new);
