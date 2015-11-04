@@ -13,7 +13,7 @@ class ReminderTableModel extends ComponentTableModel
     ReminderTableModel(ThreadGroup p_threadGroup)
     {
         super(p_threadGroup, 
-              new String[] {"Creation Date", "Thread", "Reminder", "Due Date", "Due"});
+              new String[] {"Creation Date", "Thread", "Name", "Due Date", "Due"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
     

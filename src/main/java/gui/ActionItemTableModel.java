@@ -13,7 +13,7 @@ class ActionItemTableModel extends ComponentTableModel
     ActionItemTableModel(ThreadGroup p_threadGroup)
     {
         super(p_threadGroup, 
-              new String[] {"Creation Date", "Thread", "Item", "Due Date", "Due"});
+              new String[] {"Creation Date", "Thread", "Name", "Due Date", "Due"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
     
@@ -26,7 +26,7 @@ class ActionItemTableModel extends ComponentTableModel
             return 0;
         }
         
-        o_actionItems = ThreadGroupHelper.getActionItems((ThreadGroup)x_threadGroup);
+        o_actionItems = ThreadGroupHelper.getActionItems(x_threadGroup);
         
         return o_actionItems.size();
     }

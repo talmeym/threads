@@ -13,7 +13,7 @@ class UpdateItemTableModel extends ComponentTableModel
     UpdateItemTableModel (ThreadGroup p_threadGroup)
     {
         super(p_threadGroup,
-              new String[]{"Creation Date", "Thread", "Item", "Updated"});
+              new String[]{"Creation Date", "Thread", "Name", "Updated"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
     
@@ -26,7 +26,7 @@ class UpdateItemTableModel extends ComponentTableModel
             return 0;
         }
 
-        o_updateItems = ThreadGroupHelper.getLatestUpdateItems((ThreadGroup)x_threadGroup);
+        o_updateItems = ThreadGroupHelper.getLatestUpdateItems(x_threadGroup);
         
         return o_updateItems.size();
     }
