@@ -67,7 +67,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 		}
 		else if(x_dueDate.before(x_eightPmToday))
 		{
-			x_component.setBackground(new Color(255, 193, 90));
+			x_component.setBackground(new Color(255, 203, 100));
 		}
 		else if(x_dueDate.before(x_eightPmTomorrow))
 		{
