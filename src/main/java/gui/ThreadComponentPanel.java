@@ -94,7 +94,7 @@ public class ThreadComponentPanel extends TablePanel
     
     private void addNewThread()
     {
-        String x_name = JOptionPane.showInputDialog(this, "Enter Thread Group Name");
+        String x_name = JOptionPane.showInputDialog(this, "Enter Thread Name");
         
         if(x_name != null)
         {

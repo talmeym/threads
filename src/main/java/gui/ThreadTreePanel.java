@@ -26,11 +26,11 @@ public class ThreadTreePanel extends JPanel implements TreeSelectionListener, Ac
         o_threadFromTree = new JTree(x_model);
         o_threadFromTree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         o_threadFromTree.addTreeSelectionListener(this);
-        
+
         o_threadToTree = new JTree(x_model);
         o_threadToTree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         o_threadToTree.addTreeSelectionListener(this);
-        
+
         o_moveButton.setEnabled(false);
         o_moveButton.addActionListener(this);
         
@@ -52,21 +52,9 @@ public class ThreadTreePanel extends JPanel implements TreeSelectionListener, Ac
         if(o_threadFromTree.getSelectionPath() != null &&
            o_threadToTree.getSelectionPath() != null)
         {
-            Object x_fromObj = o_threadFromTree.getSelectionPath().getLastPathComponent();
             Object x_toObj = o_threadToTree.getSelectionPath().getLastPathComponent();
-            o_moveButton.setEnabled(moveValid(x_fromObj, x_toObj));
+            o_moveButton.setEnabled(x_toObj instanceof Thread);
         }
-    }
-
-    private boolean moveValid(Object p_obj1, Object p_obj2)
-    {
-        
-        if(p_obj1 == p_obj2)
-        {
-            return false;
-        }
-        
-        return ((p_obj1 instanceof Thread && p_obj2 instanceof Thread));
     }
 
     public void actionPerformed(ActionEvent e)
