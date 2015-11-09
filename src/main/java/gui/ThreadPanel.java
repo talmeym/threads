@@ -50,11 +50,11 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
     {
         if(ThreadHelper.getAllReminders(o_thread).size() > 0)
         {
-            x_tabs.setBackgroundAt(5, Color.RED);
+            x_tabs.setBackgroundAt(4, Color.RED);
         }
         else
         {
-            x_tabs.setBackgroundAt(5, x_tabs.getBackgroundAt(0));
+            x_tabs.setBackgroundAt(4, x_tabs.getBackgroundAt(0));
         }
     }
 }

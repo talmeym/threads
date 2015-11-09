@@ -54,7 +54,7 @@ class CellRenderer extends DefaultTableCellRenderer
             
             if(!x_item.isActive())
             {
-                x_component.setBackground(Color.LIGHT_GRAY);
+                x_component.setBackground(new Color(220,220,220));
             }
             else
             {
@@ -84,26 +84,5 @@ class CellRenderer extends DefaultTableCellRenderer
 		}
 
         return x_component;
-    }
-    
-    private Date getEightPmToday()
-    {
-        Calendar x_calendar = Calendar.getInstance();
-        x_calendar.set(Calendar.HOUR_OF_DAY, 20);
-        x_calendar.set(Calendar.MINUTE, 0);
-        x_calendar.set(Calendar.SECOND, 0);
-        x_calendar.set(Calendar.MILLISECOND, 0);
-        return x_calendar.getTime();
-    }
-    
-    private Date getEightPmTomorrow()
-    {
-        Calendar x_calendar = Calendar.getInstance();
-        x_calendar.set(Calendar.HOUR_OF_DAY, 20);
-        x_calendar.set(Calendar.MINUTE, 0);
-        x_calendar.set(Calendar.SECOND, 0);
-        x_calendar.set(Calendar.MILLISECOND, 0);
-        x_calendar.roll(Calendar.DATE, true);
-        return x_calendar.getTime();
     }
 }

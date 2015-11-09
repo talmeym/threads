@@ -58,18 +58,18 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 	private void setColourForTime(Component x_component, Item x_item) {
 		Date x_dueDate = x_item.getDueDate();
 		Date x_now = new Date();
-		Date x_eightPmToday = getEightPmToday();
-		Date x_eightPmTomorrow = getEightPmTomorrow();
+		Date x_lastThingToday = getLastThingToday();
+		Date x_lastThingTomorrow = getLastThingTomorrow();
 
 		if(x_now.after(x_dueDate))
 		{
 			x_component.setBackground(new Color(255, 155, 155));
 		}
-		else if(x_dueDate.before(x_eightPmToday))
+		else if(x_dueDate.before(x_lastThingToday))
 		{
 			x_component.setBackground(new Color(255, 203, 100));
 		}
-		else if(x_dueDate.before(x_eightPmTomorrow))
+		else if(x_dueDate.before(x_lastThingTomorrow))
 		{
 			x_component.setBackground(new Color(255, 255, 155));
 		}
@@ -83,24 +83,24 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 		}
 	}
 
-	private Date getEightPmToday()
-    {
-        Calendar x_calendar = Calendar.getInstance();
-        x_calendar.set(Calendar.HOUR_OF_DAY, 20);
-        x_calendar.set(Calendar.MINUTE, 0);
-        x_calendar.set(Calendar.SECOND, 0);
-        x_calendar.set(Calendar.MILLISECOND, 0);
-        return x_calendar.getTime();
-    }
-    
-    private Date getEightPmTomorrow()
-    {
-        Calendar x_calendar = Calendar.getInstance();
-        x_calendar.set(Calendar.HOUR_OF_DAY, 20);
-        x_calendar.set(Calendar.MINUTE, 0);
-        x_calendar.set(Calendar.SECOND, 0);
-        x_calendar.set(Calendar.MILLISECOND, 0);
-        x_calendar.roll(Calendar.DATE, true);
-        return x_calendar.getTime();
-    }
+	private Date getLastThingToday()
+	{
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(Calendar.HOUR_OF_DAY, 23);
+		x_calendar.set(Calendar.MINUTE, 59);
+		x_calendar.set(Calendar.SECOND, 59);
+		x_calendar.set(Calendar.MILLISECOND, 999);
+		return x_calendar.getTime();
+	}
+
+	private Date getLastThingTomorrow()
+	{
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(Calendar.HOUR_OF_DAY, 23);
+		x_calendar.set(Calendar.MINUTE, 59);
+		x_calendar.set(Calendar.SECOND, 59);
+		x_calendar.set(Calendar.MILLISECOND, 999);
+		x_calendar.roll(Calendar.DATE, true);
+		return x_calendar.getTime();
+	}
 }
