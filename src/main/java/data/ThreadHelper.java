@@ -10,11 +10,7 @@ public class ThreadHelper
     {
         List x_result = new ArrayList();
 
-		Item latestUpdate = getLatestUpdate(p_thread);
-
-		if(latestUpdate != null) {
-			x_result.add(latestUpdate);
-		}
+		x_result.addAll(getUpdateItems(p_thread));
 
 		ThreadItem[] x_groupItems = p_thread.getThreadItems();
         
@@ -87,11 +83,11 @@ public class ThreadHelper
         List x_result = new ArrayList();
 		x_result.addAll(getDueReminders(p_thread));
         ThreadItem[] x_groupItems = p_thread.getThreadItems();
-        
+
         for(int i = 0; i < x_groupItems.length; i++)
         {
             ThreadItem x_groupItem = x_groupItems[i];
-            
+
             if(x_groupItem.isActive())
             {
                 if(x_groupItem instanceof Thread)
@@ -100,29 +96,10 @@ public class ThreadHelper
                 }
             }
         }
-        
-        Collections.sort(x_result, new DueDateComparator());        
+
+        Collections.sort(x_result, new DueDateComparator());
         return x_result;
     }
-
-	static Item getLatestUpdate(Thread p_thread)
-	{
-		for(int i = 0; i < p_thread.getThreadItemCount(); i++)
-		{
-			ThreadItem x_groupItem = p_thread.getThreadItem(i);
-
-			if(x_groupItem instanceof Item) {
-				Item x_item = (Item) x_groupItem;
-
-				if(x_item.isActive() && x_item.getDueDate() == null)
-				{
-					return x_item;
-				}
-			}
-		}
-
-		return null;
-	}
 
 	public static List getUpdateItems(Thread p_thread)
 	{
