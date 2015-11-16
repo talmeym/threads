@@ -11,30 +11,34 @@ import java.util.*;
 public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
 {
 	private final Thread o_thread;
-    private final JTabbedPane x_tabs;
+    private final JTabbedPane o_tabs;
     
     public ThreadPanel(Thread p_thread, int tabIndex)
     {
         super(new BorderLayout());
         o_thread = p_thread;
         
-        x_tabs = new JTabbedPane();
-        x_tabs.addTab("Components", new ThreadComponentPanel(p_thread));
-        x_tabs.addTab("Threads", new ThreadThreadPanel(p_thread));
-        x_tabs.addTab("Updates", new ThreadUpdatePanel(p_thread));
-        x_tabs.addTab("Actions", new ThreadActionPanel(p_thread));
-        x_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));
-        x_tabs.addTab("Tree", new ThreadTreePanel(p_thread));
+        o_tabs = new JTabbedPane();
+        o_tabs.addTab("Components", new ThreadComponentPanel(p_thread));
+        o_tabs.addTab("Threads", new ThreadThreadPanel(p_thread));
+        o_tabs.addTab("Updates", new ThreadUpdatePanel(p_thread));
+        o_tabs.addTab("Actions", new ThreadActionPanel(p_thread));
+        o_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));
+        o_tabs.addTab("Tree", new ThreadTreePanel(p_thread));
         
         add(new ComponentInfoPanel(p_thread), BorderLayout.NORTH);
-        add(x_tabs, BorderLayout.CENTER);
+        add(o_tabs, BorderLayout.CENTER);
 
-		x_tabs.setSelectedIndex(tabIndex);
+		o_tabs.setSelectedIndex(tabIndex);
 
         o_thread.addObserver(this);
         TimeUpdater.getInstance().addTimeUpdateListener(this);
         setReminderTabBackground();
     }
+
+	public void setTabIndex(int tabIndex) {
+		o_tabs.setSelectedIndex(tabIndex);
+	}
 
     public void update(Observable o, Object arg)
     {
@@ -48,13 +52,13 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
     
     private void setReminderTabBackground()
     {
-        if(ThreadHelper.getAllReminders(o_thread).size() > 0)
+        if(ThreadHelper.getAllDueReminders(o_thread).size() > 0)
         {
-            x_tabs.setBackgroundAt(4, Color.RED);
+            o_tabs.setBackgroundAt(4, Color.RED);
         }
         else
         {
-            x_tabs.setBackgroundAt(4, x_tabs.getBackgroundAt(0));
+            o_tabs.setBackgroundAt(4, o_tabs.getBackgroundAt(0));
         }
     }
 }

@@ -26,7 +26,7 @@ class ReminderTableModel extends ComponentTableModel
             return 0;
         }
         
-        o_dueReminders = ThreadHelper.getAllReminders(x_thread);
+        o_dueReminders = ThreadHelper.getAllDueReminders(x_thread);
         
         return o_dueReminders.size();
     }

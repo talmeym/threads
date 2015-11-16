@@ -1,6 +1,6 @@
 package util;
 
-import java.util.Date;
+import java.util.*;
 
 public class DateHelper
 {
@@ -32,7 +32,7 @@ public class DateHelper
             x_days = x_days % 7;
         }
         
-        x_hours = (int) ((x_time / (1000 * 60 * 60)) % 24);        
+        x_hours = (int) ((x_time / (1000 * 60 * 60)) % 24);
         x_mins = (int) ((x_time / (1000 * 60)) % 60);
         
         x_mins++;
@@ -49,7 +49,7 @@ public class DateHelper
             x_buffer.append(x_days + "D ");
         }
 
-        if(x_hours > 0 && x_weeks == 0 && x_days < 5)
+        if(x_hours > 0 && x_weeks == 0 && x_days < 7)
         {
             x_buffer.append(x_hours + "H ");
         }

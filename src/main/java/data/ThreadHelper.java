@@ -82,10 +82,10 @@ public class ThreadHelper
         return x_result;
     }
     
-    public static List getAllReminders(Thread p_thread)
+    public static List getAllDueReminders(Thread p_thread)
     {
         List x_result = new ArrayList();
-		x_result.addAll(getReminders(p_thread));
+		x_result.addAll(getDueReminders(p_thread));
         ThreadItem[] x_groupItems = p_thread.getThreadItems();
         
         for(int i = 0; i < x_groupItems.length; i++)
@@ -96,7 +96,7 @@ public class ThreadHelper
             {
                 if(x_groupItem instanceof Thread)
                 {
-                    x_result.addAll(ThreadHelper.getAllReminders((Thread) x_groupItem));
+                    x_result.addAll(ThreadHelper.getAllDueReminders((Thread) x_groupItem));
                 }
             }
         }
@@ -166,7 +166,7 @@ public class ThreadHelper
 		return x_actionItems;
 	}
 
-	public static List getReminders(Thread p_thread)
+	public static List getDueReminders(Thread p_thread)
 	{
 		List x_reminders = new ArrayList();
 
@@ -179,7 +179,7 @@ public class ThreadHelper
 
 				if(x_item.isActive())
 				{
-					x_reminders.addAll(ItemHelper.getReminder(x_item));
+					x_reminders.addAll(ItemHelper.getDueReminders(x_item));
 				}
 			}
 		}

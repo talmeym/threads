@@ -29,11 +29,11 @@ public class WindowManager extends WindowAdapter
         o_windowComponents = new HashMap();
     }
     
-    public Window openComponentWindow(Component p_component, boolean p_new, int tabIndex)
+    public Window openComponentWindow(Component p_component, boolean p_new, int p_tabIndex)
     {
         if(!o_componentWindows.containsKey(p_component))
         {
-            JPanel x_panel = getComponentPanel(p_component, p_new, tabIndex);
+            JPanel x_panel = getComponentPanel(p_component, p_new, p_tabIndex);
             JFrame x_window = new JFrame();
             sizeWindow(p_component, x_window);
             x_window.setContentPane(x_panel);
@@ -47,9 +47,15 @@ public class WindowManager extends WindowAdapter
         }
         else
         {
-            Window x_window = (Window) o_componentWindows.get(p_component);
+            JFrame x_window = (JFrame) o_componentWindows.get(p_component);
             x_window.setVisible(false);
-            x_window.setVisible(true);
+			JPanel panel = (JPanel) x_window.getContentPane();
+
+			if(panel instanceof ThreadPanel) {
+				((ThreadPanel)panel).setTabIndex(p_tabIndex);
+			}
+
+			x_window.setVisible(true);
             return x_window;
         }
     }
