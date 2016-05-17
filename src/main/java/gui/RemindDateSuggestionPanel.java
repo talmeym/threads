@@ -12,7 +12,7 @@ public class RemindDateSuggestionPanel extends JPanel
 {
     private final Reminder o_reminder;
     
-    private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
     
     private static final DateItem[] s_weekItems;
     
