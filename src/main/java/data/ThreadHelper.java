@@ -27,7 +27,7 @@ public class ThreadHelper
             }
         }
 
-        Collections.sort(x_result, new CreationDateComparator());        
+        Collections.sort(x_result, new CreationDateComparator());
         return x_result;
     }
     
