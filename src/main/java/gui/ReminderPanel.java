@@ -58,7 +58,10 @@ public class ReminderPanel extends JPanel implements ActionListener, DocumentLis
         
         RemindDateSuggestionPanel x_dateSugPanel = new RemindDateSuggestionPanel(o_reminder, o_remindDateField);
         x_dateSugPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-        
+
+		x_remindDatePanel.add(x_dateSugPanel, BorderLayout.EAST);
+		x_remindDatePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
         JPanel x_panel = new JPanel(new BorderLayout());
         x_panel.add(o_compInfoPanel, BorderLayout.NORTH);
         x_panel.add(x_remindDatePanel, BorderLayout.CENTER);
@@ -73,7 +76,6 @@ public class ReminderPanel extends JPanel implements ActionListener, DocumentLis
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
         
         add(x_panel, BorderLayout.NORTH);
-        add(x_dateSugPanel, BorderLayout.CENTER);
         add(x_buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -103,13 +105,13 @@ public class ReminderPanel extends JPanel implements ActionListener, DocumentLis
             {
                 if(checkFields())
                 {
-                    JTextField x_textFields = o_compInfoPanel.getTextField();
+                    JTextField x_textField = o_compInfoPanel.getTextField();
                     
-                    String x_text = x_textFields.getText();
+                    String x_text = x_textField.getText();
                     
                     if(!x_text.equals(o_reminder.getText()))
                     {
-                        o_reminder.setText(x_textFields.getText());
+                        o_reminder.setText(x_textField.getText());
                     }
                     
                     Date x_thisDate = o_dateFormat.parse(o_remindDateField.getText());

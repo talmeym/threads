@@ -44,7 +44,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
         o_dueDateField.getDocument().addDocumentListener(this);
 
         o_saveButton.setEnabled(false);
-        
+
         if(o_item.getDueDate() != null)
         {
             o_dueDateField.setText(o_dateFormat.format(o_item.getDueDate()));
@@ -80,8 +80,10 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
         JPanel x_dueDatePanel = new JPanel(new BorderLayout());
         x_dueDatePanel.add(x_dueDateLabelPanel, BorderLayout.WEST);
         x_dueDatePanel.add(o_dueDateField, BorderLayout.CENTER);
+
         DateSuggestionPanel x_dateSugPanel = new DateSuggestionPanel(o_dueDateField);
         x_dateSugPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+
         x_dueDatePanel.add(x_dateSugPanel, BorderLayout.EAST);
         x_dueDatePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
@@ -149,14 +151,14 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
             {
                 if(checkFields())
                 {
-                    JTextField x_textFields = o_compInfoPanel.getTextField();
+                    JTextField x_textField = o_compInfoPanel.getTextField();
                     
-                    String x_text = x_textFields.getText();
+                    String x_text = x_textField.getText();
                     String x_due = o_dueDateField.getText(); 
                     
                     if(!x_text.equals(o_item.getText()))
                     {
-                        o_item.setText(x_textFields.getText());
+                        o_item.setText(x_textField.getText());
                     }
                     
                     if(x_due != null && x_due.length() > 0)
@@ -185,12 +187,13 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
                     
                     WindowManager.getInstance().closeComponentWindow(o_item);
                     
-                    if(o_new && o_dueDateField.getText().length() == 0)
+                    if(o_dueDateField.getText().length() == 0)
                     {
-                        if(JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION)
+						Thread x_thread = o_item.getThread();
+
+                        if(ThreadHelper.getActiveUpdates(x_thread).size() > 1 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION)
                         {
-                            Thread x_thread = o_item.getThread();
-                            
+
                             for(int i = 0; i < x_thread.getThreadItemCount(); i++)
                             {
                                 ThreadItem x_groupItem = x_thread.getThreadItem(i);
@@ -286,11 +289,15 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
             WindowManager.getInstance().openComponentWindow(o_item.getReminder(p_index), false, 0);
         }
     }
-    
-    void tableRowClicked(int col, int row)
+
+	@Override
+	void tableRowClicked(int col, int row) {
+		//do nothing
+	}
+
+	void tableRowDoubleClicked(int col, int row)
     {
 		switch(col) {
-			case 0: break;
 			default: showReminder(row);
 		}
     }

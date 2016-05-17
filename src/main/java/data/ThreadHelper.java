@@ -10,7 +10,7 @@ public class ThreadHelper
     {
         List x_result = new ArrayList();
 
-		x_result.addAll(getUpdateItems(p_thread));
+		x_result.addAll(getActiveUpdates(p_thread));
 
 		ThreadItem[] x_groupItems = p_thread.getThreadItems();
         
@@ -34,7 +34,7 @@ public class ThreadHelper
     public static List getAllActiveActions(Thread p_thread)
     {
         List x_result = new ArrayList();
-		x_result.addAll(getActionItems(p_thread));
+		x_result.addAll(getActiveActions(p_thread));
 
 		ThreadItem[] x_groupItems = p_thread.getThreadItems();
         
@@ -101,7 +101,7 @@ public class ThreadHelper
         return x_result;
     }
 
-	public static List getUpdateItems(Thread p_thread)
+	public static List getActiveUpdates(Thread p_thread)
 	{
 		List x_updateItems = new ArrayList();
 		for(int i = 0; i < p_thread.getThreadItemCount(); i++)
@@ -121,7 +121,7 @@ public class ThreadHelper
 		return x_updateItems;
 	}
 
-	public static List getActionItems(Thread p_thread)
+	public static List getActiveActions(Thread p_thread)
 	{
 		List x_actionItems = new ArrayList();
 

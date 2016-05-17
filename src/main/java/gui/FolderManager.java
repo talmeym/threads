@@ -4,27 +4,24 @@ import data.ThreadItem;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 import java.io.*;
 
 public class FolderManager
 {
-    private static final String s_explorerCommand = "c:\\WINDOWS\\explorer.exe";
-    
     public static void openDocFolder(ThreadItem p_item)
     {
         if(p_item.getDocFolder() != null)
         {
-            Runtime x_runTime = Runtime.getRuntime();
-            
-            String p_folderName = "\"" + p_item.getDocFolder().getAbsolutePath() + "\"";
-            
-            try
+			try
             {
-                x_runTime.exec(s_explorerCommand + " " + p_folderName);
+				if (Desktop.isDesktopSupported()) {
+					Desktop.getDesktop().open(new File(p_item.getDocFolder().getAbsolutePath()));
+				}
             }
             catch(IOException ioe)
             {
-                System.err.println("Error running explorer: " + ioe);
+                System.err.println("Error opening folder: " + ioe);
             }
         }
     }

@@ -22,5 +22,5 @@ class GUIConstants
 
     public static final Dimension s_itemWindowSize = new Dimension(700, 370);
     
-    public static final Dimension s_reminderWindowSize = new Dimension(500, 168);
+    public static final Dimension s_reminderWindowSize = new Dimension(720, 150);
 }

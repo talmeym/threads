@@ -22,8 +22,9 @@ public class ThreadReminderPanel extends TablePanel
         fixColumnWidth(1, GUIConstants.s_threadWidth);
         fixColumnWidth(3, GUIConstants.s_creationDateWidth);
         fixColumnWidth(4, GUIConstants.s_dateStatusWidth);
-        
-        o_dismissButton.addActionListener(new ActionListener(){
+
+		o_dismissButton.setEnabled(false);
+		o_dismissButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e)
             {
                 int x_index = getSelectedRow();
@@ -33,7 +34,7 @@ public class ThreadReminderPanel extends TablePanel
                     Reminder x_reminder = (Reminder) ThreadHelper.getAllDueReminders(o_thread).get(x_index);
                     x_reminder.setActive(false);
                 }
-            }            
+            }
         });
         
         JPanel x_panel = new JPanel(new BorderLayout());
@@ -69,12 +70,16 @@ public class ThreadReminderPanel extends TablePanel
             WindowManager.getInstance().openComponentWindow(x_reminder.getItem().getThread(), false, 0);
         }
     }
-    
-    void tableRowClicked(int col, int row)
+
+	@Override
+	void tableRowClicked(int col, int row) {
+		o_dismissButton.setEnabled(true);
+	}
+
+	void tableRowDoubleClicked(int col, int row)
     {
         switch(col)
         {
-			case 0: break;
 			case 1: showThread(row); break;
 			default: showReminder(row); break;
         }

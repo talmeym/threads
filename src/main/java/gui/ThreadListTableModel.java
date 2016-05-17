@@ -45,8 +45,8 @@ class ThreadListTableModel extends ComponentTableModel
         case 1: return x_thread.getThread().getText();
         case 2: return x_thread.getText();
         case 3: return ThreadHelper.getAllActiveThreads(x_thread).size();
-		case 4: return ThreadHelper.getUpdateItems(x_thread).size();
-		default: return ThreadHelper.getActionItems(x_thread).size();
+		case 4: return ThreadHelper.getActiveUpdates(x_thread).size();
+		default: return ThreadHelper.getActiveActions(x_thread).size();
         }
     }
 }

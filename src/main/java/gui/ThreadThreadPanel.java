@@ -39,10 +39,14 @@ class ThreadThreadPanel extends TablePanel
         }
     }
 
-    void tableRowClicked(int col, int row)
+	@Override
+	void tableRowClicked(int col, int row) {
+		//do nothing
+	}
+
+    void tableRowDoubleClicked(int col, int row)
     {
 		switch(col) {
-			case 0: break;
 			case 1: showParentThread(row); break;
 			default: showThread(col, row);
 		}

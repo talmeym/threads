@@ -3,11 +3,17 @@ package gui;
 import data.*;
 import data.Thread;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
 public class ThreadActionPanel extends TablePanel
 {
     private final Thread o_thread;
-    
-    ThreadActionPanel(Thread p_thread)
+
+	private JButton o_dismissButton = new JButton("Dismiss");
+
+	ThreadActionPanel(Thread p_thread)
     {
         super(new ActionItemTableModel(p_thread),
               new ActionCellRenderer(p_thread));
@@ -16,6 +22,26 @@ public class ThreadActionPanel extends TablePanel
         fixColumnWidth(1, GUIConstants.s_threadWidth);
         fixColumnWidth(3, GUIConstants.s_creationDateWidth);
         fixColumnWidth(4, GUIConstants.s_dateStatusWidth);
+
+		o_dismissButton.setEnabled(false);
+		o_dismissButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			{
+				int x_index = getSelectedRow();
+
+				if(x_index != -1)
+				{
+					Item x_threadItem = (Item) ThreadHelper.getAllActiveActions(o_thread).get(x_index);
+					x_threadItem.setActive(false);
+				}
+			}
+		});
+
+		JPanel x_panel = new JPanel(new BorderLayout());
+		x_panel.add(o_dismissButton, BorderLayout.CENTER);
+		x_panel.setBorder(BorderFactory.createEmptyBorder(5,0,0,0));
+
+		add(x_panel, BorderLayout.SOUTH);
     }
     
     private void showThread(int p_index)
@@ -39,11 +65,15 @@ public class ThreadActionPanel extends TablePanel
             WindowManager.getInstance().openComponentWindow(x_threadItem, false, 0);
         }
     }
-    
-    void tableRowClicked(int col, int row)
+
+	@Override
+	void tableRowClicked(int col, int row) {
+		o_dismissButton.setEnabled(true);
+	}
+
+	void tableRowDoubleClicked(int col, int row)
     {
 		switch(col) {
-			case 0: break;
 			case 1: showThread(row); break;
 			default: showItem(row);
         }

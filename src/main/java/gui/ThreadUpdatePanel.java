@@ -38,12 +38,16 @@ public class ThreadUpdatePanel extends TablePanel
             WindowManager.getInstance().openComponentWindow(x_threadItem, false, 0);
         }
     }
-    
-    void tableRowClicked(int col, int row)
+
+	@Override
+	void tableRowClicked(int col, int row) {
+		//do nothing
+	}
+
+    void tableRowDoubleClicked(int col, int row)
     {
         switch(col)
         {
-			case 0: break;
 			case 1: showThread(row); break;
 			default: showItem(row); break;
         }

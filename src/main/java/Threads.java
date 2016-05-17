@@ -5,6 +5,7 @@ import util.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.Date;
 
 public class Threads
@@ -13,7 +14,7 @@ public class Threads
     {
         TimeUpdater.getInstance().start();
 		final String filePath = args.length > 0 ? args[0] : "threads.xml";
-		final Thread x_topThread = args.length > 0 ? Loader.loadDocument(filePath) : new Thread(new Date(), true, "Welcome to Threads", null, null);
+		final Thread x_topThread = new File(filePath).exists() ? Loader.loadDocument(filePath) : new Thread(new Date(), true, "Welcome to Threads", null, null);
         Window x_window = WindowManager.getInstance().openComponentWindow(x_topThread, false, 0);
         
         x_window.addWindowListener(new WindowAdapter(){

@@ -8,13 +8,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Date;
 
-public class ThreadComponentPanel extends TablePanel
+public class ThreadContentsPanel extends TablePanel
 {
     private final Thread o_thread;
     
     private final JButton o_addItemButton = new JButton("Add Item");
     
-    private final JButton o_addGroupButton = new JButton("Add Thread");
+    private final JButton o_addThreadButton = new JButton("Add Thread");
     
     private final JButton o_removeButton = new JButton("Remove Selected");
     
@@ -22,7 +22,7 @@ public class ThreadComponentPanel extends TablePanel
     
     private final JButton o_setDocFolderButton = new JButton("Set Doc Folder");
     
-    public ThreadComponentPanel(final Thread p_thread)
+    public ThreadContentsPanel(final Thread p_thread)
     {
         super(new ComponentListTableModel(p_thread),
               new CellRenderer(p_thread));
@@ -34,6 +34,8 @@ public class ThreadComponentPanel extends TablePanel
         fixColumnWidth(4, GUIConstants.s_statsWidth);
         fixColumnWidth(5, GUIConstants.s_statsWidth);
 
+		o_removeButton.setEnabled(false);
+
         o_addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addItem();
@@ -41,13 +43,12 @@ public class ThreadComponentPanel extends TablePanel
 		}
 		);
         
-        o_addGroupButton.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e)
-            {
-                addNewThread();
-            }            
-        }
-        );
+        o_addThreadButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addNewThread();
+			}
+		}
+		);
         
         o_removeButton.addActionListener(new ActionListener(){            
             public void actionPerformed(ActionEvent e)
@@ -76,7 +77,7 @@ public class ThreadComponentPanel extends TablePanel
         
         JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
         x_buttonPanel.add(o_addItemButton);
-        x_buttonPanel.add(o_addGroupButton);
+        x_buttonPanel.add(o_addThreadButton);
         x_buttonPanel.add(o_removeButton);
         x_buttonPanel.add(o_openDocFolderButton);
         x_buttonPanel.add(o_setDocFolderButton);
@@ -128,11 +129,15 @@ public class ThreadComponentPanel extends TablePanel
 			WindowManager.getInstance().openComponentWindow(o_thread.getThreadItem(p_row), false, p_col > 2 ? p_col - 2 : 0);
         }
     }
-    
-    void tableRowClicked(int col, int row)
+
+	@Override
+	void tableRowClicked(int col, int row) {
+		o_removeButton.setEnabled(getSelectedRow() != -1);
+	}
+
+	void tableRowDoubleClicked(int col, int row)
     {
 		switch (col) {
-			case 0: break;
 			default: showComponent(col, row);
 		}
     }
