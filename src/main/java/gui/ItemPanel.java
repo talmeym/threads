@@ -21,7 +21,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
     private final ComponentInfoPanel o_compInfoPanel;    
     private final JTextField o_dueDateField = new JTextField();  
     private final JButton o_saveButton = new JButton("Save & Close");
-    private final JButton o_cancelButton = new JButton("Cancel");    
+    private final JButton o_cancelButton = new JButton("Cancel");
 
     private final JButton o_addReminderButton = new JButton("Add Reminder");
     private final JButton o_removeReminderButton = new JButton("Remove Reminder");
@@ -52,7 +52,7 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
         
         if(p_new)
         {
-            JTextField o_textField = o_compInfoPanel.getTextField(); 
+            JTextField o_textField = o_compInfoPanel.getTextField();
             o_textField.setSelectionStart(0);
             o_textField.setSelectionEnd(o_textField.getText().length());
         }
@@ -301,6 +301,4 @@ class ItemPanel extends TablePanel implements DocumentListener, ActionListener
 			default: showReminder(row);
 		}
     }
-    
-    
 }

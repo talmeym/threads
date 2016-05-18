@@ -20,8 +20,8 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
     {
         super(new BorderLayout());
         o_component = p_component;
-        
-        o_parentButton.setEnabled(o_component.getParentComponent() != null);
+
+		o_parentButton.setEnabled(o_component.getParentComponent() != null);
         o_parentButton.addActionListener(this);
         
         o_textField.setPreferredSize(new Dimension(200, 25));
@@ -32,15 +32,15 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
         o_activeCheckBox.setSelected(p_component.isActive());
         o_activeCheckBox.addActionListener(this);
         
-        JPanel x_textLabelPanel = new JPanel(new BorderLayout());
-        x_textLabelPanel.add(o_parentButton, BorderLayout.CENTER);
-        x_textLabelPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        JPanel x_parentButtonPanel = new JPanel(new BorderLayout());
+        x_parentButtonPanel.add(o_parentButton, BorderLayout.CENTER);
+        x_parentButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         
         JPanel x_activeCheckBoxPanel = new JPanel(new BorderLayout());
         x_activeCheckBoxPanel.add(o_activeCheckBox, BorderLayout.CENTER);
         x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
         
-        add(x_textLabelPanel, BorderLayout.WEST);
+        add(x_parentButtonPanel, BorderLayout.WEST);
         add(o_textField, BorderLayout.CENTER);
         add(x_activeCheckBoxPanel, BorderLayout.EAST);
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -60,7 +60,7 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
                 if(!o_textField.getText().equals(o_component.getText()))
                 {
                     o_component.setText(o_textField.getText());
-                    WindowManager.getInstance().renameWindow(o_component);
+                    WindowManager.getInstance().renameAllWindows();
                 }
             }
         }

@@ -13,7 +13,7 @@ class ReminderTableModel extends ComponentTableModel
     ReminderTableModel(Thread p_thread)
     {
         super(p_thread,
-              new String[] {"Creation Date", "Thread", "Name", "Due Date", "Due"});
+              new String[] {"Creation Date", "Item", "Name", "Due Date", "Due"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
     
@@ -48,10 +48,10 @@ class ReminderTableModel extends ComponentTableModel
         switch(col)
         {
         case 0: return x_dueReminder.getCreationDate(); 
-        case 1: return x_dueReminder.getItem().getThread().getText();
+        case 1: return x_dueReminder.getItem().getText();
         case 2: return x_dueReminder.getText();
-        case 3: return x_dueReminder.getDate();
-        default: return DateHelper.getDateStatus(x_dueReminder.getDate());
+        case 3: return x_dueReminder.getDueDate();
+        default: return DateHelper.getDateStatus(x_dueReminder.getDueDate());
         }
     }
 }

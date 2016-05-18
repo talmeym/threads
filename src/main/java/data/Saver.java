@@ -73,7 +73,7 @@ public class Saver
     {
         Element x_reminderElem = new Element(XmlConstants.s_REMINDER);
         addComponentData(x_reminderElem, p_reminder);        
-        addContent(x_reminderElem, XmlConstants.s_REM_DATE, addDateTime(p_reminder.getDate()));        
+        addContent(x_reminderElem, XmlConstants.s_REM_DATE, addDateTime(p_reminder.getDueDate()));
         return x_reminderElem;
     }
 

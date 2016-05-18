@@ -33,7 +33,8 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
 
         o_thread.addObserver(this);
         TimeUpdater.getInstance().addTimeUpdateListener(this);
-        setReminderTabBackground();
+        setActionTabBackground();
+		setReminderTabBackground();
     }
 
 	public void setTabIndex(int tabIndex) {
@@ -42,22 +43,40 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
 
     public void update(Observable o, Object arg)
     {
+        setActionTabBackground();
         setReminderTabBackground();
     }
     
     public void timeUpdate()
     {
+		setActionTabBackground();
         setReminderTabBackground();
     }
-    
+
+    private void setActionTabBackground()
+    {
+        if(ThreadHelper.getAllDueActions(o_thread).size() > 0)
+        {
+            o_tabs.setTitleAt(3, "Actions *");
+            o_tabs.setBackgroundAt(3, Color.RED);
+        }
+        else
+        {
+			o_tabs.setTitleAt(3, "Actions");
+            o_tabs.setBackgroundAt(3, o_tabs.getBackgroundAt(0));
+        }
+    }
+
     private void setReminderTabBackground()
     {
         if(ThreadHelper.getAllDueReminders(o_thread).size() > 0)
         {
+            o_tabs.setTitleAt(4, "Reminders *");
             o_tabs.setBackgroundAt(4, Color.RED);
         }
         else
         {
+			o_tabs.setTitleAt(4, "Reminders");
             o_tabs.setBackgroundAt(4, o_tabs.getBackgroundAt(0));
         }
     }

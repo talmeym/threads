@@ -21,13 +21,13 @@ public class Reminder extends Component
     {
         return (Item) getParentComponent();
     }
-    
-    public Date getDate()
+
+    public Date getDueDate()
     {
         return o_date;
     }
-    
-    public void setDate(Date p_date)
+
+    public void setDueDate(Date p_date)
     {
         o_date = p_date;
         changed();

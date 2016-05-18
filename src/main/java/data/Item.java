@@ -48,7 +48,7 @@ public class Item extends ThreadItem
     {
         return o_dueDate;
     }
-    
+
     public void setDueDate(Date p_dueDate)
     {
         o_dueDate = p_dueDate;

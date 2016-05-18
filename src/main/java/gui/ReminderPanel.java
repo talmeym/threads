@@ -37,7 +37,7 @@ public class ReminderPanel extends JPanel implements ActionListener, DocumentLis
         
         o_saveButton.setEnabled(true);
         
-        o_remindDateField.setText(o_dateFormat.format(o_reminder.getDate()));            
+        o_remindDateField.setText(o_dateFormat.format(o_reminder.getDueDate()));
         
         if(p_new)
         {
@@ -83,10 +83,8 @@ public class ReminderPanel extends JPanel implements ActionListener, DocumentLis
     {
         try
         {
-            Date x_date = o_dateFormat.parse(o_remindDateField.getText());
-
+            o_dateFormat.parse(o_remindDateField.getText());
             JTextField x_textFields = o_compInfoPanel.getTextField();
-            
             o_saveButton.setEnabled(x_textFields.getText() != null && x_textFields.getText().length() > 0);
         }
         catch(ParseException pe)
@@ -116,9 +114,9 @@ public class ReminderPanel extends JPanel implements ActionListener, DocumentLis
                     
                     Date x_thisDate = o_dateFormat.parse(o_remindDateField.getText());
                     
-                    if(!x_thisDate.equals(o_reminder.getDate()))
+                    if(!x_thisDate.equals(o_reminder.getDueDate()))
                     {
-                        o_reminder.setDate(x_thisDate);
+                        o_reminder.setDueDate(x_thisDate);
                     }
                                     
                     WindowManager.getInstance().closeComponentWindow(o_reminder);                

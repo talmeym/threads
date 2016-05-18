@@ -26,7 +26,7 @@ public class DueDateComparator implements Comparator
             Reminder x_reminder1 = (Reminder) obj1;
             Reminder x_reminder2 = (Reminder) obj2;
         
-            return x_reminder1.getDate().compareTo(x_reminder2.getDate());
+            return x_reminder1.getDueDate().compareTo(x_reminder2.getDueDate());
         }
         
         throw new IllegalArgumentException("Invalid comparison object: " + obj1);

@@ -96,24 +96,35 @@ public class WindowManager extends WindowAdapter
             x_window.setVisible(false);
         }
     }
-    
+
+	public void renameAllWindows() {
+		for(Object x_obj: o_componentWindows.keySet()) {
+			Component x_component = (Component) x_obj;
+			renameWindow(x_component);
+		}
+	}
+
     void renameWindow(Component p_component)
     {
         JFrame x_window = (JFrame) o_componentWindows.get(p_component);
         
-        StringBuffer x_title = new StringBuffer("Threads - ");
-        
-		if(p_component instanceof Item)
-        {
-            x_title.append("Item - ");
-            
-        }
-        else if(p_component instanceof Reminder)
-        {
-            x_title.append("Reminder - ");
-        }
+        StringBuffer x_title = new StringBuffer();
+		String x_componentText = p_component.getText();
 
-        x_title.append(p_component.getText());
+		List<String> x_parentNames = new ArrayList<String>();
+
+		while(p_component.getParentComponent() != null) {
+			x_parentNames.add(p_component.getParentComponent().getText());
+			p_component = p_component.getParentComponent();
+		}
+
+		for(int i = x_parentNames.size() - 1; i > -1; i--) {
+			x_title.append(x_parentNames.get(i));
+			x_title.append(" > ");
+		}
+
+		x_title.append(x_componentText);
+
         x_window.setTitle(x_title.toString());
     }
     
@@ -160,24 +171,12 @@ public class WindowManager extends WindowAdapter
     
     void positionWindow(Component p_component, Window p_window)
     {
-        Window x_parentWindow = (Window) o_componentWindows.get(p_component.getParentComponent());
-        
-        if(x_parentWindow == null && p_component.getParentComponent() != null)
-        {
-            Component x_tempComp = p_component.getParentComponent();
-            
-            while(o_componentWindows.get(x_tempComp) == null)
-            {
-                x_tempComp = x_tempComp.getParentComponent();
-            }
-            
-            x_parentWindow = (Window) o_componentWindows.get(x_tempComp);
-        }
+		Window x_parentWindow = getParentWindow(p_component);
         
         if(x_parentWindow != null)
         {
-            Point x_location = new Point(x_parentWindow.getX() + GUIConstants.s_windowOffset, 
-                                         x_parentWindow.getY() + GUIConstants.s_windowOffset);
+            Point x_location = new Point(x_parentWindow.getX() + (x_parentWindow.getWidth() / 2) - (p_window.getWidth() / 2),
+                                         x_parentWindow.getY() + (x_parentWindow.getHeight() / 2) - (p_window.getHeight() / 2));
             p_window.setLocation(x_location);
         }
         
@@ -186,6 +185,24 @@ public class WindowManager extends WindowAdapter
             GUIUtil.centreWindow(p_window);
         }        
     }
+
+	private Window getParentWindow(Component p_component) {
+		Window x_parentWindow = (Window) o_componentWindows.get(p_component.getParentComponent());
+
+		if(x_parentWindow == null && p_component.getParentComponent() != null)
+		{
+			Component x_tempComp = p_component.getParentComponent();
+
+			while(o_componentWindows.get(x_tempComp) == null)
+			{
+				x_tempComp = x_tempComp.getParentComponent();
+			}
+
+			x_parentWindow = (Window) o_componentWindows.get(x_tempComp);
+		}
+
+		return x_parentWindow;
+	}
 
 	public static interface WindowListener {
 		void lastWindowClosing();

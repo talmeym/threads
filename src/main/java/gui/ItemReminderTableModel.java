@@ -44,8 +44,8 @@ public class ItemReminderTableModel extends ComponentTableModel
         {
         case 0: return x_reminder.getCreationDate(); 
         case 1: return x_reminder.getText();
-        case 2: return x_reminder.getDate();
-        default: return DateHelper.getDateStatus(x_reminder.getDate());
+        case 2: return x_reminder.getDueDate();
+        default: return DateHelper.getDateStatus(x_reminder.getDueDate());
         }
     }    
 }
