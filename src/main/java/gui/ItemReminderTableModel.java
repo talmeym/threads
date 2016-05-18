@@ -10,7 +10,7 @@ public class ItemReminderTableModel extends ComponentTableModel
     public ItemReminderTableModel(Item p_item)
     {
         super(p_item, 
-              new String[] {"Creation Date", "Text", "Date", "Time Till Due"});
+              new String[] {"Creation Date", "Text", "Due Date", "Due"});
     }
     
     public int getRowCount()
@@ -45,7 +45,7 @@ public class ItemReminderTableModel extends ComponentTableModel
         case 0: return x_reminder.getCreationDate(); 
         case 1: return x_reminder.getText();
         case 2: return x_reminder.getDate();
-        default: return DateHelper.getDateStatus(x_reminder.getDate(), x_reminder.getItem().getDueDate());
+        default: return DateHelper.getDateStatus(x_reminder.getDate());
         }
     }    
 }
