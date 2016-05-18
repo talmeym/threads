@@ -15,17 +15,17 @@ public class Threads
         TimeUpdater.getInstance().start();
 		final String filePath = args.length > 0 ? args[0] : "threads.xml";
 		final Thread x_topThread = new File(filePath).exists() ? Loader.loadDocument(filePath) : new Thread(new Date(), true, "Welcome to Threads", null, null);
-        Window x_window = WindowManager.getInstance().openComponentWindow(x_topThread, false, 0);
-        
-        x_window.addWindowListener(new WindowAdapter(){
-            public void windowClosing(WindowEvent we)
-            {
-                TimedSaver.getInstance().stopRunning();
-                Saver.saveDocument(x_topThread, filePath);
-                System.exit(0);
-            }
-        });
-        
+
+		WindowManager.getInstance().addWindowListener(new WindowManager.WindowListener() {
+			@Override
+			public void lastWindowClosing() {
+				TimedSaver.getInstance().stopRunning();
+				Saver.saveDocument(x_topThread, filePath);
+				System.exit(0);
+			}
+		});
+
+		WindowManager.getInstance().openComponentWindow(x_topThread, true, 0);
         TimedSaver.getInstance().setThread(x_topThread, filePath);
     }
 }

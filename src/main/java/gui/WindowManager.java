@@ -9,11 +9,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 public class WindowManager extends WindowAdapter
 {
     private static final WindowManager s_INSTANCE = new WindowManager();
-    
+
+	private static final List<WindowListener> listeners = new ArrayList<WindowListener>();
+
     public static WindowManager getInstance()
     {
         return s_INSTANCE;
@@ -28,7 +31,17 @@ public class WindowManager extends WindowAdapter
         o_componentWindows = new HashMap();
         o_windowComponents = new HashMap();
     }
-    
+
+	public void addWindowListener(WindowListener listener) {
+		listeners.add(listener);
+	}
+
+	private void lastWindowClosing() {
+		for(WindowListener listener: listeners) {
+			listener.lastWindowClosing();
+		}
+	}
+
     public Window openComponentWindow(Component p_component, boolean p_new, int p_tabIndex)
     {
         if(!o_componentWindows.containsKey(p_component))
@@ -62,9 +75,14 @@ public class WindowManager extends WindowAdapter
     
     public void windowClosing(WindowEvent we)
     {
-        o_componentWindows.remove(o_windowComponents.get(we.getWindow()));
-        o_windowComponents.remove(we.getWindow());
-        we.getWindow().removeWindowListener(this);
+		Window window = we.getWindow();
+		o_componentWindows.remove(o_windowComponents.get(window));
+        o_windowComponents.remove(window);
+        window.removeWindowListener(this);
+
+		if(o_componentWindows.size() == 0) {
+			lastWindowClosing();
+		}
     }
     
     public void closeComponentWindow(Component p_component)
@@ -72,9 +90,9 @@ public class WindowManager extends WindowAdapter
         if(o_componentWindows.containsKey(p_component))
         {
             Window x_window = (Window)o_componentWindows.get(p_component);
-            x_window.removeWindowListener(this);
-            o_windowComponents.remove(o_componentWindows.get(p_component));
+            o_windowComponents.remove(x_window);
             o_componentWindows.remove(p_component);
+            x_window.removeWindowListener(this);
             x_window.setVisible(false);
         }
     }
@@ -168,4 +186,8 @@ public class WindowManager extends WindowAdapter
             GUIUtil.centreWindow(p_window);
         }        
     }
+
+	public static interface WindowListener {
+		void lastWindowClosing();
+	}
 }
