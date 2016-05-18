@@ -56,6 +56,6 @@ public class Item extends ThreadItem
     }
 
 	public String getType() {
-		return "Item";
+		return o_dueDate != null ? "Action" : "Update";
 	}
 }

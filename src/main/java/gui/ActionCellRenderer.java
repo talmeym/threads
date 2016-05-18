@@ -21,27 +21,27 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 	public static final DateFormat s_dayFormat = new SimpleDateFormat("EEEE h:mm");
 
     private final Thread o_thread;
-    
+
     ActionCellRenderer(Thread p_thread)
     {
         o_thread = p_thread;
     }
-    
+
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
     {
         Object x_value = value;
-        
+
         if(x_value instanceof Date)
         {
 			x_value = getFormattedDate((Date) x_value);
         }
-        
-        java.awt.Component x_component = 
-            super.getTableCellRendererComponent(table, 
-                                                x_value, 
-                                                isSelected, 
-                                                hasFocus, 
-                                                row, 
+
+        java.awt.Component x_component =
+            super.getTableCellRendererComponent(table,
+                                                x_value,
+                                                isSelected,
+                                                hasFocus,
+                                                row,
                                                 column);
 
 		x_component.setForeground(Color.BLACK);
