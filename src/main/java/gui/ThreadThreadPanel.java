@@ -3,23 +3,132 @@ package gui;
 import data.Thread;
 import data.*;
 
-class ThreadThreadPanel extends TablePanel
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+class ThreadThreadPanel extends TablePanel implements Observer
 {
     private final Thread o_thread;
-    
+
+	private final JButton o_addItemButton = new JButton("Add Item");
+
+	private final JButton o_addThreadButton = new JButton("Add Thread");
+
+	private final JButton o_removeButton = new JButton("Remove Selected");
+
+	private final JButton o_openDocFolderButton = new JButton("Open Doc Folder");
+
+	private final JButton o_setDocFolderButton = new JButton("Set Doc Folder");
+
     ThreadThreadPanel(Thread p_thread)
     {
         super(new ThreadListTableModel(p_thread),
               new CellRenderer(null));
         o_thread = p_thread;
+		o_thread.addObserver(this);
         fixColumnWidth(0, GUIConstants.s_creationDateWidth);
         fixColumnWidth(1, GUIConstants.s_threadWidth);
 		fixColumnWidth(3, GUIConstants.s_statsWidth);
 		fixColumnWidth(4, GUIConstants.s_statsWidth);
 		fixColumnWidth(5, GUIConstants.s_statsWidth);
 
+		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		x_buttonPanel.add(o_addItemButton);
+		x_buttonPanel.add(o_addThreadButton);
+		x_buttonPanel.add(o_removeButton);
+		x_buttonPanel.add(o_openDocFolderButton);
+		x_buttonPanel.add(o_setDocFolderButton);
+		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+
+		add(x_buttonPanel, BorderLayout.SOUTH);
+
+		o_addItemButton.setEnabled(false);
+		o_addThreadButton.setEnabled(false);
+		o_removeButton.setEnabled(false);
+		o_openDocFolderButton.setEnabled(false);
+		o_setDocFolderButton.setEnabled(false);
+
+		o_addItemButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addItem();
+			}
+		}
+		);
+
+		o_addThreadButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addNewThread();
+			}
+		}
+		);
+
+		o_removeButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			{
+				removeComponent();
+			}
+		}
+		);
+
+		o_openDocFolderButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			{
+				Thread x_thread = (Thread) ThreadHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
+				FolderManager.openDocFolder(x_thread);
+			}
+		});
+
+		o_setDocFolderButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			{
+				Thread x_thread = (Thread) ThreadHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
+				FolderManager.setDocFolder(x_thread);
+				o_openDocFolderButton.setEnabled(x_thread.getDocFolder() != null);
+			}
+		});
 	}
-    
+
+	protected void addItem()
+	{
+		Item x_item = new Item();
+		Thread x_thread = (Thread) ThreadHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
+		x_thread.addThreadItem(x_item);
+		WindowManager.getInstance().openComponentWindow(x_item, true, 0);
+	}
+
+	private void addNewThread()
+	{
+		String x_name = JOptionPane.showInputDialog(this, "Enter Thread Name");
+
+		if(x_name != null)
+		{
+			Thread x_newThread = new Thread(new Date(), true, x_name, null, null);
+			Thread x_thread = (Thread) ThreadHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
+			x_thread.addThreadItem(x_newThread);
+			WindowManager.getInstance().openComponentWindow(x_newThread, true, 0);
+		}
+	}
+
+	private void removeComponent()
+	{
+		int x_index = getSelectedRow();
+
+		if(x_index != -1)
+		{
+			ThreadItem x_threadItem = (ThreadItem) ThreadHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
+			Thread x_parent = (Thread) x_threadItem.getParentComponent();
+			String x_message = "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?";
+
+			if(JOptionPane.showConfirmDialog(null, x_message) == JOptionPane.YES_OPTION)
+			{
+				WindowManager.getInstance().closeComponentWindow(x_threadItem);
+				x_parent.removeThreadItem(x_threadItem);
+			}
+		}
+	}
+
     private void showParentThread(int p_index)
     {
         if(p_index != -1)
@@ -41,7 +150,11 @@ class ThreadThreadPanel extends TablePanel
 
 	@Override
 	void tableRowClicked(int col, int row) {
-		//do nothing
+		o_addItemButton.setEnabled(row != -1);
+		o_addThreadButton.setEnabled(row != -1);
+		o_removeButton.setEnabled(row != -1);
+		o_setDocFolderButton.setEnabled(row != -1);
+		o_openDocFolderButton.setEnabled(row != -1 && ((Thread)ThreadHelper.getAllActiveThreads(o_thread).get(row)).getDocFolder() != null);
 	}
 
     void tableRowDoubleClicked(int col, int row)
@@ -51,4 +164,9 @@ class ThreadThreadPanel extends TablePanel
 			default: showThread(col, row);
 		}
     }
+
+	@Override
+	public void update(Observable observable, Object o) {
+		tableRowClicked(-1, -1);
+	}
 }

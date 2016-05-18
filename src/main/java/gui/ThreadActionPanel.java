@@ -6,8 +6,9 @@ import data.Thread;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
-public class ThreadActionPanel extends TablePanel
+public class ThreadActionPanel extends TablePanel implements Observer
 {
     private final Thread o_thread;
 
@@ -18,6 +19,8 @@ public class ThreadActionPanel extends TablePanel
         super(new ActionItemTableModel(p_thread),
               new ActionCellRenderer(p_thread));
         o_thread = p_thread;
+		o_thread.addObserver(this);
+
         fixColumnWidth(0, GUIConstants.s_creationDateWidth);
         fixColumnWidth(1, GUIConstants.s_threadWidth);
         fixColumnWidth(3, GUIConstants.s_creationDateWidth);
@@ -68,7 +71,7 @@ public class ThreadActionPanel extends TablePanel
 
 	@Override
 	void tableRowClicked(int col, int row) {
-		o_dismissButton.setEnabled(true);
+		o_dismissButton.setEnabled(row != -1);
 	}
 
 	void tableRowDoubleClicked(int col, int row)
@@ -78,4 +81,9 @@ public class ThreadActionPanel extends TablePanel
 			default: showItem(row);
         }
     }
+
+	@Override
+	public void update(Observable observable, Object o) {
+		tableRowClicked(-1, -1);
+	}
 }

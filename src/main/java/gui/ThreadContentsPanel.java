@@ -6,9 +6,9 @@ import data.Thread;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Date;
+import java.util.*;
 
-public class ThreadContentsPanel extends TablePanel
+public class ThreadContentsPanel extends TablePanel implements Observer
 {
     private final Thread o_thread;
     
@@ -27,7 +27,8 @@ public class ThreadContentsPanel extends TablePanel
         super(new ComponentListTableModel(p_thread),
               new CellRenderer(p_thread));
         o_thread = p_thread;
-        
+        o_thread.addObserver(this);
+
         fixColumnWidth(0, GUIConstants.s_creationDateWidth);
         fixColumnWidth(1, GUIConstants.s_typeWidth);
         fixColumnWidth(3, GUIConstants.s_statsWidth);
@@ -111,13 +112,13 @@ public class ThreadContentsPanel extends TablePanel
         
         if(x_index != -1)
         {
-            ThreadItem x_groupItem = o_thread.getThreadItem(x_index);
-            String x_message = "Remove " + x_groupItem.getType() + " '" + x_groupItem.getText() + "' ?";
+            ThreadItem x_threadItem = o_thread.getThreadItem(x_index);
+            String x_message = "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?";
             
             if(JOptionPane.showConfirmDialog(null, x_message) == JOptionPane.YES_OPTION)
             {
-                WindowManager.getInstance().closeComponentWindow(x_groupItem);
-                o_thread.removeThreadItem(x_groupItem);
+                WindowManager.getInstance().closeComponentWindow(x_threadItem);
+                o_thread.removeThreadItem(x_threadItem);
             }
         }
     }
@@ -132,7 +133,7 @@ public class ThreadContentsPanel extends TablePanel
 
 	@Override
 	void tableRowClicked(int col, int row) {
-		o_removeButton.setEnabled(getSelectedRow() != -1);
+		o_removeButton.setEnabled(row != -1);
 	}
 
 	void tableRowDoubleClicked(int col, int row)
@@ -141,4 +142,9 @@ public class ThreadContentsPanel extends TablePanel
 			default: showComponent(col, row);
 		}
     }
+
+	@Override
+	public void update(Observable observable, Object o) {
+		tableRowClicked(-1, -1);
+	}
 }

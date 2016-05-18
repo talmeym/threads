@@ -6,8 +6,9 @@ import data.Thread;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
-public class ThreadReminderPanel extends TablePanel
+public class ThreadReminderPanel extends TablePanel implements Observer
 {
     private final Thread o_thread;
     
@@ -73,7 +74,7 @@ public class ThreadReminderPanel extends TablePanel
 
 	@Override
 	void tableRowClicked(int col, int row) {
-		o_dismissButton.setEnabled(true);
+		o_dismissButton.setEnabled(row != -1);
 	}
 
 	void tableRowDoubleClicked(int col, int row)
@@ -84,4 +85,9 @@ public class ThreadReminderPanel extends TablePanel
 			default: showReminder(row); break;
         }
     }
+
+	@Override
+	public void update(Observable observable, Object o) {
+		tableRowClicked(-1, -1);
+	}
 }
