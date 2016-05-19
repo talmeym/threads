@@ -16,7 +16,7 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
     
     private final JCheckBox o_activeCheckBox = new JCheckBox("Active");
     
-    public ComponentInfoPanel(Component p_component)
+    public ComponentInfoPanel(Component p_component, boolean p_new)
     {
         super(new BorderLayout());
         o_component = p_component;
@@ -27,7 +27,13 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
         o_textField.setPreferredSize(new Dimension(200, 25));
         o_textField.setText(p_component.getText());
         o_textField.addActionListener(this);
-        
+
+		if(p_new)
+		{
+			o_textField.setSelectionStart(0);
+			o_textField.setSelectionEnd(o_textField.getText().length());
+		}
+
 		o_activeCheckBox.setEnabled(o_component.getParentComponent() != null);
         o_activeCheckBox.setSelected(p_component.isActive());
         o_activeCheckBox.addActionListener(this);
@@ -44,11 +50,6 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
         add(o_textField, BorderLayout.CENTER);
         add(x_activeCheckBoxPanel, BorderLayout.EAST);
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-    }
-
-    JTextField getTextField()
-    {
-        return o_textField;
     }
     
     public void actionPerformed(ActionEvent e)

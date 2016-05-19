@@ -153,7 +153,7 @@ public class WindowManager extends WindowAdapter
     {
         if(p_component instanceof Thread)
         {
-            return new ThreadPanel((Thread)p_component, tabIndex);
+            return new ThreadPanel((Thread)p_component, p_new, tabIndex);
         }
         else if(p_component instanceof Item)
         {

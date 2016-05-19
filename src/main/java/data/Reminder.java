@@ -2,7 +2,7 @@ package data;
 
 import java.util.Date;
 
-public class Reminder extends Component
+public class Reminder extends Component implements HasDueDate
 {
     private Date o_date;
     
@@ -22,11 +22,13 @@ public class Reminder extends Component
         return (Item) getParentComponent();
     }
 
+	@Override
     public Date getDueDate()
     {
         return o_date;
     }
 
+	@Override
     public void setDueDate(Date p_date)
     {
         o_date = p_date;

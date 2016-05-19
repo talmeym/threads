@@ -1,22 +1,29 @@
 package gui;
 
+import data.*;
+
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.*;
-import java.util.Calendar;
+import java.util.*;
 
-class DateSuggestionPanel extends JPanel
+class DateSuggestionPanel extends JPanel implements DocumentListener
+
 {   
     private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
-    
-    private static DateItem[] s_timeItems = new DateItem[]{new DateItem("9 AM", 9), 
+	private static final Dimension s_dueFieldSize = new Dimension(130, 25);
+
+	private static DateItem[] s_timeItems = new DateItem[]{new DateItem("Anytime", 0),
+                                                           new DateItem("9 AM", 9),
                                                            new DateItem("Midday", 12), 
                                                            new DateItem("C.O.B.", 18)};  
 
     private static DateItem[] s_weekItems = new DateItem[]{new DateItem("This", 0),
                                                            new DateItem("Next", 7),
-                                                           new DateItem("2 Weeks", 21), 
+                                                           new DateItem("A week", 14),
+                                                           new DateItem("2 Weeks", 21),
                                                            new DateItem("3 Weeks", 28), 
                                                            new DateItem("4 Weeks", 35)};
     
@@ -34,29 +41,57 @@ class DateSuggestionPanel extends JPanel
 
     private JComboBox o_dayBox = new JComboBox(s_dayItems);
 
-    private JButton o_suggestButton = new JButton("Suggest");
+    private JButton o_SetButton = new JButton("Set");
 
-    private final JTextField o_textField;
+    private final HasDueDate o_item;
+
+	private ChangeListener o_listener;
     
-    DateSuggestionPanel(JTextField p_textField)
-    {
-        super(new GridLayout(1, 0, 5, 5));
-        o_textField = p_textField;
+    private final JTextField o_dueDateField = new JTextField();
 
-        o_suggestButton.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e)
-            {
-                suggest();
-            }
-        });
+    DateSuggestionPanel(Item p_item, ChangeListener p_listener)
+    {
+        super(new BorderLayout());
+		o_item = p_item;
+		o_listener = p_listener;
+
+		if(o_item.getDueDate() != null)
+		{
+			o_dueDateField.setText(s_dateFormat.format(o_item.getDueDate()));
+		}
+
+		o_dueDateField.setPreferredSize(s_dueFieldSize);
+		o_dueDateField.getDocument().addDocumentListener(this);
+
+		o_SetButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				suggestAndSet();
+			}
+		});
+
+		o_dueDateField.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				setDueDate();
+			}
+		});
 
 		setUpDropDowns();
 
-		add(o_timeBox);
-        add(o_weekBox);
-        add(o_dayBox);
-        add(o_suggestButton);
-    }
+		JPanel x_labelPanel = new JPanel(new BorderLayout());
+		x_labelPanel.add(new JLabel("Due Date"), BorderLayout.CENTER);
+		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+
+		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		x_buttonPanel.add(o_timeBox);
+		x_buttonPanel.add(o_weekBox);
+		x_buttonPanel.add(o_dayBox);
+		x_buttonPanel.add(o_SetButton);
+
+		add(x_labelPanel, BorderLayout.WEST);
+		add(o_dueDateField, BorderLayout.CENTER);
+		add(x_buttonPanel, BorderLayout.EAST);
+	}
 
 	private void setUpDropDowns() {
 		Calendar now = Calendar.getInstance();
@@ -85,7 +120,7 @@ class DateSuggestionPanel extends JPanel
 		}
 	}
 
-	private void suggest()
+	private void suggestAndSet()
     {
         Calendar x_calendar = Calendar.getInstance();
         
@@ -115,10 +150,55 @@ class DateSuggestionPanel extends JPanel
 
         x_calendar.roll(Calendar.DATE, x_daysToAdd);
         
-        o_textField.setText(s_dateFormat.format(x_calendar.getTime()));
+        o_dueDateField.setText(s_dateFormat.format(x_calendar.getTime()));
+		setDueDate();
     }
-    
-    private static class DateItem
+
+	private void setDueDate() {
+		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0)
+		{
+			try {
+				Date x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
+
+				if(o_item.getDueDate() != null)
+				{
+					if(!x_dueDate.equals(o_item.getDueDate()))
+					{
+						o_item.setDueDate(x_dueDate);
+					}
+				}
+				else
+				{
+					o_item.setDueDate(x_dueDate);
+				}
+			} catch (ParseException e) {
+				o_dueDateField.setText(s_dateFormat.format(o_item.getDueDate()));
+			}
+		}
+		else
+		{
+			o_item.setDueDate(null);
+		}
+
+		o_listener.changed(true);
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent documentEvent) {
+		o_listener.changed(false);
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent documentEvent) {
+		o_listener.changed(false);
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent documentEvent) {
+		o_listener.changed(false);
+	}
+
+	private static class DateItem
     {
         public final String o_display;
         

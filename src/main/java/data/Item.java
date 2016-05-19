@@ -4,7 +4,7 @@ import util.TextComparator;
 
 import java.util.Date;
 
-public class Item extends ThreadItem
+public class Item extends ThreadItem implements HasDueDate
 {
     private Date o_dueDate;
     
@@ -44,11 +44,13 @@ public class Item extends ThreadItem
 		removeComponent(p_reminder);
 	}
 
+	@Override
 	public Date getDueDate()
     {
         return o_dueDate;
     }
 
+	@Override
     public void setDueDate(Date p_dueDate)
     {
         o_dueDate = p_dueDate;

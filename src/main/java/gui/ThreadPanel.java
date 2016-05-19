@@ -13,7 +13,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
 	private final Thread o_thread;
     private final JTabbedPane o_tabs;
     
-    public ThreadPanel(Thread p_thread, int tabIndex)
+    public ThreadPanel(Thread p_thread, boolean p_new, int tabIndex)
     {
         super(new BorderLayout());
         o_thread = p_thread;
@@ -26,7 +26,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
         o_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));
         o_tabs.addTab("Tree", new ThreadTreePanel(p_thread));
         
-        add(new ComponentInfoPanel(p_thread), BorderLayout.NORTH);
+        add(new ComponentInfoPanel(p_thread, p_new), BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 
 		o_tabs.setSelectedIndex(tabIndex);
