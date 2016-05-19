@@ -4,7 +4,7 @@ import java.util.*;
 
 public class TimeUpdater extends java.lang.Thread
 {
-    private static final int s_updateFrequency = 60000;
+    private static final int s_updateFrequency = 30000;
     
     private static final TimeUpdater s_INSTANCE = new TimeUpdater();
     

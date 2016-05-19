@@ -3,9 +3,7 @@ import data.Thread;
 import gui.WindowManager;
 import util.*;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
+import java.io.*;
 import java.util.Date;
 
 public class Threads
@@ -27,5 +25,6 @@ public class Threads
 
 		WindowManager.getInstance().openComponentWindow(x_topThread, true, 0);
         TimedSaver.getInstance().setThread(x_topThread, filePath);
-    }
+		SystemTrayUtil.initialise(x_topThread);
+	}
 }

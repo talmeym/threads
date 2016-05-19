@@ -7,6 +7,7 @@ import util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
 {
@@ -53,7 +54,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
         setReminderTabBackground();
     }
 
-    private void setActionTabBackground()
+	private void setActionTabBackground()
     {
         if(ThreadHelper.getAllDueActions(o_thread).size() > 0)
         {

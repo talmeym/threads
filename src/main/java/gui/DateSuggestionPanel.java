@@ -62,6 +62,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener
 
 		o_dueDateField.setPreferredSize(s_dueFieldSize);
 		o_dueDateField.getDocument().addDocumentListener(this);
+		o_dueDateField.setToolTipText("Press enter to set date");
 
 		o_SetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -87,9 +88,14 @@ class DateSuggestionPanel extends JPanel implements DocumentListener
 		x_buttonPanel.add(o_weekBox);
 		x_buttonPanel.add(o_dayBox);
 		x_buttonPanel.add(o_SetButton);
+		x_buttonPanel.setBorder(BorderFactory.createEtchedBorder(1));
+
+		JPanel x_fieldPanel = new JPanel(new BorderLayout());
+		x_fieldPanel.add(o_dueDateField, BorderLayout.CENTER);
+		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
 		add(x_labelPanel, BorderLayout.WEST);
-		add(o_dueDateField, BorderLayout.CENTER);
+		add(x_fieldPanel, BorderLayout.CENTER);
 		add(x_buttonPanel, BorderLayout.EAST);
 	}
 

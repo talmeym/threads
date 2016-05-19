@@ -79,6 +79,7 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 		o_dueDateField.setPreferredSize(s_dueFieldSize);
 		o_dueDateField.setText(s_dateFormat.format(o_reminder.getDueDate()));
 		o_dueDateField.getDocument().addDocumentListener(this);
+		o_dueDateField.setToolTipText("Press enter to set date");
 
 		o_dueDateField.addActionListener(new ActionListener(){
 			@Override
@@ -115,9 +116,13 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 		x_suggestPanel.add(x_beforePanel, BorderLayout.WEST);
 		x_suggestPanel.add(o_setButton, BorderLayout.CENTER);
 
-		add(x_labelAndFieldPanel, BorderLayout.WEST);
-		add(x_dropdownPanel, BorderLayout.CENTER);
-        add(x_suggestPanel, BorderLayout.EAST);
+		JPanel x_borderedPanel = new JPanel(new BorderLayout());
+		x_borderedPanel.add(x_dropdownPanel, BorderLayout.CENTER);
+		x_borderedPanel.add(x_suggestPanel, BorderLayout.EAST);
+		x_borderedPanel.setBorder(BorderFactory.createEtchedBorder(1));
+
+		add(x_labelAndFieldPanel, BorderLayout.CENTER);
+		add(x_borderedPanel, BorderLayout.EAST);
     }
 
 	private void suggestAndSet()
