@@ -13,7 +13,7 @@ class UpdateItemTableModel extends ComponentTableModel
     UpdateItemTableModel (Thread p_thread)
     {
         super(p_thread,
-              new String[]{"Creation Date", "Thread", "Name", "Updated"});
+              new String[]{"Creation Date", "Thread", "Update", "Updated"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
     

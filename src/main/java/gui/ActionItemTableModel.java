@@ -13,7 +13,7 @@ class ActionItemTableModel extends ComponentTableModel
     ActionItemTableModel(Thread p_thread)
     {
         super(p_thread,
-              new String[] {"Creation Date", "Thread", "Name", "Due Date", "Due"});
+              new String[] {"Creation Date", "Thread", "Action", "Due Date", "Due"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
     

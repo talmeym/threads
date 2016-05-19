@@ -15,6 +15,8 @@ import static java.util.Calendar.*;
 
 public class ActionCellRenderer extends DefaultTableCellRenderer
 {
+	public static final DateFormat s_createDateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
+
 	public static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd MMM yy");
 	public static final DateFormat s_TimeFormat = new SimpleDateFormat("h:mm");
 	public static final DateFormat s_amPmFormat = new SimpleDateFormat("aa");
@@ -33,7 +35,11 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 
         if(x_value instanceof Date)
         {
-			x_value = getFormattedDate((Date) x_value);
+			if(column == 0) {
+				x_value = s_createDateFormat.format((Date) x_value);
+			} else {
+				x_value = getFormattedDate((Date) x_value);
+			}
         }
 
         java.awt.Component x_component =

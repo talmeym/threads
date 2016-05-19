@@ -1,17 +1,13 @@
 package gui;
 
-import com.apple.eawt.Application;
 import data.Component;
 import data.*;
 import data.Thread;
 import util.*;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 

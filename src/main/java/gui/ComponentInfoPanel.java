@@ -30,6 +30,7 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
 
 		if(p_new)
 		{
+			o_textField.requestFocus();
 			o_textField.setSelectionStart(0);
 			o_textField.setSelectionEnd(o_textField.getText().length());
 		}

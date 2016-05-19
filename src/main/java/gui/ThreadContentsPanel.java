@@ -89,9 +89,15 @@ public class ThreadContentsPanel extends TablePanel implements Observer
 
 	protected void addItem()
 	{
-		Item x_item = new Item();
-		o_thread.addThreadItem(x_item);
-		WindowManager.getInstance().openComponentWindow(x_item, true, 0);
+		String x_text = JOptionPane.showInputDialog(this, "Enter Item Text");
+
+		if(x_text != null)
+		{
+			Item x_item = new Item();
+			x_item.setText(x_text);
+			o_thread.addThreadItem(x_item);
+			WindowManager.getInstance().openComponentWindow(x_item, true, 0);
+		}
 	}
     
     private void addNewThread()
