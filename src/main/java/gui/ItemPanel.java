@@ -46,10 +46,6 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener
             }            
         });
 
-		if(p_new) {
-			o_closeButton.setText("Cancel");
-		}
-
         o_closeButton.addActionListener(this);
 
 		JPanel x_dueDatePanel = new JPanel(new BorderLayout());
@@ -80,11 +76,7 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener
     {
 		Thread x_thread = o_item.getThread();
 
-		if(o_new)
-		{
-			x_thread.removeItem(o_item);
-		}
-		else if(ThreadHelper.getActiveUpdates(x_thread).size() > 1 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION)
+		if(ThreadHelper.getActiveUpdates(x_thread).size() > 1 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION)
 		{
 
 			for(int i = 0; i < x_thread.getThreadItemCount(); i++)

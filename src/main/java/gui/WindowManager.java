@@ -1,13 +1,17 @@
 package gui;
 
+import com.apple.eawt.Application;
 import data.Component;
 import data.*;
 import data.Thread;
-import util.GUIUtil;
+import util.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -48,6 +52,7 @@ public class WindowManager extends WindowAdapter
         {
             JPanel x_panel = getComponentPanel(p_component, p_new, p_tabIndex);
             JFrame x_window = new JFrame();
+			ImageUtil.addIconToWindow(x_window);
             sizeWindow(p_component, x_window);
             x_window.setContentPane(x_panel);
             o_componentWindows.put(p_component, x_window);
@@ -72,8 +77,12 @@ public class WindowManager extends WindowAdapter
             return x_window;
         }
     }
-    
-    public void windowClosing(WindowEvent we)
+
+	private void setIconOnWindow(JFrame x_window) {
+
+	}
+
+	public void windowClosing(WindowEvent we)
     {
 		Window window = we.getWindow();
 		o_componentWindows.remove(o_windowComponents.get(window));

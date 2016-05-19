@@ -1,10 +1,9 @@
 package util;
 
 import data.Component;
-import data.Thread;
 import data.*;
+import data.Thread;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -17,7 +16,7 @@ public class SystemTrayUtil {
 
 	public static void initialise(Thread p_topLevelThread) {
 		try {
-			o_trayIcon = new TrayIcon(ImageIO.read(SystemTrayUtil.class.getResourceAsStream("/threads.jpg")));
+			o_trayIcon = new TrayIcon(ImageUtil.getThreadsImage());
 			o_topLevelThread = p_topLevelThread;
 			SystemTray systemTray = SystemTray.getSystemTray();
 			systemTray.add(o_trayIcon);
