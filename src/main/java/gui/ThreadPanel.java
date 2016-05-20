@@ -26,8 +26,10 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
         o_tabs.addTab("Actions", new ThreadActionPanel(p_thread));
         o_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));
         o_tabs.addTab("Tree", new ThreadTreePanel(p_thread));
-        
-        add(new ComponentInfoPanel(p_thread, p_new), BorderLayout.NORTH);
+
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_new);
+		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 
 		o_tabs.setSelectedIndex(tabIndex);

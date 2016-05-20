@@ -6,13 +6,14 @@ import data.Thread;
 import util.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-public class WindowManager extends WindowAdapter
-{
+public class WindowManager extends WindowAdapter implements TreeSelectionListener {
     private static final WindowManager s_INSTANCE = new WindowManager();
 
 	private static final List<WindowListener> listeners = new ArrayList<WindowListener>();
@@ -23,7 +24,7 @@ public class WindowManager extends WindowAdapter
     }
     
     private final Map o_componentWindows;
-    
+
     private final Map o_windowComponents;
     
     private WindowManager()
@@ -44,10 +45,12 @@ public class WindowManager extends WindowAdapter
 
     public Window openComponentWindow(Component p_component, boolean p_new, int p_tabIndex)
     {
+		JFrame x_window;
+
         if(!o_componentWindows.containsKey(p_component))
         {
             JPanel x_panel = getComponentPanel(p_component, p_new, p_tabIndex);
-            JFrame x_window = new JFrame();
+            x_window = new JFrame();
 			ImageUtil.addIconToWindow(x_window);
             sizeWindow(p_component, x_window);
             x_window.setContentPane(x_panel);
@@ -57,25 +60,49 @@ public class WindowManager extends WindowAdapter
             positionWindow(p_component, x_window);
             renameWindow(p_component);            
             x_window.setVisible(true);
-            return x_window;
         }
         else
         {
-            JFrame x_window = (JFrame) o_componentWindows.get(p_component);
+            x_window = (JFrame) o_componentWindows.get(p_component);
             x_window.setVisible(false);
 			JPanel panel = (JPanel) x_window.getContentPane();
 
-			if(panel instanceof ThreadPanel) {
+			if(panel instanceof ThreadPanel && p_tabIndex != -1) {
 				((ThreadPanel)panel).setTabIndex(p_tabIndex);
 			}
 
 			x_window.setVisible(true);
-            return x_window;
         }
+
+		closeOtherWindows(p_component);
+
+		return x_window;
     }
 
-	private void setIconOnWindow(JFrame x_window) {
+	private void closeOtherWindows(Component p_component) {
+		if(p_component instanceof Thread && getAllOtherWindows(p_component).size() > 0) {
+			List<Window> x_parentWindows = getAllOtherWindows(p_component);
 
+			for(Window x_parentWindow : x_parentWindows) {
+				closeComponentWindow((Component)o_windowComponents.get(x_parentWindow));
+			}
+		}
+
+		if(p_component instanceof Item && getAllOtherItemAndReminderWindows(p_component).size() > 0) {
+			List<Window> x_parentWindows = getAllOtherItemAndReminderWindows(p_component);
+
+			for(Window x_parentWindow : x_parentWindows) {
+				closeComponentWindow((Component)o_windowComponents.get(x_parentWindow));
+			}
+		}
+
+		if(p_component instanceof Reminder && getAllOtherReminderWindows(p_component).size() > 0) {
+			List<Window> x_parentWindows = getAllOtherReminderWindows(p_component);
+
+			for(Window x_parentWindow : x_parentWindows) {
+				closeComponentWindow((Component)o_windowComponents.get(x_parentWindow));
+			}
+		}
 	}
 
 	public void windowClosing(WindowEvent we)
@@ -156,6 +183,10 @@ public class WindowManager extends WindowAdapter
     
     private JPanel getComponentPanel(Component p_component, boolean p_new, int tabIndex)
     {
+		if(tabIndex == -1) {
+			tabIndex = 0;
+		}
+
         if(p_component instanceof Thread)
         {
             return new ThreadPanel((Thread)p_component, p_new, tabIndex);
@@ -176,8 +207,9 @@ public class WindowManager extends WindowAdapter
     
     void positionWindow(Component p_component, Window p_window)
     {
-		Window x_parentWindow = getParentWindow(p_component);
-        
+		List<Window> x_parentWindows = getAllOtherWindows(p_component);
+		Window x_parentWindow = x_parentWindows.size() > 0 ? x_parentWindows.get(0) : null;
+
         if(x_parentWindow != null)
         {
             Point x_location = new Point(x_parentWindow.getX() + (x_parentWindow.getWidth() / 2) - (p_window.getWidth() / 2),
@@ -188,25 +220,75 @@ public class WindowManager extends WindowAdapter
         if(x_parentWindow == null)
         {
             GUIUtil.centreWindow(p_window);
-        }        
-    }
+        }
+	}
 
-	private Window getParentWindow(Component p_component) {
-		Window x_parentWindow = (Window) o_componentWindows.get(p_component.getParentComponent());
+	private List<Window> getAllOtherItemAndReminderWindows(Component p_component) {
+		List<Window> x_parentWindows = new ArrayList<Window>();
+		Iterator iterator = o_componentWindows.keySet().iterator();
 
-		if(x_parentWindow == null && p_component.getParentComponent() != null)
-		{
-			Component x_tempComp = p_component.getParentComponent();
+		while(iterator.hasNext()) {
+			Component component = (Component) iterator.next();
 
-			while(o_componentWindows.get(x_tempComp) == null)
-			{
-				x_tempComp = x_tempComp.getParentComponent();
+			if(component != p_component && (component instanceof Item || component instanceof Reminder)) {
+				x_parentWindows.add((Window)o_componentWindows.get(component));
 			}
-
-			x_parentWindow = (Window) o_componentWindows.get(x_tempComp);
 		}
 
-		return x_parentWindow;
+		return x_parentWindows;
+	}
+
+	private List<Window> getAllOtherReminderWindows(Component p_component) {
+		List<Window> x_parentWindows = new ArrayList<Window>();
+		Iterator iterator = o_componentWindows.keySet().iterator();
+
+		while(iterator.hasNext()) {
+			Component component = (Component) iterator.next();
+
+			if(component != p_component && component instanceof Reminder) {
+				x_parentWindows.add((Window)o_componentWindows.get(component));
+			}
+		}
+
+		return x_parentWindows;
+	}
+
+	private List<Window> getAllOtherWindows(Component p_component) {
+		List<Window> x_parentWindows = new ArrayList<Window>();
+		Iterator iterator = o_componentWindows.keySet().iterator();
+
+		while(iterator.hasNext()) {
+			Component component = (Component) iterator.next();
+
+			if(component != p_component) {
+				x_parentWindows.add((Window)o_componentWindows.get(component));
+			}
+		}
+
+		return x_parentWindows;
+	}
+
+	public void showNavigationTreeWindow(Thread p_thread) {
+		JPanel treePanel = new JPanel(new BorderLayout());
+		JTree tree = new JTree(new ThreadTreeModel(p_thread));
+		tree.setCellRenderer(new ThreadTreeCellRenderer());
+		treePanel.add(new JScrollPane(tree), BorderLayout.CENTER);
+		tree.addTreeSelectionListener(this);
+		JFrame x_window = new JFrame();
+		ImageUtil.addIconToWindow(x_window);
+		x_window.setContentPane(treePanel);
+		x_window.setSize(300, 600);
+		x_window.setTitle("Navigation");
+		Dimension x_screenSize = x_window.getToolkit().getScreenSize();
+		x_window.setLocation(((x_screenSize.width - x_window.getWidth()) / 2) - 600, (x_screenSize.height - x_window.getHeight()) / 2);
+		x_window.setVisible(true);
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent p_treeSelectionEvent) {
+		TreePath x_path = p_treeSelectionEvent.getPath();
+		Component x_component = (Component) x_path.getLastPathComponent();
+		WindowManager.getInstance().openComponentWindow(x_component, false, -1);
 	}
 
 	public static interface WindowListener {

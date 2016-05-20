@@ -7,7 +7,7 @@ public class TimedSaver extends java.lang.Thread
 {
     private static TimedSaver s_INSTANCE = null;
 
-    private static final int s_updateFrequency = 10000; 
+    private static final int s_updateFrequency = 30000;
     
     public static TimedSaver getInstance()
     {

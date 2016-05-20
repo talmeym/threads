@@ -27,6 +27,7 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
         o_textField.setPreferredSize(new Dimension(200, 25));
         o_textField.setText(p_component.getText());
         o_textField.addActionListener(this);
+		o_textField.setHorizontalAlignment(JTextField.CENTER);
 
 		if(p_new)
 		{
@@ -46,11 +47,10 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
         JPanel x_activeCheckBoxPanel = new JPanel(new BorderLayout());
         x_activeCheckBoxPanel.add(o_activeCheckBox, BorderLayout.CENTER);
         x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        
-        add(x_parentButtonPanel, BorderLayout.WEST);
+
+        add(x_parentButtonPanel, BorderLayout.EAST);
         add(o_textField, BorderLayout.CENTER);
-        add(x_activeCheckBoxPanel, BorderLayout.EAST);
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        add(x_activeCheckBoxPanel, BorderLayout.WEST);
     }
     
     public void actionPerformed(ActionEvent e)

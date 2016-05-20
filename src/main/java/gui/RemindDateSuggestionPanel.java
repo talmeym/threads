@@ -80,6 +80,7 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 		o_dueDateField.setText(s_dateFormat.format(o_reminder.getDueDate()));
 		o_dueDateField.getDocument().addDocumentListener(this);
 		o_dueDateField.setToolTipText("Press enter to set date");
+		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
 
 		o_dueDateField.addActionListener(new ActionListener(){
 			@Override
@@ -98,9 +99,16 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 		x_labelPanel.add(new JLabel("Due Date"), BorderLayout.CENTER);
 		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
+		JPanel x_fieldPanel = new JPanel();
+		x_fieldPanel.setLayout(new BoxLayout(x_fieldPanel, BoxLayout.Y_AXIS));
+		x_fieldPanel.add(Box.createVerticalStrut(12));
+		x_fieldPanel.add(o_dueDateField);
+		x_fieldPanel.add(Box.createVerticalStrut(12));
+		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+
 		JPanel x_labelAndFieldPanel = new JPanel(new BorderLayout());
 		x_labelAndFieldPanel.add(x_labelPanel, BorderLayout.WEST);
-		x_labelAndFieldPanel.add(o_dueDateField, BorderLayout.CENTER);
+		x_labelAndFieldPanel.add(x_fieldPanel, BorderLayout.CENTER);
 
 		JPanel x_dropdownPanel = new JPanel(new GridLayout(1, 0, 5, 5));
 		x_dropdownPanel.add(o_weekBox);
@@ -112,14 +120,14 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 		x_beforePanel.add(new JLabel("before"), BorderLayout.CENTER);
 		x_beforePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
-		JPanel x_suggestPanel = new JPanel(new BorderLayout());
-		x_suggestPanel.add(x_beforePanel, BorderLayout.WEST);
-		x_suggestPanel.add(o_setButton, BorderLayout.CENTER);
+		JPanel x_setPanel = new JPanel(new BorderLayout());
+		x_setPanel.add(x_beforePanel, BorderLayout.WEST);
+		x_setPanel.add(o_setButton, BorderLayout.CENTER);
 
 		JPanel x_borderedPanel = new JPanel(new BorderLayout());
 		x_borderedPanel.add(x_dropdownPanel, BorderLayout.CENTER);
-		x_borderedPanel.add(x_suggestPanel, BorderLayout.EAST);
-		x_borderedPanel.setBorder(BorderFactory.createEtchedBorder(1));
+		x_borderedPanel.add(x_setPanel, BorderLayout.EAST);
+		x_borderedPanel.setBorder(BorderFactory.createTitledBorder("Quick Set"));
 
 		add(x_labelAndFieldPanel, BorderLayout.CENTER);
 		add(x_borderedPanel, BorderLayout.EAST);

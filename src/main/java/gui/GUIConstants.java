@@ -16,9 +16,11 @@ class GUIConstants
 
     public static final Dimension s_threadWindowSize = new Dimension(850, 600);
 
-    public static int s_tableRowHeight = 25;
+	public static final int s_windowOffset = 50;
+
+	public static int s_tableRowHeight = 25;
 
     public static final Dimension s_itemWindowSize = new Dimension(700, 270);
     
-    public static final Dimension s_reminderWindowSize = new Dimension(760, 150);
+    public static final Dimension s_reminderWindowSize = new Dimension(760, 145);
 }

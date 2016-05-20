@@ -48,13 +48,9 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener
 
         o_closeButton.addActionListener(this);
 
-		JPanel x_dueDatePanel = new JPanel(new BorderLayout());
-        x_dueDatePanel.add(new DateSuggestionPanel(o_item, this), BorderLayout.CENTER);
-
         JPanel x_panel = new JPanel(new BorderLayout());
         x_panel.add(o_compInfoPanel, BorderLayout.NORTH);
-        x_panel.add(x_dueDatePanel, BorderLayout.CENTER);
-        x_panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        x_panel.add(new DateSuggestionPanel(o_item, this), BorderLayout.CENTER);
 
         JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
         x_buttonPanel.add(o_addReminderButton);
