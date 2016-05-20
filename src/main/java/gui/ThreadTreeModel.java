@@ -3,7 +3,7 @@ package gui;
 import data.*;
 import data.Thread;
 
-import javax.swing.event.TreeModelListener;
+import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.util.*;
 
@@ -11,7 +11,7 @@ public class ThreadTreeModel implements TreeModel, Observer
 {
     private final Thread o_thread;
     
-    private List o_listeners = new ArrayList();
+    private List<TreeModelListener> o_listeners = new ArrayList<TreeModelListener>();
     
     public ThreadTreeModel(Thread p_thread)
     {
@@ -89,6 +89,34 @@ public class ThreadTreeModel implements TreeModel, Observer
 
     public void update(Observable o, Object arg)
     {
+		if(o instanceof Reminder) {
+			return;
+		}
 
-    }
+		ObservableChangeEvent event = (ObservableChangeEvent) arg;
+		Component component = (Component) event.getObservableObserver();
+		TreePath treePath = new TreePath(getPathObjs(component));
+
+		for(TreeModelListener listener: o_listeners) {
+			switch(event.getType()) {
+				case ObservableChangeEvent.s_ADDED: listener.treeNodesInserted(new TreeModelEvent(this, treePath, new int[]{event.getIndex()}, null)); break;
+				case ObservableChangeEvent.s_REMOVED: listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{event.getIndex()}, null)); break;
+				default: listener.treeNodesChanged(new TreeModelEvent(this, treePath));
+			}
+
+		}
+	}
+
+	private Object[] getPathObjs(Component p_component) {
+		List<Component> parentComponents = new ArrayList<Component>();
+
+		parentComponents.add(p_component);
+
+		while(p_component.getParentComponent() != null) {
+			parentComponents.add(0, p_component.getParentComponent());
+			p_component = p_component.getParentComponent();
+		}
+
+		return parentComponents.toArray(new Object[parentComponents.size()]);
+	}
 }

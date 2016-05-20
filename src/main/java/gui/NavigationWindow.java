@@ -9,7 +9,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class NavigationWindow extends JFrame implements TreeSelectionListener {
@@ -35,6 +35,11 @@ public class NavigationWindow extends JFrame implements TreeSelectionListener {
 			p_component = p_component.getParentComponent();
 		}
 
+		Object[] pathObjs = getPathObjs(p_component);
+		tree.setSelectionPath(new TreePath(pathObjs));
+	}
+
+	private Object[] getPathObjs(Component p_component) {
 		List<Component> parentComponents = new ArrayList<Component>();
 
 		parentComponents.add(p_component);
@@ -44,9 +49,7 @@ public class NavigationWindow extends JFrame implements TreeSelectionListener {
 			p_component = p_component.getParentComponent();
 		}
 
-		Object[] pathObjs = parentComponents.toArray(new Object[parentComponents.size()]);
-
-		tree.setSelectionPath(new TreePath(pathObjs));
+		return parentComponents.toArray(new Object[parentComponents.size()]);
 	}
 
 	@Override

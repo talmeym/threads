@@ -21,7 +21,7 @@ class ObservableObserver extends Observable implements Observer
     
     protected void changed()
     {
-        changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_CHANGE));
+        changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_CHANGE, -1));
     }
 
     protected void changed(ObservableChangeEvent p_event)

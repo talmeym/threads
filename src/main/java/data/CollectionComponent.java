@@ -53,15 +53,21 @@ public class CollectionComponent extends Component
         startObserve(p_component);
         o_components.add(p_component);
         Collections.sort(o_components, o_comparator);
-        changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_ADDED));
+
+		int index = o_components.indexOf(p_component);
+
+		changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_ADDED, index));
     }
 
     protected void removeComponent(Component p_component)
     {        
-        p_component.setParentComponent(null);
+		int index = o_components.indexOf(p_component);
+
+		p_component.setParentComponent(null);
         stopObserve(p_component);
         o_components.remove(p_component);
         Collections.sort(o_components, o_comparator);
-        changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_REMOVED));
+
+		changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_REMOVED, index));
     }
 }

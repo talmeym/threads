@@ -7,14 +7,15 @@ public class ObservableChangeEvent
     public static final int s_REMOVED = 2;
     
     private final ObservableObserver o_component;
-    
     private final int o_type;
-    
-    public ObservableChangeEvent(ObservableObserver p_component, int p_type)
+	private final int o_index;
+
+	public ObservableChangeEvent(ObservableObserver p_component, int p_type, int p_index)
     {
         o_component = p_component;
         o_type = p_type;
-    }
+		this.o_index = p_index;
+	}
     
     public ObservableObserver getObservableObserver()    
     {
@@ -25,4 +26,8 @@ public class ObservableChangeEvent
     {
         return o_type;
     }
+
+	public int getIndex() {
+		return o_index;
+	}
 }
