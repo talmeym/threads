@@ -23,8 +23,8 @@ public class Threads
 			}
 		});
 
-		WindowManager.getInstance().openComponentWindow(x_topThread, true, 0);
 		WindowManager.getInstance().showNavigationTreeWindow(x_topThread);
+		WindowManager.getInstance().openComponentWindow(x_topThread, true, 0);
         TimedSaver.getInstance().setThread(x_topThread, filePath);
 		SystemTrayUtil.initialise(x_topThread);
 	}

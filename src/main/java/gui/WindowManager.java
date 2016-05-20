@@ -13,10 +13,12 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-public class WindowManager extends WindowAdapter implements TreeSelectionListener {
+public class WindowManager extends WindowAdapter {
     private static final WindowManager s_INSTANCE = new WindowManager();
 
 	private static final List<WindowListener> listeners = new ArrayList<WindowListener>();
+
+	private static NavigationWindow navigationWindow;
 
     public static WindowManager getInstance()
     {
@@ -75,7 +77,7 @@ public class WindowManager extends WindowAdapter implements TreeSelectionListene
         }
 
 		closeOtherWindows(p_component);
-
+		navigationWindow.selectComponent(p_component);
 		return x_window;
     }
 
@@ -269,26 +271,7 @@ public class WindowManager extends WindowAdapter implements TreeSelectionListene
 	}
 
 	public void showNavigationTreeWindow(Thread p_thread) {
-		JPanel treePanel = new JPanel(new BorderLayout());
-		JTree tree = new JTree(new ThreadTreeModel(p_thread));
-		tree.setCellRenderer(new ThreadTreeCellRenderer());
-		treePanel.add(new JScrollPane(tree), BorderLayout.CENTER);
-		tree.addTreeSelectionListener(this);
-		JFrame x_window = new JFrame();
-		ImageUtil.addIconToWindow(x_window);
-		x_window.setContentPane(treePanel);
-		x_window.setSize(300, 600);
-		x_window.setTitle("Navigation");
-		Dimension x_screenSize = x_window.getToolkit().getScreenSize();
-		x_window.setLocation(((x_screenSize.width - x_window.getWidth()) / 2) - 600, (x_screenSize.height - x_window.getHeight()) / 2);
-		x_window.setVisible(true);
-	}
-
-	@Override
-	public void valueChanged(TreeSelectionEvent p_treeSelectionEvent) {
-		TreePath x_path = p_treeSelectionEvent.getPath();
-		Component x_component = (Component) x_path.getLastPathComponent();
-		WindowManager.getInstance().openComponentWindow(x_component, false, -1);
+		navigationWindow = new NavigationWindow(p_thread);
 	}
 
 	public static interface WindowListener {
