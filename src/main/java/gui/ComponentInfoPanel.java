@@ -3,29 +3,33 @@ package gui;
 import data.Component;
 
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ComponentInfoPanel extends JPanel implements ActionListener
-{
+public class ComponentInfoPanel extends JPanel implements ActionListener, DocumentListener {
     private final Component o_component;
-    
-    private final JButton o_parentButton = new JButton("Parent");
+
+	private ChangeListener o_listener;
+
+	private final JButton o_parentButton = new JButton("Parent");
     
     private final JTextField o_textField = new JTextField();
     
     private final JCheckBox o_activeCheckBox = new JCheckBox("Active");
     
-    public ComponentInfoPanel(Component p_component, boolean p_new)
+    public ComponentInfoPanel(Component p_component, boolean p_new, ChangeListener p_listener)
     {
         super(new BorderLayout());
         o_component = p_component;
+		o_listener = p_listener;
 
 		o_parentButton.setEnabled(o_component.getParentComponent() != null);
         o_parentButton.addActionListener(this);
         
         o_textField.setPreferredSize(new Dimension(200, 25));
-        o_textField.setText(p_component.getText());
+		o_textField.setText(p_component.getText());
+		o_textField.getDocument().addDocumentListener(this);
         o_textField.addActionListener(this);
 		o_textField.setHorizontalAlignment(JTextField.CENTER);
 
@@ -65,6 +69,11 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
                     WindowManager.getInstance().renameAllWindows();
                 }
             }
+			else {
+				o_textField.setText(o_component.getText());
+			}
+
+			o_listener.changed(true);
         }
         
         if(e.getSource() == o_activeCheckBox)
@@ -78,4 +87,19 @@ public class ComponentInfoPanel extends JPanel implements ActionListener
             WindowManager.getInstance().openComponentWindow(o_component.getParentComponent(), false, 0);
         }
     }
+
+	@Override
+	public void insertUpdate(DocumentEvent documentEvent) {
+		o_listener.changed(false);
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent documentEvent) {
+		o_listener.changed(false);
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent documentEvent) {
+		o_listener.changed(false);
+	}
 }

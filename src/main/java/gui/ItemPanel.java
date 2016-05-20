@@ -30,7 +30,7 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener
         o_item = p_item;
         o_new = p_new;
         
-        o_compInfoPanel = new ComponentInfoPanel(p_item, p_new);
+        o_compInfoPanel = new ComponentInfoPanel(p_item, p_new, this);
 
         o_addReminderButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e)

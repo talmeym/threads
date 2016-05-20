@@ -22,7 +22,7 @@ public class ReminderPanel extends JPanel implements ChangeListener, ActionListe
         o_reminder = p_reminder;
         o_new = p_new;
         
-        o_compInfoPanel = new ComponentInfoPanel(p_reminder, p_new);
+        o_compInfoPanel = new ComponentInfoPanel(p_reminder, p_new, this);
 		o_compInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         JPanel x_remindDatePanel = new JPanel(new BorderLayout());

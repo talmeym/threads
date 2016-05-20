@@ -63,7 +63,6 @@ class DateSuggestionPanel extends JPanel implements DocumentListener
 		o_dueDateField.setPreferredSize(s_dueFieldSize);
 		o_dueDateField.getDocument().addDocumentListener(this);
 		o_dueDateField.setToolTipText("Press enter to set date");
-		//o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
 
 		o_SetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

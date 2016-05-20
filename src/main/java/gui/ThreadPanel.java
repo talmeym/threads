@@ -7,10 +7,8 @@ import util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
-public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
-{
+public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer, ChangeListener {
 	private final Thread o_thread;
     private final JTabbedPane o_tabs;
     
@@ -27,7 +25,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
         o_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));
         o_tabs.addTab("Tree", new ThreadTreePanel(p_thread));
 
-		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_new);
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_new, this);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
@@ -83,4 +81,9 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer
             o_tabs.setBackgroundAt(4, o_tabs.getBackgroundAt(0));
         }
     }
+
+	@Override
+	public void changed(boolean saved) {
+		// do nothing
+	}
 }

@@ -142,7 +142,7 @@ public class WindowManager extends WindowAdapter {
     {
         JFrame x_window = (JFrame) o_componentWindows.get(p_component);
         
-        StringBuffer x_title = new StringBuffer();
+        StringBuffer x_title = new StringBuffer("Threads: ");
 		String x_componentText = p_component.getText();
 
 		List<String> x_parentNames = new ArrayList<String>();
