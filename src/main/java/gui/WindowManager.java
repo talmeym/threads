@@ -114,11 +114,14 @@ public class WindowManager extends WindowAdapter {
         o_windowComponents.remove(window);
         window.removeWindowListener(this);
 
-		if(o_componentWindows.size() == 0 && !navigationWindow.isVisible()) {
+		if(window == navigationWindow && o_componentWindows.size() == 0) {
+			lastWindowClosing();
+		}
+		else if(o_componentWindows.size() == 0 && !navigationWindow.isVisible()) {
 			lastWindowClosing();
 		}
     }
-    
+
     public void closeComponentWindow(Component p_component)
     {
         if(o_componentWindows.containsKey(p_component))
@@ -272,6 +275,7 @@ public class WindowManager extends WindowAdapter {
 
 	public void showNavigationTreeWindow(Thread p_thread) {
 		navigationWindow = new NavigationWindow(p_thread);
+		navigationWindow.addWindowListener(this);
 	}
 
 	public static interface WindowListener {
