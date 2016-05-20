@@ -114,7 +114,7 @@ public class WindowManager extends WindowAdapter {
         o_windowComponents.remove(window);
         window.removeWindowListener(this);
 
-		if(o_componentWindows.size() == 0) {
+		if(o_componentWindows.size() == 0 && !navigationWindow.isVisible()) {
 			lastWindowClosing();
 		}
     }
