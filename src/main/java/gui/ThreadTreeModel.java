@@ -61,7 +61,7 @@ public class ThreadTreeModel implements TreeModel, Observer
             return ((Thread)parent).getThreadItem(index);
         }
         
-        throw new IllegalStateException("Asking about invalid parent: " + parent);
+        return -1;
     }
 
     public int getIndexOfChild(Object parent, Object child)
@@ -79,7 +79,7 @@ public class ThreadTreeModel implements TreeModel, Observer
             }
         }
         
-        throw new IllegalStateException("Asking about invalid child: " + child);
+        return -1;
     }
 
     public void valueForPathChanged(TreePath path, Object newValue)
@@ -103,19 +103,18 @@ public class ThreadTreeModel implements TreeModel, Observer
 				case ObservableChangeEvent.s_REMOVED: listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{event.getIndex()}, null)); break;
 				default: listener.treeNodesChanged(new TreeModelEvent(this, treePath));
 			}
-
 		}
 	}
 
 	private Object[] getPathObjs(Component p_component) {
 		List<Component> parentComponents = new ArrayList<Component>();
 
-		parentComponents.add(p_component);
-
-		while(p_component.getParentComponent() != null) {
-			parentComponents.add(0, p_component.getParentComponent());
+		while(p_component != o_thread) {
+			parentComponents.add(0, p_component);
 			p_component = p_component.getParentComponent();
 		}
+
+		parentComponents.add(0, o_thread);
 
 		return parentComponents.toArray(new Object[parentComponents.size()]);
 	}

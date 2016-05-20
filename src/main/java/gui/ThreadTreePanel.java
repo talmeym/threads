@@ -22,21 +22,31 @@ public class ThreadTreePanel extends JPanel implements TreeSelectionListener, Ac
         super(new BorderLayout());
         
         TreeModel x_model = new ThreadTreeModel(p_thread);
-        
+
         o_threadFromTree = new JTree(x_model);
-        o_threadFromTree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         o_threadFromTree.addTreeSelectionListener(this);
+		o_threadFromTree.setCellRenderer(new ThreadTreeCellRenderer());
+
+		JPanel leftTreePanel = new JPanel(new BorderLayout());
+        leftTreePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		leftTreePanel.add(new JLabel("From:"), BorderLayout.NORTH);
+		leftTreePanel.add(new JScrollPane(o_threadFromTree), BorderLayout.CENTER);
 
         o_threadToTree = new JTree(x_model);
-        o_threadToTree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         o_threadToTree.addTreeSelectionListener(this);
+		o_threadToTree.setCellRenderer(new ThreadTreeCellRenderer());
+
+		JPanel rightTreePanel = new JPanel(new BorderLayout());
+		rightTreePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		rightTreePanel.add(new JLabel("To:"), BorderLayout.NORTH);
+		rightTreePanel.add(new JScrollPane(o_threadToTree), BorderLayout.CENTER);
 
         o_moveButton.setEnabled(false);
         o_moveButton.addActionListener(this);
         
         JPanel x_panel = new JPanel(new GridLayout(1, 0, 5, 5));        
-        x_panel.add(new JScrollPane(o_threadFromTree));
-        x_panel.add(new JScrollPane(o_threadToTree));
+        x_panel.add(leftTreePanel);
+        x_panel.add(rightTreePanel);
         
         JPanel x_buttonBox = new JPanel(new BorderLayout());
         x_buttonBox.add(o_moveButton, BorderLayout.CENTER);
