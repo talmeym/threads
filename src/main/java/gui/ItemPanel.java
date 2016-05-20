@@ -45,6 +45,7 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener
                 removeReminder();
             }            
         });
+		o_removeReminderButton.setEnabled(false);
 
         o_closeButton.addActionListener(this);
 
@@ -132,7 +133,7 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener
 
 	@Override
 	void tableRowClicked(int col, int row) {
-		//do nothing
+		o_removeReminderButton.setEnabled(row != -1);
 	}
 
 	void tableRowDoubleClicked(int col, int row)
