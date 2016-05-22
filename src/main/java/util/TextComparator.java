@@ -1,21 +1,11 @@
 package util;
 
-import data.Component;
+import data.*;
 
 import java.util.Comparator;
 
-public class TextComparator implements Comparator
-{
-    public int compare(Object obj1, Object obj2)
-    {
-        if(obj1 instanceof Component)
-        {
-            Component x_item1 = (Component) obj1;
-            Component x_item2 = (Component) obj2; 
-            
-            return x_item1.getText().compareTo(x_item2.getText());
-        }
-        
-        throw new IllegalArgumentException("Invalid compare object: " + obj1);
-    }
+public class TextComparator <TYPE extends Component> implements Comparator<TYPE> {
+    public int compare(TYPE obj1, TYPE obj2) {
+		return obj1.getText().compareTo(obj2.getText());
+	}
 }

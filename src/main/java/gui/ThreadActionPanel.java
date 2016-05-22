@@ -8,16 +8,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class ThreadActionPanel extends TablePanel implements Observer
-{
+public class ThreadActionPanel extends TablePanel implements Observer {
     private final Thread o_thread;
-
 	private JButton o_dismissButton = new JButton("Dismiss");
 
-	ThreadActionPanel(Thread p_thread)
-    {
-        super(new ActionItemTableModel(p_thread),
-              new ActionCellRenderer(p_thread));
+	ThreadActionPanel(Thread p_thread) {
+        super(new ActionItemTableModel(p_thread), new ActionCellRenderer(p_thread));
         o_thread = p_thread;
 		o_thread.addObserver(this);
 
@@ -28,14 +24,11 @@ public class ThreadActionPanel extends TablePanel implements Observer
 
 		o_dismissButton.setEnabled(false);
 		o_dismissButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e)
-			{
+			public void actionPerformed(ActionEvent e) {
 				int x_index = getSelectedRow();
 
-				if(x_index != -1)
-				{
-					Item x_threadItem = (Item) ThreadHelper.getAllActiveActions(o_thread).get(x_index);
-					x_threadItem.setActive(false);
+				if(x_index != -1) {
+					ThreadHelper.getAllActiveActions(o_thread).get(x_index).setActive(false);
 				}
 			}
 		});
@@ -47,11 +40,9 @@ public class ThreadActionPanel extends TablePanel implements Observer
 		add(x_panel, BorderLayout.SOUTH);
     }
     
-    private void showThread(int p_index)
-    {
-        if(p_index != -1)
-        {
-            Item x_threadItem = (Item) ThreadHelper.getAllActiveActions(o_thread).get(p_index);
+    private void showThread(int p_index) {
+        if(p_index != -1) {
+            Item x_threadItem = ThreadHelper.getAllActiveActions(o_thread).get(p_index);
 			Thread x_thread = x_threadItem.getThread();
 
 			if(x_thread != o_thread) {
@@ -60,11 +51,9 @@ public class ThreadActionPanel extends TablePanel implements Observer
         }
     }
 
-    private void showItem(int p_index)
-    {
-        if(p_index != -1)
-        {
-            Item x_threadItem = (Item) ThreadHelper.getAllActiveActions(o_thread).get(p_index);
+    private void showItem(int p_index) {
+        if(p_index != -1) {
+            Item x_threadItem = ThreadHelper.getAllActiveActions(o_thread).get(p_index);
             WindowManager.getInstance().openComponentWindow(x_threadItem, false, 0);
         }
     }
@@ -74,8 +63,7 @@ public class ThreadActionPanel extends TablePanel implements Observer
 		o_dismissButton.setEnabled(row != -1);
 	}
 
-	void tableRowDoubleClicked(int col, int row)
-    {
+	void tableRowDoubleClicked(int col, int row) {
 		switch(col) {
 			case 1: showThread(row); break;
 			default: showItem(row);

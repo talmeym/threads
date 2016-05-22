@@ -9,9 +9,7 @@ import java.awt.event.*;
 import java.text.*;
 import java.util.*;
 
-class DateSuggestionPanel extends JPanel implements DocumentListener
-
-{   
+class DateSuggestionPanel extends JPanel implements DocumentListener {
     private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final Dimension s_dueFieldSize = new Dimension(130, 25);
 
@@ -36,27 +34,18 @@ class DateSuggestionPanel extends JPanel implements DocumentListener
                                                           new DateItem("Sun", 1)};
     
     private JComboBox o_timeBox = new JComboBox(s_timeItems);
-
     private JComboBox o_weekBox = new JComboBox(s_weekItems);
-
     private JComboBox o_dayBox = new JComboBox(s_dayItems);
-
-    private JButton o_SetButton = new JButton("Set");
-
-    private final HasDueDate o_item;
-
+	private final HasDueDate o_item;
 	private ChangeListener o_listener;
-    
     private final JTextField o_dueDateField = new JTextField();
 
-    DateSuggestionPanel(Item p_item, ChangeListener p_listener)
-    {
+    DateSuggestionPanel(Item p_item, ChangeListener p_listener) {
         super(new BorderLayout());
 		o_item = p_item;
 		o_listener = p_listener;
 
-		if(o_item.getDueDate() != null)
-		{
+		if(o_item.getDueDate() != null) {
 			o_dueDateField.setText(s_dateFormat.format(o_item.getDueDate()));
 		}
 
@@ -64,6 +53,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener
 		o_dueDateField.getDocument().addDocumentListener(this);
 		o_dueDateField.setToolTipText("Press enter to set date");
 
+		JButton o_SetButton = new JButton("Set");
 		o_SetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				suggestAndSet();
@@ -129,8 +119,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener
 		}
 	}
 
-	private void suggestAndSet()
-    {
+	private void suggestAndSet() {
         Calendar x_calendar = Calendar.getInstance();
         
         x_calendar.set(Calendar.HOUR_OF_DAY, ((DateItem)o_timeBox.getSelectedItem()).o_value);
@@ -144,15 +133,13 @@ class DateSuggestionPanel extends JPanel implements DocumentListener
 
         int x_daysLeftInYear = 365 - x_calendar.get(Calendar.DAY_OF_YEAR);
         
-        if(x_daysToAdd > x_daysLeftInYear)
-        {
+        if(x_daysToAdd > x_daysLeftInYear) {
             x_calendar.roll(Calendar.YEAR, true);
         }
         
         int x_daysLeftInMonth = x_calendar.getActualMaximum(Calendar.DAY_OF_MONTH) - x_calendar.get(Calendar.DAY_OF_MONTH);
         
-        if(x_daysToAdd > x_daysLeftInMonth)
-        {
+        if(x_daysToAdd > x_daysLeftInMonth) {
             x_calendar.roll(Calendar.MONTH, true);
             x_daysToAdd++;
         }
@@ -164,28 +151,21 @@ class DateSuggestionPanel extends JPanel implements DocumentListener
     }
 
 	private void setDueDate() {
-		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0)
-		{
+		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0) {
 			try {
 				Date x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
 
-				if(o_item.getDueDate() != null)
-				{
-					if(!x_dueDate.equals(o_item.getDueDate()))
-					{
+				if(o_item.getDueDate() != null) {
+					if(!x_dueDate.equals(o_item.getDueDate())) {
 						o_item.setDueDate(x_dueDate);
 					}
-				}
-				else
-				{
+				} else {
 					o_item.setDueDate(x_dueDate);
 				}
 			} catch (ParseException e) {
 				o_dueDateField.setText(s_dateFormat.format(o_item.getDueDate()));
 			}
-		}
-		else
-		{
+		} else {
 			o_item.setDueDate(null);
 		}
 
@@ -207,20 +187,16 @@ class DateSuggestionPanel extends JPanel implements DocumentListener
 		o_listener.changed(false);
 	}
 
-	private static class DateItem
-    {
+	private static class DateItem {
         public final String o_display;
-        
         public final int o_value;
         
-        public DateItem(String p_display, int p_value)
-        {
+        public DateItem(String p_display, int p_value) {
             o_display = p_display;
             o_value = p_value;
         }
         
-        public String toString()
-        {
+        public String toString() {
             return o_display;
         }
     }

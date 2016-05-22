@@ -18,8 +18,7 @@ public class ComponentInfoPanel extends JPanel implements ActionListener, Docume
     
     private final JCheckBox o_activeCheckBox = new JCheckBox("Active");
     
-    public ComponentInfoPanel(Component p_component, boolean p_new, ChangeListener p_listener)
-    {
+    public ComponentInfoPanel(Component p_component, boolean p_new, ChangeListener p_listener) {
         super(new BorderLayout());
         o_component = p_component;
 		o_listener = p_listener;
@@ -33,8 +32,7 @@ public class ComponentInfoPanel extends JPanel implements ActionListener, Docume
         o_textField.addActionListener(this);
 		o_textField.setHorizontalAlignment(JTextField.CENTER);
 
-		if(p_new)
-		{
+		if(p_new) {
 			o_textField.requestFocus();
 			o_textField.setSelectionStart(0);
 			o_textField.setSelectionEnd(o_textField.getText().length());
@@ -57,32 +55,25 @@ public class ComponentInfoPanel extends JPanel implements ActionListener, Docume
         add(x_activeCheckBoxPanel, BorderLayout.WEST);
     }
     
-    public void actionPerformed(ActionEvent e)
-    {
-        if(e.getSource() == o_textField)
-        {
-            if(o_textField.getText().length() > 0)
-            {
-                if(!o_textField.getText().equals(o_component.getText()))
-                {
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == o_textField) {
+            if(o_textField.getText().length() > 0) {
+                if(!o_textField.getText().equals(o_component.getText())) {
                     o_component.setText(o_textField.getText());
                     WindowManager.getInstance().renameAllWindows();
                 }
-            }
-			else {
+            } else {
 				o_textField.setText(o_component.getText());
 			}
 
 			o_listener.changed(true);
         }
         
-        if(e.getSource() == o_activeCheckBox)
-        {
+        if(e.getSource() == o_activeCheckBox) {
             o_component.setActive(o_activeCheckBox.isSelected());
         }
         
-        if(e.getSource() == o_parentButton)
-        {
+        if(e.getSource() == o_parentButton) {
             WindowManager.getInstance().closeComponentWindow(o_component);
             WindowManager.getInstance().openComponentWindow(o_component.getParentComponent(), false, 0);
         }

@@ -21,7 +21,6 @@ public class SystemTrayUtil {
 			SystemTray systemTray = SystemTray.getSystemTray();
 			systemTray.add(o_trayIcon);
 			alertAllActionsAndReminders();
-
 			TimeUpdater.getInstance().addTimeUpdateListener(new TimeUpdateListener() {
 				@Override
 				public void timeUpdate() {

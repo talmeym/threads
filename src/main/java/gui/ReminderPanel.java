@@ -6,23 +6,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ReminderPanel extends JPanel implements ChangeListener, ActionListener
-{
+public class ReminderPanel extends JPanel implements ChangeListener, ActionListener {
 
     private final Reminder o_reminder;
-    private final boolean o_new;
+	private final JButton o_closeButton = new JButton("Close");
     
-    private final ComponentInfoPanel o_compInfoPanel;
-
-    private final JButton o_closeButton = new JButton("Close");
-    
-    public ReminderPanel(Reminder p_reminder, boolean p_new)
-    {
+    public ReminderPanel(Reminder p_reminder, boolean p_new) {
         super(new BorderLayout());
         o_reminder = p_reminder;
-        o_new = p_new;
-        
-        o_compInfoPanel = new ComponentInfoPanel(p_reminder, p_new, this);
+
+		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_reminder, p_new, this);
 		o_compInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         JPanel x_remindDatePanel = new JPanel(new BorderLayout());
@@ -42,9 +35,8 @@ public class ReminderPanel extends JPanel implements ChangeListener, ActionListe
         add(x_buttonPanel, BorderLayout.SOUTH);
     }
 
-    public void actionPerformed(ActionEvent e)
-    {
-			WindowManager.getInstance().closeComponentWindow(o_reminder);
+    public void actionPerformed(ActionEvent e) {
+		WindowManager.getInstance().closeComponentWindow(o_reminder);
     }
 
 	@Override

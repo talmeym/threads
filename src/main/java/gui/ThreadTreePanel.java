@@ -10,15 +10,13 @@ import javax.swing.tree.TreeModel;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ThreadTreePanel extends JPanel implements TreeSelectionListener, ActionListener
-{
+public class ThreadTreePanel extends JPanel implements TreeSelectionListener, ActionListener {
     private final JTree o_threadFromTree;
     private final JTree o_threadToTree;
 
     private JButton o_moveButton = new JButton("Move Selected");
     
-    public ThreadTreePanel(Thread p_thread)
-    {
+    public ThreadTreePanel(Thread p_thread) {
         super(new BorderLayout());
         
         TreeModel x_model = new ThreadTreeModel(p_thread);
@@ -57,31 +55,25 @@ public class ThreadTreePanel extends JPanel implements TreeSelectionListener, Ac
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
-    public void valueChanged(TreeSelectionEvent e)
-    {
-        if(o_threadFromTree.getSelectionPath() != null &&
-           o_threadToTree.getSelectionPath() != null)
-        {
+    public void valueChanged(TreeSelectionEvent e) {
+        if(o_threadFromTree.getSelectionPath() != null && o_threadToTree.getSelectionPath() != null) {
             Object x_toObj = o_threadToTree.getSelectionPath().getLastPathComponent();
             o_moveButton.setEnabled(x_toObj instanceof Thread);
         }
     }
 
-    public void actionPerformed(ActionEvent e)
-    {
+    public void actionPerformed(ActionEvent e) {
         Component x_fromObj = (Component) o_threadFromTree.getSelectionPath().getLastPathComponent();
         Component x_toObj = (Component) o_threadToTree.getSelectionPath().getLastPathComponent();
         
-        if(x_fromObj instanceof Item)
-        {
+        if(x_fromObj instanceof Item) {
             Item x_toMove = (Item) x_fromObj;
             x_toMove.getThread().removeItem(x_toMove);
             Thread x_thread = (Thread) x_toObj;
             x_thread.addItem(x_toMove);
         }
         
-        if(x_fromObj instanceof Thread)
-        {
+        if(x_fromObj instanceof Thread) {
             Thread x_toMove = (Thread) x_fromObj;
             x_toMove.getThread().removeThreadItem(x_toMove);
             Thread x_thread = (Thread) x_toObj;

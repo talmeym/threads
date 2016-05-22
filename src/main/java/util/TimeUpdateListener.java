@@ -1,6 +1,5 @@
 package util;
 
-public interface TimeUpdateListener
-{
+public interface TimeUpdateListener {
     void timeUpdate();    
 }

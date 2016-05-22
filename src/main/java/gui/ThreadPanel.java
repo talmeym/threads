@@ -12,8 +12,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 	private final Thread o_thread;
     private final JTabbedPane o_tabs;
     
-    public ThreadPanel(Thread p_thread, boolean p_new, int tabIndex)
-    {
+    public ThreadPanel(Thread p_thread, boolean p_new, int tabIndex) {
         super(new BorderLayout());
         o_thread = p_thread;
         
@@ -42,41 +41,31 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 		o_tabs.setSelectedIndex(tabIndex);
 	}
 
-    public void update(Observable o, Object arg)
-    {
+    public void update(Observable o, Object arg) {
         setActionTabBackground();
         setReminderTabBackground();
     }
     
-    public void timeUpdate()
-    {
+    public void timeUpdate() {
 		setActionTabBackground();
         setReminderTabBackground();
     }
 
-	private void setActionTabBackground()
-    {
-        if(ThreadHelper.getAllDueActions(o_thread).size() > 0)
-        {
+	private void setActionTabBackground() {
+        if(ThreadHelper.getAllDueActions(o_thread).size() > 0) {
             o_tabs.setTitleAt(3, "Actions *");
             o_tabs.setBackgroundAt(3, Color.RED);
-        }
-        else
-        {
+        } else {
 			o_tabs.setTitleAt(3, "Actions");
             o_tabs.setBackgroundAt(3, o_tabs.getBackgroundAt(0));
         }
     }
 
-    private void setReminderTabBackground()
-    {
-        if(ThreadHelper.getAllDueReminders(o_thread).size() > 0)
-        {
+    private void setReminderTabBackground() {
+        if(ThreadHelper.getAllDueReminders(o_thread).size() > 0) {
             o_tabs.setTitleAt(4, "Reminders *");
             o_tabs.setBackgroundAt(4, Color.RED);
-        }
-        else
-        {
+        } else {
 			o_tabs.setTitleAt(4, "Reminders");
             o_tabs.setBackgroundAt(4, o_tabs.getBackgroundAt(0));
         }

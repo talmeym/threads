@@ -13,10 +13,8 @@ import java.util.List;
 
 import static java.util.Calendar.*;
 
-public class ActionCellRenderer extends DefaultTableCellRenderer
-{
+public class ActionCellRenderer extends DefaultTableCellRenderer {
 	public static final DateFormat s_createDateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
-
 	public static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd MMM yy");
 	public static final DateFormat s_TimeFormat = new SimpleDateFormat("h:mm");
 	public static final DateFormat s_amPmFormat = new SimpleDateFormat("aa");
@@ -24,17 +22,14 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 
     private final Thread o_thread;
 
-    ActionCellRenderer(Thread p_thread)
-    {
+    ActionCellRenderer(Thread p_thread) {
         o_thread = p_thread;
     }
 
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-    {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Object x_value = value;
 
-        if(x_value instanceof Date)
-        {
+        if(x_value instanceof Date) {
 			if(column == 0) {
 				x_value = s_createDateFormat.format((Date) x_value);
 			} else {
@@ -42,13 +37,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 			}
         }
 
-        java.awt.Component x_component =
-            super.getTableCellRendererComponent(table,
-                                                x_value,
-                                                isSelected,
-                                                hasFocus,
-                                                row,
-                                                column);
+        java.awt.Component x_component = super.getTableCellRendererComponent(table, x_value, isSelected, hasFocus, row, column);
 
 		x_component.setForeground(Color.BLACK);
 		x_component.setBackground(Color.WHITE);
@@ -73,16 +62,11 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 
 		String x_value;
 
-		if(x_dueDate.before(x_lastThingToday))
-		{
+		if(x_dueDate.before(x_lastThingToday)) {
 			x_value = "Today " + s_TimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
-		}
-		else if(x_dueDate.before(x_lastThingTomorrow))
-		{
+		} else if(x_dueDate.before(x_lastThingTomorrow)) {
 			x_value = "Tomorrow " + s_TimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
-		}
-		else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) // within 7 days
-		{
+		} else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
 			x_value = s_dayFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
 		} else {
 		 	x_value = s_dateTimeFormat.format(x_dueDate);
@@ -100,30 +84,20 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 		Date x_lastThingToday = getLastThingToday();
 		Date x_lastThingTomorrow = getLastThingTomorrow();
 
-		if(x_now.after(x_dueDate))
-		{
+		if(x_now.after(x_dueDate)) {
 			x_component.setBackground(new Color(255, 155, 155)); // gone by
-		}
-		else if(x_dueDate.before(x_lastThingToday))
-		{
+		} else if(x_dueDate.before(x_lastThingToday)) {
 			x_component.setBackground(new Color(255, 203, 100)); // today
-		}
-		else if(x_dueDate.before(x_lastThingTomorrow))
-		{
+		} else if(x_dueDate.before(x_lastThingTomorrow)) {
 			x_component.setBackground(new Color(255, 255, 155)); // tomorrow
-		}
-		else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) // within 7 days
-		{
+		} else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
 			x_component.setBackground(new Color(155,255,155));
-		}
-		else
-		{
+		} else {
 			x_component.setBackground(Color.WHITE);
 		}
 	}
 
-	private Date getLastThingToday()
-	{
+	private Date getLastThingToday() {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.set(HOUR_OF_DAY, 23);
 		x_calendar.set(MINUTE, 59);
@@ -132,8 +106,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer
 		return x_calendar.getTime();
 	}
 
-	private Date getLastThingTomorrow()
-	{
+	private Date getLastThingTomorrow() {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.set(HOUR_OF_DAY, 23);
 		x_calendar.set(MINUTE, 59);
