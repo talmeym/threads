@@ -28,7 +28,7 @@ public class ThreadActionPanel extends TablePanel implements Observer {
 				int x_index = getSelectedRow();
 
 				if(x_index != -1) {
-					ThreadHelper.getAllActiveActions(o_thread).get(x_index).setActive(false);
+					LookupHelper.getAllActiveActions(o_thread).get(x_index).setActive(false);
 				}
 			}
 		});
@@ -42,7 +42,7 @@ public class ThreadActionPanel extends TablePanel implements Observer {
     
     private void showThread(int p_index) {
         if(p_index != -1) {
-            Item x_threadItem = ThreadHelper.getAllActiveActions(o_thread).get(p_index);
+            Item x_threadItem = LookupHelper.getAllActiveActions(o_thread).get(p_index);
 			Thread x_thread = x_threadItem.getThread();
 
 			if(x_thread != o_thread) {
@@ -53,7 +53,7 @@ public class ThreadActionPanel extends TablePanel implements Observer {
 
     private void showItem(int p_index) {
         if(p_index != -1) {
-            Item x_threadItem = ThreadHelper.getAllActiveActions(o_thread).get(p_index);
+            Item x_threadItem = LookupHelper.getAllActiveActions(o_thread).get(p_index);
             WindowManager.getInstance().openComponentWindow(x_threadItem, false, 0);
         }
     }

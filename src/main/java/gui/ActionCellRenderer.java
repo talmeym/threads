@@ -42,7 +42,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 		x_component.setForeground(Color.BLACK);
 		x_component.setBackground(Color.WHITE);
 
-		List x_actionItems = ThreadHelper.getAllActiveActions(o_thread);
+		List x_actionItems = LookupHelper.getAllActiveActions(o_thread);
         Item x_item = (Item) x_actionItems.get(row);
 
 		setColourForTime(x_component, x_item);

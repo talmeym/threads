@@ -4,7 +4,7 @@ import util.*;
 
 import java.util.*;
 
-public class ThreadHelper {
+public class LookupHelper {
     public static List<Item> getAllActiveUpdates(Thread p_thread) {
         List<Item> x_result = new ArrayList<Item>();
 		x_result.addAll(getActiveUpdates(p_thread));
@@ -14,7 +14,7 @@ public class ThreadHelper {
             
             if(x_groupItem.isActive()) {
                 if(x_groupItem instanceof Thread) {
-                    x_result.addAll(ThreadHelper.getAllActiveUpdates((Thread) x_groupItem));
+                    x_result.addAll(getAllActiveUpdates((Thread) x_groupItem));
                 }
             }
         }
@@ -32,7 +32,7 @@ public class ThreadHelper {
             
             if(x_groupItem.isActive()) {
                 if(x_groupItem instanceof Thread) {
-                    x_result.addAll(ThreadHelper.getAllActiveActions((Thread) x_groupItem));
+                    x_result.addAll(getAllActiveActions((Thread) x_groupItem));
                 }
             }
         }
@@ -51,7 +51,7 @@ public class ThreadHelper {
                 if(x_groupItem instanceof Thread) {
 					Thread x_thread = (Thread) x_groupItem;
                     x_result.add(x_thread);
-                    x_result.addAll(ThreadHelper.getAllActiveThreads(x_thread));
+                    x_result.addAll(getAllActiveThreads(x_thread));
                 }
             }
         }
@@ -69,7 +69,7 @@ public class ThreadHelper {
 
             if(x_groupItem.isActive()) {
                 if(x_groupItem instanceof Thread) {
-                    x_result.addAll(ThreadHelper.getAllDueActions((Thread) x_groupItem));
+                    x_result.addAll(getAllDueActions((Thread) x_groupItem));
                 }
             }
         }
@@ -87,7 +87,7 @@ public class ThreadHelper {
 
             if(x_groupItem.isActive()) {
                 if(x_groupItem instanceof Thread) {
-                    x_result.addAll(ThreadHelper.getAllDueReminders((Thread) x_groupItem));
+                    x_result.addAll(getAllDueReminders((Thread) x_groupItem));
                 }
             }
         }
@@ -161,11 +161,27 @@ public class ThreadHelper {
 				Item x_item = (Item) x_groupItem;
 
 				if(x_item.isActive()) {
-					x_reminders.addAll(ItemHelper.getDueReminders(x_item));
+					x_reminders.addAll(getDueReminders(x_item));
 				}
 			}
 		}
 
 		return x_reminders;
+	}
+
+	public static List<Reminder> getDueReminders(Item p_item) {
+		List<Reminder> x_dueActiveReminders = new ArrayList<Reminder>();
+
+		if(p_item.isActive() && p_item.getDueDate() != null) {
+			for(int i = 0; i < p_item.getReminderCount(); i++) {
+				Reminder x_reminder = p_item.getReminder(i);
+
+				if(x_reminder.isActive() && x_reminder.getDueDate().before(new Date())) {
+					x_dueActiveReminders.add(x_reminder);
+				}
+			}
+		}
+
+		return x_dueActiveReminders;
 	}
 }

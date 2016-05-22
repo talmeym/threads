@@ -33,7 +33,7 @@ public class SystemTrayUtil {
 	}
 
 	private static void alertAllActionsAndReminders() {
-		List dueReminders = ThreadHelper.getAllDueReminders(o_topLevelThread);
+		List dueReminders = LookupHelper.getAllDueReminders(o_topLevelThread);
 
 		if(dueReminders.size() > 0) {
 			for(Object obj: dueReminders) {
@@ -43,7 +43,7 @@ public class SystemTrayUtil {
 			}
 		}
 
-		List dueActions = ThreadHelper.getAllDueActions(o_topLevelThread);
+		List dueActions = LookupHelper.getAllDueActions(o_topLevelThread);
 
 		if(dueActions.size() > 0) {
 			for(Object obj: dueActions) {

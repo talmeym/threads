@@ -3,10 +3,10 @@ package data;
 import java.io.File;
 import java.util.*;
 
-public abstract class ThreadItem <TYPE extends Component> extends CollectionComponent<TYPE> {
+public abstract class ThreadItem <CONTENTS extends Component> extends CollectionComponent<CONTENTS> {
     private File o_docFolder;
     
-    ThreadItem(Date p_creationDate, boolean p_active, String p_text, List<TYPE> p_components, Comparator<TYPE> p_comparator, File p_docFolder) {
+    ThreadItem(Date p_creationDate, boolean p_active, String p_text, List<CONTENTS> p_components, Comparator<CONTENTS> p_comparator, File p_docFolder) {
         super(p_creationDate, p_active, p_text, p_components, p_comparator);
         o_docFolder = p_docFolder;
     }

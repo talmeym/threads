@@ -16,7 +16,7 @@ public class ThreadUpdatePanel extends TablePanel {
 
     private void showThread(int p_index) {
         if(p_index != -1) {
-            Item x_threadItem = ThreadHelper.getAllActiveUpdates(o_thread).get(p_index);
+            Item x_threadItem = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
 			Thread x_thread = x_threadItem.getThread();
 
 			if(x_thread != o_thread) {
@@ -27,7 +27,7 @@ public class ThreadUpdatePanel extends TablePanel {
 
     private void showItem(int p_index) {
         if(p_index != -1) {
-            Item x_threadItem = ThreadHelper.getAllActiveUpdates(o_thread).get(p_index);
+            Item x_threadItem = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
             WindowManager.getInstance().openComponentWindow(x_threadItem, false, 0);
         }
     }

@@ -20,7 +20,7 @@ class ActionItemTableModel extends ComponentTableModel
             return 0;
         }
         
-        return ThreadHelper.getAllActiveActions(x_thread).size();
+        return LookupHelper.getAllActiveActions(x_thread).size();
     }
 
     public Class getColumnClass(int col) {
@@ -32,7 +32,7 @@ class ActionItemTableModel extends ComponentTableModel
     }
 
     public Object getValueAt(int row, int col) {
-        Item x_item = ThreadHelper.getAllActiveActions((Thread)getComponent()).get(row);
+        Item x_item = LookupHelper.getAllActiveActions((Thread) getComponent()).get(row);
         
         switch(col) {
 			case 0: return x_item.getCreationDate();

@@ -52,7 +52,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
     }
 
 	private void setActionTabBackground() {
-        if(ThreadHelper.getAllDueActions(o_thread).size() > 0) {
+        if(LookupHelper.getAllDueActions(o_thread).size() > 0) {
             o_tabs.setTitleAt(3, "Actions *");
             o_tabs.setBackgroundAt(3, Color.RED);
         } else {
@@ -62,7 +62,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
     }
 
     private void setReminderTabBackground() {
-        if(ThreadHelper.getAllDueReminders(o_thread).size() > 0) {
+        if(LookupHelper.getAllDueReminders(o_thread).size() > 0) {
             o_tabs.setTitleAt(4, "Reminders *");
             o_tabs.setBackgroundAt(4, Color.RED);
         } else {

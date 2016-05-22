@@ -19,7 +19,7 @@ class UpdateItemTableModel extends ComponentTableModel {
             return 0;
         }
 
-        return ThreadHelper.getAllActiveUpdates(x_thread).size();
+        return LookupHelper.getAllActiveUpdates(x_thread).size();
     }
 
     public Class getColumnClass(int col) {
@@ -30,7 +30,7 @@ class UpdateItemTableModel extends ComponentTableModel {
     }
 
     public Object getValueAt(int row, int col) {
-        Item x_updateItem = ThreadHelper.getAllActiveUpdates((Thread)getComponent()).get(row);
+        Item x_updateItem = LookupHelper.getAllActiveUpdates((Thread) getComponent()).get(row);
         
         switch(col) {
 			case 0: return x_updateItem.getCreationDate();

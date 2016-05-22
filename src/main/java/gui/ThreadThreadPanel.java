@@ -67,14 +67,14 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 
 		o_openDocFolderButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				Thread x_thread = ThreadHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
+				Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
 				FolderManager.openDocFolder(x_thread);
 			}
 		});
 
 		o_setDocFolderButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				Thread x_thread = ThreadHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
+				Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
 				FolderManager.setDocFolder(x_thread);
 				o_openDocFolderButton.setEnabled(x_thread.getDocFolder() != null);
 			}
@@ -87,7 +87,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 		if(x_text != null) {
 			Item x_item = new Item();
 			x_item.setText(x_text);
-			Thread x_thread = ThreadHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
+			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
 			x_thread.addThreadItem(x_item);
 			WindowManager.getInstance().openComponentWindow(x_item, true, 0);
 		}
@@ -98,7 +98,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 
 		if(x_name != null) {
 			Thread x_newThread = new Thread(new Date(), true, x_name, null, null);
-			Thread x_thread = ThreadHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
+			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
 			x_thread.addThreadItem(x_newThread);
 			WindowManager.getInstance().openComponentWindow(x_newThread, true, 0);
 		}
@@ -108,7 +108,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 		int x_index = getSelectedRow();
 
 		if(x_index != -1) {
-			ThreadItem x_threadItem = (ThreadItem) ThreadHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
+			ThreadItem x_threadItem = (ThreadItem) LookupHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
 			Thread x_parent = (Thread) x_threadItem.getParentComponent();
 			String x_message = "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?";
 
@@ -121,7 +121,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 
     private void showParentThread(int p_index) {
         if(p_index != -1) {
-            Thread x_thread = ThreadHelper.getAllActiveThreads(o_thread).get(p_index);
+            Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
             WindowManager.getInstance().openComponentWindow(x_thread.getParentComponent(), false, 0);
         }
     }
@@ -129,7 +129,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
     private void showThread(int p_col, int p_row) {
         if(p_row != -1) {
 			int x_tab = p_col > 2 ? p_col - 2 : 0;
-            Thread x_thread = ThreadHelper.getAllActiveThreads(o_thread).get(p_row);
+            Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_row);
             WindowManager.getInstance().openComponentWindow(x_thread, false, x_tab);
         }
     }
@@ -140,7 +140,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 		o_addThreadButton.setEnabled(row != -1);
 		o_removeButton.setEnabled(row != -1);
 		o_setDocFolderButton.setEnabled(row != -1);
-		o_openDocFolderButton.setEnabled(row != -1 && ThreadHelper.getAllActiveThreads(o_thread).get(row).getDocFolder() != null);
+		o_openDocFolderButton.setEnabled(row != -1 && LookupHelper.getAllActiveThreads(o_thread).get(row).getDocFolder() != null);
 	}
 
     void tableRowDoubleClicked(int col, int row) {

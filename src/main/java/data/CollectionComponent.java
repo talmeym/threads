@@ -2,16 +2,16 @@ package data;
 
 import java.util.*;
 
-public abstract class CollectionComponent <TYPE extends Component> extends Component {
-    private final List<TYPE> o_components = new ArrayList<TYPE>();
-    private final Comparator<TYPE> o_comparator;
+public abstract class CollectionComponent <CONTENTS extends Component> extends Component {
+    private final List<CONTENTS> o_components = new ArrayList<CONTENTS>();
+    private final Comparator<CONTENTS> o_comparator;
     
-    CollectionComponent(Date p_creationDate, boolean p_active, String p_text, List<TYPE> p_components, Comparator<TYPE> p_comparator) {
+    CollectionComponent(Date p_creationDate, boolean p_active, String p_text, List<CONTENTS> p_components, Comparator<CONTENTS> p_comparator) {
         super(p_creationDate, p_active, p_text);
         o_comparator = p_comparator;
         
         if(p_components != null) {
-            for(TYPE x_component: p_components) {
+            for(CONTENTS x_component: p_components) {
                 addComponent(x_component);
             }
         }
@@ -21,11 +21,11 @@ public abstract class CollectionComponent <TYPE extends Component> extends Compo
         return o_components.size();
     }
     
-    protected TYPE getComponent(int p_index) {
+    protected CONTENTS getComponent(int p_index) {
 		return o_components.get(p_index);
     }
     
-    protected void addComponent(TYPE p_component) {
+    protected void addComponent(CONTENTS p_component) {
         p_component.setParentComponent(this);
         observe(p_component);
         o_components.add(p_component);
@@ -34,10 +34,10 @@ public abstract class CollectionComponent <TYPE extends Component> extends Compo
 		changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_ADDED, index));
     }
 
-    protected void removeComponent(TYPE p_component) {
-		int index = o_components.indexOf(p_component);
+    protected void removeComponent(CONTENTS p_component) {
 		p_component.setParentComponent(null);
         unobserve(p_component);
+		int index = o_components.indexOf(p_component);
         o_components.remove(p_component);
         Collections.sort(o_components, o_comparator);
 		changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_REMOVED, index));

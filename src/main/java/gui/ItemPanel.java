@@ -61,7 +61,7 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
 		Thread x_thread = o_item.getThread();
 
-		if(ThreadHelper.getActiveUpdates(x_thread).size() > 1 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION) {
+		if(LookupHelper.getActiveUpdates(x_thread).size() > 1 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION) {
 
 			for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
 				ThreadItem x_groupItem = x_thread.getThreadItem(i);

@@ -34,9 +34,9 @@ class ComponentListTableModel extends ComponentTableModel {
 			case 0: return x_threadItem.getCreationDate();
 			case 1: return x_threadItem.getType();
 			case 2: return x_threadItem.getText();
-			case 3: return x_threadItem instanceof Thread ? ThreadHelper.getAllActiveThreads((Thread) x_threadItem).size() : "";
-			case 4: return x_threadItem instanceof Thread ? ThreadHelper.getAllActiveUpdates((Thread) x_threadItem).size() : "";
-			default: return x_threadItem instanceof Thread ? ThreadHelper.getAllActiveActions((Thread) x_threadItem).size() : "";
+			case 3: return x_threadItem instanceof Thread ? LookupHelper.getAllActiveThreads((Thread) x_threadItem).size() : "";
+			case 4: return x_threadItem instanceof Thread ? LookupHelper.getAllActiveUpdates((Thread) x_threadItem).size() : "";
+			default: return x_threadItem instanceof Thread ? LookupHelper.getAllActiveActions((Thread) x_threadItem).size() : "";
         }
     }
 }

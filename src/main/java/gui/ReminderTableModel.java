@@ -19,7 +19,7 @@ class ReminderTableModel extends ComponentTableModel {
             return 0;
         }
         
-        return ThreadHelper.getAllDueReminders(x_thread).size();
+        return LookupHelper.getAllDueReminders(x_thread).size();
     }
 
     public Class getColumnClass(int col) {
@@ -31,7 +31,7 @@ class ReminderTableModel extends ComponentTableModel {
     }
 
     public Object getValueAt(int row, int col) {
-        Reminder x_dueReminder = ThreadHelper.getAllDueReminders((Thread)getComponent()).get(row);
+        Reminder x_dueReminder = LookupHelper.getAllDueReminders((Thread) getComponent()).get(row);
         
         switch(col) {
 			case 0: return x_dueReminder.getCreationDate();
