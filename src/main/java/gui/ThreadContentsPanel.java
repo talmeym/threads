@@ -84,8 +84,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
 		String x_text = JOptionPane.showInputDialog(this, "Enter Item Text");
 
 		if(x_text != null) {
-			Item x_item = new Item();
-			x_item.setText(x_text);
+			Item x_item = new Item(x_text);
 			o_thread.addThreadItem(x_item);
 			WindowManager.getInstance().openComponentWindow(x_item, true, 0);
 		}
@@ -95,7 +94,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
         String x_name = JOptionPane.showInputDialog(this, "Enter Thread Name");
         
         if(x_name != null) {
-            Thread x_thread = new Thread(new Date(), true, x_name, null, null);
+            Thread x_thread = new Thread(x_name);
             o_thread.addThreadItem(x_thread);
             WindowManager.getInstance().openComponentWindow(x_thread, true, 0);
         }

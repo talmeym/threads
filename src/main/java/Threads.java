@@ -10,7 +10,7 @@ public class Threads {
     public static void main(String[] args) {
         TimeUpdater.getInstance().start();
 		final String filePath = args.length > 0 ? args[0] : "threads.xml";
-		final Thread x_topThread = new File(filePath).exists() ? Loader.loadDocument(filePath) : new Thread(new Date(), true, "Welcome to Threads", null, null);
+		final Thread x_topThread = new File(filePath).exists() ? Loader.loadDocument(filePath) : new Thread("Welcome to Threads");
 
 		WindowManager.getInstance().addWindowListener(new WindowManager.WindowListener() {
 			@Override

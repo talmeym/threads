@@ -63,6 +63,7 @@ public class Saver {
     }
 
     private static void addComponentData(Element p_element, Component p_component) {
+		p_element.setAttribute(XmlConstants.s_ID, p_component.getId().toString());
         p_element.setAttribute(XmlConstants.s_CREATED, addDateTime(p_component.getCreationDate()));
         p_element.setAttribute(XmlConstants.s_ACTIVE, addBoolean(p_component.isActive()));
         addContent(p_element, XmlConstants.s_TEXT, p_component.getText());

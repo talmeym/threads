@@ -1,17 +1,17 @@
 package data;
 
-import java.util.Date;
+import java.util.*;
 
 public class Reminder extends Component implements HasDueDate
 {
     private Date o_date;
     
     public Reminder(Item p_item) {
-        this(new Date(), true, "New Reminder", p_item.getDueDate());
+        this(UUID.randomUUID(), new Date(), true, "New Reminder", p_item.getDueDate());
     }
     
-    public Reminder(Date p_creationDate, boolean p_active, String p_text, Date p_date) {
-        super(p_creationDate, p_active, p_text);
+    public Reminder(UUID id, Date p_creationDate, boolean p_active, String p_text, Date p_date) {
+        super(id, p_creationDate, p_active, p_text);
         o_date = p_date;
     }
     

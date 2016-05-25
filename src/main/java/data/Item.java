@@ -7,12 +7,12 @@ import java.util.*;
 public class Item extends ThreadItem<Reminder> implements HasDueDate {
     private Date o_dueDate;
     
-    public Item() {
-        this(new Date(), true, "New Item", null, null);
+    public Item(String text) {
+        this(UUID.randomUUID(), new Date(), true, text, null, null);
     }
     
-    public Item(Date p_creationDate, boolean p_active, String p_text, Date p_dueDate, List<Reminder> p_reminders) {
-        super(p_creationDate, p_active, p_text, p_reminders, new TextComparator<Reminder>(), null);
+    public Item(UUID id, Date p_creationDate, boolean p_active, String p_text, Date p_dueDate, List<Reminder> p_reminders) {
+        super(id, p_creationDate, p_active, p_text, p_reminders, new TextComparator<Reminder>(), null);
 		o_dueDate = p_dueDate;
     }
     

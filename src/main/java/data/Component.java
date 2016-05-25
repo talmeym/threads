@@ -1,19 +1,25 @@
 package data;
 
-import java.util.Date;
+import java.util.*;
 
 public abstract class Component extends ObservableObserver {
-    private final Date o_creationDate;
+	private final UUID o_id;
+	private final Date o_creationDate;
     private boolean o_active;
     private String o_text;
     private Component o_parentComponent;
-    
-    Component(Date p_creationDate, boolean p_activeFlag, String p_text) {
-        o_creationDate = p_creationDate;
+
+	Component(UUID p_id, Date p_creationDate, boolean p_activeFlag, String p_text) {
+		o_id = p_id;
+		o_creationDate = p_creationDate;
         o_active = p_activeFlag;
         o_text = p_text;
     }
-    
+
+	public UUID getId() {
+		return o_id;
+	}
+
     public Date getCreationDate() {
         return o_creationDate;
     }

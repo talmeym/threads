@@ -50,12 +50,19 @@
 		<xs:sequence>
 			<xs:element name="text" type="text"/>
 		</xs:sequence>
+		<xs:attribute name="id" type="uuid" use="required"/>
 		<xs:attribute name="created" type="xs:dateTime" use="required"/>
 		<xs:attribute name="active" type="xs:boolean" use="required"/>
 	</xs:complexType>
 	<xs:simpleType name="text" final="restriction">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="uuid">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

@@ -34,6 +34,7 @@ public class Loader {
     }
     
     private static Thread loadThread(Element p_element) {
+		UUID id = loadId(p_element);
         Date x_creationDate = loadCreatedDate(p_element);
         boolean x_active = loadActiveFlag(p_element);        
         String x_text = loadText(p_element); 
@@ -52,10 +53,11 @@ public class Loader {
 		}
         
         File x_docFolder = loadDocFolder(p_element);
-        return new Thread(x_creationDate, x_active, x_text, x_itemList, x_docFolder);
+        return new Thread(id, x_creationDate, x_active, x_text, x_itemList, x_docFolder);
     }
 
     private static Item loadItem(Element p_element) {
+		UUID id = loadId(p_element);
         Date x_creationDate = loadCreatedDate(p_element);
         boolean x_active = loadActiveFlag(p_element);        
         String x_text = loadText(p_element);
@@ -73,17 +75,28 @@ public class Loader {
 			}
 		}
 
-		return new Item(x_creationDate, x_active, x_text, x_dueDate, x_reminderList);
+		return new Item(id, x_creationDate, x_active, x_text, x_dueDate, x_reminderList);
     }
 
     private static Reminder loadReminder(Element p_element) {
-        Date x_creationDate = loadCreatedDate(p_element);
+		UUID id = loadId(p_element);
+		Date x_creationDate = loadCreatedDate(p_element);
         boolean x_active = loadActiveFlag(p_element);        
         String x_text = loadText(p_element);
         Date x_date = loadDateTime(p_element.getChildText(XmlConstants.s_REM_DATE));
-        return new Reminder(x_creationDate, x_active, x_text, x_date);
+        return new Reminder(id, x_creationDate, x_active, x_text, x_date);
     }
-    
+
+	private static UUID loadId(Element p_element) {
+		String id = p_element.getAttributeValue(XmlConstants.s_ID);
+
+		if(id == null) {
+			return UUID.randomUUID();
+		}
+
+		return UUID.fromString(id);
+	}
+
     private static Date loadCreatedDate(Element p_element) {
         return loadDateTime(p_element.getAttributeValue(XmlConstants.s_CREATED));
     }

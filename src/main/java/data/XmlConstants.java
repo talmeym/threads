@@ -14,4 +14,5 @@ public class XmlConstants {
     public static final String s_REM_DATE = "remind_dt";
     public static final String s_THREAD = "thread";
     public static final String s_DOC_FOLDER = "doc_folder";
+	public static final String s_ID = "id";
 }
