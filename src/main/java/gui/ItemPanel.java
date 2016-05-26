@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class ItemPanel extends TablePanel implements ChangeListener, ActionListener {
+class ItemPanel extends TablePanel implements ComponentInfoChangeListener, ActionListener {
     private final Item o_item;
 	private final JButton o_removeReminderButton = new JButton("Remove Reminder");
     private final JButton o_closeButton = new JButton("Close");
@@ -54,7 +54,7 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener {
     }
 
 	@Override
-	public void changed(boolean saved) {
+	public void componentInfoChanged(boolean saved) {
 		o_closeButton.setText(saved ? "Close" : "Cancel");
 	}
 

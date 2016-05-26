@@ -1,18 +1,19 @@
 package gui;
 
-import data.Thread;
 import data.*;
+import data.Thread;
 import util.*;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.*;
 
-public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer, ChangeListener {
+public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer, ComponentInfoChangeListener {
 	private final Thread o_thread;
     private final JTabbedPane o_tabs;
     
-    public ThreadPanel(Thread p_thread, boolean p_new, int tabIndex) {
+    public ThreadPanel(Thread p_thread, boolean p_new, int tabIndex, ChangeListener listener) {
         super(new BorderLayout());
         o_thread = p_thread;
         
@@ -29,7 +30,9 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 
-		o_tabs.setSelectedIndex(tabIndex);
+		int index = tabIndex != -1 ? tabIndex : 0;
+		o_tabs.setSelectedIndex(index);
+		o_tabs.addChangeListener(listener);
 
         o_thread.addObserver(this);
         TimeUpdater.getInstance().addTimeUpdateListener(this);
@@ -37,8 +40,24 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 		setReminderTabBackground();
     }
 
+	public int getTabIndex() {
+		return o_tabs.getSelectedIndex();
+	}
+
 	public void setTabIndex(int tabIndex) {
-		o_tabs.setSelectedIndex(tabIndex);
+		if(tabIndex != -1) {
+			ChangeListener[] changeListeners = o_tabs.getChangeListeners();
+
+			for(ChangeListener listener: changeListeners) {
+				o_tabs.removeChangeListener(listener);
+			}
+
+			o_tabs.setSelectedIndex(tabIndex);
+
+			for(ChangeListener listener: changeListeners) {
+				o_tabs.addChangeListener(listener);
+			}
+		}
 	}
 
     public void update(Observable o, Object arg) {
@@ -72,7 +91,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
     }
 
 	@Override
-	public void changed(boolean saved) {
+	public void componentInfoChanged(boolean saved) {
 		// do nothing
 	}
 }

@@ -37,10 +37,10 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
     private JComboBox o_weekBox = new JComboBox(s_weekItems);
     private JComboBox o_dayBox = new JComboBox(s_dayItems);
 	private final HasDueDate o_item;
-	private ChangeListener o_listener;
+	private ComponentInfoChangeListener o_listener;
     private final JTextField o_dueDateField = new JTextField();
 
-    DateSuggestionPanel(Item p_item, ChangeListener p_listener) {
+    DateSuggestionPanel(Item p_item, ComponentInfoChangeListener p_listener) {
         super(new BorderLayout());
 		o_item = p_item;
 		o_listener = p_listener;
@@ -169,22 +169,22 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 			o_item.setDueDate(null);
 		}
 
-		o_listener.changed(true);
+		o_listener.componentInfoChanged(true);
 	}
 
 	@Override
 	public void insertUpdate(DocumentEvent documentEvent) {
-		o_listener.changed(false);
+		o_listener.componentInfoChanged(false);
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent documentEvent) {
-		o_listener.changed(false);
+		o_listener.componentInfoChanged(false);
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent documentEvent) {
-		o_listener.changed(false);
+		o_listener.componentInfoChanged(false);
 	}
 
 	private static class DateItem {

@@ -10,7 +10,7 @@ import java.awt.event.*;
 public class ComponentInfoPanel extends JPanel implements ActionListener, DocumentListener {
     private final Component o_component;
 
-	private ChangeListener o_listener;
+	private ComponentInfoChangeListener o_listener;
 
 	private final JButton o_parentButton = new JButton("Parent");
     
@@ -18,7 +18,7 @@ public class ComponentInfoPanel extends JPanel implements ActionListener, Docume
     
     private final JCheckBox o_activeCheckBox = new JCheckBox("Active");
     
-    public ComponentInfoPanel(Component p_component, boolean p_new, ChangeListener p_listener) {
+    public ComponentInfoPanel(Component p_component, boolean p_new, ComponentInfoChangeListener p_listener) {
         super(new BorderLayout());
         o_component = p_component;
 		o_listener = p_listener;
@@ -65,7 +65,7 @@ public class ComponentInfoPanel extends JPanel implements ActionListener, Docume
 				o_textField.setText(o_component.getText());
 			}
 
-			o_listener.changed(true);
+			o_listener.componentInfoChanged(true);
         }
         
         if(e.getSource() == o_activeCheckBox) {
@@ -80,16 +80,16 @@ public class ComponentInfoPanel extends JPanel implements ActionListener, Docume
 
 	@Override
 	public void insertUpdate(DocumentEvent documentEvent) {
-		o_listener.changed(false);
+		o_listener.componentInfoChanged(false);
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent documentEvent) {
-		o_listener.changed(false);
+		o_listener.componentInfoChanged(false);
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent documentEvent) {
-		o_listener.changed(false);
+		o_listener.componentInfoChanged(false);
 	}
 }

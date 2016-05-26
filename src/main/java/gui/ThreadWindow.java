@@ -12,16 +12,13 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class ThreadWindow extends JFrame implements TreeSelectionListener, Observer {
+public class ThreadWindow extends JFrame implements TreeSelectionListener, Observer, ChangeListener {
 
 	private final JTree navigationTree;
-
 	private final CardLayout cardLayout = new CardLayout();
-
 	private final List<String> ids = new ArrayList<String>();
-
-	private final JPanel threadPanel;
-
+	private final JPanel threadPanel = new JPanel(cardLayout);
+	private final Map<Thread, ThreadPanel> threadPanels = new HashMap<Thread, ThreadPanel>();
 	private Thread o_currentThread;
 
 	public ThreadWindow(Thread p_topLevelThread) {
@@ -35,8 +32,6 @@ public class ThreadWindow extends JFrame implements TreeSelectionListener, Obser
 		navigationPanel.add(new JScrollPane(navigationTree), BorderLayout.CENTER);
 		navigationTree.addTreeSelectionListener(this);
 		ImageUtil.addIconToWindow(this);
-
-		threadPanel = new JPanel(cardLayout);
 
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setDividerLocation(300);
@@ -54,14 +49,18 @@ public class ThreadWindow extends JFrame implements TreeSelectionListener, Obser
 	}
 
 	public void showThread(Thread p_thread, boolean p_new, int p_tabIndex) {
-		o_currentThread = p_thread;
 		String idString = p_thread.getId().toString();
 
 		if(!ids.contains(idString)) {
-			threadPanel.add(new ThreadPanel(p_thread, p_new, 0), idString);
+			ThreadPanel newPanel = new ThreadPanel(p_thread, p_new, p_tabIndex == -1 ? getCurrentThreadTabIndex() : p_tabIndex, this);
+			threadPanel.add(newPanel, idString);
+			threadPanels.put(p_thread, newPanel);
 			ids.add(idString);
+		} else {
+			threadPanels.get(p_thread).setTabIndex(p_tabIndex);
 		}
 
+		o_currentThread = p_thread;
 		cardLayout.show(threadPanel, idString);
 		renameWindow(p_thread);
 	}
@@ -115,5 +114,18 @@ public class ThreadWindow extends JFrame implements TreeSelectionListener, Obser
 		}
 
 		return parentComponents.toArray(new Object[parentComponents.size()]);
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent changeEvent) {
+		int tabIndex = getCurrentThreadTabIndex();
+
+		for(ThreadPanel panel: threadPanels.values()) {
+			panel.setTabIndex(tabIndex);
+		}
+	}
+
+	private int getCurrentThreadTabIndex() {
+		return threadPanels.get(o_currentThread).getTabIndex();
 	}
 }

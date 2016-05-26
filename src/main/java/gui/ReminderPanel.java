@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ReminderPanel extends JPanel implements ChangeListener, ActionListener {
+public class ReminderPanel extends JPanel implements ComponentInfoChangeListener, ActionListener {
 
     private final Reminder o_reminder;
 	private final JButton o_closeButton = new JButton("Close");
@@ -40,7 +40,7 @@ public class ReminderPanel extends JPanel implements ChangeListener, ActionListe
     }
 
 	@Override
-	public void changed(boolean saved) {
+	public void componentInfoChanged(boolean saved) {
 		o_closeButton.setText(saved ? "Close" : "Cancel");
 	}
 }
