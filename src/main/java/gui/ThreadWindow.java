@@ -49,6 +49,7 @@ public class ThreadWindow extends JFrame implements TreeSelectionListener, Obser
 
 		showThread(p_topLevelThread, true, 0);
 
+		ImageUtil.addIconToWindow(this);
 		setVisible(true);
 	}
 

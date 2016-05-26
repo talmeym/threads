@@ -1,7 +1,7 @@
 package gui;
 
 import data.*;
-import util.GUIUtil;
+import util.*;
 
 import javax.swing.*;
 import java.util.*;
@@ -12,6 +12,7 @@ public class ItemWindow extends JFrame {
 		setSize(GUIConstants.s_itemWindowSize);
 		renameWindow(p_item);
 		GUIUtil.centreToWindow(this, parent);
+		ImageUtil.addIconToWindow(this);
 		setVisible(true);
 	}
 

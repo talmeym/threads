@@ -10,9 +10,9 @@ import java.util.*;
 
 public class Loader {
     public static Thread loadDocument(String p_xmlPath) {
-        SAXBuilder x_builder = new SAXBuilder(true);
-        x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
-        x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
+        SAXBuilder x_builder = new SAXBuilder(false);
+        //x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
+        //x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
         x_builder.setEntityResolver(new EntityResolver() {
 			@Override
 			public InputSource resolveEntity(String something, String entityPath) throws SAXException, IOException {
