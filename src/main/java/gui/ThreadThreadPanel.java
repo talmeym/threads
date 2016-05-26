@@ -88,7 +88,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 			Item x_item = new Item(x_text);
 			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
 			x_thread.addThreadItem(x_item);
-			WindowManager.getInstance().openComponentWindow(x_item, true, 0);
+			WindowManager.getInstance().openComponent(x_item, true, 0);
 		}
 	}
 
@@ -99,7 +99,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 			Thread x_newThread = new Thread(x_name);
 			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
 			x_thread.addThreadItem(x_newThread);
-			WindowManager.getInstance().openComponentWindow(x_newThread, true, 0);
+			WindowManager.getInstance().openComponent(x_newThread, true, 0);
 		}
 	}
 
@@ -112,7 +112,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 			String x_message = "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?";
 
 			if(JOptionPane.showConfirmDialog(null, x_message) == JOptionPane.YES_OPTION) {
-				WindowManager.getInstance().closeComponentWindow(x_threadItem);
+				WindowManager.getInstance().closeComponent(x_threadItem);
 				x_parent.removeThreadItem(x_threadItem);
 			}
 		}
@@ -121,7 +121,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
     private void showParentThread(int p_index) {
         if(p_index != -1) {
             Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
-            WindowManager.getInstance().openComponentWindow(x_thread.getParentComponent(), false, 0);
+            WindowManager.getInstance().openComponent(x_thread.getParentComponent(), false, 0);
         }
     }
 
@@ -129,7 +129,7 @@ class ThreadThreadPanel extends TablePanel implements Observer {
         if(p_row != -1) {
 			int x_tab = p_col > 2 ? p_col - 2 : 0;
             Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_row);
-            WindowManager.getInstance().openComponentWindow(x_thread, false, x_tab);
+            WindowManager.getInstance().openComponent(x_thread, false, x_tab);
         }
     }
 

@@ -36,7 +36,7 @@ public class ReminderPanel extends JPanel implements ChangeListener, ActionListe
     }
 
     public void actionPerformed(ActionEvent e) {
-		WindowManager.getInstance().closeComponentWindow(o_reminder);
+		WindowManager.getInstance().closeComponent(o_reminder);
     }
 
 	@Override

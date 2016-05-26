@@ -86,7 +86,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
 		if(x_text != null) {
 			Item x_item = new Item(x_text);
 			o_thread.addThreadItem(x_item);
-			WindowManager.getInstance().openComponentWindow(x_item, true, 0);
+			WindowManager.getInstance().openComponent(x_item, true, 0);
 		}
 	}
     
@@ -96,7 +96,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
         if(x_name != null) {
             Thread x_thread = new Thread(x_name);
             o_thread.addThreadItem(x_thread);
-            WindowManager.getInstance().openComponentWindow(x_thread, true, 0);
+            WindowManager.getInstance().openComponent(x_thread, true, 0);
         }
     }
     
@@ -108,7 +108,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
             String x_message = "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?";
             
             if(JOptionPane.showConfirmDialog(null, x_message) == JOptionPane.YES_OPTION) {
-                WindowManager.getInstance().closeComponentWindow(x_threadItem);
+                WindowManager.getInstance().closeComponent(x_threadItem);
                 o_thread.removeThreadItem(x_threadItem);
             }
         }
@@ -116,7 +116,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
     
     private void showComponent(int p_col, int p_row) {
         if(p_row != -1) {
-			WindowManager.getInstance().openComponentWindow(o_thread.getThreadItem(p_row), false, p_col > 2 ? p_col - 2 : 0);
+			WindowManager.getInstance().openComponent(o_thread.getThreadItem(p_row), false, p_col > 2 ? p_col - 2 : 0);
         }
     }
 

@@ -1,29 +1,19 @@
 import data.*;
 import data.Thread;
-import gui.WindowManager;
+import gui.*;
 import util.*;
 
 import java.io.*;
-import java.util.Date;
 
 public class Threads {
     public static void main(String[] args) {
         TimeUpdater.getInstance().start();
-		final String filePath = args.length > 0 ? args[0] : "threads.xml";
-		final Thread x_topThread = new File(filePath).exists() ? Loader.loadDocument(filePath) : new Thread("Welcome to Threads");
+		String x_filePath = args.length > 0 ? args[0] : "threads.xml";
+		Thread x_topThread = new File(x_filePath).exists() ? Loader.loadDocument(x_filePath) : new Thread("Welcome to Threads");
 
-		WindowManager.getInstance().addWindowListener(new WindowManager.WindowListener() {
-			@Override
-			public void lastWindowClosing() {
-				TimedSaver.getInstance().stopRunning();
-				Saver.saveDocument(x_topThread, filePath);
-				System.exit(0);
-			}
-		});
-
-		WindowManager.getInstance().showNavigationTreeWindow(x_topThread);
-		WindowManager.getInstance().openComponentWindow(x_topThread, true, 0);
-        TimedSaver.getInstance().setThread(x_topThread, filePath);
+        TimedSaver.getInstance().setThread(x_topThread, x_filePath);
 		SystemTrayUtil.initialise(x_topThread);
+
+		WindowManager.initialise(x_topThread, x_filePath);
 	}
 }

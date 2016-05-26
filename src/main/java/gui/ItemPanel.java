@@ -76,14 +76,14 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener {
 			}
 		}
 
-		WindowManager.getInstance().closeComponentWindow(o_item);
+		WindowManager.getInstance().closeComponent(o_item);
     }
     
     private void addReminder() {
         if(o_item.getDueDate() != null) {
             Reminder x_reminder = new Reminder(o_item);
             o_item.addReminder(x_reminder);
-            WindowManager.getInstance().openComponentWindow(x_reminder, true, 0);
+            WindowManager.getInstance().openComponent(x_reminder, true, 0);
         }
     }
     
@@ -95,7 +95,7 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener {
                 Reminder x_reminder = o_item.getReminder(x_index);
                 
                 if(JOptionPane.showConfirmDialog(null, "Remove Reminder '" + x_reminder.getText() + "' ?") == JOptionPane.YES_OPTION) {
-                    WindowManager.getInstance().closeComponentWindow(x_reminder);
+                    WindowManager.getInstance().closeComponent(x_reminder);
                     o_item.removeReminder(x_reminder);
                 }
             }
@@ -104,7 +104,7 @@ class ItemPanel extends TablePanel implements ChangeListener, ActionListener {
     
     private void showReminder(int p_index) {
         if(p_index != -1) {
-            WindowManager.getInstance().openComponentWindow(o_item.getReminder(p_index), false, 0);
+            WindowManager.getInstance().openComponent(o_item.getReminder(p_index), false, 0);
         }
     }
 

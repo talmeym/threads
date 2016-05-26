@@ -60,7 +60,6 @@ public class ComponentInfoPanel extends JPanel implements ActionListener, Docume
             if(o_textField.getText().length() > 0) {
                 if(!o_textField.getText().equals(o_component.getText())) {
                     o_component.setText(o_textField.getText());
-                    WindowManager.getInstance().renameAllWindows();
                 }
             } else {
 				o_textField.setText(o_component.getText());
@@ -74,8 +73,8 @@ public class ComponentInfoPanel extends JPanel implements ActionListener, Docume
         }
         
         if(e.getSource() == o_parentButton) {
-            WindowManager.getInstance().closeComponentWindow(o_component);
-            WindowManager.getInstance().openComponentWindow(o_component.getParentComponent(), false, 0);
+            WindowManager.getInstance().closeComponent(o_component);
+            WindowManager.getInstance().openComponent(o_component.getParentComponent(), false, 0);
         }
     }
 

@@ -90,6 +90,7 @@ public class Loader {
 	private static UUID loadId(Element p_element) {
 		String id = p_element.getAttributeValue(XmlConstants.s_ID);
 
+		// TODO remove this soon
 		if(id == null) {
 			return UUID.randomUUID();
 		}

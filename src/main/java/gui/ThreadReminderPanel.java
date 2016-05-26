@@ -43,14 +43,14 @@ public class ThreadReminderPanel extends TablePanel implements Observer {
     private void showReminder(int p_index) {
         if(p_index != -1) {
             Reminder x_reminder = LookupHelper.getAllDueReminders(o_thread).get(p_index);
-            WindowManager.getInstance().openComponentWindow(x_reminder, false, 0);
+            WindowManager.getInstance().openComponent(x_reminder, false, 0);
         }
     }
 
     private void showItem(int p_index) {
         if(p_index != -1) {
             Reminder x_reminder = LookupHelper.getAllDueReminders(o_thread).get(p_index);
-            WindowManager.getInstance().openComponentWindow(x_reminder.getItem(), false, 0);
+            WindowManager.getInstance().openComponent(x_reminder.getItem(), false, 0);
         }
     }
 
