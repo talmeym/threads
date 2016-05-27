@@ -17,7 +17,6 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 	public static final DateFormat s_createDateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
 	public static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd MMM yy");
 	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mm");
-	public static final DateFormat s_24HrTimeFormat = new SimpleDateFormat("H:mm");
 	public static final DateFormat s_amPmFormat = new SimpleDateFormat("aa");
 	public static final DateFormat s_dayFormat = new SimpleDateFormat("EEEE h:mm");
 
@@ -86,7 +85,6 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 		Date x_now = new Date();
 		Date x_lastThingToday = getLastThingToday();
 		Date x_lastThingTomorrow = getLastThingTomorrow();
-
 
 		if(x_dueDate.before(x_now)) {
 			x_component.setBackground(new Color(255, 155, 155)); // gone by
