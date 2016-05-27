@@ -25,10 +25,11 @@ public class ItemWindow extends JDialog implements ActionListener {
 	void renameWindow(Component p_component) {
 		StringBuilder x_title = new StringBuilder("Threads: ");
 		List<String> x_parentNames = new ArrayList<String>();
+		Component x_parent = p_component.getParentComponent();
 
-		while(p_component.getParentComponent() != null) {
-			x_parentNames.add(p_component.getParentComponent().getText());
-			p_component = p_component.getParentComponent();
+		while(x_parent != null) {
+			x_parentNames.add(x_parent.getText());
+			x_parent = x_parent.getParentComponent();
 		}
 
 		for(int i = x_parentNames.size() - 1; i > -1; i--) {

@@ -45,15 +45,15 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 		return o_tabs.getSelectedIndex();
 	}
 
-	public void setTabIndex(int tabIndex) {
-		if(tabIndex != -1) {
+	public void setTabIndex(int p_tabIndex) {
+		if(p_tabIndex != -1 && p_tabIndex != o_tabs.getSelectedIndex()) {
 			ChangeListener[] changeListeners = o_tabs.getChangeListeners();
 
 			for(ChangeListener listener: changeListeners) {
 				o_tabs.removeChangeListener(listener);
 			}
 
-			o_tabs.setSelectedIndex(tabIndex);
+			o_tabs.setSelectedIndex(p_tabIndex);
 
 			for(ChangeListener listener: changeListeners) {
 				o_tabs.addChangeListener(listener);
