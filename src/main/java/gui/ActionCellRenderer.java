@@ -84,18 +84,12 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 	private void setColourForTime(Component x_component, Item x_item) {
 		Date x_dueDate = x_item.getDueDate();
 		Date x_now = new Date();
-		Date x_firstThingToday = getFirstThingToday();
 		Date x_lastThingToday = getLastThingToday();
 		Date x_lastThingTomorrow = getLastThingTomorrow();
 
-		boolean x_allDay = s_24HrTimeFormat.format(x_dueDate).equals("0:00");
 
-		if(x_allDay && x_dueDate.before(x_firstThingToday)) {
+		if(x_dueDate.before(x_now)) {
 			x_component.setBackground(new Color(255, 155, 155)); // gone by
-		} else if(!x_allDay && x_dueDate.before(x_now)) {
-			x_component.setBackground(new Color(255, 155, 155)); // gone by
-		} else if(x_allDay && x_dueDate.before(x_now)) {
-			x_component.setBackground(new Color(255, 203, 100)); // today
 		} else if(x_dueDate.before(x_lastThingToday)) {
 			x_component.setBackground(new Color(255, 203, 100)); // today
 		} else if(x_dueDate.before(x_lastThingTomorrow)) {
@@ -105,15 +99,6 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 		} else {
 			x_component.setBackground(Color.WHITE);
 		}
-	}
-
-	private Date getFirstThingToday() {
-		Calendar x_calendar = Calendar.getInstance();
-		x_calendar.set(HOUR_OF_DAY, 0);
-		x_calendar.set(MINUTE, 0);
-		x_calendar.set(Calendar.SECOND, 0);
-		x_calendar.set(Calendar.MILLISECOND, 0);
-		return x_calendar.getTime();
 	}
 
 	private Date getLastThingToday() {
