@@ -18,14 +18,11 @@ public class SystemTrayUtil {
 
 	public static void initialise(Thread p_topLevelThread) {
 		try {
-			o_trayIcon = new TrayIcon(ImageUtil.getThreadsImage());
 			o_topLevelThread = p_topLevelThread;
+			o_popUpMenu = new PopupMenu();
+			o_trayIcon = new TrayIcon(ImageUtil.getThreadsImage(), "Tooltip", o_popUpMenu);
 			SystemTray systemTray = SystemTray.getSystemTray();
 			systemTray.add(o_trayIcon);
-
-			o_popUpMenu = new PopupMenu();
-			o_trayIcon.setPopupMenu(o_popUpMenu);
-
 			processAlerts();
 			TimeUpdater.getInstance().addTimeUpdateListener(new TimeUpdateListener() {
 				@Override
