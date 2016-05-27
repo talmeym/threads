@@ -20,7 +20,8 @@ public class SystemTrayUtil {
 		try {
 			o_topLevelThread = p_topLevelThread;
 			o_popUpMenu = new PopupMenu();
-			o_trayIcon = new TrayIcon(ImageUtil.getThreadsImage(), "Tooltip", o_popUpMenu);
+			o_trayIcon = new TrayIcon(ImageUtil.getThreadsImage(), "Threads", o_popUpMenu);
+			o_trayIcon.setImageAutoSize(true);
 			SystemTray systemTray = SystemTray.getSystemTray();
 			systemTray.add(o_trayIcon);
 			processAlerts();
@@ -72,7 +73,7 @@ public class SystemTrayUtil {
 			}
 		});
 
-		String menuItemText = (component instanceof Item ? "Action" : "Reminder") + ": " + component.getText();
+		String menuItemText = (component instanceof Item ? "Action Overdue" : "Reminder") + ": " + component.getText();
 		MenuItem menuItem = new MenuItem(menuItemText);
 
 		menuItem.addActionListener(new ActionListener() {

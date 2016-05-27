@@ -16,7 +16,7 @@ public class ImageUtil {
 
 	public static Image getThreadsImage() {
 		try {
-			InputStream inputStream = SystemTrayUtil.class.getResourceAsStream("/threads.png");
+			InputStream inputStream = SystemTrayUtil.class.getResourceAsStream("/threads.gif");
 
 			if(inputStream != null && inputStream.available() > 0) {
 				return ImageIO.read(inputStream);
