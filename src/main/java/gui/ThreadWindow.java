@@ -34,7 +34,7 @@ public class ThreadWindow extends JFrame implements TreeSelectionListener, Obser
 		ImageUtil.addIconToWindow(this);
 
 		JSplitPane splitPane = new JSplitPane();
-		splitPane.setDividerLocation(300);
+		splitPane.setDividerLocation(GUIConstants.s_threadWindowDividerLocation);
 		splitPane.setLeftComponent(navigationPanel);
 		splitPane.setRightComponent(threadPanel);
 
