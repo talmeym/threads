@@ -108,15 +108,8 @@ public class ThreadContentsPanel extends TablePanel implements Observer
             String x_message = "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?";
             
             if(JOptionPane.showConfirmDialog(null, x_message) == JOptionPane.YES_OPTION) {
-                WindowManager.getInstance().closeComponent(x_threadItem);
                 o_thread.removeThreadItem(x_threadItem);
             }
-        }
-    }
-    
-    private void showComponent(int p_col, int p_row) {
-        if(p_row != -1) {
-			WindowManager.getInstance().openComponent(o_thread.getThreadItem(p_row), false, p_col > 2 ? p_col - 2 : 0);
         }
     }
 
@@ -126,8 +119,8 @@ public class ThreadContentsPanel extends TablePanel implements Observer
 	}
 
 	void tableRowDoubleClicked(int col, int row) {
-		switch (col) {
-			default: showComponent(col, row);
+		if(row != -1) {
+			WindowManager.getInstance().openComponent(o_thread.getThreadItem(row), false, col > 2 ? col - 2 : 0);
 		}
     }
 

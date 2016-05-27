@@ -1,18 +1,17 @@
 package gui;
 
 import data.*;
-import data.Thread;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class ItemPanel extends TablePanel implements ComponentInfoChangeListener, ActionListener {
+class ItemPanel extends TablePanel implements ComponentInfoChangeListener {
     private final Item o_item;
 	private final JButton o_removeReminderButton = new JButton("Remove Reminder");
     private final JButton o_closeButton = new JButton("Close");
 
-    ItemPanel(Item p_item, boolean p_new) {
+    ItemPanel(Item p_item, boolean p_new, final ActionListener listener) {
         super(new ItemReminderTableModel(p_item),  new CellRenderer(p_item));
         o_item = p_item;
 
@@ -20,7 +19,7 @@ class ItemPanel extends TablePanel implements ComponentInfoChangeListener, Actio
         fixColumnWidth(2, GUIConstants.s_creationDateWidth);
         fixColumnWidth(3, GUIConstants.s_dateStatusWidth);
 
-		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_item, p_new, this);
+		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_item, p_new, this, listener);
 
 		JButton o_addReminderButton = new JButton("Add Reminder");
 		o_addReminderButton.addActionListener(new ActionListener() {
@@ -35,9 +34,9 @@ class ItemPanel extends TablePanel implements ComponentInfoChangeListener, Actio
                 removeReminder();
             }            
         });
-		o_removeReminderButton.setEnabled(false);
 
-        o_closeButton.addActionListener(this);
+		o_removeReminderButton.setEnabled(false);
+        o_closeButton.addActionListener(listener);
 
         JPanel x_panel = new JPanel(new BorderLayout());
         x_panel.add(o_compInfoPanel, BorderLayout.NORTH);
@@ -58,28 +57,7 @@ class ItemPanel extends TablePanel implements ComponentInfoChangeListener, Actio
 		o_closeButton.setText(saved ? "Close" : "Cancel");
 	}
 
-    public void actionPerformed(ActionEvent e) {
-		Thread x_thread = o_item.getThread();
-
-		if(LookupHelper.getActiveUpdates(x_thread).size() > 1 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION) {
-
-			for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
-				ThreadItem x_groupItem = x_thread.getThreadItem(i);
-
-				if(x_groupItem instanceof Item)  {
-					Item x_item = (Item) x_groupItem;
-
-					if(x_item != o_item && x_item.getDueDate() == null && x_item.isActive()) {
-						x_item.setActive(false);
-					}
-				}
-			}
-		}
-
-		WindowManager.getInstance().closeComponent(o_item);
-    }
-    
-    private void addReminder() {
+	private void addReminder() {
         if(o_item.getDueDate() != null) {
             Reminder x_reminder = new Reminder(o_item);
             o_item.addReminder(x_reminder);
@@ -95,7 +73,6 @@ class ItemPanel extends TablePanel implements ComponentInfoChangeListener, Actio
                 Reminder x_reminder = o_item.getReminder(x_index);
                 
                 if(JOptionPane.showConfirmDialog(null, "Remove Reminder '" + x_reminder.getText() + "' ?") == JOptionPane.YES_OPTION) {
-                    WindowManager.getInstance().closeComponent(x_reminder);
                     o_item.removeReminder(x_reminder);
                 }
             }

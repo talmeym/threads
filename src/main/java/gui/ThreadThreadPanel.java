@@ -112,7 +112,6 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 			String x_message = "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?";
 
 			if(JOptionPane.showConfirmDialog(null, x_message) == JOptionPane.YES_OPTION) {
-				WindowManager.getInstance().closeComponent(x_threadItem);
 				x_parent.removeThreadItem(x_threadItem);
 			}
 		}

@@ -16,7 +16,8 @@ import static java.util.Calendar.*;
 public class ActionCellRenderer extends DefaultTableCellRenderer {
 	public static final DateFormat s_createDateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
 	public static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd MMM yy");
-	public static final DateFormat s_TimeFormat = new SimpleDateFormat("h:mm");
+	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mm");
+	public static final DateFormat s_24HrTimeFormat = new SimpleDateFormat("H:mm");
 	public static final DateFormat s_amPmFormat = new SimpleDateFormat("aa");
 	public static final DateFormat s_dayFormat = new SimpleDateFormat("EEEE h:mm");
 
@@ -62,10 +63,12 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 
 		String x_value;
 
-		if(x_dueDate.before(x_lastThingToday)) {
-			x_value = "Today " + s_TimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
+		if(x_dueDate.before(x_now)) {
+			x_value = s_dateTimeFormat.format(x_dueDate) + " " + s_12HrTimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
+		}else if(x_dueDate.before(x_lastThingToday)) {
+			x_value = "Today " + s_12HrTimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
 		} else if(x_dueDate.before(x_lastThingTomorrow)) {
-			x_value = "Tomorrow " + s_TimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
+			x_value = "Tomorrow " + s_12HrTimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
 		} else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
 			x_value = s_dayFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
 		} else {
@@ -81,11 +84,18 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 	private void setColourForTime(Component x_component, Item x_item) {
 		Date x_dueDate = x_item.getDueDate();
 		Date x_now = new Date();
+		Date x_firstThingToday = getFirstThingToday();
 		Date x_lastThingToday = getLastThingToday();
 		Date x_lastThingTomorrow = getLastThingTomorrow();
 
-		if(x_now.after(x_dueDate)) {
+		boolean x_allDay = s_24HrTimeFormat.format(x_dueDate).equals("0:00");
+
+		if(x_allDay && x_dueDate.before(x_firstThingToday)) {
 			x_component.setBackground(new Color(255, 155, 155)); // gone by
+		} else if(!x_allDay && x_dueDate.before(x_now)) {
+			x_component.setBackground(new Color(255, 155, 155)); // gone by
+		} else if(x_allDay && x_dueDate.before(x_now)) {
+			x_component.setBackground(new Color(255, 203, 100)); // today
 		} else if(x_dueDate.before(x_lastThingToday)) {
 			x_component.setBackground(new Color(255, 203, 100)); // today
 		} else if(x_dueDate.before(x_lastThingTomorrow)) {
@@ -95,6 +105,15 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 		} else {
 			x_component.setBackground(Color.WHITE);
 		}
+	}
+
+	private Date getFirstThingToday() {
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(HOUR_OF_DAY, 0);
+		x_calendar.set(MINUTE, 0);
+		x_calendar.set(Calendar.SECOND, 0);
+		x_calendar.set(Calendar.MILLISECOND, 0);
+		return x_calendar.getTime();
 	}
 
 	private Date getLastThingToday() {

@@ -1,18 +1,24 @@
 package gui;
 
 import data.*;
+import data.Thread;
 import util.*;
 
 import javax.swing.*;
+import java.awt.event.*;
 import java.util.*;
 
-public class ItemWindow extends JFrame {
+public class ItemWindow extends JDialog implements ActionListener {
+	private final Item o_item;
+
 	public ItemWindow(Item p_item, boolean p_new, JFrame parent) {
-		setContentPane(new ItemPanel(p_item, p_new));
+		o_item = p_item;
+		setContentPane(new ItemPanel(p_item, p_new, this));
 		setSize(GUIConstants.s_itemWindowSize);
 		renameWindow(p_item);
 		GUIUtil.centreToWindow(this, parent);
 		ImageUtil.addIconToWindow(this);
+		setModal(true);
 		setVisible(true);
 	}
 
@@ -33,7 +39,30 @@ public class ItemWindow extends JFrame {
 		setTitle(x_title.toString());
 	}
 
-	public void close() {
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
 		setVisible(false);
+
+
+		if(((JButton)actionEvent.getSource()).getText().equals("Parent")) {
+			WindowManager.getInstance().openComponent(o_item.getParentComponent(), false, -1);
+		} else {
+			Thread x_thread = (Thread) o_item.getParentComponent();
+
+			if(LookupHelper.getActiveUpdates(x_thread).size() > 1 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION) {
+
+				for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
+					ThreadItem x_groupItem = x_thread.getThreadItem(i);
+
+					if(x_groupItem instanceof Item)  {
+						Item x_item = (Item) x_groupItem;
+
+						if(x_item != o_item && x_item.getDueDate() == null && x_item.isActive()) {
+							x_item.setActive(false);
+						}
+					}
+				}
+			}
+		}
 	}
 }

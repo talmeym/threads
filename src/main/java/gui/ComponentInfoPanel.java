@@ -7,30 +7,40 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ComponentInfoPanel extends JPanel implements ActionListener, DocumentListener {
+public class ComponentInfoPanel extends JPanel implements DocumentListener {
     private final Component o_component;
 
 	private ComponentInfoChangeListener o_listener;
 
-	private final JButton o_parentButton = new JButton("Parent");
-    
-    private final JTextField o_textField = new JTextField();
-    
-    private final JCheckBox o_activeCheckBox = new JCheckBox("Active");
-    
-    public ComponentInfoPanel(Component p_component, boolean p_new, ComponentInfoChangeListener p_listener) {
+    public ComponentInfoPanel(Component p_component, boolean p_new, ComponentInfoChangeListener p_componentInfoListener, ActionListener p_actionListener) {
         super(new BorderLayout());
         o_component = p_component;
-		o_listener = p_listener;
+		o_listener = p_componentInfoListener;
 
+		JButton o_parentButton = new JButton("Parent");
 		o_parentButton.setEnabled(o_component.getParentComponent() != null);
-        o_parentButton.addActionListener(this);
-        
+        o_parentButton.addActionListener(p_actionListener);
+
+		final JTextField o_textField = new JTextField();
         o_textField.setPreferredSize(new Dimension(200, 25));
 		o_textField.setText(p_component.getText());
 		o_textField.getDocument().addDocumentListener(this);
-        o_textField.addActionListener(this);
 		o_textField.setHorizontalAlignment(JTextField.CENTER);
+
+        o_textField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				if (o_textField.getText().length() > 0) {
+					if (!o_textField.getText().equals(o_component.getText())) {
+						o_component.setText(o_textField.getText());
+					}
+				} else {
+					o_textField.setText(o_component.getText());
+				}
+
+				o_listener.componentInfoChanged(true);
+			}
+		});
 
 		if(p_new) {
 			o_textField.requestFocus();
@@ -38,9 +48,16 @@ public class ComponentInfoPanel extends JPanel implements ActionListener, Docume
 			o_textField.setSelectionEnd(o_textField.getText().length());
 		}
 
+		final JCheckBox o_activeCheckBox = new JCheckBox("Active");
 		o_activeCheckBox.setEnabled(o_component.getParentComponent() != null);
         o_activeCheckBox.setSelected(p_component.isActive());
-        o_activeCheckBox.addActionListener(this);
+
+		o_activeCheckBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				o_component.setActive(o_activeCheckBox.isSelected());
+			}
+		});
         
         JPanel x_parentButtonPanel = new JPanel(new BorderLayout());
         x_parentButtonPanel.add(o_parentButton, BorderLayout.CENTER);
@@ -55,29 +72,6 @@ public class ComponentInfoPanel extends JPanel implements ActionListener, Docume
         add(x_activeCheckBoxPanel, BorderLayout.WEST);
     }
     
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == o_textField) {
-            if(o_textField.getText().length() > 0) {
-                if(!o_textField.getText().equals(o_component.getText())) {
-                    o_component.setText(o_textField.getText());
-                }
-            } else {
-				o_textField.setText(o_component.getText());
-			}
-
-			o_listener.componentInfoChanged(true);
-        }
-        
-        if(e.getSource() == o_activeCheckBox) {
-            o_component.setActive(o_activeCheckBox.isSelected());
-        }
-        
-        if(e.getSource() == o_parentButton) {
-            WindowManager.getInstance().closeComponent(o_component);
-            WindowManager.getInstance().openComponent(o_component.getParentComponent(), false, 0);
-        }
-    }
-
 	@Override
 	public void insertUpdate(DocumentEvent documentEvent) {
 		o_listener.componentInfoChanged(false);

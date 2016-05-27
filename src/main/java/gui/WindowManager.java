@@ -2,10 +2,9 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.*;
+import util.TimedSaver;
 
 import java.awt.event.*;
-import java.io.File;
 
 public class WindowManager {
     private static WindowManager s_INSTANCE;
@@ -44,12 +43,14 @@ public class WindowManager {
     }
 
     public void openComponent(Component p_component, boolean p_new, int p_tabIndex) {
+		threadWindow.selectComponent(p_component);
+
 		if(reminderWindow != null && reminderWindow.isVisible()) {
-			reminderWindow.close();
+			reminderWindow.setVisible(false);
 		}
 
 		if(itemWindow != null && itemWindow.isVisible()) {
-			itemWindow.close();
+			itemWindow.setVisible(false);
 		}
 
 		if(p_component instanceof Thread) {
@@ -61,21 +62,7 @@ public class WindowManager {
 		}
 
 		if(p_component instanceof Reminder) {
-			Reminder reminder = (Reminder) p_component;
-			itemWindow = new ItemWindow((Item)reminder.getParentComponent(), false, threadWindow);
-			reminderWindow = new ReminderWindow(reminder, p_new, threadWindow);
-		}
-
-		threadWindow.selectComponent(p_component);
-    }
-
-    public void closeComponent(Component p_component) {
-		if(p_component instanceof Item) {
-			itemWindow.close();
-		}
-
-		if(p_component instanceof Reminder) {
-			reminderWindow.close();
+			reminderWindow = new ReminderWindow((Reminder) p_component, p_new, threadWindow);
 		}
     }
 }

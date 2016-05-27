@@ -4,15 +4,20 @@ import data.*;
 import util.*;
 
 import javax.swing.*;
+import java.awt.event.*;
 import java.util.*;
 
-public class ReminderWindow extends JFrame {
+public class ReminderWindow extends JDialog implements ActionListener {
+	private final Reminder o_reminder;
+
 	public ReminderWindow(Reminder p_reminder, boolean p_new, JFrame parent) {
-		setContentPane(new ReminderPanel(p_reminder, p_new));
+		this.o_reminder = p_reminder;
+		setContentPane(new ReminderPanel(p_reminder, p_new, this));
 		setSize(GUIConstants.s_reminderWindowSize);
 		renameWindow(p_reminder);
 		GUIUtil.centreToWindow(this, parent);
 		ImageUtil.addIconToWindow(this);
+		setModal(true);
 		setVisible(true);
 	}
 
@@ -33,7 +38,12 @@ public class ReminderWindow extends JFrame {
 		setTitle(x_title.toString());
 	}
 
-	public void close() {
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
 		setVisible(false);
+
+		if(((JButton)actionEvent.getSource()).getText().equals("Parent")) {
+			WindowManager.getInstance().openComponent(o_reminder.getParentComponent(), false, -1);
+		}
 	}
 }

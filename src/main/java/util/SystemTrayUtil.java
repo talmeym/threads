@@ -3,15 +3,17 @@ package util;
 import data.Component;
 import data.*;
 import data.Thread;
+import gui.WindowManager;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
 public class SystemTrayUtil {
+	private static PopupMenu o_popUpMenu;
 	private static TrayIcon o_trayIcon;
 	private static Thread o_topLevelThread;
-
 	private static List<Component> alertedComponents = new ArrayList<Component>();
 
 	public static void initialise(Thread p_topLevelThread) {
@@ -20,11 +22,15 @@ public class SystemTrayUtil {
 			o_topLevelThread = p_topLevelThread;
 			SystemTray systemTray = SystemTray.getSystemTray();
 			systemTray.add(o_trayIcon);
-			alertMultipleActionsReminders();
+
+			o_popUpMenu = new PopupMenu();
+			o_trayIcon.setPopupMenu(o_popUpMenu);
+
+			processAlerts();
 			TimeUpdater.getInstance().addTimeUpdateListener(new TimeUpdateListener() {
 				@Override
 				public void timeUpdate() {
-					alertIndividualActionsReminders();
+					processAlerts();
 				}
 			});
 		} catch (Exception e) {
@@ -32,57 +38,28 @@ public class SystemTrayUtil {
 		}
 	}
 
-	private static void alertMultipleActionsReminders() {
-		List<Component> currentAlerts = new ArrayList<Component>();
-		currentAlerts.addAll(LookupHelper.getAllDueReminders(o_topLevelThread));
-		currentAlerts.addAll(LookupHelper.getAllDueActions(o_topLevelThread));
+	private static void processAlerts() {
+		List<Component> dueAlerts = new ArrayList<Component>();
+		dueAlerts.addAll(LookupHelper.getAllDueReminders(o_topLevelThread));
+		dueAlerts.addAll(LookupHelper.getAllDueActions(o_topLevelThread));
+		dueAlerts.removeAll(alertedComponents);
 
-		if(currentAlerts.size() == 1) {
-			alertIndividualActionsReminders();
+		if(dueAlerts.size() == 1) {
+			Component component = dueAlerts.get(0);
+			o_trayIcon.displayMessage(component instanceof Item ? "Action Overdue" : "Reminder", component.getText(), TrayIcon.MessageType.INFO);
+			haveAlerted(component);
 		} else {
-			if(currentAlerts.size() > 1) {
+			if(dueAlerts.size() > 1) {
 				o_trayIcon.displayMessage("Threads", "You have multiple notifications.", TrayIcon.MessageType.INFO);
 
-				for(Component alert: currentAlerts) {
-					haveAlerted(alert);
+				for(Component component: dueAlerts) {
+					haveAlerted(component);
 				}
 			}
 		}
 	}
 
-	private static void alertIndividualActionsReminders() {
-		List dueReminders = LookupHelper.getAllDueReminders(o_topLevelThread);
-
-		if(dueReminders.size() > 0) {
-			for(Object obj: dueReminders) {
-				if(alertComponent((Component)obj, "Reminder")){
-					return;
-				}
-			}
-		}
-
-		List dueActions = LookupHelper.getAllDueActions(o_topLevelThread);
-
-		if(dueActions.size() > 0) {
-			for(Object obj: dueActions) {
-				if(alertComponent((Component)obj, "Action Overdue")){
-					return;
-				}
-			}
-		}
-	}
-
-	public synchronized static boolean alertComponent(Component component, String type) {
-		if(!alertedComponents.contains(component)) {
-			o_trayIcon.displayMessage(type, component.getText(), TrayIcon.MessageType.INFO);
-			haveAlerted(component);
-			return true;
-		}
-
-		return false;
-	}
-
-	private static void haveAlerted(Component component) {
+	private static void haveAlerted(final Component component) {
 		alertedComponents.add(component);
 
 		component.addObserver(new Observer() {
@@ -97,5 +74,17 @@ public class SystemTrayUtil {
 				}
 			}
 		});
+
+		String menuItemText = (component instanceof Item ? "Action" : "Reminder") + ": " + component.getText();
+		MenuItem menuItem = new MenuItem(menuItemText);
+
+		menuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				WindowManager.getInstance().openComponent(component, false, -1);
+			}
+		});
+
+		o_popUpMenu.add(menuItem);
 	}
 }

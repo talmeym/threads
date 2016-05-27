@@ -7,7 +7,7 @@ import util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -21,6 +21,8 @@ public class ThreadWindow extends JFrame implements TreeSelectionListener, Obser
 	private final Map<Thread, ThreadPanel> threadPanels = new HashMap<Thread, ThreadPanel>();
 	private Thread o_currentThread;
 
+	private boolean firstSelect = true;
+
 	public ThreadWindow(Thread p_topLevelThread) {
 		super();
 
@@ -31,6 +33,7 @@ public class ThreadWindow extends JFrame implements TreeSelectionListener, Obser
 		navigationTree.setCellRenderer(new ThreadTreeCellRenderer());
 		navigationPanel.add(new JScrollPane(navigationTree), BorderLayout.CENTER);
 		navigationTree.addTreeSelectionListener(this);
+
 		ImageUtil.addIconToWindow(this);
 
 		JSplitPane splitPane = new JSplitPane();
@@ -84,9 +87,12 @@ public class ThreadWindow extends JFrame implements TreeSelectionListener, Obser
 
 	@Override
 	public void valueChanged(TreeSelectionEvent p_treeSelectionEvent) {
-		TreePath x_path = p_treeSelectionEvent.getPath();
-		data.Component x_component = (data.Component) x_path.getLastPathComponent();
-		WindowManager.getInstance().openComponent(x_component, false, -1);
+		if(firstSelect || (p_treeSelectionEvent.getNewLeadSelectionPath() != null && p_treeSelectionEvent.getOldLeadSelectionPath() != null)) {
+			TreePath x_path = p_treeSelectionEvent.getPath();
+			data.Component x_component = (data.Component) x_path.getLastPathComponent();
+			WindowManager.getInstance().openComponent(x_component, false, -1);
+			firstSelect = false;
+		}
 	}
 
 	@Override
@@ -100,7 +106,21 @@ public class ThreadWindow extends JFrame implements TreeSelectionListener, Obser
 		}
 
 		Object[] pathObjs = getPathObjs(p_component);
-		navigationTree.setSelectionPath(new TreePath(pathObjs));
+		TreePath newTreePath = new TreePath(pathObjs);
+
+		if(!newTreePath.equals(navigationTree.getSelectionPath())) {
+			TreeSelectionListener[] listeners = navigationTree.getTreeSelectionListeners();
+
+			for(TreeSelectionListener listener: listeners) {
+				navigationTree.removeTreeSelectionListener(listener);
+			}
+
+			navigationTree.setSelectionPath(newTreePath);
+
+			for(TreeSelectionListener listener: listeners) {
+				navigationTree.addTreeSelectionListener(listener);
+			}
+		}
 	}
 
 	private Object[] getPathObjs(Component p_component) {
