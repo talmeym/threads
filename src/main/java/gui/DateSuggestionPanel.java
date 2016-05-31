@@ -178,7 +178,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 
         x_calendar.roll(Calendar.DATE, x_daysToAdd);
         
-        o_dueDateField.setText(s_dateFormat.format(x_calendar.getTime()));
+        o_dueDateField.setText(s_dateTimeFormat.format(x_calendar.getTime()));
 		setDueDate();
     }
 
