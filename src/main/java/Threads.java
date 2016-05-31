@@ -9,7 +9,9 @@ public class Threads {
     public static void main(String[] args) {
         TimeUpdater.getInstance().start();
 		String x_filePath = args.length > 0 ? args[0] : "threads.xml";
-		Thread x_topThread = new File(x_filePath).exists() ? Loader.loadDocument(x_filePath) : new Thread("Welcome to Threads");
+		Thread x_topThread = new File(x_filePath).exists() ? Loader.loadDocument(x_filePath) : new Thread("Threads");
+
+		x_topThread.setText("Threads");
 
         TimedSaver.getInstance().setThread(x_topThread, x_filePath);
 		SystemTrayUtil.initialise(x_topThread);
