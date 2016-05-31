@@ -26,6 +26,7 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
 		o_textField.setText(p_component.getText());
 		o_textField.getDocument().addDocumentListener(this);
 		o_textField.setHorizontalAlignment(JTextField.CENTER);
+		o_textField.setEnabled(p_component.getParentComponent() != null);
 
         o_textField.addActionListener(new ActionListener() {
 			@Override
@@ -61,15 +62,15 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
         
         JPanel x_parentButtonPanel = new JPanel(new BorderLayout());
         x_parentButtonPanel.add(o_parentButton, BorderLayout.CENTER);
-        x_parentButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        x_parentButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
         
         JPanel x_activeCheckBoxPanel = new JPanel(new BorderLayout());
         x_activeCheckBoxPanel.add(o_activeCheckBox, BorderLayout.CENTER);
-        x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
-        add(x_parentButtonPanel, BorderLayout.EAST);
+        add(x_parentButtonPanel, BorderLayout.WEST);
         add(o_textField, BorderLayout.CENTER);
-        add(x_activeCheckBoxPanel, BorderLayout.WEST);
+        add(x_activeCheckBoxPanel, BorderLayout.EAST);
     }
     
 	@Override
