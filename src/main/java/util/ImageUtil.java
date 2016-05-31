@@ -15,8 +15,17 @@ public class ImageUtil {
 	}
 
 	public static Image getThreadsImage() {
+		return loadImage("/threads.gif");
+	}
+
+	public static Image getTreeImage() {
+		String filename = "/spool.jpg";
+		return loadImage(filename);
+	}
+
+	private static Image loadImage(String filename) {
 		try {
-			InputStream inputStream = SystemTrayUtil.class.getResourceAsStream("/threads.gif");
+			InputStream inputStream = SystemTrayUtil.class.getResourceAsStream(filename);
 
 			if(inputStream != null && inputStream.available() > 0) {
 				return ImageIO.read(inputStream);
