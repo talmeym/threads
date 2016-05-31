@@ -107,7 +107,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
             ThreadItem x_threadItem = o_thread.getThreadItem(x_index);
             String x_message = "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?";
             
-            if(JOptionPane.showConfirmDialog(null, x_message) == JOptionPane.YES_OPTION) {
+            if(JOptionPane.showConfirmDialog(null, x_message, "Remove " + x_threadItem.getType() + "?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
                 o_thread.removeThreadItem(x_threadItem);
             }
         }

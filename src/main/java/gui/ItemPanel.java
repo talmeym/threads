@@ -72,7 +72,7 @@ class ItemPanel extends TablePanel implements ComponentInfoChangeListener {
             if(x_index != -1) {
                 Reminder x_reminder = o_item.getReminder(x_index);
                 
-                if(JOptionPane.showConfirmDialog(null, "Remove Reminder '" + x_reminder.getText() + "' ?") == JOptionPane.YES_OPTION) {
+                if(JOptionPane.showConfirmDialog(null, "Remove Reminder '" + x_reminder.getText() + "' ?", "Remove Reminder?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
                     o_item.removeReminder(x_reminder);
                 }
             }

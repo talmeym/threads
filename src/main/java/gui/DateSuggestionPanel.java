@@ -12,19 +12,20 @@ import java.util.*;
 class DateSuggestionPanel extends JPanel implements DocumentListener {
     private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final Dimension s_dueFieldSize = new Dimension(130, 25);
+	private static final String s_defaultTextString = "dd/mm/yy hh:mm";
 
 	private static DateItem[] s_timeItems = new DateItem[]{new DateItem("Anytime", 0),
                                                            new DateItem("9 AM", 9),
-                                                           new DateItem("Midday", 12), 
-                                                           new DateItem("C.O.B.", 18)};  
+                                                           new DateItem("Midday", 12),
+                                                           new DateItem("C.O.B.", 18)};
 
     private static DateItem[] s_weekItems = new DateItem[]{new DateItem("This", 0),
                                                            new DateItem("Next", 7),
                                                            new DateItem("A week", 14),
                                                            new DateItem("2 Weeks", 21),
-                                                           new DateItem("3 Weeks", 28), 
+                                                           new DateItem("3 Weeks", 28),
                                                            new DateItem("4 Weeks", 35)};
-    
+
     private static DateItem[] s_dayItems = new DateItem[]{new DateItem("Mon", 2),
                                                           new DateItem("Tues", 3),
                                                           new DateItem("Wed", 4),
@@ -32,7 +33,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
                                                           new DateItem("Fri", 6),
                                                           new DateItem("Sat", 7),
                                                           new DateItem("Sun", 1)};
-    
+
     private JComboBox o_timeBox = new JComboBox(s_timeItems);
     private JComboBox o_weekBox = new JComboBox(s_weekItems);
     private JComboBox o_dayBox = new JComboBox(s_dayItems);
@@ -47,11 +48,32 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 
 		if(o_item.getDueDate() != null) {
 			o_dueDateField.setText(s_dateFormat.format(o_item.getDueDate()));
+		} else {
+			o_dueDateField.setText(s_defaultTextString);
+			o_dueDateField.setForeground(Color.gray);
 		}
 
 		o_dueDateField.setPreferredSize(s_dueFieldSize);
 		o_dueDateField.getDocument().addDocumentListener(this);
 		o_dueDateField.setToolTipText("Press enter to set date");
+
+		o_dueDateField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent focusEvent) {
+				if(o_dueDateField.getText().equals(s_defaultTextString)) {
+					o_dueDateField.setText("");
+					o_dueDateField.setForeground(Color.black);
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent focusEvent) {
+				if(o_dueDateField.getText().length() == 0) {
+					o_dueDateField.setText(s_defaultTextString);
+					o_dueDateField.setForeground(Color.gray);
+				}
+			}
+		});
 
 		JButton o_SetButton = new JButton("Set");
 		o_SetButton.addActionListener(new ActionListener() {
@@ -72,6 +94,8 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 		JPanel x_labelPanel = new JPanel(new BorderLayout());
 		x_labelPanel.add(new JLabel("Due Date"), BorderLayout.CENTER);
 		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+
+		o_timeBox.setSelectedIndex(3);
 
 		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
 		x_buttonPanel.add(o_timeBox);
@@ -151,7 +175,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
     }
 
 	private void setDueDate() {
-		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0) {
+		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0 && !o_dueDateField.getText().equals(s_defaultTextString)) {
 			try {
 				Date x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
 

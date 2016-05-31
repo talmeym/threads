@@ -11,6 +11,7 @@ import java.util.Date;
 
 public class RemindDateSuggestionPanel extends JPanel implements DocumentListener {
     private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+	private static final String s_defaultTextString = "dd/mm/yy hh:mm";
 	private static final Dimension s_dueFieldSize = new Dimension(130, 25);
     private static final DateItem[] s_weekItems;
     private static final DateItem[] s_dayItems;
@@ -68,6 +69,24 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 			}
 		});
 
+		o_dueDateField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent focusEvent) {
+				if(o_dueDateField.getText().equals(s_defaultTextString)) {
+					o_dueDateField.setText("");
+					o_dueDateField.setForeground(Color.black);
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent focusEvent) {
+				if(o_dueDateField.getText().length() == 0) {
+					o_dueDateField.setText(s_defaultTextString);
+					o_dueDateField.setForeground(Color.gray);
+				}
+			}
+		});
+
 		JButton o_setButton = new JButton("Set");
 		o_setButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -89,6 +108,8 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 		JPanel x_labelAndFieldPanel = new JPanel(new BorderLayout());
 		x_labelAndFieldPanel.add(x_labelPanel, BorderLayout.WEST);
 		x_labelAndFieldPanel.add(x_fieldPanel, BorderLayout.CENTER);
+
+		o_minBox.setSelectedIndex(3);
 
 		JPanel x_dropdownPanel = new JPanel(new GridLayout(1, 0, 5, 5));
 		x_dropdownPanel.add(o_weekBox);
@@ -128,7 +149,7 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
     }
 
 	private void setDueDate() {
-		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0) {
+		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0 && !o_dueDateField.getText().equals(s_defaultTextString)) {
 			try {
 				Date x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
 
