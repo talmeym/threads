@@ -22,7 +22,7 @@ public class ReminderWindow extends JDialog implements ActionListener {
 	}
 
 	void renameWindow(Component p_component) {
-		StringBuilder x_title = new StringBuilder("Threads: ");
+		StringBuilder x_title = new StringBuilder();
 		List<String> x_parentNames = new ArrayList<String>();
 		Component x_parent = p_component.getParentComponent();
 
