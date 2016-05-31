@@ -10,7 +10,8 @@ import java.text.*;
 import java.util.*;
 
 class DateSuggestionPanel extends JPanel implements DocumentListener {
-    private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
 	private static final Dimension s_dueFieldSize = new Dimension(130, 25);
 	private static final String s_defaultTextString = "dd/mm/yy hh:mm";
 
@@ -47,7 +48,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 		o_listener = p_listener;
 
 		if(o_item.getDueDate() != null) {
-			o_dueDateField.setText(s_dateFormat.format(o_item.getDueDate()));
+			o_dueDateField.setText(s_dateTimeFormat.format(o_item.getDueDate()));
 		} else {
 			o_dueDateField.setText(s_defaultTextString);
 			o_dueDateField.setForeground(Color.gray);
@@ -57,21 +58,28 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 		o_dueDateField.getDocument().addDocumentListener(this);
 		o_dueDateField.setToolTipText("Press enter to set date");
 
+		final DocumentListener listener = this;
+
 		o_dueDateField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent focusEvent) {
 				if(o_dueDateField.getText().equals(s_defaultTextString)) {
-					o_dueDateField.setText("");
-					o_dueDateField.setForeground(Color.black);
+					setDueDateText("", Color.black);
 				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent focusEvent) {
 				if(o_dueDateField.getText().length() == 0) {
-					o_dueDateField.setText(s_defaultTextString);
-					o_dueDateField.setForeground(Color.gray);
+					setDueDateText(s_defaultTextString, Color.gray);
 				}
+			}
+
+			private void setDueDateText(String textString, Color color) {
+				o_dueDateField.getDocument().removeDocumentListener(listener);
+				o_dueDateField.setText(textString);
+				o_dueDateField.setForeground(color);
+				o_dueDateField.getDocument().addDocumentListener(listener);
 			}
 		});
 
@@ -177,22 +185,27 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 	private void setDueDate() {
 		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0 && !o_dueDateField.getText().equals(s_defaultTextString)) {
 			try {
-				Date x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
+				Date x_dueDate = s_dateTimeFormat.parse(o_dueDateField.getText());
 
-				if(o_item.getDueDate() != null) {
-					if(!x_dueDate.equals(o_item.getDueDate())) {
-						o_item.setDueDate(x_dueDate);
-					}
-				} else {
+				if(!x_dueDate.equals(o_item.getDueDate())) {
 					o_item.setDueDate(x_dueDate);
 				}
 			} catch (ParseException e) {
-				o_dueDateField.setText(s_dateFormat.format(o_item.getDueDate()));
+				try {
+					Date x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
+
+					if(!x_dueDate.equals(o_item.getDueDate())) {
+						o_item.setDueDate(x_dueDate);
+					}
+				} catch (ParseException pe) {
+					// do nothing
+				}
 			}
 		} else {
 			o_item.setDueDate(null);
 		}
 
+		o_dueDateField.setText(o_item.getDueDate() != null ? s_dateTimeFormat.format(o_item.getDueDate()) : "");
 		o_listener.componentInfoChanged(true);
 	}
 
