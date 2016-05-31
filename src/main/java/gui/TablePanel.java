@@ -15,6 +15,7 @@ abstract class TablePanel extends JPanel {
         o_table.setRowHeight(GUIConstants.s_tableRowHeight);
         o_table.setDefaultRenderer(String.class, p_cellRenderer);
         o_table.setDefaultRenderer(Date.class, p_cellRenderer);
+		o_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         o_table.addMouseListener(new MouseAdapter(){
 			@Override
