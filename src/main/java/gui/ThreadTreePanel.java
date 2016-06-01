@@ -25,34 +25,41 @@ public class ThreadTreePanel extends JPanel implements TreeSelectionListener, Ac
         o_threadFromTree.addTreeSelectionListener(this);
 		o_threadFromTree.setCellRenderer(new ThreadTreeCellRenderer());
 
+		JPanel x_fromLabelPanel = new JPanel(new BorderLayout());
+		x_fromLabelPanel.add(new JLabel("From:"), BorderLayout.CENTER);
+		x_fromLabelPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
 		JPanel leftTreePanel = new JPanel(new BorderLayout());
-        leftTreePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		leftTreePanel.add(new JLabel("From:"), BorderLayout.NORTH);
+		leftTreePanel.add(x_fromLabelPanel, BorderLayout.NORTH);
 		leftTreePanel.add(new JScrollPane(o_threadFromTree), BorderLayout.CENTER);
 
         o_threadToTree = new JTree(x_model);
         o_threadToTree.addTreeSelectionListener(this);
 		o_threadToTree.setCellRenderer(new ThreadTreeCellRenderer());
 
+		JPanel x_toLabelPanel = new JPanel(new BorderLayout());
+		x_toLabelPanel.add(new JLabel("To:"), BorderLayout.CENTER);
+		x_toLabelPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
 		JPanel rightTreePanel = new JPanel(new BorderLayout());
-		rightTreePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		rightTreePanel.add(new JLabel("To:"), BorderLayout.NORTH);
+		rightTreePanel.add(x_toLabelPanel, BorderLayout.NORTH);
 		rightTreePanel.add(new JScrollPane(o_threadToTree), BorderLayout.CENTER);
 
         o_moveButton.setEnabled(false);
         o_moveButton.addActionListener(this);
-        
-        JPanel x_panel = new JPanel(new GridLayout(1, 0, 5, 5));        
+
+        JPanel x_panel = new JPanel(new GridLayout(1, 0, 5, 5));
         x_panel.add(leftTreePanel);
         x_panel.add(rightTreePanel);
-        
+		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+
         JPanel x_buttonBox = new JPanel(new BorderLayout());
         x_buttonBox.add(o_moveButton, BorderLayout.CENTER);
-        x_buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+        x_buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         
         add(x_panel, BorderLayout.CENTER);
         add(x_buttonBox, BorderLayout.SOUTH);
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        //setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 
     public void valueChanged(TreeSelectionEvent e) {
