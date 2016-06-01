@@ -56,6 +56,10 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener {
 	}
 
 	public void selectComponent(Component p_component) {
+		if(p_component instanceof Reminder) {
+			p_component = p_component.getParentComponent();
+		}
+
 		o_navigationTree.removeTreeSelectionListener(this);
 		o_navigationTree.setSelectionPath(getTreePath(p_component));
 		o_navigationTree.addTreeSelectionListener(this);

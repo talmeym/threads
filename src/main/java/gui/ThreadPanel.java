@@ -7,7 +7,6 @@ import util.*;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 
 public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer, ComponentInfoChangeListener {
@@ -15,7 +14,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 	private final ChangeListener o_listener;
 	private final JTabbedPane o_tabs;
     
-    public ThreadPanel(Thread p_thread, boolean p_new, int p_tabIndex, ChangeListener p_changeListener, ActionListener p_actionListener) {
+    public ThreadPanel(Thread p_thread, boolean p_new, int p_tabIndex, ChangeListener p_changeListener) {
         super(new BorderLayout());
         o_thread = p_thread;
 		o_listener = p_changeListener;
@@ -28,7 +27,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
         o_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));
         o_tabs.addTab("Tree", new ThreadTreePanel(p_thread));
 
-		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_new, this, p_actionListener);
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_new, this);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
@@ -41,10 +40,6 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
         setActionTabBackground();
 		setReminderTabBackground();
     }
-
-	public int getTabIndex() {
-		return o_tabs.getSelectedIndex();
-	}
 
 	public void setTabIndex(int p_tabIndex) {
 		if(p_tabIndex != -1 && p_tabIndex != o_tabs.getSelectedIndex()) {

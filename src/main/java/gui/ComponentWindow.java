@@ -3,10 +3,9 @@ package gui;
 import data.Component;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.util.*;
 
-public class ComponentWindow <TYPE extends Component> extends JFrame implements ActionListener, Observer {
+public class ComponentWindow <TYPE extends Component> extends JFrame implements Observer {
 	private final TYPE o_component;
 
 	public ComponentWindow(TYPE p_component) {
@@ -16,13 +15,6 @@ public class ComponentWindow <TYPE extends Component> extends JFrame implements 
 
 	public TYPE getComponent() {
 		return o_component;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent actionEvent) {
-		if(((JButton)actionEvent.getSource()).getText().equals("Parent")) {
-			WindowManager.getInstance().openComponent(o_component.getParentComponent(), false, -1);
-		}
 	}
 
 	@Override

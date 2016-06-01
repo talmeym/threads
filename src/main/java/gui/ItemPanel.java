@@ -19,7 +19,7 @@ class ItemPanel extends TablePanel implements ComponentInfoChangeListener {
         fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
 
-		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_item, p_new, this, listener);
+		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_item, p_new, this);
 
 		JButton o_addReminderButton = new JButton("Add Reminder");
 		o_addReminderButton.addActionListener(new ActionListener() {

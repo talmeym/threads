@@ -1,10 +1,8 @@
 package gui;
 
-import data.*;
+import data.Reminder;
 
-import javax.swing.*;
 import java.awt.event.*;
-import java.util.*;
 
 public class ReminderWindow extends ComponentWindow<Reminder> implements ActionListener {
 	public ReminderWindow(Reminder p_reminder, boolean p_new) {
@@ -16,10 +14,6 @@ public class ReminderWindow extends ComponentWindow<Reminder> implements ActionL
 
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
-		super.actionPerformed(actionEvent);
-
-		if(!((JButton)actionEvent.getSource()).getText().equals("Parent")) {
-			setVisible(false);
-		}
+		setVisible(false);
 	}
 }

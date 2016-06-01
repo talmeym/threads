@@ -14,18 +14,23 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
 
 	private List<ComponentInfoChangeListener> o_listeners;
 
-    public ComponentInfoPanel(Component p_component, boolean p_new, ComponentInfoChangeListener p_compInfoListeners, ActionListener p_actionListener) {
-		this(p_component, p_new, Arrays.asList(p_compInfoListeners), p_actionListener);
+    public ComponentInfoPanel(Component p_component, boolean p_new, ComponentInfoChangeListener p_compInfoListeners) {
+		this(p_component, p_new, Arrays.asList(p_compInfoListeners));
 	}
 
-    public ComponentInfoPanel(Component p_component, boolean p_new, List<ComponentInfoChangeListener> p_componentInfoListeners, ActionListener p_actionListener) {
+    public ComponentInfoPanel(Component p_component, boolean p_new, List<ComponentInfoChangeListener> p_componentInfoListeners) {
         super(new BorderLayout());
         o_component = p_component;
 		o_listeners = p_componentInfoListeners;
 
 		JButton o_parentButton = new JButton("Parent");
 		o_parentButton.setEnabled(o_component.getParentComponent() != null);
-        o_parentButton.addActionListener(p_actionListener);
+        o_parentButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				WindowManager.getInstance().openComponent(o_component.getParentComponent(), false, -1);
+			}
+		});
 
 		final JTextField o_textField = new JTextField();
         o_textField.setPreferredSize(new Dimension(200, 25));

@@ -16,25 +16,21 @@ public class ItemWindow extends ComponentWindow<Item> implements ActionListener 
 
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
-		super.actionPerformed(actionEvent);
+		setVisible(false);
 
-		if(!((JButton)actionEvent.getSource()).getText().equals("Parent")) {
-			setVisible(false);
+		Item x_item = getComponent();
+		Thread x_thread = (Thread) x_item.getParentComponent();
 
-			Item x_item = getComponent();
-			Thread x_thread = (Thread) x_item.getParentComponent();
+		if(LookupHelper.getActiveUpdates(x_thread).size() > 1 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION) {
 
-			if(LookupHelper.getActiveUpdates(x_thread).size() > 1 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?") == JOptionPane.YES_OPTION) {
+			for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
+				ThreadItem x_groupItem = x_thread.getThreadItem(i);
 
-				for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
-					ThreadItem x_groupItem = x_thread.getThreadItem(i);
+				if(x_groupItem instanceof Item)  {
+					Item x_otherItem = (Item) x_groupItem;
 
-					if(x_groupItem instanceof Item)  {
-						Item x_otherItem = (Item) x_groupItem;
-
-						if(x_otherItem != x_item && x_otherItem.getDueDate() == null && x_otherItem.isActive()) {
-							x_otherItem.setActive(false);
-						}
+					if(x_otherItem != x_item && x_otherItem.getDueDate() == null && x_otherItem.isActive()) {
+						x_otherItem.setActive(false);
 					}
 				}
 			}
