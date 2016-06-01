@@ -7,6 +7,7 @@ import util.TimedSaver;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
@@ -33,6 +34,9 @@ public class WindowManager implements ChangeListener {
 	private Map<Component, JFrame> o_windows = new HashMap<Component, JFrame>();
 	private int o_tabIndex = -1;
 
+	private Map<Class, Dimension> o_windowDimensions = new HashMap<Class, Dimension>();
+	private Map<Class, Point> o_windowLocations = new HashMap<Class, Point>();
+
     private WindowManager(final Thread p_topLevelThread, final String filePath) {
 		o_navigationWindow = new NavigationWindow(p_topLevelThread);
 
@@ -47,10 +51,19 @@ public class WindowManager implements ChangeListener {
 
 		o_navigationWindow.setLocation(250, 200);
 		o_navigationWindow.setVisible(true);
-		openComponent(p_topLevelThread, false, -1);
+
+		o_windowDimensions.put(Thread.class, GUIConstants.s_threadWindowSize);
+		o_windowDimensions.put(Item.class, GUIConstants.s_itemWindowSize);
+		o_windowDimensions.put(Reminder.class, GUIConstants.s_reminderWindowSize);
+
+		o_windowLocations.put(Thread.class, new Point(o_navigationWindow.getX() + o_navigationWindow.getWidth() + 20, o_navigationWindow.getY()));
+		o_windowLocations.put(Item.class, new Point(o_navigationWindow.getX() + o_navigationWindow.getWidth() + 20, o_navigationWindow.getY()));
+		o_windowLocations.put(Reminder.class, new Point(o_navigationWindow.getX() + o_navigationWindow.getWidth() + 20, o_navigationWindow.getY()));
+
+		// openComponent(p_topLevelThread, false, -1);
 	}
 
-    public void openComponent(Component p_component, boolean p_new, int p_tabIndex) {
+    public void openComponent(final Component p_component, boolean p_new, int p_tabIndex) {
 		for(JFrame x_frame: o_windows.values()) {
 			x_frame.setVisible(false);
 		}
@@ -64,13 +77,14 @@ public class WindowManager implements ChangeListener {
 		}
 
 		JFrame x_window = o_windows.get(p_component);
-		x_window.setLocation(o_navigationWindow.getX() + o_navigationWindow.getWidth() + 20, o_navigationWindow.getY());
+		x_window.setSize(o_windowDimensions.get(p_component.getClass()));
+		x_window.setLocation(o_windowLocations.get(p_component.getClass()));
 		x_window.setVisible(true);
 
 		o_navigationWindow.selectComponent(p_component);
     }
 
-	private JFrame makeComponentWindow(Component p_component, boolean p_new, int p_tabIndex) {
+	private JFrame makeComponentWindow(final Component p_component, boolean p_new, int p_tabIndex) {
 		JFrame x_window = null;
 
 		if(p_component instanceof Thread) {
@@ -84,6 +98,7 @@ public class WindowManager implements ChangeListener {
 		if(p_component instanceof Reminder) {
 			x_window = new ReminderWindow((Reminder) p_component, p_new);
 		}
+
 		return x_window;
 	}
 
@@ -96,5 +111,10 @@ public class WindowManager implements ChangeListener {
 				((ThreadPanel)o_windows.get(x_component).getContentPane()).setTabIndex(o_tabIndex);
 			}
 		}
+	}
+
+	public void setComponentWindowDetails(Class<? extends Component> clazz, Point location, Dimension size) {
+		o_windowLocations.put(clazz, location);
+		o_windowDimensions.put(clazz, size);
 	}
 }

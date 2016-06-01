@@ -3,6 +3,7 @@ package gui;
 import data.Component;
 
 import javax.swing.*;
+import java.awt.event.*;
 import java.util.*;
 
 public class ComponentWindow <TYPE extends Component> extends JFrame implements Observer {
@@ -11,6 +12,20 @@ public class ComponentWindow <TYPE extends Component> extends JFrame implements 
 	public ComponentWindow(TYPE p_component) {
 		this.o_component = p_component;
 		o_component.addObserver(this);
+
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentMoved(ComponentEvent componentEvent) {
+				WindowManager.getInstance().setComponentWindowDetails(getComponent().getClass(), getLocation(), getSize());
+			}
+		});
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent windowEvent) {
+				WindowManager.getInstance().setComponentWindowDetails(getComponent().getClass(), getLocation(), getSize());
+			}
+		});
 	}
 
 	public TYPE getComponent() {

@@ -102,8 +102,8 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 		});
 
 		JPanel x_labelPanel = new JPanel(new GridLayout(0, 1, 5, 5));
-		x_labelPanel.add(new JLabel("Action Due"));
-		x_labelPanel.add(new JLabel("Reminder"));
+		x_labelPanel.add(new JLabel("Action"));
+		x_labelPanel.add(new JLabel("Due Date"));
 		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
 		JTextField x_actionDueDateField = new JTextField(s_dateTimeFormat.format(((Item)p_reminder.getParentComponent()).getDueDate()));
