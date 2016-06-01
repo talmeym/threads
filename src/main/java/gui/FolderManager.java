@@ -20,19 +20,9 @@ public class FolderManager {
         }
     }
     
-    public static void setDocFolder(ThreadItem p_item) {
-        JFileChooser x_chooser;
-        
-        if(p_item.getDocFolder() == null) {
-            if(p_item.getThread() != null && p_item.getThread().getDocFolder() != null) {
-                x_chooser = new JFileChooser(p_item.getThread().getDocFolder());
-            } else {
-                x_chooser = new JFileChooser();
-            }
-        } else {
-            x_chooser = new JFileChooser(p_item.getDocFolder());
-        }
-        
+    public static void setDocFolder(ThreadItem p_threadItem) {
+        JFileChooser x_chooser = p_threadItem.getDocFolder() != null ? new JFileChooser(p_threadItem.getDocFolder()) : new JFileChooser();
+
         x_chooser.setFileFilter(new FileFilter(){
             public boolean accept(File p_file) {
                 return p_file.exists() && p_file.isDirectory();
@@ -50,7 +40,7 @@ public class FolderManager {
             File x_folder = x_chooser.getSelectedFile(); 
             
             if(x_folder != null) {
-                p_item.setDocFolder(x_folder);
+                p_threadItem.setDocFolder(x_folder);
             }
         }
     }

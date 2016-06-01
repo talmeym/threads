@@ -27,7 +27,7 @@ class ThreadListTableModel extends ComponentTableModel {
         
         switch(col) {
 			case 0: return x_thread.getCreationDate();
-			case 1: return x_thread.getThread().getText();
+			case 1: return x_thread.getParentThread().getText();
 			case 2: return x_thread.getText();
 			case 3: return LookupHelper.getAllActiveThreads(x_thread).size();
 			case 4: return LookupHelper.getActiveUpdates(x_thread).size();

@@ -13,8 +13,6 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 	private final JButton o_addItemButton = new JButton("Add Item");
 	private final JButton o_addThreadButton = new JButton("Add Thread");
 	private final JButton o_removeButton = new JButton("Remove Selected");
-	private final JButton o_openDocFolderButton = new JButton("Open Doc Folder");
-	private final JButton o_setDocFolderButton = new JButton("Set Doc Folder");
 
     ThreadThreadPanel(Thread p_thread) {
         super(new ThreadListTableModel(p_thread), new CellRenderer(null));
@@ -31,8 +29,6 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 		x_buttonPanel.add(o_addItemButton);
 		x_buttonPanel.add(o_addThreadButton);
 		x_buttonPanel.add(o_removeButton);
-		x_buttonPanel.add(o_openDocFolderButton);
-		x_buttonPanel.add(o_setDocFolderButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
@@ -40,8 +36,6 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 		o_addItemButton.setEnabled(false);
 		o_addThreadButton.setEnabled(false);
 		o_removeButton.setEnabled(false);
-		o_openDocFolderButton.setEnabled(false);
-		o_setDocFolderButton.setEnabled(false);
 
 		o_addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -64,21 +58,6 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 			}
 		}
 		);
-
-		o_openDocFolderButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
-				FolderManager.openDocFolder(x_thread);
-			}
-		});
-
-		o_setDocFolderButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
-				FolderManager.setDocFolder(x_thread);
-				o_openDocFolderButton.setEnabled(x_thread.getDocFolder() != null);
-			}
-		});
 	}
 
 	protected void addItem() {
@@ -137,8 +116,6 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 		o_addItemButton.setEnabled(row != -1);
 		o_addThreadButton.setEnabled(row != -1);
 		o_removeButton.setEnabled(row != -1);
-		o_setDocFolderButton.setEnabled(row != -1);
-		o_openDocFolderButton.setEnabled(row != -1 && LookupHelper.getAllActiveThreads(o_thread).get(row).getDocFolder() != null);
 	}
 
     void tableRowDoubleClicked(int col, int row) {

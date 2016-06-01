@@ -1,70 +1,25 @@
 package gui;
 
-import data.*;
 import data.Component;
 import data.Thread;
-import util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.tree.*;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class ThreadWindow extends JFrame implements TreeSelectionListener, Observer, ChangeListener {
+public class ThreadWindow extends JFrame implements Observer {
 
-	private final JTree navigationTree;
-	private final CardLayout cardLayout = new CardLayout();
-	private final List<String> ids = new ArrayList<String>();
-	private final JPanel threadPanel = new JPanel(cardLayout);
-	private final Map<Thread, ThreadPanel> threadPanels = new HashMap<Thread, ThreadPanel>();
-	private Thread o_currentThread;
+	private Thread o_thread;
 
-	private boolean firstSelect = true;
-
-	public ThreadWindow(Thread p_topLevelThread) {
+	public ThreadWindow(Thread p_thread, boolean p_new, int p_tabIndex, ChangeListener p_listener) {
 		super();
+		o_thread = p_thread;
+		p_thread.addObserver(this);
 
-		p_topLevelThread.addObserver(this);
 
-		JPanel navigationPanel = new JPanel(new BorderLayout());
-		navigationTree = new JTree(new ThreadTreeModel(p_topLevelThread));
-		navigationTree.setCellRenderer(new ThreadTreeCellRenderer());
-		navigationPanel.add(new JScrollPane(navigationTree), BorderLayout.CENTER);
-		navigationTree.addTreeSelectionListener(this);
-
-		ImageUtil.addIconToWindow(this);
-
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setDividerLocation(GUIConstants.s_threadWindowDividerLocation);
-		splitPane.setLeftComponent(navigationPanel);
-		splitPane.setRightComponent(threadPanel);
-
-		setContentPane(splitPane);
+		setContentPane(new ThreadPanel(p_thread, p_new, p_tabIndex, p_listener));
 		setSize(GUIConstants.s_threadWindowSize);
-		GUIUtil.centreWindow(this);
-
-		showThread(p_topLevelThread, true, 0);
-
-		ImageUtil.addIconToWindow(this);
-		setVisible(true);
-	}
-
-	public void showThread(Thread p_thread, boolean p_new, int p_tabIndex) {
-		String idString = p_thread.getId().toString();
-
-		if(!ids.contains(idString)) {
-			ThreadPanel newPanel = new ThreadPanel(p_thread, p_new, p_tabIndex == -1 ? getCurrentThreadTabIndex() : p_tabIndex, this);
-			threadPanel.add(newPanel, idString);
-			threadPanels.put(p_thread, newPanel);
-			ids.add(idString);
-		} else {
-			threadPanels.get(p_thread).setTabIndex(p_tabIndex);
-		}
-
-		o_currentThread = p_thread;
-		cardLayout.show(threadPanel, idString);
 		renameWindow(p_thread);
 	}
 
@@ -87,66 +42,7 @@ public class ThreadWindow extends JFrame implements TreeSelectionListener, Obser
 	}
 
 	@Override
-	public void valueChanged(TreeSelectionEvent p_treeSelectionEvent) {
-		if(firstSelect || (p_treeSelectionEvent.getNewLeadSelectionPath() != null && p_treeSelectionEvent.getOldLeadSelectionPath() != null)) {
-			TreePath x_path = p_treeSelectionEvent.getPath();
-			data.Component x_component = (data.Component) x_path.getLastPathComponent();
-			WindowManager.getInstance().openComponent(x_component, false, -1);
-			firstSelect = false;
-		}
-	}
-
-	@Override
 	public void update(Observable observable, Object o) {
-		renameWindow(o_currentThread);
-	}
-
-	public void selectComponent(Component p_component) {
-		if(p_component instanceof Reminder) {
-			p_component = p_component.getParentComponent();
-		}
-
-		Object[] pathObjs = getPathObjs(p_component);
-		TreePath newTreePath = new TreePath(pathObjs);
-
-		if(!newTreePath.equals(navigationTree.getSelectionPath())) {
-			TreeSelectionListener[] listeners = navigationTree.getTreeSelectionListeners();
-
-			for(TreeSelectionListener listener: listeners) {
-				navigationTree.removeTreeSelectionListener(listener);
-			}
-
-			navigationTree.setSelectionPath(newTreePath);
-
-			for(TreeSelectionListener listener: listeners) {
-				navigationTree.addTreeSelectionListener(listener);
-			}
-		}
-	}
-
-	private Object[] getPathObjs(Component p_component) {
-		List<Component> parentComponents = new ArrayList<Component>();
-
-		parentComponents.add(p_component);
-
-		while(p_component.getParentComponent() != null) {
-			parentComponents.add(0, p_component.getParentComponent());
-			p_component = p_component.getParentComponent();
-		}
-
-		return parentComponents.toArray(new Object[parentComponents.size()]);
-	}
-
-	@Override
-	public void stateChanged(ChangeEvent changeEvent) {
-		int tabIndex = getCurrentThreadTabIndex();
-
-		for(ThreadPanel panel: threadPanels.values()) {
-			panel.setTabIndex(tabIndex);
-		}
-	}
-
-	private int getCurrentThreadTabIndex() {
-		return threadPanels.get(o_currentThread).getTabIndex();
+		renameWindow(o_thread);
 	}
 }

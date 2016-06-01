@@ -36,7 +36,7 @@ class ActionItemTableModel extends ComponentTableModel
         
         switch(col) {
 			case 0: return x_item.getCreationDate();
-			case 1: return x_item.getThread().getText();
+			case 1: return x_item.getParentThread().getText();
 			case 2: return x_item.getText();
 			case 3: return x_item.getDueDate();
 			default: return DateHelper.getDateStatus(x_item.getDueDate());

@@ -12,7 +12,6 @@ public class ThreadContentsPanel extends TablePanel implements Observer
 {
     private final Thread o_thread;
 	private final JButton o_removeButton = new JButton("Remove Selected");
-    private final JButton o_openDocFolderButton = new JButton("Open Doc Folder");
 
 	public ThreadContentsPanel(final Thread p_thread)
     {
@@ -53,28 +52,10 @@ public class ThreadContentsPanel extends TablePanel implements Observer
         }
         );
 
-        o_openDocFolderButton.setEnabled(o_thread.getDocFolder() != null);
-        o_openDocFolderButton.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e)
-            {
-                FolderManager.openDocFolder(o_thread);
-            }            
-        });
-
-		JButton o_setDocFolderButton = new JButton("Set Doc Folder");
-		o_setDocFolderButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				FolderManager.setDocFolder(o_thread);
-				o_openDocFolderButton.setEnabled(o_thread.getDocFolder() != null);
-			}
-		});
-        
         JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
         x_buttonPanel.add(o_addItemButton);
         x_buttonPanel.add(o_addThreadButton);
         x_buttonPanel.add(o_removeButton);
-        x_buttonPanel.add(o_openDocFolderButton);
-        x_buttonPanel.add(o_setDocFolderButton);
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         
         add(x_buttonPanel, BorderLayout.SOUTH);

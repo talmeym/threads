@@ -16,7 +16,7 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 		o_dueDate = p_dueDate;
     }
     
-    public Thread getThread() {
+    public Thread getParentThread() {
         return (Thread) getParentComponent();
     }
 

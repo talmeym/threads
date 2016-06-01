@@ -38,7 +38,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
     private JComboBox o_timeBox = new JComboBox(s_timeItems);
     private JComboBox o_weekBox = new JComboBox(s_weekItems);
     private JComboBox o_dayBox = new JComboBox(s_dayItems);
-	private final HasDueDate o_item;
+	private final Item o_item;
 	private ComponentInfoChangeListener o_listener;
     private final JTextField o_dueDateField = new JTextField();
 
@@ -184,21 +184,26 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 
 	private void setDueDate() {
 		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0 && !o_dueDateField.getText().equals(s_defaultTextString)) {
-			try {
-				Date x_dueDate = s_dateTimeFormat.parse(o_dueDateField.getText());
+			Date x_dueDate = null;
 
-				if(!x_dueDate.equals(o_item.getDueDate())) {
-					o_item.setDueDate(x_dueDate);
-				}
+			try {
+				x_dueDate = s_dateTimeFormat.parse(o_dueDateField.getText());
 			} catch (ParseException e) {
 				try {
-					Date x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
+					x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
+				} catch (ParseException pe) { /* do nothing */ }
+			}
 
-					if(!x_dueDate.equals(o_item.getDueDate())) {
-						o_item.setDueDate(x_dueDate);
+			if(x_dueDate != null && !x_dueDate.equals(o_item.getDueDate())) {
+				Date x_actionDate = o_item.getDueDate();
+				o_item.setDueDate(x_dueDate);
+
+				if(o_item.getReminderCount() > 0 && JOptionPane.showConfirmDialog(this, "This action has reminders.\nDo you want to keep their relative chronological positions the same?", "Keep Reminders Relative?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+
+					for(int i = 0; i < o_item.getReminderCount(); i++) {
+						Reminder x_reminder = o_item.getReminder(i);
+						x_reminder.setDueDate(new Date(x_dueDate.getTime() + (x_reminder.getDueDate().getTime() - x_actionDate.getTime())));
 					}
-				} catch (ParseException pe) {
-					// do nothing
 				}
 			}
 		} else {

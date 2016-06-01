@@ -1,6 +1,6 @@
 package gui;
 
-import data.Reminder;
+import data.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -62,7 +62,6 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 		o_dueDateField.setText(s_dateTimeFormat.format(o_reminder.getDueDate()));
 		o_dueDateField.getDocument().addDocumentListener(this);
 		o_dueDateField.setToolTipText("Press enter to set date");
-		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
 		o_dueDateField.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -102,16 +101,18 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 			}
 		});
 
-		JPanel x_labelPanel = new JPanel(new BorderLayout());
-		x_labelPanel.add(new JLabel("Due Date"), BorderLayout.CENTER);
+		JPanel x_labelPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+		x_labelPanel.add(new JLabel("Action Due"));
+		x_labelPanel.add(new JLabel("Reminder"));
 		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
-		JPanel x_fieldPanel = new JPanel();
-		x_fieldPanel.setLayout(new BoxLayout(x_fieldPanel, BoxLayout.Y_AXIS));
-		x_fieldPanel.add(Box.createVerticalStrut(12));
+		JTextField x_actionDueDateField = new JTextField(s_dateTimeFormat.format(((Item)p_reminder.getParentComponent()).getDueDate()));
+		x_actionDueDateField.setEnabled(false);
+
+		JPanel x_fieldPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+		x_fieldPanel.add(x_actionDueDateField);
 		x_fieldPanel.add(o_dueDateField);
-		x_fieldPanel.add(Box.createVerticalStrut(12));
-		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
 		JPanel x_labelAndFieldPanel = new JPanel(new BorderLayout());
 		x_labelAndFieldPanel.add(x_labelPanel, BorderLayout.WEST);

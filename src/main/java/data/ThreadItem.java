@@ -11,7 +11,7 @@ public abstract class ThreadItem <CONTENTS extends Component> extends Collection
         o_docFolder = p_docFolder;
     }
     
-    public Thread getThread() {
+    public Thread getParentThread() {
         return (Thread) getParentComponent();
     }
     

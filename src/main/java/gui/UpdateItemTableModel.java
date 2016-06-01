@@ -34,7 +34,7 @@ class UpdateItemTableModel extends ComponentTableModel {
         
         switch(col) {
 			case 0: return x_updateItem.getCreationDate();
-			case 1: return x_updateItem.getThread().getText();
+			case 1: return x_updateItem.getParentThread().getText();
 			case 2: return x_updateItem.getText();
 			default: return DateHelper.getDateStatus(x_updateItem.getCreationDate());
         }

@@ -2,24 +2,19 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.*;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class ItemWindow extends JDialog implements ActionListener {
+public class ItemWindow extends JFrame implements ActionListener {
 	private final Item o_item;
 
-	public ItemWindow(Item p_item, boolean p_new, JFrame parent) {
+	public ItemWindow(Item p_item, boolean p_new) {
 		o_item = p_item;
 		setContentPane(new ItemPanel(p_item, p_new, this));
 		setSize(GUIConstants.s_itemWindowSize);
 		renameWindow(p_item);
-		GUIUtil.centreToWindow(this, parent);
-		ImageUtil.addIconToWindow(this);
-		setModal(true);
-		setVisible(true);
 	}
 
 	void renameWindow(Component p_component) {

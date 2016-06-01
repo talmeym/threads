@@ -43,7 +43,7 @@ public class ThreadActionPanel extends TablePanel implements Observer {
     private void showThread(int p_index) {
         if(p_index != -1) {
             Item x_threadItem = LookupHelper.getAllActiveActions(o_thread).get(p_index);
-			Thread x_thread = x_threadItem.getThread();
+			Thread x_thread = x_threadItem.getParentThread();
 
 			if(x_thread != o_thread) {
 				WindowManager.getInstance().openComponent(x_thread, false, 0);

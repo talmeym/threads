@@ -12,13 +12,15 @@ import java.util.*;
 
 public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer, ComponentInfoChangeListener, ActionListener {
 	private final Thread o_thread;
-    private final JTabbedPane o_tabs;
+	private final ChangeListener o_listener;
+	private final JTabbedPane o_tabs;
     
-    public ThreadPanel(Thread p_thread, boolean p_new, int tabIndex, ChangeListener listener) {
+    public ThreadPanel(Thread p_thread, boolean p_new, int p_tabIndex, ChangeListener p_listener) {
         super(new BorderLayout());
         o_thread = p_thread;
-        
-        o_tabs = new JTabbedPane();
+		o_listener = p_listener;
+
+		o_tabs = new JTabbedPane();
         o_tabs.addTab("Contents", new ThreadContentsPanel(p_thread));
         o_tabs.addTab("Threads", new ThreadThreadPanel(p_thread));
         o_tabs.addTab("Updates", new ThreadUpdatePanel(p_thread));
@@ -31,9 +33,8 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 
-		int index = tabIndex != -1 ? tabIndex : 0;
-		o_tabs.setSelectedIndex(index);
-		o_tabs.addChangeListener(listener);
+		o_tabs.setSelectedIndex(p_tabIndex);
+		o_tabs.addChangeListener(p_listener);
 
         o_thread.addObserver(this);
         TimeUpdater.getInstance().addTimeUpdateListener(this);
@@ -47,17 +48,9 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 
 	public void setTabIndex(int p_tabIndex) {
 		if(p_tabIndex != -1 && p_tabIndex != o_tabs.getSelectedIndex()) {
-			ChangeListener[] changeListeners = o_tabs.getChangeListeners();
-
-			for(ChangeListener listener: changeListeners) {
-				o_tabs.removeChangeListener(listener);
-			}
-
+			o_tabs.removeChangeListener(o_listener);
 			o_tabs.setSelectedIndex(p_tabIndex);
-
-			for(ChangeListener listener: changeListeners) {
-				o_tabs.addChangeListener(listener);
-			}
+			o_tabs.addChangeListener(o_listener);
 		}
 	}
 

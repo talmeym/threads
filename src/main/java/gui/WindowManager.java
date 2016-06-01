@@ -1,12 +1,16 @@
 package gui;
 
 import data.*;
+import data.Component;
 import data.Thread;
 import util.TimedSaver;
 
+import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.event.*;
+import java.util.*;
 
-public class WindowManager {
+public class WindowManager implements ChangeListener {
     private static WindowManager s_INSTANCE;
 
 	public static void initialise(Thread p_topLevelThread, String filePath) {
@@ -25,14 +29,16 @@ public class WindowManager {
         return s_INSTANCE;
     }
 
-	private final ThreadWindow threadWindow;
-	private ItemWindow itemWindow;
-	private ReminderWindow reminderWindow;
+	private NavigationWindow o_navigationWindow;
+
+	private Map<Component, JFrame> o_windows = new HashMap<Component, JFrame>();
+
+	private int o_tabIndex = -1;
 
     private WindowManager(final Thread p_topLevelThread, final String filePath) {
-		threadWindow = new ThreadWindow(p_topLevelThread);
+		o_navigationWindow = new NavigationWindow(p_topLevelThread);
 
-		threadWindow.addWindowListener(new WindowAdapter() {
+		o_navigationWindow.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
 				TimedSaver.getInstance().stopRunning();
@@ -40,29 +46,61 @@ public class WindowManager {
 				System.exit(0);
 			}
 		});
-    }
+
+		o_navigationWindow.setLocation(250, 200);
+		o_navigationWindow.setSize(300, 600);
+		o_navigationWindow.setVisible(true);
+
+		openComponent(p_topLevelThread, false, -1);
+	}
 
     public void openComponent(Component p_component, boolean p_new, int p_tabIndex) {
-		threadWindow.selectComponent(p_component);
-
-		if(reminderWindow != null && reminderWindow.isVisible()) {
-			reminderWindow.setVisible(false);
+		for(JFrame x_frame: o_windows.values()) {
+			x_frame.setVisible(false);
 		}
 
-		if(itemWindow != null && itemWindow.isVisible()) {
-			itemWindow.setVisible(false);
+		int x_index = p_tabIndex != -1 ? p_tabIndex : o_tabIndex != -1 ? o_tabIndex : 0;
+
+		if(!o_windows.containsKey(p_component)) {
+			o_windows.put(p_component, makeComponentWindow(p_component, p_new, x_index));
+		} else if (p_component instanceof Thread) {
+			((ThreadPanel)o_windows.get(p_component).getContentPane()).setTabIndex(x_index);
 		}
+
+		showFrame(o_windows.get(p_component));
+		o_navigationWindow.selectComponent(p_component);
+    }
+
+	private JFrame makeComponentWindow(Component p_component, boolean p_new, int p_tabIndex) {
+		JFrame x_window = null;
 
 		if(p_component instanceof Thread) {
-			threadWindow.showThread((Thread) p_component, p_new, p_tabIndex);
+			x_window = new ThreadWindow((Thread) p_component, p_new, p_tabIndex, this);
 		}
 
 		if(p_component instanceof Item) {
-			itemWindow = new ItemWindow((Item)p_component, p_new, threadWindow);
+			x_window = new ItemWindow((Item) p_component, p_new);
 		}
 
 		if(p_component instanceof Reminder) {
-			reminderWindow = new ReminderWindow((Reminder) p_component, p_new, threadWindow);
+			x_window = new ReminderWindow((Reminder) p_component, p_new);
 		}
-    }
+		return x_window;
+	}
+
+	private void showFrame(JFrame x_window) {
+		x_window.setLocation(o_navigationWindow.getX() + o_navigationWindow.getWidth() + 20, o_navigationWindow.getY());
+		x_window.setVisible(true);
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent changeEvent) {
+		o_tabIndex = ((JTabbedPane)changeEvent.getSource()).getSelectedIndex();
+
+		for(Component x_component: o_windows.keySet()) {
+			if(x_component instanceof Thread) {
+				((ThreadPanel)o_windows.get(x_component).getContentPane()).setTabIndex(o_tabIndex);
+			}
+		}
+	}
 }

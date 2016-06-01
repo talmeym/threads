@@ -68,14 +68,14 @@ public class ThreadTreePanel extends JPanel implements TreeSelectionListener, Ac
         
         if(x_fromObj instanceof Item) {
             Item x_toMove = (Item) x_fromObj;
-            x_toMove.getThread().removeItem(x_toMove);
+            x_toMove.getParentThread().removeItem(x_toMove);
             Thread x_thread = (Thread) x_toObj;
             x_thread.addItem(x_toMove);
         }
         
         if(x_fromObj instanceof Thread) {
             Thread x_toMove = (Thread) x_fromObj;
-            x_toMove.getThread().removeThreadItem(x_toMove);
+            x_toMove.getParentThread().removeThreadItem(x_toMove);
             Thread x_thread = (Thread) x_toObj;
             x_thread.addThreadItem(x_toMove);
         }

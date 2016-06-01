@@ -1,24 +1,19 @@
 package gui;
 
 import data.*;
-import util.*;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class ReminderWindow extends JDialog implements ActionListener {
+public class ReminderWindow extends JFrame implements ActionListener {
 	private final Reminder o_reminder;
 
-	public ReminderWindow(Reminder p_reminder, boolean p_new, JFrame parent) {
+	public ReminderWindow(Reminder p_reminder, boolean p_new) {
 		this.o_reminder = p_reminder;
 		setContentPane(new ReminderPanel(p_reminder, p_new, this));
 		setSize(GUIConstants.s_reminderWindowSize);
 		renameWindow(p_reminder);
-		GUIUtil.centreToWindow(this, parent);
-		ImageUtil.addIconToWindow(this);
-		setModal(true);
-		setVisible(true);
 	}
 
 	void renameWindow(Component p_component) {
