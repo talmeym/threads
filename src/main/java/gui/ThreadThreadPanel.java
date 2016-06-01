@@ -19,11 +19,11 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 
 		o_thread = p_thread;
 		o_thread.addObserver(this);
-        fixColumnWidth(0, GUIConstants.s_creationDateWidth);
-        fixColumnWidth(1, GUIConstants.s_threadWidth);
-		fixColumnWidth(3, GUIConstants.s_statsWidth);
-		fixColumnWidth(4, GUIConstants.s_statsWidth);
-		fixColumnWidth(5, GUIConstants.s_statsWidth);
+        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
+        fixColumnWidth(1, GUIConstants.s_threadColumnWidth);
+		fixColumnWidth(3, GUIConstants.s_statsColumnWidth);
+		fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
+		fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
 
 		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
 		x_buttonPanel.add(o_addItemButton);

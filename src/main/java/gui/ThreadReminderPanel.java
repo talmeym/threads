@@ -16,10 +16,10 @@ public class ThreadReminderPanel extends TablePanel implements Observer {
         super(new ReminderTableModel(p_thread), new CellRenderer(null));
 
 		o_thread = p_thread;
-        fixColumnWidth(0, GUIConstants.s_creationDateWidth);
-        fixColumnWidth(1, GUIConstants.s_threadWidth);
-        fixColumnWidth(3, GUIConstants.s_creationDateWidth);
-        fixColumnWidth(4, GUIConstants.s_dateStatusWidth);
+        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
+        fixColumnWidth(1, GUIConstants.s_threadColumnWidth);
+        fixColumnWidth(3, GUIConstants.s_creationDateColumnWidth);
+        fixColumnWidth(4, GUIConstants.s_dateStatusColumnWidth);
 
 		o_dismissButton.setEnabled(false);
 		o_dismissButton.addActionListener(new ActionListener() {

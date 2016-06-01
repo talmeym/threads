@@ -48,9 +48,7 @@ public class WindowManager implements ChangeListener {
 		});
 
 		o_navigationWindow.setLocation(250, 200);
-		o_navigationWindow.setSize(300, 600);
 		o_navigationWindow.setVisible(true);
-
 		openComponent(p_topLevelThread, false, -1);
 	}
 

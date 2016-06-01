@@ -14,9 +14,9 @@ public class ThreadUpdatePanel extends TablePanel {
 	public ThreadUpdatePanel(Thread p_thread) {
         super(new UpdateItemTableModel(p_thread), new CellRenderer(null));
         o_thread = p_thread;
-        fixColumnWidth(0, GUIConstants.s_creationDateWidth);
-        fixColumnWidth(1, GUIConstants.s_threadWidth);
-        fixColumnWidth(3, GUIConstants.s_dateStatusWidth);
+        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
+        fixColumnWidth(1, GUIConstants.s_threadColumnWidth);
+        fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
 
 		o_updateButton.setEnabled(false);
 		o_updateButton.addActionListener(new ActionListener() {

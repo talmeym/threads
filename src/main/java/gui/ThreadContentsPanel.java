@@ -20,11 +20,11 @@ public class ThreadContentsPanel extends TablePanel implements Observer
         o_thread = p_thread;
         o_thread.addObserver(this);
 
-        fixColumnWidth(0, GUIConstants.s_creationDateWidth);
-        fixColumnWidth(1, GUIConstants.s_typeWidth);
-        fixColumnWidth(3, GUIConstants.s_statsWidth);
-        fixColumnWidth(4, GUIConstants.s_statsWidth);
-        fixColumnWidth(5, GUIConstants.s_statsWidth);
+        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
+        fixColumnWidth(1, GUIConstants.s_typeColumnWidth);
+        fixColumnWidth(3, GUIConstants.s_statsColumnWidth);
+        fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
+        fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
 
 		o_removeButton.setEnabled(false);
 

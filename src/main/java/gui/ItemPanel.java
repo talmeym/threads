@@ -15,9 +15,9 @@ class ItemPanel extends TablePanel implements ComponentInfoChangeListener {
         super(new ItemReminderTableModel(p_item),  new CellRenderer(p_item));
         o_item = p_item;
 
-        fixColumnWidth(0, GUIConstants.s_creationDateWidth);
-        fixColumnWidth(2, GUIConstants.s_creationDateWidth);
-        fixColumnWidth(3, GUIConstants.s_dateStatusWidth);
+        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
+        fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
+        fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
 
 		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_item, p_new, this, listener);
 
