@@ -43,8 +43,21 @@ public class ThreadUpdatePanel extends TablePanel {
 
 			if(x_text != null) {
 				Item x_item = new Item(x_text);
-				x_thread.addThreadItem(x_item);
-				WindowManager.getInstance().openComponent(x_item, true, 0);
+				x_thread.addItem(x_item);
+
+				if(LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?", "Supersede previous updates ?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
+						ThreadItem x_groupItem = x_thread.getThreadItem(i);
+
+						if(x_groupItem instanceof Item)  {
+							Item x_otherItem = (Item) x_groupItem;
+
+							if(x_otherItem != x_item && x_otherItem.getDueDate() == null && x_otherItem.isActive()) {
+								x_otherItem.setActive(false);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -53,10 +66,7 @@ public class ThreadUpdatePanel extends TablePanel {
         if(p_index != -1) {
             Item x_threadItem = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
 			Thread x_thread = x_threadItem.getParentThread();
-
-			if(x_thread != o_thread) {
-				WindowManager.getInstance().openComponent(x_thread, false, 0);
-			}
+			WindowManager.getInstance().openComponent(x_thread, false, 0);
         }
     }
 

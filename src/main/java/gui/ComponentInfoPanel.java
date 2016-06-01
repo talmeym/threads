@@ -7,21 +7,17 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.List;
 
-public class ComponentInfoPanel extends JPanel implements DocumentListener {
+public class ComponentInfoPanel extends JPanel implements DocumentListener, Observer {
     private final Component o_component;
+	private final ComponentInfoChangeListener o_listener;
+	private final JCheckBox o_activeCheckBox;
 
-	private List<ComponentInfoChangeListener> o_listeners;
-
-    public ComponentInfoPanel(Component p_component, boolean p_new, ComponentInfoChangeListener p_compInfoListeners) {
-		this(p_component, p_new, Arrays.asList(p_compInfoListeners));
-	}
-
-    public ComponentInfoPanel(Component p_component, boolean p_new, List<ComponentInfoChangeListener> p_componentInfoListeners) {
+	public ComponentInfoPanel(Component p_component, boolean p_new, ComponentInfoChangeListener p_compInfoListeners) {
         super(new BorderLayout());
         o_component = p_component;
-		o_listeners = p_componentInfoListeners;
+		o_component.addObserver(this);
+		o_listener = p_compInfoListeners;
 
 		JButton o_parentButton = new JButton("Parent");
 		o_parentButton.setEnabled(o_component.getParentComponent() != null);
@@ -51,7 +47,7 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
 					x_textField.setText(o_component.getText());
 				}
 
-				updateListeners(true);
+				o_listener.componentInfoChanged(true);
 			}
 		});
 
@@ -61,7 +57,7 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
 			x_textField.setSelectionEnd(x_textField.getText().length());
 		}
 
-		final JCheckBox o_activeCheckBox = new JCheckBox("Active");
+		o_activeCheckBox = new JCheckBox("Active");
 		o_activeCheckBox.setEnabled(o_component.getParentComponent() != null);
         o_activeCheckBox.setSelected(p_component.isActive());
 
@@ -88,22 +84,21 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
     
 	@Override
 	public void insertUpdate(DocumentEvent documentEvent) {
-		updateListeners(false);
+		o_listener.componentInfoChanged(false);
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent documentEvent) {
-		updateListeners(false);
+		o_listener.componentInfoChanged(false);
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent documentEvent) {
-		updateListeners(false);
+		o_listener.componentInfoChanged(false);
 	}
 
-	private void updateListeners(boolean p_saved) {
-		for(ComponentInfoChangeListener listener: o_listeners) {
-			listener.componentInfoChanged(p_saved);
-		}
+	@Override
+	public void update(Observable observable, Object o) {
+		o_activeCheckBox.setSelected(o_component.isActive());
 	}
 }
