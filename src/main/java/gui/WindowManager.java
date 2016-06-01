@@ -3,7 +3,7 @@ package gui;
 import data.*;
 import data.Component;
 import data.Thread;
-import util.TimedSaver;
+import util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -49,6 +49,7 @@ public class WindowManager implements ChangeListener {
 			}
 		});
 
+		ImageUtil.addIconToWindow(o_navigationWindow);
 		o_navigationWindow.setLocation(250, 200);
 		o_navigationWindow.setVisible(true);
 
@@ -99,6 +100,7 @@ public class WindowManager implements ChangeListener {
 			x_window = new ReminderWindow((Reminder) p_component, p_new);
 		}
 
+		ImageUtil.addIconToWindow(x_window);
 		return x_window;
 	}
 

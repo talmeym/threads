@@ -19,7 +19,7 @@ public class ImageUtil {
 	}
 
 	public static Image getTreeImage() {
-		String filename = "/spool.jpg";
+		String filename = "/spool2.png";
 		return loadImage(filename);
 	}
 
