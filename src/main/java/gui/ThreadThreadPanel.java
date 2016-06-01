@@ -16,9 +16,9 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 
     ThreadThreadPanel(Thread p_thread) {
         super(new ThreadListTableModel(p_thread), new CellRenderer(null));
-
 		o_thread = p_thread;
 		o_thread.addObserver(this);
+
         fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(1, GUIConstants.s_threadColumnWidth);
 		fixColumnWidth(3, GUIConstants.s_statsColumnWidth);

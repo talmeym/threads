@@ -13,10 +13,8 @@ public class ThreadContentsPanel extends TablePanel implements Observer
     private final Thread o_thread;
 	private final JButton o_removeButton = new JButton("Remove Selected");
 
-	public ThreadContentsPanel(final Thread p_thread)
-    {
-        super(new ComponentListTableModel(p_thread),
-              new CellRenderer(p_thread));
+	public ThreadContentsPanel(final Thread p_thread) {
+        super(new ComponentListTableModel(p_thread), new CellRenderer(p_thread));
         o_thread = p_thread;
         o_thread.addObserver(this);
 
@@ -26,33 +24,28 @@ public class ThreadContentsPanel extends TablePanel implements Observer
         fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
         fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
 
-		o_removeButton.setEnabled(false);
-
 		JButton o_addItemButton = new JButton("Add Item");
 		o_addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addItem();
 			}
-		}
-		);
+		});
 
 		JButton o_addThreadButton = new JButton("Add Thread");
 		o_addThreadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addNewThread();
 			}
-		}
-		);
-        
-        o_removeButton.addActionListener(new ActionListener(){            
-            public void actionPerformed(ActionEvent e)
-            {
+		});
+
+		o_removeButton.setEnabled(false);
+        o_removeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
                 removeComponent();
             }            
-        }
-        );
+        });
 
-        JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+        JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 0, 0));
         x_buttonPanel.add(o_addItemButton);
         x_buttonPanel.add(o_addThreadButton);
         x_buttonPanel.add(o_removeButton);

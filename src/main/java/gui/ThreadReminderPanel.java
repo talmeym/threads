@@ -14,8 +14,8 @@ public class ThreadReminderPanel extends TablePanel implements Observer {
     
     ThreadReminderPanel(Thread p_thread) {
         super(new ReminderTableModel(p_thread), new CellRenderer(null));
-
 		o_thread = p_thread;
+
         fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(1, GUIConstants.s_threadColumnWidth);
         fixColumnWidth(3, GUIConstants.s_creationDateColumnWidth);
