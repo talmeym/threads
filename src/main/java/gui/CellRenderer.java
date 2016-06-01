@@ -34,13 +34,13 @@ class CellRenderer extends DefaultTableCellRenderer {
         if(o_component instanceof Thread) {
             Thread x_thread = (Thread) o_component;
             ThreadItem x_item = x_thread.getThreadItem(row);
-			x_component.setBackground(x_item.isActive() ? Color.WHITE : new Color(220,220,220));
+			x_component.setForeground(x_item.isActive() ? Color.BLACK : Color.gray);
         }
-        
+
         if(o_component instanceof Item) {
             Item x_item = (Item) o_component;
             Reminder x_reminder = x_item.getReminder(row);
-			x_component.setBackground(x_reminder.isActive() ? Color.WHITE : Color.LIGHT_GRAY);
+			x_component.setForeground(x_reminder.isActive() ? Color.BLACK : Color.gray);
         }
 
 		if(isSelected) {

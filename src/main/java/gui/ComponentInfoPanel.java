@@ -32,22 +32,23 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
 			}
 		});
 
-		final JTextField o_textField = new JTextField();
-        o_textField.setPreferredSize(new Dimension(200, 25));
-		o_textField.setText(p_component.getText());
-		o_textField.getDocument().addDocumentListener(this);
-		o_textField.setHorizontalAlignment(JTextField.CENTER);
-		o_textField.setEnabled(p_component.getParentComponent() != null);
+		final JTextField x_textField = new JTextField();
+        x_textField.setPreferredSize(new Dimension(200, 25));
+		x_textField.setText(p_component.getText());
+		x_textField.getDocument().addDocumentListener(this);
+		x_textField.setHorizontalAlignment(JTextField.CENTER);
+		x_textField.setEnabled(p_component.getParentComponent() != null);
+		x_textField.setForeground(p_component.isActive() ? Color.BLACK : Color.gray);
 
-        o_textField.addActionListener(new ActionListener() {
+        x_textField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				if (o_textField.getText().length() > 0) {
-					if (!o_textField.getText().equals(o_component.getText())) {
-						o_component.setText(o_textField.getText());
+				if (x_textField.getText().length() > 0) {
+					if (!x_textField.getText().equals(o_component.getText())) {
+						o_component.setText(x_textField.getText());
 					}
 				} else {
-					o_textField.setText(o_component.getText());
+					x_textField.setText(o_component.getText());
 				}
 
 				updateListeners(true);
@@ -55,9 +56,9 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
 		});
 
 		if(p_new) {
-			o_textField.requestFocus();
-			o_textField.setSelectionStart(0);
-			o_textField.setSelectionEnd(o_textField.getText().length());
+			x_textField.requestFocus();
+			x_textField.setSelectionStart(0);
+			x_textField.setSelectionEnd(x_textField.getText().length());
 		}
 
 		final JCheckBox o_activeCheckBox = new JCheckBox("Active");
@@ -68,6 +69,7 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				o_component.setActive(o_activeCheckBox.isSelected());
+				x_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
 			}
 		});
         
@@ -80,7 +82,7 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
         x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
         add(x_parentButtonPanel, BorderLayout.WEST);
-        add(o_textField, BorderLayout.CENTER);
+        add(x_textField, BorderLayout.CENTER);
         add(x_activeCheckBoxPanel, BorderLayout.EAST);
     }
     
