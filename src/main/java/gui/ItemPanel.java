@@ -11,7 +11,7 @@ class ItemPanel extends TablePanel implements ComponentInfoChangeListener {
 	private final JButton o_removeReminderButton = new JButton("Remove Selected");
     private final JButton o_closeButton = new JButton("Close");
 
-    ItemPanel(Item p_item, boolean p_new, final ActionListener listener) {
+    ItemPanel(Item p_item, boolean p_new, ActionListener listener) {
         super(new ItemReminderTableModel(p_item),  new CellRenderer(p_item));
         o_item = p_item;
 

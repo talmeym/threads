@@ -10,15 +10,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer, ComponentInfoChangeListener, ActionListener {
+public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer, ComponentInfoChangeListener {
 	private final Thread o_thread;
 	private final ChangeListener o_listener;
 	private final JTabbedPane o_tabs;
     
-    public ThreadPanel(Thread p_thread, boolean p_new, int p_tabIndex, ChangeListener p_listener) {
+    public ThreadPanel(Thread p_thread, boolean p_new, int p_tabIndex, ChangeListener p_changeListener, ActionListener p_actionListener) {
         super(new BorderLayout());
         o_thread = p_thread;
-		o_listener = p_listener;
+		o_listener = p_changeListener;
 
 		o_tabs = new JTabbedPane();
         o_tabs.addTab("Contents", new ThreadContentsPanel(p_thread));
@@ -28,13 +28,13 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
         o_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));
         o_tabs.addTab("Tree", new ThreadTreePanel(p_thread));
 
-		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_new, this, this);
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_new, this, p_actionListener);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 
 		o_tabs.setSelectedIndex(p_tabIndex);
-		o_tabs.addChangeListener(p_listener);
+		o_tabs.addChangeListener(p_changeListener);
 
         o_thread.addObserver(this);
         TimeUpdater.getInstance().addTimeUpdateListener(this);
@@ -87,10 +87,5 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 	@Override
 	public void componentInfoChanged(boolean saved) {
 		// do nothing
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent actionEvent) {
-		WindowManager.getInstance().openComponent(o_thread.getParentComponent(), false, -1);
 	}
 }

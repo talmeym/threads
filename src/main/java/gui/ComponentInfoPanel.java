@@ -6,16 +6,22 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
 
 public class ComponentInfoPanel extends JPanel implements DocumentListener {
     private final Component o_component;
 
-	private ComponentInfoChangeListener o_listener;
+	private List<ComponentInfoChangeListener> o_listeners;
 
-    public ComponentInfoPanel(Component p_component, boolean p_new, ComponentInfoChangeListener p_componentInfoListener, ActionListener p_actionListener) {
+    public ComponentInfoPanel(Component p_component, boolean p_new, ComponentInfoChangeListener p_compInfoListeners, ActionListener p_actionListener) {
+		this(p_component, p_new, Arrays.asList(p_compInfoListeners), p_actionListener);
+	}
+
+    public ComponentInfoPanel(Component p_component, boolean p_new, List<ComponentInfoChangeListener> p_componentInfoListeners, ActionListener p_actionListener) {
         super(new BorderLayout());
         o_component = p_component;
-		o_listener = p_componentInfoListener;
+		o_listeners = p_componentInfoListeners;
 
 		JButton o_parentButton = new JButton("Parent");
 		o_parentButton.setEnabled(o_component.getParentComponent() != null);
@@ -39,7 +45,7 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
 					o_textField.setText(o_component.getText());
 				}
 
-				o_listener.componentInfoChanged(true);
+				updateListeners(true);
 			}
 		});
 
@@ -75,16 +81,22 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener {
     
 	@Override
 	public void insertUpdate(DocumentEvent documentEvent) {
-		o_listener.componentInfoChanged(false);
+		updateListeners(false);
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent documentEvent) {
-		o_listener.componentInfoChanged(false);
+		updateListeners(false);
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent documentEvent) {
-		o_listener.componentInfoChanged(false);
+		updateListeners(false);
+	}
+
+	private void updateListeners(boolean p_saved) {
+		for(ComponentInfoChangeListener listener: o_listeners) {
+			listener.componentInfoChanged(p_saved);
+		}
 	}
 }
