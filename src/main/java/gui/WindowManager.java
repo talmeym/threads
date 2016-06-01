@@ -30,9 +30,7 @@ public class WindowManager implements ChangeListener {
     }
 
 	private NavigationWindow o_navigationWindow;
-
 	private Map<Component, JFrame> o_windows = new HashMap<Component, JFrame>();
-
 	private int o_tabIndex = -1;
 
     private WindowManager(final Thread p_topLevelThread, final String filePath) {
@@ -65,7 +63,10 @@ public class WindowManager implements ChangeListener {
 			((ThreadPanel)o_windows.get(p_component).getContentPane()).setTabIndex(x_index);
 		}
 
-		showFrame(o_windows.get(p_component));
+		JFrame x_window = o_windows.get(p_component);
+		x_window.setLocation(o_navigationWindow.getX() + o_navigationWindow.getWidth() + 20, o_navigationWindow.getY());
+		x_window.setVisible(true);
+
 		o_navigationWindow.selectComponent(p_component);
     }
 
@@ -84,11 +85,6 @@ public class WindowManager implements ChangeListener {
 			x_window = new ReminderWindow((Reminder) p_component, p_new);
 		}
 		return x_window;
-	}
-
-	private void showFrame(JFrame x_window) {
-		x_window.setLocation(o_navigationWindow.getX() + o_navigationWindow.getWidth() + 20, o_navigationWindow.getY());
-		x_window.setVisible(true);
 	}
 
 	@Override
