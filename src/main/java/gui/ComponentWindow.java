@@ -1,6 +1,6 @@
 package gui;
 
-import data.Component;
+import data.*;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -32,7 +32,9 @@ public class ComponentWindow <TYPE extends Component> extends JFrame implements 
 
 	@Override
 	public void update(Observable observable, Object o) {
-		renameWindow(o_component);
+		if(observable == ((ObservableChangeEvent)o).getObservableObserver()) {
+			renameWindow(o_component);
+		}
 	}
 
 	protected void renameWindow(Component p_component) {

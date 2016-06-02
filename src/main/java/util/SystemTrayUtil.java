@@ -14,7 +14,7 @@ public class SystemTrayUtil {
 	private static PopupMenu o_popUpMenu;
 	private static TrayIcon o_trayIcon;
 	private static Thread o_topLevelThread;
-	private static List<Component> alertedComponents = new ArrayList<Component>();
+	private static List<Component> o_alertedComponents = new ArrayList<Component>();
 
 	public static void initialise(Thread p_topLevelThread) {
 		try {
@@ -40,7 +40,7 @@ public class SystemTrayUtil {
 		List<Component> dueAlerts = new ArrayList<Component>();
 		dueAlerts.addAll(LookupHelper.getAllDueReminders(o_topLevelThread));
 		dueAlerts.addAll(LookupHelper.getAllDueActions(o_topLevelThread));
-		dueAlerts.removeAll(alertedComponents);
+		dueAlerts.removeAll(o_alertedComponents);
 
 		if(dueAlerts.size() == 1) {
 			Component component = dueAlerts.get(0);
@@ -58,17 +58,17 @@ public class SystemTrayUtil {
 	}
 
 	private static void haveAlerted(final Component component) {
-		alertedComponents.add(component);
+		o_alertedComponents.add(component);
 
 		component.addObserver(new Observer() {
 			@Override
 			public void update(Observable observable, Object o) {
-				ObservableChangeEvent event = (ObservableChangeEvent) o;
+				ObservableChangeEvent x_oce = (ObservableChangeEvent) o;
 
-				if(event.getType() == ObservableChangeEvent.s_CHANGE) {
-					Component component = (Component) observable;
-					alertedComponents.remove(component);
-					component.deleteObserver(this);
+				if(observable == x_oce.getObservableObserver() && x_oce.getType() == ObservableChangeEvent.s_CHANGE) {
+					Component x_component = (Component) x_oce.getObservableObserver();
+					o_alertedComponents.remove(x_component);
+					x_component.deleteObserver(this);
 				}
 			}
 		});

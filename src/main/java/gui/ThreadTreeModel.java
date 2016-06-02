@@ -75,15 +75,15 @@ public class ThreadTreeModel implements TreeModel, Observer {
 			return;
 		}
 
-		ObservableChangeEvent event = (ObservableChangeEvent) arg;
-		Component component = (Component) event.getObservableObserver();
-		TreePath treePath = new TreePath(getPathObjs(component));
+		ObservableChangeEvent x_oce = (ObservableChangeEvent) arg;
+		Component x_component = (Component) x_oce.getObservableObserver();
+		TreePath treePath = new TreePath(getPathObjs(x_component));
 
-		for(TreeModelListener listener: o_listeners) {
-			switch(event.getType()) {
-				case ObservableChangeEvent.s_ADDED: listener.treeNodesInserted(new TreeModelEvent(this, treePath, new int[]{event.getIndex()}, null)); break;
-				case ObservableChangeEvent.s_REMOVED: listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{event.getIndex()}, null)); break;
-				default: listener.treeNodesChanged(new TreeModelEvent(this, treePath));
+		for(TreeModelListener x_listener: o_listeners) {
+			switch(x_oce.getType()) {
+				case ObservableChangeEvent.s_ADDED: x_listener.treeNodesInserted(new TreeModelEvent(this, treePath, new int[]{x_oce.getIndex()}, null)); break;
+				case ObservableChangeEvent.s_REMOVED: x_listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{x_oce.getIndex()}, null)); break;
+				default: x_listener.treeNodesChanged(new TreeModelEvent(this, treePath));
 			}
 		}
 	}

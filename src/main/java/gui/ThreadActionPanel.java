@@ -33,11 +33,11 @@ public class ThreadActionPanel extends TablePanel implements Observer {
 			}
 		});
 
-		JPanel x_panel = new JPanel(new BorderLayout());
-		x_panel.add(o_dismissButton, BorderLayout.CENTER);
-		x_panel.setBorder(BorderFactory.createEmptyBorder(5,0,0,0));
+		JPanel x_buttonPanel = new JPanel(new BorderLayout());
+		x_buttonPanel.add(o_dismissButton, BorderLayout.CENTER);
+		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-		add(x_panel, BorderLayout.SOUTH);
+		add(x_buttonPanel, BorderLayout.SOUTH);
     }
     
     private void showThread(int p_index) {

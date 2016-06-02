@@ -1,5 +1,6 @@
 package gui;
 
+import data.*;
 import data.Component;
 
 import javax.swing.*;
@@ -99,6 +100,8 @@ public class ComponentInfoPanel extends JPanel implements DocumentListener, Obse
 
 	@Override
 	public void update(Observable observable, Object o) {
-		o_activeCheckBox.setSelected(o_component.isActive());
+		if(observable == ((ObservableChangeEvent)o).getObservableObserver()) {
+			o_activeCheckBox.setSelected(o_component.isActive());
+		}
 	}
 }
