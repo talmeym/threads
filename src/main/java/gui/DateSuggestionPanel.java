@@ -49,6 +49,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 
 		if(o_item.getDueDate() != null) {
 			o_dueDateField.setText(s_dateTimeFormat.format(o_item.getDueDate()));
+			o_dueDateField.setForeground(Color.black);
 		} else {
 			o_dueDateField.setText(s_defaultTextString);
 			o_dueDateField.setForeground(Color.gray);
@@ -180,6 +181,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
         
         o_dueDateField.setText(s_dateTimeFormat.format(x_calendar.getTime()));
 		setDueDate();
+		o_dueDateField.setForeground(Color.black);
     }
 
 	private void setDueDate() {
@@ -198,7 +200,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 				Date x_actionDate = o_item.getDueDate();
 				o_item.setDueDate(x_dueDate);
 
-				if(o_item.getReminderCount() > 0 && JOptionPane.showConfirmDialog((JPanel) o_listener, "This action has reminders.\nDo you want to keep their relative chronological positions the same?", "Keep Reminders Relative?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+				if(o_item.getReminderCount() > 0 && JOptionPane.showConfirmDialog((JPanel) o_listener, MessagingConstants.s_moveRemindersDesc, MessagingConstants.s_moveReminderTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 
 					for(int i = 0; i < o_item.getReminderCount(); i++) {
 						Reminder x_reminder = o_item.getReminder(i);

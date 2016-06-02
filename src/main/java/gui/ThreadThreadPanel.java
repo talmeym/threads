@@ -84,9 +84,8 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 		if(x_index != -1) {
 			ThreadItem x_threadItem = (ThreadItem) LookupHelper.getAllActiveThreads(o_thread).get(getSelectedRow());
 			Thread x_parent = (Thread) x_threadItem.getParentComponent();
-			String x_message = "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?";
 
-			if(JOptionPane.showConfirmDialog(null, x_message) == JOptionPane.YES_OPTION) {
+			if(JOptionPane.showConfirmDialog(null, "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?", "Remove " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
 				x_parent.removeThreadItem(x_threadItem);
 			}
 		}

@@ -21,7 +21,7 @@ public class ItemWindow extends ComponentWindow<Item> implements ActionListener 
 		Item x_item = getComponent();
 		Thread x_thread = (Thread) x_item.getParentComponent();
 
-		if(x_item.getDueDate() == null && LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(null, "Set previous updates inactive ?", "Supersede previous updates ?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+		if(x_item.getDueDate() == null && LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(null, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
 				ThreadItem x_groupItem = x_thread.getThreadItem(i);
 
