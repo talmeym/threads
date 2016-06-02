@@ -159,22 +159,18 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 
 	private void setDueDate() {
 		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0) {
-			try {
-				Date x_dueDate = s_dateTimeFormat.parse(o_dueDateField.getText());
+			Date x_dueDate = null;
 
-				if(!x_dueDate.equals(o_reminder.getDueDate())) {
-					o_reminder.setDueDate(x_dueDate);
-				}
+			try {
+				x_dueDate = s_dateTimeFormat.parse(o_dueDateField.getText());
 			} catch (ParseException e) {
 				try {
-					Date x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
+					x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
+				} catch (ParseException pe) { /* do nothing */ }
+			}
 
-					if(!x_dueDate.equals(o_reminder.getDueDate())) {
-						o_reminder.setDueDate(x_dueDate);
-					}
-				} catch (ParseException pe) {
-					// do nothing
-				}
+			if(x_dueDate != null && !x_dueDate.equals(o_reminder.getDueDate())) {
+				o_reminder.setDueDate(x_dueDate);
 			}
 		}
 
