@@ -198,7 +198,7 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 				Date x_actionDate = o_item.getDueDate();
 				o_item.setDueDate(x_dueDate);
 
-				if(o_item.getReminderCount() > 0 && JOptionPane.showConfirmDialog(this, "This action has reminders.\nDo you want to keep their relative chronological positions the same?", "Keep Reminders Relative?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+				if(o_item.getReminderCount() > 0 && JOptionPane.showConfirmDialog((JPanel) o_listener, "This action has reminders.\nDo you want to keep their relative chronological positions the same?", "Keep Reminders Relative?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
 
 					for(int i = 0; i < o_item.getReminderCount(); i++) {
 						Reminder x_reminder = o_item.getReminder(i);
