@@ -8,7 +8,10 @@ public class DateHelper {
     }
     
     private static String getDateStatus(Date p_date1, Date p_date2, String p_beforeStr) {
-        int x_weeks = 0;
+		// make all day events be measure against start of today
+		p_date2 = isAllDay(p_date1) ? makeStartOfDay(p_date2) : p_date2;
+
+		int x_weeks = 0;
         int x_days;
         int x_hours;
         int x_mins;
@@ -25,31 +28,64 @@ public class DateHelper {
         
         x_hours = (int) ((x_time / (1000 * 60 * 60)) % 24);
         x_mins = (int) ((x_time / (1000 * 60)) % 60);
-        
+
+		// hack to correct minutes
         x_mins++;
-        
+
         StringBuilder x_buffer = new StringBuilder();
         
-        if(x_weeks > 0) {
+        if(showingWeeks(x_weeks)) {
             x_buffer.append(x_weeks).append("W ");
         }
-        
-        if(x_days > 0 && x_weeks < 5) {
+
+        if(showingDays(x_weeks, x_days)) {
             x_buffer.append(x_days).append("D ");
         }
 
-        if(x_hours > 0 && x_weeks == 0 && x_days < 7) {
+        if(showingHours(x_weeks, x_days, x_hours)) {
             x_buffer.append(x_hours).append("H ");
         }
-        
-        if(x_mins > 0 && x_weeks == 0 && x_days < 2) {
+
+        if(showingMinutes(x_weeks, x_days, x_mins)) {
             x_buffer.append(x_mins).append("M ");
         }
-                
+
         if(x_diff < 0) {
             x_buffer.append(p_beforeStr);
         }
 
         return x_buffer.toString();
     }
+
+	private static Date makeStartOfDay(Date p_date) {
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.setTime(p_date);
+		x_calendar.set(Calendar.HOUR_OF_DAY, 0);
+		x_calendar.set(Calendar.MINUTE, 0);
+		x_calendar.set(Calendar.SECOND, 0);
+		x_calendar.set(Calendar.MILLISECOND, 0);
+		return x_calendar.getTime();
+	}
+
+	private static boolean isAllDay(Date p_date) {
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.setTime(p_date);
+		return x_calendar.get(Calendar.HOUR_OF_DAY) == 0 && x_calendar.get(Calendar.MINUTE) == 0;
+	}
+
+	private static boolean showingMinutes(int x_weeks, int x_days, int x_mins) {
+		return x_mins > 0 && x_weeks == 0 && x_days < 2;
+	}
+
+	private static boolean showingHours(int x_weeks, int x_days, int x_hours) {
+		return x_hours > 0 && x_weeks == 0 && x_days < 7;
+	}
+
+	private static boolean showingDays(int x_weeks, int x_days) {
+		return x_days > 0 && x_weeks < 5;
+	}
+
+	private static boolean showingWeeks(int x_weeks) {
+		return x_weeks > 0;
+	}
 }
