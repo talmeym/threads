@@ -53,13 +53,12 @@ public class ThreadTreePanel extends JPanel implements TreeSelectionListener, Ac
         x_panel.add(rightTreePanel);
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
-        JPanel x_buttonBox = new JPanel(new BorderLayout());
-        x_buttonBox.add(o_moveButton, BorderLayout.CENTER);
-        x_buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        JPanel x_buttonPanel = new JPanel(new BorderLayout());
+        x_buttonPanel.add(o_moveButton, BorderLayout.CENTER);
+        x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         
         add(x_panel, BorderLayout.CENTER);
-        add(x_buttonBox, BorderLayout.SOUTH);
-        //setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        add(x_buttonPanel, BorderLayout.SOUTH);
     }
 
     public void valueChanged(TreeSelectionEvent e) {

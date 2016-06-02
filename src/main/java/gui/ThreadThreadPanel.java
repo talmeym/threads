@@ -25,14 +25,6 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 		fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
 		fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
 
-		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
-		x_buttonPanel.add(o_addItemButton);
-		x_buttonPanel.add(o_addThreadButton);
-		x_buttonPanel.add(o_removeButton);
-		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-
-		add(x_buttonPanel, BorderLayout.SOUTH);
-
 		o_addItemButton.setEnabled(false);
 		o_addThreadButton.setEnabled(false);
 		o_removeButton.setEnabled(false);
@@ -41,23 +33,27 @@ class ThreadThreadPanel extends TablePanel implements Observer {
 			public void actionPerformed(ActionEvent e) {
 				addItem();
 			}
-		}
-		);
+		});
 
 		o_addThreadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addNewThread();
 			}
-		}
-		);
+		});
 
 		o_removeButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e)
-			{
+			public void actionPerformed(ActionEvent e) {
 				removeComponent();
 			}
-		}
-		);
+		});
+
+		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		x_buttonPanel.add(o_addItemButton);
+		x_buttonPanel.add(o_addThreadButton);
+		x_buttonPanel.add(o_removeButton);
+		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+
+		add(x_buttonPanel, BorderLayout.SOUTH);
 	}
 
 	protected void addItem() {
