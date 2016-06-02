@@ -125,11 +125,11 @@ class DateSuggestionPanel extends JPanel implements DocumentListener {
 	}
 
 	private void setUpDropDowns() {
-		Calendar now = Calendar.getInstance();
-		int x_dayIndex = now.get(Calendar.DAY_OF_WEEK) - 2;
+		Calendar x_now = Calendar.getInstance();
+		int x_dayIndex = x_now.get(Calendar.DAY_OF_WEEK) - 2;
 		o_dayBox.setSelectedIndex(x_dayIndex < 0 ? x_dayIndex + 7 : x_dayIndex);
 
-		int x_hour = now.get(Calendar.HOUR_OF_DAY);
+		int x_hour = x_now.get(Calendar.HOUR_OF_DAY);
 
 		if(x_hour > 9) {
 			o_timeBox.setSelectedIndex(1);
