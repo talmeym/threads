@@ -87,11 +87,11 @@ public class ThreadContentsPanel extends TablePanel implements Observer
     }
 
 	@Override
-	void tableRowClicked(int col, int row) {
+	void tableRowClicked(int row, int col) {
 		o_removeButton.setEnabled(row != -1);
 	}
 
-	void tableRowDoubleClicked(int col, int row) {
+	void tableRowDoubleClicked(int row, int col) {
 		if(row != -1) {
 			WindowManager.getInstance().openComponent(o_thread.getThreadItem(row), false, col > 2 ? col - 2 : 0);
 		}

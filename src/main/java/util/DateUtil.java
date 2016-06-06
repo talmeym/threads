@@ -2,7 +2,7 @@ package util;
 
 import java.util.*;
 
-public class DateHelper {
+public class DateUtil {
     public static String getDateStatus(Date p_date) {
         return getDateStatus(p_date, new Date(), " ago");
     }
@@ -67,10 +67,22 @@ public class DateHelper {
 		return x_calendar.getTime();
 	}
 
-	private static boolean isAllDay(Date p_date) {
+	public static boolean isAllDay(Date p_date) {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.setTime(p_date);
 		return x_calendar.get(Calendar.HOUR_OF_DAY) == 0 && x_calendar.get(Calendar.MINUTE) == 0;
+	}
+
+	public static boolean isSameDay(Date p_date, Date p_referenceDate) {
+		Calendar x_calendar1 = Calendar.getInstance();
+		x_calendar1.setTime(p_date);
+
+		Calendar x_calendar2 = Calendar.getInstance();
+		x_calendar2.setTime(p_referenceDate);
+
+		return x_calendar1.get(Calendar.YEAR) == x_calendar2.get(Calendar.YEAR)
+				&& x_calendar1.get(Calendar.MONTH) == x_calendar2.get(Calendar.MONTH)
+				&& x_calendar1.get(Calendar.DAY_OF_MONTH) == x_calendar2.get(Calendar.DAY_OF_MONTH);
 	}
 
 	private static boolean showingMinutes(int x_weeks, int x_days, int x_mins) {

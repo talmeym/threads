@@ -45,7 +45,7 @@ class CellRenderer extends DefaultTableCellRenderer {
 
 		if(isSelected) {
 			x_component.setForeground(Color.BLACK);
-			x_component.setBackground(Color.CYAN);
+			x_component.setBackground(ColourConstants.s_selectedColour);
 		}
 
         return x_component;

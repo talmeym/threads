@@ -1,7 +1,7 @@
 package gui;
 
 import data.*;
-import util.DateHelper;
+import util.DateUtil;
 
 import java.util.Date;
 
@@ -9,7 +9,8 @@ public class ItemReminderTableModel extends ComponentTableModel {
     public ItemReminderTableModel(Item p_item) {
         super(p_item, new String[] {"Creation Date", "Text", "Due Date", "Due"});
     }
-    
+
+	@Override
     public int getRowCount() {
         Item x_item = (Item) getComponent();
         
@@ -20,6 +21,7 @@ public class ItemReminderTableModel extends ComponentTableModel {
         return x_item.getReminderCount();
     }
 
+	@Override
     public Class getColumnClass(int col) {
         switch(col) {
 			case 0:
@@ -28,6 +30,7 @@ public class ItemReminderTableModel extends ComponentTableModel {
         }        
     }
 
+	@Override
     public Object getValueAt(int row, int col) {
 		Reminder x_reminder = ((Item)getComponent()).getReminder(row);
         
@@ -35,7 +38,7 @@ public class ItemReminderTableModel extends ComponentTableModel {
 			case 0: return x_reminder.getCreationDate();
 			case 1: return x_reminder.getText();
 			case 2: return x_reminder.getDueDate();
-			default: return DateHelper.getDateStatus(x_reminder.getDueDate());
+			default: return DateUtil.getDateStatus(x_reminder.getDueDate());
         }
     }    
 }

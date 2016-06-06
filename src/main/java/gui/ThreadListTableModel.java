@@ -7,7 +7,8 @@ class ThreadListTableModel extends ComponentTableModel {
     ThreadListTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Creation Date", "Parent", "Thread", "Threads", "Updates", "Actions"});
     }
-    
+
+	@Override
     public int getRowCount() {
         Thread x_thread = (Thread) getComponent();
         
@@ -18,10 +19,12 @@ class ThreadListTableModel extends ComponentTableModel {
         return LookupHelper.getAllActiveThreads(x_thread).size();
     }
 
+	@Override
     public Class getColumnClass(int col) {
         return String.class;
     }
 
+	@Override
     public Object getValueAt(int row, int col) {
         Thread x_thread = LookupHelper.getAllActiveThreads((Thread) getComponent()).get(row);
         

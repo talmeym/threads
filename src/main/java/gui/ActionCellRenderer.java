@@ -15,7 +15,7 @@ import static java.util.Calendar.*;
 
 public class ActionCellRenderer extends DefaultTableCellRenderer {
 	public static final DateFormat s_createDateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
-	public static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd MMM yy");
+	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy");
 	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mm");
 	public static final DateFormat s_amPmFormat = new SimpleDateFormat("aa");
 	public static final DateFormat s_dayFormat = new SimpleDateFormat("EEEE h:mm");
@@ -39,8 +39,8 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 
         java.awt.Component x_component = super.getTableCellRendererComponent(table, x_value, isSelected, hasFocus, row, column);
 
-		x_component.setForeground(Color.BLACK);
-		x_component.setBackground(Color.WHITE);
+		x_component.setForeground(Color.black);
+		x_component.setBackground(Color.white);
 
 		List x_actionItems = LookupHelper.getAllActiveActions(o_thread);
         Item x_item = (Item) x_actionItems.get(row);
@@ -48,8 +48,8 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 		setColourForTime(x_component, x_item);
 
 		if(isSelected) {
-			x_component.setForeground(Color.BLACK);
-			x_component.setBackground(new Color(155, 255, 255));
+			x_component.setForeground(Color.black);
+			x_component.setBackground(ColourConstants.s_selectedColour);
 		}
 
         return x_component;
@@ -63,7 +63,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 		String x_value;
 
 		if(x_dueDate.before(x_now)) {
-			x_value = s_dateTimeFormat.format(x_dueDate) + " " + s_12HrTimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
+			x_value = s_dateFormat.format(x_dueDate) + " " + s_12HrTimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
 		}else if(x_dueDate.before(x_lastThingToday)) {
 			x_value = "Today " + s_12HrTimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
 		} else if(x_dueDate.before(x_lastThingTomorrow)) {
@@ -71,7 +71,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 		} else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
 			x_value = s_dayFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
 		} else {
-		 	x_value = s_dateTimeFormat.format(x_dueDate);
+		 	x_value = s_dateFormat.format(x_dueDate);
 		}
 
 		x_value = x_value.replace(":00", "");
@@ -87,13 +87,13 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 		Date x_lastThingTomorrow = getLastThingTomorrow();
 
 		if(x_dueDate.before(x_now)) {
-			x_component.setBackground(new Color(255, 155, 155)); // gone by
+			x_component.setBackground(ColourConstants.s_goneByColour); // gone by
 		} else if(x_dueDate.before(x_lastThingToday)) {
-			x_component.setBackground(new Color(255, 203, 100)); // today
+			x_component.setBackground(ColourConstants.s_todayColour); // today
 		} else if(x_dueDate.before(x_lastThingTomorrow)) {
-			x_component.setBackground(new Color(255, 255, 155)); // tomorrow
+			x_component.setBackground(ColourConstants.s_tomorrowColour); // tomorrow
 		} else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
-			x_component.setBackground(new Color(155,255,155));
+			x_component.setBackground(ColourConstants.s_thisWeek);
 		} else {
 			x_component.setBackground(Color.WHITE);
 		}

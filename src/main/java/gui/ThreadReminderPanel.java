@@ -55,11 +55,11 @@ public class ThreadReminderPanel extends TablePanel implements Observer {
     }
 
 	@Override
-	void tableRowClicked(int col, int row) {
+	void tableRowClicked(int row, int col) {
 		o_dismissButton.setEnabled(row != -1);
 	}
 
-	void tableRowDoubleClicked(int col, int row) {
+	void tableRowDoubleClicked(int row, int col) {
         switch(col) {
 			case 1: showItem(row); break;
 			default: showReminder(row); break;

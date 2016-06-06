@@ -24,7 +24,7 @@ class ComponentTableModel extends DefaultTableModel implements TimeUpdateListene
     }
     
     public final int getColumnCount() {
-        return o_columnNames.length;
+        return o_columnNames != null ? o_columnNames.length : 0;
     }
     
     public final String getColumnName(int col) {

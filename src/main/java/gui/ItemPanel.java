@@ -86,11 +86,11 @@ class ItemPanel extends TablePanel implements ComponentInfoChangeListener {
     }
 
 	@Override
-	void tableRowClicked(int col, int row) {
+	void tableRowClicked(int row, int col) {
 		o_removeReminderButton.setEnabled(row != -1);
 	}
 
-	void tableRowDoubleClicked(int col, int row) {
+	void tableRowDoubleClicked(int row, int col) {
 		switch(col) {
 			default: showReminder(row);
 		}

@@ -11,8 +11,9 @@ class UpdateItemTableModel extends ComponentTableModel {
         super(p_thread, new String[]{"Creation Date", "Thread", "Update", "Updated"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
-    
-    public int getRowCount() {
+
+	@Override
+	public int getRowCount() {
         Thread x_thread = (Thread) getComponent();
         
         if(x_thread == null) {
@@ -22,6 +23,7 @@ class UpdateItemTableModel extends ComponentTableModel {
         return LookupHelper.getAllActiveUpdates(x_thread).size();
     }
 
+	@Override
     public Class getColumnClass(int col) {
         switch(col) {
 			case 0: return Date.class;
@@ -29,6 +31,7 @@ class UpdateItemTableModel extends ComponentTableModel {
         }        
     }
 
+	@Override
     public Object getValueAt(int row, int col) {
         Item x_updateItem = LookupHelper.getAllActiveUpdates((Thread) getComponent()).get(row);
         
@@ -36,7 +39,7 @@ class UpdateItemTableModel extends ComponentTableModel {
 			case 0: return x_updateItem.getCreationDate();
 			case 1: return x_updateItem.getParentThread().getText();
 			case 2: return x_updateItem.getText();
-			default: return DateHelper.getDateStatus(x_updateItem.getCreationDate());
+			default: return DateUtil.getDateStatus(x_updateItem.getCreationDate());
         }
     }
 }

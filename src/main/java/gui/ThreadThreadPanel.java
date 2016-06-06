@@ -107,13 +107,13 @@ class ThreadThreadPanel extends TablePanel implements Observer {
     }
 
 	@Override
-	void tableRowClicked(int col, int row) {
+	void tableRowClicked(int row, int col) {
 		o_addItemButton.setEnabled(row != -1);
 		o_addThreadButton.setEnabled(row != -1);
 		o_removeButton.setEnabled(row != -1);
 	}
 
-    void tableRowDoubleClicked(int col, int row) {
+    void tableRowDoubleClicked(int row, int col) {
 		switch(col) {
 			case 1: showParentThread(row); break;
 			default: showThread(col, row);

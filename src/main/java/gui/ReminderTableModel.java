@@ -11,8 +11,9 @@ class ReminderTableModel extends ComponentTableModel {
         super(p_thread, new String[] {"Creation Date", "Action", "Reminder", "Due Date", "Due"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
-    
-    public int getRowCount() {
+
+	@Override
+	public int getRowCount() {
         Thread x_thread = (Thread) getComponent();
         
         if(x_thread == null) {
@@ -22,6 +23,7 @@ class ReminderTableModel extends ComponentTableModel {
         return LookupHelper.getAllDueReminders(x_thread).size();
     }
 
+	@Override
     public Class getColumnClass(int col) {
         switch(col) {
 			case 0:
@@ -30,6 +32,7 @@ class ReminderTableModel extends ComponentTableModel {
         }        
     }
 
+	@Override
     public Object getValueAt(int row, int col) {
         Reminder x_dueReminder = LookupHelper.getAllDueReminders((Thread) getComponent()).get(row);
         
@@ -38,7 +41,7 @@ class ReminderTableModel extends ComponentTableModel {
 			case 1: return x_dueReminder.getItem().getText();
 			case 2: return x_dueReminder.getText();
 			case 3: return x_dueReminder.getDueDate();
-			default: return DateHelper.getDateStatus(x_dueReminder.getDueDate());
+			default: return DateUtil.getDateStatus(x_dueReminder.getDueDate());
         }
     }
 }

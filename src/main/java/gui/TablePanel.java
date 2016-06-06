@@ -7,13 +7,14 @@ import java.awt.event.*;
 import java.util.Date;
 
 abstract class TablePanel extends JPanel {
-    private final JTable o_table;
-    
-    protected TablePanel(TableModel p_tableModel, TableCellRenderer p_cellRenderer) {
+    protected final JTable o_table;
+
+	protected TablePanel(TableModel p_tableModel, TableCellRenderer p_cellRenderer) {
         super(new BorderLayout());
         o_table = new JTable(p_tableModel);
         o_table.setRowHeight(GUIConstants.s_tableRowHeight);
         o_table.setDefaultRenderer(String.class, p_cellRenderer);
+        o_table.setDefaultRenderer(Object[].class, p_cellRenderer);
         o_table.setDefaultRenderer(Date.class, p_cellRenderer);
 		o_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -21,19 +22,19 @@ abstract class TablePanel extends JPanel {
 			@Override
             public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 1) {
-					tableRowClicked(o_table.getSelectedColumn(), o_table.getSelectedRow());
+					tableRowClicked(o_table.getSelectedRow(), o_table.getSelectedColumn());
 				}
 
                 if(e.getClickCount() == 2) {
-                    tableRowDoubleClicked(o_table.getSelectedColumn(), o_table.getSelectedRow());
+                    tableRowDoubleClicked(o_table.getSelectedRow(), o_table.getSelectedColumn());
                 }
             }
         });
 
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));        
-        add(new JScrollPane(o_table), BorderLayout.CENTER);        
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        add(new JScrollPane(o_table), BorderLayout.CENTER);
     }
-    
+
     protected void fixColumnWidth(int p_column, int p_width) {
         TableColumnModel x_model = o_table.getColumnModel();        
         x_model.getColumn(p_column).setPreferredWidth(p_width);
@@ -45,7 +46,7 @@ abstract class TablePanel extends JPanel {
         return o_table.getSelectedRow();
     }
     
-    abstract void tableRowClicked(int col, int row);
+    abstract void tableRowClicked(int row, int col);
 
-    abstract void tableRowDoubleClicked(int col, int row);
+    abstract void tableRowDoubleClicked(int row, int col);
 }
