@@ -17,7 +17,7 @@ public class ThreadUpdatePanel extends TablePanel {
 
         fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(1, GUIConstants.s_threadColumnWidth);
-        fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
+        fixColumnWidth(3, GUIConstants.s_lastUpdatedColumnWidth);
 
 		o_updateButton.setEnabled(false);
 		o_updateButton.addActionListener(new ActionListener() {

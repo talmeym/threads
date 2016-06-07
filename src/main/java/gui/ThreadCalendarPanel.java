@@ -51,7 +51,9 @@ public class ThreadCalendarPanel extends TablePanel  {
 		o_currentMonthButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				setMonth(Calendar.getInstance().get(Calendar.MONTH));
+				int x_month = Calendar.getInstance().get(Calendar.MONTH);
+				setMonth(x_month);
+				setMemoryValue(x_month);
 			}
 		});
 

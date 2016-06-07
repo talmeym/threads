@@ -32,6 +32,11 @@ public class DateUtil {
 		// hack to correct minutes
         x_mins++;
 
+		if(x_mins == 60) {
+			x_hours++;
+			x_mins = 0;
+		}
+
         StringBuilder x_buffer = new StringBuilder();
         
         if(showingWeeks(x_weeks)) {
