@@ -12,14 +12,13 @@ import java.util.List;
 public class ThreadCalendarPanel extends TablePanel  {
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
-	private JButton o_previousButton = new JButton("Previous");
-	private JButton o_currentMonthButton = new JButton(getMonthLabel(Calendar.getInstance().get(Calendar.MONTH)));
-	private JButton o_nextButton = new JButton("Next");
 	private Thread o_thread;
+	private JButton o_currentMonthButton = new JButton(getMonthLabel(Calendar.getInstance().get(Calendar.MONTH)));
 
 	public ThreadCalendarPanel(Thread p_thread) {
-		super(new ThreadCalendarTableModel(p_thread, Calendar.getInstance().get(Calendar.MONTH)), new ThreadCalendarCellRenderer(Calendar.getInstance().get(Calendar.MONTH)));
+		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer(), "calendar_month");
 		o_thread = p_thread;
+		setMonth(getMemoryValue(Calendar.getInstance().get(Calendar.MONTH)));
 
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -32,6 +31,7 @@ public class ThreadCalendarPanel extends TablePanel  {
 		o_table.setShowGrid(true);
 		o_table.setGridColor(Color.black);
 
+		JButton o_previousButton = new JButton("Previous");
 		o_previousButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -39,6 +39,7 @@ public class ThreadCalendarPanel extends TablePanel  {
 			}
 		});
 
+		JButton o_nextButton = new JButton("Next");
 		o_nextButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -46,6 +47,7 @@ public class ThreadCalendarPanel extends TablePanel  {
 			}
 		});
 
+		o_currentMonthButton.setToolTipText("Press to return to Today");
 		o_currentMonthButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -75,6 +77,7 @@ public class ThreadCalendarPanel extends TablePanel  {
 		int x_currentMonth = x_model.getMonth();
 		int x_month = up ? x_currentMonth == 11 ? 0 : x_currentMonth + 1 : x_currentMonth == 0 ? 11 : x_currentMonth - 1;
 		setMonth(x_month);
+		setMemoryValue(x_month);
 	}
 
 	private void setMonth(int x_month) {
@@ -82,6 +85,11 @@ public class ThreadCalendarPanel extends TablePanel  {
 		((ThreadCalendarCellRenderer)o_table.getCellRenderer(0, 0)).setMonth(x_month);
 		x_model.setMonth(x_month);
 		o_currentMonthButton.setText(getMonthLabel(x_month));
+	}
+
+	@Override
+	protected void memoryChanged(int p_newMemory) {
+		setMonth(p_newMemory);
 	}
 
 	private String getMonthLabel(int x_month) {
@@ -98,6 +106,7 @@ public class ThreadCalendarPanel extends TablePanel  {
 
 			for(final Item x_action: x_actions) {
 				JMenuItem x_menuItem = new JMenuItem(ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem(x_action));
+				x_menuItem.setForeground(x_action.isActive() ? Color.black : Color.gray);
 
 				x_menuItem.addActionListener(new ActionListener() {
 					@Override

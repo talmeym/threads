@@ -8,9 +8,9 @@ import java.util.*;
 public class ThreadCalendarTableModel extends ComponentTableModel {
 	private int o_month;
 
-	ThreadCalendarTableModel(Component p_component, int p_month) {
+	ThreadCalendarTableModel(Component p_component) {
 		super(p_component, new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"});
-		o_month = p_month;
+		o_month = Calendar.getInstance().get(Calendar.MONTH);
 	}
 
 	@Override

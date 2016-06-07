@@ -9,10 +9,10 @@ import java.text.ParseException;
 import java.util.*;
 
 public class Loader {
-    public static Thread loadDocument(String p_xmlPath) {
+    public static Thread loadDocumentThread(String p_xmlPath) {
         SAXBuilder x_builder = new SAXBuilder(false);
-        //x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
-        //x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
+        x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
+        x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
         x_builder.setEntityResolver(new EntityResolver() {
 			@Override
 			public InputSource resolveEntity(String something, String entityPath) throws SAXException, IOException {
@@ -33,7 +33,43 @@ public class Loader {
         return null;
     }
     
-    private static Thread loadThread(Element p_element) {
+    public static Properties loadDocumentSettings(String p_xmlPath) {
+        SAXBuilder x_builder = new SAXBuilder(false);
+        x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
+        x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
+        x_builder.setEntityResolver(new EntityResolver() {
+			@Override
+			public InputSource resolveEntity(String something, String entityPath) throws SAXException, IOException {
+			    entityPath = entityPath.indexOf('/') != -1 ? entityPath.substring(entityPath.lastIndexOf('/')) : entityPath;
+				return new InputSource(getClass().getResourceAsStream(entityPath));
+			}
+		});
+
+        try {
+            Document x_doc = x_builder.build(p_xmlPath);
+            return loadSettings(x_doc.getRootElement().getChild(XmlConstants.s_SETTINGS));
+        }
+        catch(Exception ioe) {
+            System.err.println("Error loading threads file: " + ioe);
+            System.exit(1);
+        }
+
+        return null;
+    }
+
+	private static Properties loadSettings(Element p_element) {
+		Properties x_settings = new Properties();
+		List x_properties = p_element.getChildren();
+
+		for(Object x_property: x_properties) {
+			Element x_propertyElem = (Element) x_property;
+			x_settings.setProperty(x_propertyElem.getAttributeValue(XmlConstants.s_PROPERTY_NAME), x_propertyElem.getAttributeValue(XmlConstants.s_PROPERTY_VALUE));
+		}
+
+		return x_settings;
+	}
+
+	private static Thread loadThread(Element p_element) {
 		UUID id = loadId(p_element);
         Date x_creationDate = loadCreatedDate(p_element);
         boolean x_active = loadActiveFlag(p_element);        

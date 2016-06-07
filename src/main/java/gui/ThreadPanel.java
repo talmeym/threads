@@ -5,19 +5,17 @@ import data.Thread;
 import util.*;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.util.*;
 
-public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer, ComponentInfoChangeListener {
+public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Observer, ComponentInfoChangeListener {
 	private final Thread o_thread;
-	private final ChangeListener o_listener;
 	private final JTabbedPane o_tabs;
     
-    public ThreadPanel(Thread p_thread, boolean p_new, int p_tabIndex, ChangeListener p_changeListener) {
-        super(new BorderLayout());
+    public ThreadPanel(Thread p_thread, boolean p_new, int p_tabIndex) {
+        super(new BorderLayout(), "tab_index");
         o_thread = p_thread;
-		o_listener = p_changeListener;
 
 		o_tabs = new JTabbedPane();
         o_tabs.addTab("Contents", new ThreadContentsPanel(p_thread));
@@ -33,8 +31,13 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 
-		o_tabs.setSelectedIndex(p_tabIndex);
-		o_tabs.addChangeListener(p_changeListener);
+		o_tabs.setSelectedIndex(p_tabIndex == -1 ? getMemoryValue(0) : setMemoryValue(p_tabIndex));
+		o_tabs.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent changeEvent) {
+				setMemoryValue(o_tabs.getSelectedIndex());
+			}
+		});
 
         o_thread.addObserver(this);
         TimeUpdater.getInstance().addTimeUpdateListener(this);
@@ -42,12 +45,9 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Observer,
 		setReminderTabBackground();
     }
 
-	public void setTabIndex(int p_tabIndex) {
-		if(p_tabIndex != -1 && p_tabIndex != o_tabs.getSelectedIndex()) {
-			o_tabs.removeChangeListener(o_listener);
-			o_tabs.setSelectedIndex(p_tabIndex);
-			o_tabs.addChangeListener(o_listener);
-		}
+	@Override
+	protected void memoryChanged(int p_newMemory) {
+		o_tabs.setSelectedIndex(p_newMemory);
 	}
 
     public void update(Observable o, Object arg) {

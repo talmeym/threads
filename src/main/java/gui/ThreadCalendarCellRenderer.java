@@ -14,8 +14,8 @@ public class ThreadCalendarCellRenderer extends DefaultTableCellRenderer impleme
 
 	private int o_month;
 
-	public ThreadCalendarCellRenderer(int p_month) {
-		o_month = p_month;
+	public ThreadCalendarCellRenderer() {
+		o_month = Calendar.getInstance().get(Calendar.YEAR);
 	}
 
 	@Override

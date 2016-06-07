@@ -2,6 +2,7 @@ package util;
 
 import data.*;
 import data.Thread;
+import gui.WindowManager;
 
 public class TimedSaver extends java.lang.Thread {
     private static TimedSaver s_INSTANCE = null;
@@ -30,7 +31,7 @@ public class TimedSaver extends java.lang.Thread {
                 java.lang.Thread.sleep(s_updateFrequency);
                 
                 if(o_topThread != null) {
-                    Saver.saveDocument(o_topThread, o_saveLocation);
+                    Saver.saveDocument(o_topThread, o_saveLocation, WindowManager.getInstance().getSettings());
                 }
             } catch (InterruptedException e) {
                 // do nothing

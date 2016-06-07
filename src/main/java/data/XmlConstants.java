@@ -13,6 +13,10 @@ public class XmlConstants {
     public static final String s_REMINDER = "reminder";
     public static final String s_REM_DATE = "remind_dt";
     public static final String s_THREAD = "thread";
+    public static final String s_SETTINGS = "settings";
     public static final String s_DOC_FOLDER = "doc_folder";
 	public static final String s_ID = "id";
+	public static final String s_PROPERTY = "property";
+	public static final String s_PROPERTY_NAME = "name";
+	public static final String s_PROPERTY_VALUE = "value";
 }

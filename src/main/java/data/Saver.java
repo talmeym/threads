@@ -4,13 +4,14 @@ import org.jdom.*;
 import org.jdom.output.*;
 
 import java.io.FileOutputStream;
-import java.util.Date;
+import java.util.*;
 
 public class Saver {
-    public static void saveDocument(Thread p_topThread, String p_xmlPath) {
+    public static void saveDocument(Thread p_topThread, String p_xmlPath, Properties p_settings) {
         try {
             Element x_rootElem = new Element(XmlConstants.s_THREADS);
             x_rootElem.addContent(addThread(p_topThread));
+            x_rootElem.addContent(addSettings(p_settings));
             Document x_doc = new Document(x_rootElem);
             addSchema(x_doc);
             XMLOutputter x_outputter = new XMLOutputter(Format.getPrettyFormat());
@@ -21,7 +22,22 @@ public class Saver {
         }
     }
 
-    static Element addThread(Thread p_thread) {
+	private static Element addSettings(Properties p_settings) {
+		Element x_settingsElem = new Element(XmlConstants.s_SETTINGS);
+		Enumeration x_settings = p_settings.propertyNames();
+
+		while(x_settings.hasMoreElements()) {
+			Element x_propertyElement = new Element(XmlConstants.s_PROPERTY);
+			String x_propertyName = (String) x_settings.nextElement();
+			x_propertyElement.setAttribute(XmlConstants.s_PROPERTY_NAME, x_propertyName);
+			x_propertyElement.setAttribute(XmlConstants.s_PROPERTY_VALUE, p_settings.getProperty(x_propertyName));
+			x_settingsElem.addContent(x_propertyElement);
+		}
+
+		return x_settingsElem;
+	}
+
+	static Element addThread(Thread p_thread) {
         Element x_threadElem = new Element(XmlConstants.s_THREAD);
         addComponentData(x_threadElem, p_thread);
     
