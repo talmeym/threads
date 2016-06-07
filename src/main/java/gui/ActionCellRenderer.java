@@ -93,7 +93,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 		} else if(x_dueDate.before(x_lastThingTomorrow)) {
 			x_component.setBackground(ColourConstants.s_tomorrowColour); // tomorrow
 		} else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
-			x_component.setBackground(ColourConstants.s_thisWeek);
+			x_component.setBackground(ColourConstants.s_thisWeekColour);
 		} else {
 			x_component.setBackground(Color.WHITE);
 		}
