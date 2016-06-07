@@ -59,11 +59,14 @@ public class Loader {
 
 	private static Properties loadSettings(Element p_element) {
 		Properties x_settings = new Properties();
-		List x_properties = p_element.getChildren();
 
-		for(Object x_property: x_properties) {
-			Element x_propertyElem = (Element) x_property;
-			x_settings.setProperty(x_propertyElem.getAttributeValue(XmlConstants.s_PROPERTY_NAME), x_propertyElem.getAttributeValue(XmlConstants.s_PROPERTY_VALUE));
+		if(p_element != null) {
+			List x_properties = p_element.getChildren();
+
+			for(Object x_property: x_properties) {
+				Element x_propertyElem = (Element) x_property;
+				x_settings.setProperty(x_propertyElem.getAttributeValue(XmlConstants.s_PROPERTY_NAME), x_propertyElem.getAttributeValue(XmlConstants.s_PROPERTY_VALUE));
+			}
 		}
 
 		return x_settings;
