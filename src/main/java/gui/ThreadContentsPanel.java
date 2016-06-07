@@ -93,7 +93,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
 
 	void tableRowDoubleClicked(int row, int col) {
 		if(row != -1) {
-			WindowManager.getInstance().openComponent(o_thread.getThreadItem(row), false, col > 2 ? col - 2 : 0);
+			WindowManager.getInstance().openComponent(o_thread.getThreadItem(row), false, col > 2 ? col - 2 : -1);
 		}
     }
 

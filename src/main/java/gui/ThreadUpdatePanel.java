@@ -66,14 +66,14 @@ public class ThreadUpdatePanel extends TablePanel {
         if(p_index != -1) {
             Item x_threadItem = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
 			Thread x_thread = x_threadItem.getParentThread();
-			WindowManager.getInstance().openComponent(x_thread, false, 0);
+			WindowManager.getInstance().openComponent(x_thread, false, -1);
         }
     }
 
     private void showItem(int p_index) {
         if(p_index != -1) {
             Item x_threadItem = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
-            WindowManager.getInstance().openComponent(x_threadItem, false, 0);
+            WindowManager.getInstance().openComponent(x_threadItem, false, -1);
         }
     }
 

@@ -94,15 +94,14 @@ class ThreadThreadPanel extends TablePanel implements Observer {
     private void showParentThread(int p_index) {
         if(p_index != -1) {
             Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
-            WindowManager.getInstance().openComponent(x_thread.getParentComponent(), false, 0);
+            WindowManager.getInstance().openComponent(x_thread.getParentComponent(), false, -1);
         }
     }
 
     private void showThread(int p_col, int p_row) {
         if(p_row != -1) {
-			int x_tab = p_col > 2 ? p_col - 2 : 0;
-            Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_row);
-            WindowManager.getInstance().openComponent(x_thread, false, x_tab);
+			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_row);
+            WindowManager.getInstance().openComponent(x_thread, false, p_col > 2 ? p_col - 2 : -1);
         }
     }
 

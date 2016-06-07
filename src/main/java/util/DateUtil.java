@@ -78,6 +78,10 @@ public class DateUtil {
 		return x_calendar.get(Calendar.HOUR_OF_DAY) == 0 && x_calendar.get(Calendar.MINUTE) == 0;
 	}
 
+	public static boolean istoday(Date p_date) {
+	    return isSameDay(p_date, new Date());
+	}
+
 	public static boolean isSameDay(Date p_date, Date p_referenceDate) {
 		Calendar x_calendar1 = Calendar.getInstance();
 		x_calendar1.setTime(p_date);
