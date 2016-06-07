@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.util.*;
 
 public class Loader {
+	// TODO turn schema validation back on soon
+
     public static Thread loadDocumentThread(String p_xmlPath) {
         SAXBuilder x_builder = new SAXBuilder(false);
         x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
@@ -68,6 +70,8 @@ public class Loader {
 				x_settings.setProperty(x_propertyElem.getAttributeValue(XmlConstants.s_PROPERTY_NAME), x_propertyElem.getAttributeValue(XmlConstants.s_PROPERTY_VALUE));
 			}
 		}
+
+		// TODO remove if around settings soon
 
 		return x_settings;
 	}

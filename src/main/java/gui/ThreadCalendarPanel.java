@@ -29,7 +29,7 @@ public class ThreadCalendarPanel extends TablePanel  {
 
 		o_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		o_table.setShowGrid(true);
-		o_table.setGridColor(Color.black);
+		o_table.setGridColor(Color.lightGray);
 
 		JButton o_previousButton = new JButton("Previous");
 		o_previousButton.addActionListener(new ActionListener() {
