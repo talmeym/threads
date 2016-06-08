@@ -16,12 +16,12 @@ public class ComponentWindow <TYPE extends Component> extends JFrame implements 
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentMoved(ComponentEvent componentEvent) {
-				WindowManager.getInstance().setComponentWindowDetails(getComponent().getClass(), getLocation(), getSize());
+				WindowManager.getInstance().setComponentWindowDetails(getComponent(), getLocation(), getSize());
 			}
 
 			@Override
 			public void componentResized(ComponentEvent componentEvent) {
-				WindowManager.getInstance().setComponentWindowDetails(getComponent().getClass(), getLocation(), getSize());
+				WindowManager.getInstance().setComponentWindowDetails(getComponent(), getLocation(), getSize());
 			}
 		});
 	}

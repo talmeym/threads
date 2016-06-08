@@ -2,6 +2,7 @@ package gui;
 
 import data.*;
 import data.Thread;
+import util.DateUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -9,16 +10,12 @@ import java.awt.*;
 import java.awt.Component;
 import java.text.*;
 import java.util.*;
-import java.util.List;
-
-import static java.util.Calendar.*;
 
 public class ActionCellRenderer extends DefaultTableCellRenderer {
 	public static final DateFormat s_createDateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy");
-	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mm");
-	public static final DateFormat s_amPmFormat = new SimpleDateFormat("aa");
-	public static final DateFormat s_dayFormat = new SimpleDateFormat("EEEE h:mm");
+	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mmaa");
+	public static final DateFormat s_dayFormat = new SimpleDateFormat("EEEE h:mmaa");
 
     private final Thread o_thread;
 
@@ -26,29 +23,18 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
         o_thread = p_thread;
     }
 
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Object x_value = value;
-
-        if(x_value instanceof Date) {
-			if(column == 0) {
-				x_value = s_createDateFormat.format((Date) x_value);
-			} else {
-				x_value = getFormattedDate((Date) x_value);
-			}
+    public Component getTableCellRendererComponent(JTable table, Object p_value, boolean isSelected, boolean hasFocus, int row, int column) {
+        if(p_value instanceof Date) {
+			p_value = column == 0 ? s_createDateFormat.format((Date) p_value) : getFormattedDate((Date) p_value);
         }
 
-        java.awt.Component x_component = super.getTableCellRendererComponent(table, x_value, isSelected, hasFocus, row, column);
-
+        java.awt.Component x_component = super.getTableCellRendererComponent(table, p_value, isSelected, hasFocus, row, column);
 		x_component.setForeground(Color.black);
-		x_component.setBackground(Color.white);
 
-		List x_actionItems = LookupHelper.getAllActiveActions(o_thread);
-        Item x_item = (Item) x_actionItems.get(row);
-
-		setColourForTime(x_component, x_item);
+		Item x_item = LookupHelper.getAllActiveActions(o_thread).get(row);
+		x_component.setBackground(getColourForTime(x_item.getDueDate()));
 
 		if(isSelected) {
-			x_component.setForeground(Color.black);
 			x_component.setBackground(ColourConstants.s_selectedColour);
 		}
 
@@ -57,64 +43,36 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 
 	private String getFormattedDate(Date x_dueDate) {
 		Date x_now = new Date();
-		Date x_lastThingToday = getLastThingToday();
-		Date x_lastThingTomorrow = getLastThingTomorrow();
-
 		String x_value;
 
 		if(x_dueDate.before(x_now)) {
-			x_value = s_dateFormat.format(x_dueDate) + " " + s_12HrTimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
-		}else if(x_dueDate.before(x_lastThingToday)) {
-			x_value = "Today " + s_12HrTimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
-		} else if(x_dueDate.before(x_lastThingTomorrow)) {
-			x_value = "Tomorrow " + s_12HrTimeFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
+			x_value = s_dateFormat.format(x_dueDate) + " " + s_12HrTimeFormat.format(x_dueDate).toLowerCase();
+		}else if(x_dueDate.before(DateUtil.getLastThingToday())) {
+			x_value = "Today " + s_12HrTimeFormat.format(x_dueDate).toLowerCase();
+		} else if(x_dueDate.before(DateUtil.getLastThingTomorrow())) {
+			x_value = "Tomorrow " + s_12HrTimeFormat.format(x_dueDate).toLowerCase();
 		} else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
-			x_value = s_dayFormat.format(x_dueDate) + s_amPmFormat.format(x_dueDate).toLowerCase();
+			x_value = s_dayFormat.format(x_dueDate).toLowerCase();
 		} else {
 		 	x_value = s_dateFormat.format(x_dueDate);
 		}
 
-		x_value = x_value.replace(":00", "");
-		x_value = x_value.replace(" 12am", "");
-
-		return x_value;
+		return x_value.replace(":00", "").replace(" 12am", "");
 	}
 
-	private void setColourForTime(Component x_component, Item x_item) {
-		Date x_dueDate = x_item.getDueDate();
+	private Color getColourForTime(Date p_dueDate) {
 		Date x_now = new Date();
-		Date x_lastThingToday = getLastThingToday();
-		Date x_lastThingTomorrow = getLastThingTomorrow();
 
-		if(x_dueDate.before(x_now)) {
-			x_component.setBackground(ColourConstants.s_goneByColour); // gone by
-		} else if(x_dueDate.before(x_lastThingToday)) {
-			x_component.setBackground(ColourConstants.s_todayColour); // today
-		} else if(x_dueDate.before(x_lastThingTomorrow)) {
-			x_component.setBackground(ColourConstants.s_tomorrowColour); // tomorrow
-		} else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
-			x_component.setBackground(ColourConstants.s_thisWeekColour);
-		} else {
-			x_component.setBackground(Color.WHITE);
+		if(p_dueDate.before(x_now)) {
+			return ColourConstants.s_goneByColour; // gone by
+		} else if(p_dueDate.before(DateUtil.getLastThingToday())) {
+			return ColourConstants.s_todayColour; // today
+		} else if(p_dueDate.before(DateUtil.getLastThingTomorrow())) {
+			return ColourConstants.s_tomorrowColour; // tomorrow
+		} else if((p_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
+			return ColourConstants.s_thisWeekColour;
 		}
-	}
 
-	private Date getLastThingToday() {
-		Calendar x_calendar = Calendar.getInstance();
-		x_calendar.set(HOUR_OF_DAY, 23);
-		x_calendar.set(MINUTE, 59);
-		x_calendar.set(Calendar.SECOND, 59);
-		x_calendar.set(Calendar.MILLISECOND, 999);
-		return x_calendar.getTime();
-	}
-
-	private Date getLastThingTomorrow() {
-		Calendar x_calendar = Calendar.getInstance();
-		x_calendar.set(HOUR_OF_DAY, 23);
-		x_calendar.set(MINUTE, 59);
-		x_calendar.set(Calendar.SECOND, 59);
-		x_calendar.set(Calendar.MILLISECOND, 999);
-		x_calendar.roll(DATE, true);
-		return x_calendar.getTime();
+		return Color.WHITE;
 	}
 }

@@ -41,6 +41,6 @@ public class MemoryPanel extends JPanel {
 	}
 
 	protected void memoryChanged(int p_newMemory) {
-		// do nothing by default
+		// override me
 	}
 }

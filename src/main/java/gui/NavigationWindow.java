@@ -4,6 +4,7 @@ import data.*;
 import data.Thread;
 
 import javax.swing.*;
+import java.awt.event.*;
 
 public class NavigationWindow extends JFrame {
 	private final NavigationPanel o_navigationPanel;

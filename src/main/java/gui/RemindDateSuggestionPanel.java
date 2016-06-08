@@ -1,6 +1,7 @@
 package gui;
 
 import data.*;
+import util.DateUtil;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -9,36 +10,27 @@ import java.awt.event.*;
 import java.text.*;
 import java.util.Date;
 
-public class RemindDateSuggestionPanel extends JPanel implements DocumentListener {
+public class RemindDateSuggestionPanel extends JPanel {
     private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
-	private static final String s_defaultTextString = "dd/mm/yy hh:mm";
-	private static final Dimension s_dueFieldSize = new Dimension(130, 25);
-    private static final DateItem[] s_weekItems;
-    private static final DateItem[] s_dayItems;
-    private static final DateItem[] s_hourItems;
-    private static final DateItem[] s_minItems;
+	private static final String s_defaultTextString = "dd/mm/yy [hh:mm]";
+    private static final DateItem[] s_weekItems = new DateItem[5];
+    private static final DateItem[] s_dayItems = new DateItem[7];
+    private static final DateItem[] s_hourItems = new DateItem[24];
+    private static final DateItem[] s_minItems = new DateItem[12];
 
     static {
-        s_weekItems = new DateItem[5];
-
         for(int i = 0; i < s_weekItems.length; i++) {
             s_weekItems[i] = new DateItem(i + " Ws", i * 7 * 24 * 60 * 60 * 1000);
         }
-
-        s_dayItems = new DateItem[7];
 
         for(int i = 0; i < s_dayItems.length; i++) {
             s_dayItems[i] = new DateItem(i + " Ds", i * 24 * 60 * 60 * 1000);
         }
 
-        s_hourItems = new DateItem[24];
-
         for(int i = 0; i < s_hourItems.length; i++) {
             s_hourItems[i] = new DateItem(i + " Hs", i * 60 * 60 * 1000);
         }
-
-        s_minItems = new DateItem[12];
 
         for(int i = 0; i < s_minItems.length; i++) {
             s_minItems[i] = new DateItem(i * 5 + " Ms", i * 5 * 60 * 1000);
@@ -53,23 +45,28 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
     private final JComboBox o_dayBox = new JComboBox(s_dayItems);
     private final JComboBox o_weekBox = new JComboBox(s_weekItems);
 
-	public RemindDateSuggestionPanel(Reminder p_reminder, ComponentInfoChangeListener p_listener) {
+	public RemindDateSuggestionPanel(Reminder p_reminder, final ComponentInfoChangeListener p_listener) {
         super(new BorderLayout());
 		o_reminder = p_reminder;
 		o_listener = p_listener;
 
-		o_dueDateField.setPreferredSize(s_dueFieldSize);
-		o_dueDateField.setText(s_dateTimeFormat.format(o_reminder.getDueDate()));
-		o_dueDateField.getDocument().addDocumentListener(this);
+		final DocumentListener x_listener = new DocumentListener() {
+			@Override public void insertUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
+			@Override public void removeUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
+			@Override public void changedUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
+		};
+
+		o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
+		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
+		o_dueDateField.getDocument().addDocumentListener(x_listener);
 		o_dueDateField.setToolTipText("Press enter to set date");
+
 		o_dueDateField.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				setDueDate();
 			}
 		});
-
-		final DocumentListener listener = this;
 
 		o_dueDateField.addFocusListener(new FocusListener() {
 			@Override
@@ -87,10 +84,10 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 			}
 
 			private void setDueDateText(String textString, Color color) {
-				o_dueDateField.getDocument().removeDocumentListener(listener);
+				o_dueDateField.getDocument().removeDocumentListener(x_listener);
 				o_dueDateField.setText(textString);
+				o_dueDateField.getDocument().addDocumentListener(x_listener);
 				o_dueDateField.setForeground(color);
-				o_dueDateField.getDocument().addDocumentListener(listener);
 			}
 		});
 
@@ -106,7 +103,8 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 		x_labelPanel.add(new JLabel("Due Date"));
 		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
-		JTextField x_actionDueDateField = new JTextField(s_dateTimeFormat.format(((Item)p_reminder.getParentComponent()).getDueDate()));
+		JTextField x_actionDueDateField = new JTextField(getDueDateText(((Item)p_reminder.getParentComponent()).getDueDate()));
+		x_actionDueDateField.setHorizontalAlignment(JTextField.CENTER);
 		x_actionDueDateField.setEnabled(false);
 
 		JPanel x_fieldPanel = new JPanel(new GridLayout(0, 1, 5, 5));
@@ -117,8 +115,6 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 		JPanel x_labelAndFieldPanel = new JPanel(new BorderLayout());
 		x_labelAndFieldPanel.add(x_labelPanel, BorderLayout.WEST);
 		x_labelAndFieldPanel.add(x_fieldPanel, BorderLayout.CENTER);
-
-		o_minBox.setSelectedIndex(3);
 
 		JPanel x_dropdownPanel = new JPanel(new GridLayout(1, 0, 5, 5));
 		x_dropdownPanel.add(o_weekBox);
@@ -145,15 +141,13 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 
 	private void suggestAndSet() {
         long x_timeToSubtract = 0;
-        
         x_timeToSubtract += ((DateItem)o_weekBox.getSelectedItem()).o_value;
         x_timeToSubtract += ((DateItem)o_dayBox.getSelectedItem()).o_value;
         x_timeToSubtract += ((DateItem)o_hourBox.getSelectedItem()).o_value;
         x_timeToSubtract += ((DateItem)o_minBox.getSelectedItem()).o_value;
         
         Date x_dueDate = o_reminder.getItem().getDueDate();
-        
-        o_dueDateField.setText(s_dateTimeFormat.format(new Date(x_dueDate.getTime() - x_timeToSubtract)));
+        o_dueDateField.setText(getDueDateText(new Date(x_dueDate.getTime() - x_timeToSubtract)));
 		setDueDate();
     }
 
@@ -174,23 +168,12 @@ public class RemindDateSuggestionPanel extends JPanel implements DocumentListene
 			}
 		}
 
-		o_dueDateField.setText(s_dateTimeFormat.format(o_reminder.getDueDate()));
+		o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
 		o_listener.componentInfoChanged(true);
 	}
 
-	@Override
-	public void insertUpdate(DocumentEvent documentEvent) {
-		o_listener.componentInfoChanged(false);
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent documentEvent) {
-		o_listener.componentInfoChanged(false);
-	}
-
-	@Override
-	public void changedUpdate(DocumentEvent documentEvent) {
-		o_listener.componentInfoChanged(false);
+	private String getDueDateText(Date x_dueDate) {
+		return x_dueDate != null ? DateUtil.isAllDay(x_dueDate) ? s_dateFormat.format(x_dueDate) : s_dateTimeFormat.format(x_dueDate) : s_defaultTextString;
 	}
 
 	private static class DateItem {

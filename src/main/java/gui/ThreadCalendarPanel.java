@@ -113,7 +113,7 @@ public class ThreadCalendarPanel extends TablePanel  {
 				x_menuItem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent actionEvent) {
-						WindowManager.getInstance().openComponent(x_action, false, -1);
+						WindowManager.getInstance().openComponent(x_action, -1);
 					}
 				});
 

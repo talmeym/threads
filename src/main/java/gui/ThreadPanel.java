@@ -13,20 +13,20 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs;
     
-    public ThreadPanel(Thread p_thread, boolean p_new, int p_tabIndex) {
+    public ThreadPanel(Thread p_thread, int p_tabIndex) {
         super(new BorderLayout(), "tab_index");
         o_thread = p_thread;
 
 		o_tabs = new JTabbedPane();
         o_tabs.addTab("Contents", new ThreadContentsPanel(p_thread));
-        o_tabs.addTab("Threads", new ThreadThreadPanel(p_thread));
+        o_tabs.addTab("Threads", new ThreadListPanel(p_thread));
         o_tabs.addTab("Updates", new ThreadUpdatePanel(p_thread));
         o_tabs.addTab("Actions", new ThreadActionPanel(p_thread));
         o_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));
         o_tabs.addTab("Calendar", new ThreadCalendarPanel(p_thread));
         o_tabs.addTab("Tree", new ThreadTreePanel(p_thread));
 
-		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_new, this);
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);

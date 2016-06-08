@@ -55,7 +55,7 @@ public class LookupHelper {
             }
         }
 
-        Collections.sort(x_result, new DueDateComparator());
+        Collections.sort(x_result, new ActiveAwareDueDateComparator());
         return x_result;
     }
 

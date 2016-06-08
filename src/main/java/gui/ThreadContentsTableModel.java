@@ -5,8 +5,8 @@ import data.*;
 
 import java.util.Date;
 
-class ComponentListTableModel extends ComponentTableModel {
-    ComponentListTableModel(Thread p_thread) {
+class ThreadContentsTableModel extends ComponentTableModel {
+    ThreadContentsTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Creation Date", "Type", "Name", "Threads", "Updates", "Actions"});
     }
 

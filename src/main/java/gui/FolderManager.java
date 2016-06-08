@@ -23,7 +23,7 @@ public class FolderManager {
     public static void setDocFolder(ThreadItem p_threadItem) {
         JFileChooser x_chooser = p_threadItem.getDocFolder() != null ? new JFileChooser(p_threadItem.getDocFolder()) : new JFileChooser();
 
-        x_chooser.setFileFilter(new FileFilter(){
+        x_chooser.setFileFilter(new FileFilter() {
             public boolean accept(File p_file) {
                 return p_file.exists() && p_file.isDirectory();
             }

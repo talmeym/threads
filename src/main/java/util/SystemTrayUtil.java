@@ -79,7 +79,7 @@ public class SystemTrayUtil {
 		menuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				WindowManager.getInstance().openComponent(component, false, -1);
+				WindowManager.getInstance().openComponent(component, -1);
 			}
 		});
 

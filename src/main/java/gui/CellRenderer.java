@@ -19,35 +19,25 @@ class CellRenderer extends DefaultTableCellRenderer {
         o_component = p_component;
     }
     
-    public java.awt.Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Object x_value = value;
-        
-        if(x_value instanceof Date) {
-            x_value = s_dateFormat.format((Date)x_value);
-        }
-        
-        java.awt.Component x_component = super.getTableCellRendererComponent(table, x_value, isSelected, hasFocus, row, column);
-
-		x_component.setForeground(Color.BLACK);
-		x_component.setBackground(Color.WHITE);
-
-        if(o_component instanceof Thread) {
-            Thread x_thread = (Thread) o_component;
-            ThreadItem x_item = x_thread.getThreadItem(row);
-			x_component.setForeground(x_item.isActive() ? Color.BLACK : Color.gray);
+    public java.awt.Component getTableCellRendererComponent(JTable table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
+        if(p_value instanceof Date) {
+            p_value = s_dateFormat.format((Date)p_value);
         }
 
-        if(o_component instanceof Item) {
-            Item x_item = (Item) o_component;
-            Reminder x_reminder = x_item.getReminder(row);
-			x_component.setForeground(x_reminder.isActive() ? Color.BLACK : Color.gray);
-        }
+        java.awt.Component x_component = super.getTableCellRendererComponent(table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
 
-		if(isSelected) {
-			x_component.setForeground(Color.BLACK);
-			x_component.setBackground(ColourConstants.s_selectedColour);
+
+		if(o_component instanceof Thread) {
+			ThreadItem x_thread = ((Thread)o_component).getThreadItem(p_row);
+			x_component.setForeground(x_thread.isActive() || p_isSelected ? Color.BLACK : Color.gray);
 		}
 
+		if(o_component instanceof Item) {
+			Reminder x_reminder = ((Item)o_component).getReminder(p_row);
+			x_component.setForeground(x_reminder.isActive() || p_isSelected ? Color.BLACK : Color.gray);
+		}
+
+		x_component.setBackground(p_isSelected ? ColourConstants.s_selectedColour : Color.WHITE);
         return x_component;
     }
 }

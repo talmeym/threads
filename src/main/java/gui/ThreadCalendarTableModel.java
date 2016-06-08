@@ -28,13 +28,8 @@ public class ThreadCalendarTableModel extends ComponentTableModel {
 		Date x_date = getDate(p_row, p_col);
 		List<Item> x_actions = LookupHelper.getAllActions((Thread) getComponent(), x_date);
 		Object[] x_value = new Object[x_actions.size() + 1];
-
 		x_value[0] = x_date;
-
-		for(int i = 0; i < x_actions.size(); i++) {
-			x_value[i+1] = x_actions.get(i);
-		}
-
+		System.arraycopy(x_actions.toArray(new Item[x_actions.size()]), 0, x_value, 1, x_actions.size());
 		return x_value;
 	}
 

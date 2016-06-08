@@ -2,6 +2,8 @@ package util;
 
 import java.util.*;
 
+import static java.util.Calendar.*;
+
 public class DateUtil {
     public static String getDateStatus(Date p_date) {
         return getDateStatus(p_date, new Date(), " ago");
@@ -108,5 +110,24 @@ public class DateUtil {
 
 	private static boolean showingWeeks(int x_weeks) {
 		return x_weeks > 0;
+	}
+
+	public static Date getLastThingToday() {
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(HOUR_OF_DAY, 23);
+		x_calendar.set(MINUTE, 59);
+		x_calendar.set(Calendar.SECOND, 59);
+		x_calendar.set(Calendar.MILLISECOND, 999);
+		return x_calendar.getTime();
+	}
+
+	public static Date getLastThingTomorrow() {
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(HOUR_OF_DAY, 23);
+		x_calendar.set(MINUTE, 59);
+		x_calendar.set(Calendar.SECOND, 59);
+		x_calendar.set(Calendar.MILLISECOND, 999);
+		x_calendar.roll(DATE, true);
+		return x_calendar.getTime();
 	}
 }

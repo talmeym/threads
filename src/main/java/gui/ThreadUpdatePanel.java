@@ -45,7 +45,7 @@ public class ThreadUpdatePanel extends TablePanel {
 				Item x_item = new Item(x_text);
 				x_thread.addItem(x_item);
 
-				if(LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(null, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				if(LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(this, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
 						ThreadItem x_groupItem = x_thread.getThreadItem(i);
 
@@ -66,14 +66,14 @@ public class ThreadUpdatePanel extends TablePanel {
         if(p_index != -1) {
             Item x_threadItem = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
 			Thread x_thread = x_threadItem.getParentThread();
-			WindowManager.getInstance().openComponent(x_thread, false, -1);
+			WindowManager.getInstance().openComponent(x_thread, -1);
         }
     }
 
     private void showItem(int p_index) {
         if(p_index != -1) {
             Item x_threadItem = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
-            WindowManager.getInstance().openComponent(x_threadItem, false, -1);
+            WindowManager.getInstance().openComponent(x_threadItem, -1);
         }
     }
 

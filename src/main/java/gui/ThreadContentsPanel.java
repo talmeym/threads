@@ -14,7 +14,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
 	private final JButton o_removeButton = new JButton("Remove Selected");
 
 	public ThreadContentsPanel(final Thread p_thread) {
-        super(new ComponentListTableModel(p_thread), new CellRenderer(p_thread));
+        super(new ThreadContentsTableModel(p_thread), new CellRenderer(p_thread));
         o_thread = p_thread;
         o_thread.addObserver(this);
 
@@ -60,7 +60,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
 		if(x_text != null) {
 			Item x_item = new Item(x_text);
 			o_thread.addThreadItem(x_item);
-			WindowManager.getInstance().openComponent(x_item, true, 0);
+			WindowManager.getInstance().openComponent(x_item, 0);
 		}
 	}
     
@@ -70,7 +70,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
         if(x_name != null) {
             Thread x_thread = new Thread(x_name);
             o_thread.addThreadItem(x_thread);
-            WindowManager.getInstance().openComponent(x_thread, true, 0);
+            WindowManager.getInstance().openComponent(x_thread, 0);
         }
     }
     
@@ -80,7 +80,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
         if(x_index != -1) {
             ThreadItem x_threadItem = o_thread.getThreadItem(x_index);
 
-			if(JOptionPane.showConfirmDialog(null, "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?", "Remove " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+			if(JOptionPane.showConfirmDialog(this, "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?", "Remove " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
                 o_thread.removeThreadItem(x_threadItem);
             }
         }
@@ -93,7 +93,7 @@ public class ThreadContentsPanel extends TablePanel implements Observer
 
 	void tableRowDoubleClicked(int row, int col) {
 		if(row != -1) {
-			WindowManager.getInstance().openComponent(o_thread.getThreadItem(row), false, col > 2 ? col - 2 : -1);
+			WindowManager.getInstance().openComponent(o_thread.getThreadItem(row), col > 2 ? col - 2 : -1);
 		}
     }
 

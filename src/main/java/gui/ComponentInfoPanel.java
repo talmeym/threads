@@ -9,99 +9,78 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class ComponentInfoPanel extends JPanel implements DocumentListener, Observer {
+public class ComponentInfoPanel extends JPanel {
     private final Component o_component;
-	private final ComponentInfoChangeListener o_listener;
-	private final JCheckBox o_activeCheckBox;
 
-	public ComponentInfoPanel(Component p_component, boolean p_new, ComponentInfoChangeListener p_compInfoListeners) {
+	public ComponentInfoPanel(Component p_component, final ComponentInfoChangeListener p_listener) {
         super(new BorderLayout());
         o_component = p_component;
-		o_component.addObserver(this);
-		o_listener = p_compInfoListeners;
 
-		JButton o_parentButton = new JButton("Parent");
-		o_parentButton.setEnabled(o_component.getParentComponent() != null);
-        o_parentButton.addActionListener(new ActionListener() {
+		final JButton x_parentButton = new JButton("Parent");
+		final JTextField x_textField = new JTextField(p_component.getText());
+		final JCheckBox x_activeCheckBox = new JCheckBox("Active");
+
+		x_parentButton.setEnabled(o_component.getParentComponent() != null);
+		x_activeCheckBox.setEnabled(o_component.getParentComponent() != null);
+		x_textField.setEnabled(p_component.getParentComponent() != null);
+
+		x_textField.setHorizontalAlignment(JTextField.CENTER);
+		x_textField.setForeground(p_component.isActive() ? Color.BLACK : Color.gray);
+        x_activeCheckBox.setSelected(p_component.isActive());
+
+		x_parentButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				WindowManager.getInstance().openComponent(o_component.getParentComponent(), false, -1);
+				WindowManager.getInstance().openComponent(o_component.getParentComponent(), -1);
 			}
 		});
 
-		final JTextField x_textField = new JTextField();
-        x_textField.setPreferredSize(new Dimension(200, 25));
-		x_textField.setText(p_component.getText());
-		x_textField.getDocument().addDocumentListener(this);
-		x_textField.setHorizontalAlignment(JTextField.CENTER);
-		x_textField.setEnabled(p_component.getParentComponent() != null);
-		x_textField.setForeground(p_component.isActive() ? Color.BLACK : Color.gray);
+		x_textField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override public void insertUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
+			@Override public void removeUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
+			@Override public void changedUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
+		});
 
         x_textField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				if (x_textField.getText().length() > 0) {
-					if (!x_textField.getText().equals(o_component.getText())) {
-						o_component.setText(x_textField.getText());
-					}
-				} else {
-					x_textField.setText(o_component.getText());
+				if (x_textField.getText().length() > 0 && !x_textField.getText().equals(o_component.getText())) {
+					o_component.setText(x_textField.getText());
 				}
 
-				o_listener.componentInfoChanged(true);
+				x_textField.setText(o_component.getText());
+				p_listener.componentInfoChanged(true);
 			}
 		});
 
-		if(p_new) {
-			x_textField.requestFocus();
-			x_textField.setSelectionStart(0);
-			x_textField.setSelectionEnd(x_textField.getText().length());
-		}
-
-		o_activeCheckBox = new JCheckBox("Active");
-		o_activeCheckBox.setEnabled(o_component.getParentComponent() != null);
-        o_activeCheckBox.setSelected(p_component.isActive());
-
-		o_activeCheckBox.addActionListener(new ActionListener() {
+		x_activeCheckBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				o_component.setActive(o_activeCheckBox.isSelected());
+				o_component.setActive(x_activeCheckBox.isSelected());
 				x_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
 			}
 		});
-        
+
+		o_component.addObserver(new Observer() {
+			@Override
+			public void update(Observable observable, Object o) {
+				if(observable == ((ObservableChangeEvent)o).getObservableObserver()) {
+					x_activeCheckBox.setSelected(o_component.isActive());
+					x_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
+				}
+			}
+		});
+
         JPanel x_parentButtonPanel = new JPanel(new BorderLayout());
-        x_parentButtonPanel.add(o_parentButton, BorderLayout.CENTER);
+        x_parentButtonPanel.add(x_parentButton, BorderLayout.CENTER);
         x_parentButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
         
         JPanel x_activeCheckBoxPanel = new JPanel(new BorderLayout());
-        x_activeCheckBoxPanel.add(o_activeCheckBox, BorderLayout.CENTER);
+        x_activeCheckBoxPanel.add(x_activeCheckBox, BorderLayout.CENTER);
         x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
         add(x_parentButtonPanel, BorderLayout.WEST);
         add(x_textField, BorderLayout.CENTER);
         add(x_activeCheckBoxPanel, BorderLayout.EAST);
     }
-    
-	@Override
-	public void insertUpdate(DocumentEvent documentEvent) {
-		o_listener.componentInfoChanged(false);
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent documentEvent) {
-		o_listener.componentInfoChanged(false);
-	}
-
-	@Override
-	public void changedUpdate(DocumentEvent documentEvent) {
-		o_listener.componentInfoChanged(false);
-	}
-
-	@Override
-	public void update(Observable observable, Object o) {
-		if(observable == ((ObservableChangeEvent)o).getObservableObserver()) {
-			o_activeCheckBox.setSelected(o_component.isActive());
-		}
-	}
 }

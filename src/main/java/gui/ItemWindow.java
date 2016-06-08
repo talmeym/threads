@@ -7,9 +7,9 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class ItemWindow extends ComponentWindow<Item> implements ActionListener {
-	public ItemWindow(Item p_item, boolean p_new) {
+	public ItemWindow(Item p_item) {
 		super(p_item);
-		setContentPane(new ItemPanel(p_item, p_new, this));
+		setContentPane(new ItemPanel(p_item, this));
 		setSize(GUIConstants.s_itemWindowSize);
 		renameWindow(p_item);
 	}
@@ -21,7 +21,7 @@ public class ItemWindow extends ComponentWindow<Item> implements ActionListener 
 		Item x_item = getComponent();
 		Thread x_thread = (Thread) x_item.getParentComponent();
 
-		if(x_item.getDueDate() == null && LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(null, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+		if(x_item.getDueDate() == null && LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(this, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
 				ThreadItem x_groupItem = x_thread.getThreadItem(i);
 
