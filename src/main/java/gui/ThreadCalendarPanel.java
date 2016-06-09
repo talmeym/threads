@@ -9,7 +9,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-public class ThreadCalendarPanel extends TablePanel  {
+public class ThreadCalendarPanel extends ComponentTablePanel {
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
 	private Thread o_thread;

@@ -6,14 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class ItemPanel extends TablePanel {
+class ItemPanel extends ComponentTablePanel {
     private final Item o_item;
 	private final JButton o_addReminderButton = new JButton("Add Reminder");
 	private final JButton o_removeReminderButton = new JButton("Remove");
     private final JButton o_closeButton = new JButton("Close");
 
     ItemPanel(Item p_item, ActionListener p_listener) {
-        super(new ItemReminderTableModel(p_item),  new CellRenderer(p_item));
+        super(new ItemReminderTableModel(p_item),  new ComponentCellRenderer(p_item));
         o_item = p_item;
 
         fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);

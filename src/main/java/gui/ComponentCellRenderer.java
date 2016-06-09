@@ -10,21 +10,21 @@ import java.awt.*;
 import java.text.*;
 import java.util.*;
 
-class CellRenderer extends DefaultTableCellRenderer {
+class ComponentCellRenderer extends DefaultTableCellRenderer {
     public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
     
     private final Component o_component;
     
-    CellRenderer(Component p_component) {
+    ComponentCellRenderer(Component p_component) {
         o_component = p_component;
     }
     
-    public java.awt.Component getTableCellRendererComponent(JTable table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
+    public java.awt.Component getTableCellRendererComponent(JTable p_table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
         if(p_value instanceof Date) {
             p_value = s_dateFormat.format((Date)p_value);
         }
 
-        java.awt.Component x_component = super.getTableCellRendererComponent(table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
+        java.awt.Component x_component = super.getTableCellRendererComponent(p_table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
 
 		if(o_component instanceof Thread) {
 			ThreadItem x_thread = ((Thread)o_component).getThreadItem(p_row);

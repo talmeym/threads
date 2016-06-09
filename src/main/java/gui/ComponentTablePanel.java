@@ -6,14 +6,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Date;
 
-abstract class TablePanel extends MemoryPanel {
+abstract class ComponentTablePanel extends MemoryPanel {
     protected final JTable o_table;
 
-	protected TablePanel(TableModel p_tableModel, TableCellRenderer p_cellRenderer) {
+	protected ComponentTablePanel(TableModel p_tableModel, TableCellRenderer p_cellRenderer) {
 		this(p_tableModel, p_cellRenderer, null);
 	}
 
-	protected TablePanel(TableModel p_tableModel, TableCellRenderer p_cellRenderer, String p_category) {
+	protected ComponentTablePanel(TableModel p_tableModel, TableCellRenderer p_cellRenderer, String p_category) {
         super(new BorderLayout(), p_category);
         o_table = new JTable(p_tableModel);
         o_table.setRowHeight(GUIConstants.s_tableRowHeight);

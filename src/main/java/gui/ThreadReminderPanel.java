@@ -8,12 +8,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class ThreadReminderPanel extends TablePanel implements Observer {
+public class ThreadReminderPanel extends ComponentTablePanel implements Observer {
     private final Thread o_thread;
     private final JButton o_dismissButton = new JButton("Dismiss");
     
     ThreadReminderPanel(Thread p_thread) {
-        super(new ReminderTableModel(p_thread), new CellRenderer(null));
+        super(new ReminderTableModel(p_thread), new ComponentCellRenderer(null));
 		o_thread = p_thread;
 
         fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
@@ -35,7 +35,7 @@ public class ThreadReminderPanel extends TablePanel implements Observer {
         
         JPanel x_panel = new JPanel(new BorderLayout());
         x_panel.add(o_dismissButton, BorderLayout.CENTER);
-        x_panel.setBorder(BorderFactory.createEmptyBorder(5,0,0,0));
+        x_panel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         
         add(x_panel, BorderLayout.SOUTH);
     }

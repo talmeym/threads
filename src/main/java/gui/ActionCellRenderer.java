@@ -23,18 +23,18 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
         o_thread = p_thread;
     }
 
-    public Component getTableCellRendererComponent(JTable table, Object p_value, boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(JTable p_table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
         if(p_value instanceof Date) {
-			p_value = column == 0 ? s_createDateFormat.format((Date) p_value) : getFormattedDate((Date) p_value);
+			p_value = p_col == 0 ? s_createDateFormat.format((Date) p_value) : getFormattedDate((Date) p_value);
         }
 
-        java.awt.Component x_component = super.getTableCellRendererComponent(table, p_value, isSelected, hasFocus, row, column);
+        java.awt.Component x_component = super.getTableCellRendererComponent(p_table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
 		x_component.setForeground(Color.black);
 
-		Item x_item = LookupHelper.getAllActiveActions(o_thread).get(row);
+		Item x_item = LookupHelper.getAllActiveActions(o_thread).get(p_row);
 		x_component.setBackground(getColourForTime(x_item.getDueDate()));
 
-		if(isSelected) {
+		if(p_isSelected) {
 			x_component.setBackground(ColourConstants.s_selectedColour);
 		}
 

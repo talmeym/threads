@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class ThreadActionPanel extends TablePanel implements Observer {
+public class ThreadActionPanel extends ComponentTablePanel implements Observer {
     private final Thread o_thread;
 	private JButton o_addButton = new JButton("Add Action");
 	private JButton o_dismissButton = new JButton("Dismiss");

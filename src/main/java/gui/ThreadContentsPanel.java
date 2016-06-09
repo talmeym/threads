@@ -8,13 +8,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class ThreadContentsPanel extends TablePanel implements Observer
+public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 {
     private final Thread o_thread;
 	private final JButton o_removeButton = new JButton("Remove");
 
 	public ThreadContentsPanel(final Thread p_thread) {
-        super(new ThreadContentsTableModel(p_thread), new CellRenderer(p_thread));
+        super(new ThreadContentsTableModel(p_thread), new ComponentCellRenderer(p_thread));
         o_thread = p_thread;
         o_thread.addObserver(this);
 

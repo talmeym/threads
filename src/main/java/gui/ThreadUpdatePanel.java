@@ -7,12 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ThreadUpdatePanel extends TablePanel {
+public class ThreadUpdatePanel extends ComponentTablePanel {
     private final Thread o_thread;
 	private final JButton o_updateButton = new JButton("Replace Update");
 
 	public ThreadUpdatePanel(Thread p_thread) {
-        super(new UpdateItemTableModel(p_thread), new CellRenderer(null));
+        super(new UpdateItemTableModel(p_thread), new ComponentCellRenderer(null));
         o_thread = p_thread;
 
         fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);

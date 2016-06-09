@@ -8,14 +8,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-class ThreadListPanel extends TablePanel implements Observer {
+class ThreadListPanel extends ComponentTablePanel implements Observer {
     private final Thread o_thread;
 	private final JButton o_addItemButton = new JButton("Add Item");
 	private final JButton o_addThreadButton = new JButton("Add Thread");
 	private final JButton o_removeButton = new JButton("Remove Selected");
 
     ThreadListPanel(Thread p_thread) {
-        super(new ThreadListTableModel(p_thread), new CellRenderer(null));
+        super(new ThreadListTableModel(p_thread), new ComponentCellRenderer(null));
 		o_thread = p_thread;
 		o_thread.addObserver(this);
 
