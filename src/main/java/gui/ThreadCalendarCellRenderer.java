@@ -9,7 +9,7 @@ import java.awt.*;
 import java.text.*;
 import java.util.*;
 
-public class ThreadCalendarCellRenderer extends DefaultTableCellRenderer implements TableCellRenderer {
+public class ThreadCalendarCellRenderer implements TableCellRenderer {
 	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mmaa");
 
 	private int o_month;
@@ -56,15 +56,14 @@ public class ThreadCalendarCellRenderer extends DefaultTableCellRenderer impleme
 			if(p_value instanceof String) {
 				setText((String)p_value);
 				setForeground(Color.black);
-				setBackground(Color.white);
 			} else {
 				Item x_item = (Item) p_value;
 				String x_text = buildTextForItem(x_item);
 				setText(x_text);
 				setForeground(x_item.isActive() ? Color.black : Color.gray);
-				setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
 			}
 
+			setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
 			return this;
 		}
 

@@ -53,6 +53,8 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 			x_value = "Tomorrow " + s_12HrTimeFormat.format(x_dueDate).toLowerCase();
 		} else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
 			x_value = s_dayFormat.format(x_dueDate).toLowerCase();
+			String x_firstLetter = x_value.substring(0, 1);
+			x_value = x_value.replaceFirst(x_firstLetter, x_firstLetter.toUpperCase());
 		} else {
 		 	x_value = s_dateFormat.format(x_dueDate);
 		}

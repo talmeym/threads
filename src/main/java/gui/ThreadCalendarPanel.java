@@ -120,7 +120,7 @@ public class ThreadCalendarPanel extends TablePanel  {
 				x_menu.add(x_menuItem);
 			}
 
-			x_menu.show(o_table, (o_table.getWidth() / 7) * col - 15, (o_table.getHeight() / 5) * row + 23);
+			x_menu.show(o_table, ((o_table.getWidth() / 7) * col) - 14, (o_table.getHeight() / 5) * row + 21);
 		}
 	}
 

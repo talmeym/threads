@@ -14,7 +14,7 @@ public class ThreadTreePanel extends JPanel implements TreeSelectionListener, Ac
     private final JTree o_threadFromTree;
     private final JTree o_threadToTree;
 
-    private JButton o_moveButton = new JButton("Move Selected");
+    private JButton o_moveButton = new JButton("Move");
     
     public ThreadTreePanel(Thread p_thread) {
         super(new BorderLayout());

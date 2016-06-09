@@ -9,7 +9,7 @@ import java.awt.event.*;
 
 public class ThreadUpdatePanel extends TablePanel {
     private final Thread o_thread;
-	private final JButton o_updateButton = new JButton("Update");
+	private final JButton o_updateButton = new JButton("Replace Update");
 
 	public ThreadUpdatePanel(Thread p_thread) {
         super(new UpdateItemTableModel(p_thread), new CellRenderer(null));

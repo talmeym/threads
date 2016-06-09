@@ -11,7 +11,7 @@ import java.util.*;
 public class ThreadContentsPanel extends TablePanel implements Observer
 {
     private final Thread o_thread;
-	private final JButton o_removeButton = new JButton("Remove Selected");
+	private final JButton o_removeButton = new JButton("Remove");
 
 	public ThreadContentsPanel(final Thread p_thread) {
         super(new ThreadContentsTableModel(p_thread), new CellRenderer(p_thread));

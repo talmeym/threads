@@ -9,12 +9,12 @@ class GUIConstants
 {
     public static final int s_creationDateColumnWidth = 130;
     public static final int s_typeColumnWidth = 120;
-    public static final int s_threadColumnWidth = 140;
+    public static final int s_threadColumnWidth = 160;
     public static final int s_dateStatusColumnWidth = 90;
     public static final int s_lastUpdatedColumnWidth = 110;
 	public static final int s_statsColumnWidth = 90;
 
-	public static final int s_tableRowHeight = 25;
+	public static final int s_tableRowHeight = 27;
 
 	public static final Dimension s_navWindowSize = new Dimension(300, 600);
     public static final Dimension s_threadWindowSize = new Dimension(800, 600);

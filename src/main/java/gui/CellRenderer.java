@@ -26,15 +26,14 @@ class CellRenderer extends DefaultTableCellRenderer {
 
         java.awt.Component x_component = super.getTableCellRendererComponent(table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
 
-
 		if(o_component instanceof Thread) {
 			ThreadItem x_thread = ((Thread)o_component).getThreadItem(p_row);
 			x_component.setForeground(x_thread.isActive() || p_isSelected ? Color.BLACK : Color.gray);
-		}
-
-		if(o_component instanceof Item) {
+		} else if(o_component instanceof Item) {
 			Reminder x_reminder = ((Item)o_component).getReminder(p_row);
 			x_component.setForeground(x_reminder.isActive() || p_isSelected ? Color.BLACK : Color.gray);
+		} else {
+			x_component.setForeground(Color.BLACK);
 		}
 
 		x_component.setBackground(p_isSelected ? ColourConstants.s_selectedColour : Color.WHITE);
