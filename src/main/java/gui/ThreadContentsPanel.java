@@ -57,12 +57,17 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
     }
 
 	protected void addItem(int p_index) {
-		List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
 		Thread x_thread;
 
 		if(p_index != -1) {
-			x_thread = x_threads.get(p_index);
+			if(o_thread.getThreadItem(p_index) instanceof Thread) {
+				x_thread = (Thread) o_thread.getThreadItem(p_index);
+			} else {
+				o_table.clearSelection();
+				x_thread = o_thread;
+			}
 		} else {
+			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
 			x_threads.add(0, o_thread);
 
 			if(x_threads.size() > 1) {
@@ -84,12 +89,17 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 	}
 
 	private void addThread(int p_index) {
-		List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
 		Thread x_thread;
 
 		if(p_index != -1) {
-			x_thread = x_threads.get(p_index);
+			if(o_thread.getThreadItem(p_index) instanceof Thread) {
+				x_thread = (Thread) o_thread.getThreadItem(p_index);
+			} else {
+				o_table.clearSelection();
+				x_thread = o_thread;
+			}
 		} else {
+			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
 			x_threads.add(0, o_thread);
 
 			if(x_threads.size() > 1) {
