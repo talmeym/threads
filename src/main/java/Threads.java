@@ -11,7 +11,7 @@ import java.util.Properties;
 public class Threads {
     public static void main(String[] args) {
 		doFontStuff();
-		
+
 		TimeUpdater.getInstance().start();
 		String x_filePath = args.length > 0 ? args[0] : "threads.xml";
 		File x_file = new File(x_filePath);
@@ -27,7 +27,9 @@ public class Threads {
 	}
 
 	public static void doFontStuff() {
-		Font x_font = new Font("Avenir", Font.PLAIN, 14);
+		String x_fontName = System.getProperty("os.name").equals("Mac OS X") ? "Avenir" : ((Font) UIManager.get("Button.font")).getFontName();
+		Font x_font = new Font(x_fontName, Font.PLAIN, 14);
+
 		UIManager.put("Button.font", x_font);
 		UIManager.put("CheckBox.font", x_font);
 		UIManager.put("ComboBox.font", x_font);

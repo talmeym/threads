@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 {
@@ -28,14 +29,14 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 		JButton o_addItemButton = new JButton("Add Item");
 		o_addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addItem();
+				addItem(getSelectedRow());
 			}
 		});
 
 		JButton o_addThreadButton = new JButton("Add Thread");
 		o_addThreadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addThread();
+				addThread(getSelectedRow());
 			}
 		});
 
@@ -55,25 +56,59 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
         add(x_buttonPanel, BorderLayout.SOUTH);
     }
 
-	protected void addItem() {
-		String x_text = (String) JOptionPane.showInputDialog(this, "Enter Item Text", "Add new Item to '" + o_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Item");
+	protected void addItem(int p_index) {
+		List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
+		Thread x_thread;
 
-		if(x_text != null) {
-			Item x_item = new Item(x_text);
-			o_thread.addThreadItem(x_item);
-			WindowManager.getInstance().openComponent(x_item, 0);
+		if(p_index != -1) {
+			x_thread = x_threads.get(p_index);
+		} else {
+			x_threads.add(0, o_thread);
+
+			if(x_threads.size() > 1) {
+				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose thread", "Add new Item ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+			} else {
+				x_thread = o_thread;
+			}
+		}
+
+		if(x_thread != null) {
+			String x_text = (String) JOptionPane.showInputDialog(this, "Enter Item Text", "Add new Item to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Item");
+
+			if(x_text != null) {
+				Item x_item = new Item(x_text);
+				x_thread.addThreadItem(x_item);
+				WindowManager.getInstance().openComponent(x_item, 0);
+			}
 		}
 	}
-    
-    private void addThread() {
-		String x_name = (String) JOptionPane.showInputDialog(this, "Enter Thread Name", "Add new Thread to '" + o_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
-        
-        if(x_name != null) {
-            Thread x_thread = new Thread(x_name);
-            o_thread.addThreadItem(x_thread);
-            WindowManager.getInstance().openComponent(x_thread, 0);
-        }
-    }
+
+	private void addThread(int p_index) {
+		List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
+		Thread x_thread;
+
+		if(p_index != -1) {
+			x_thread = x_threads.get(p_index);
+		} else {
+			x_threads.add(0, o_thread);
+
+			if(x_threads.size() > 1) {
+				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose thread", "Add new Thread ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+			} else {
+				x_thread = o_thread;
+			}
+		}
+
+		if(x_thread != null) {
+			String x_name = (String) JOptionPane.showInputDialog(this, "Enter Thread Name", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
+
+			if(x_name != null) {
+				Thread x_newThread = new Thread(x_name);
+				x_thread.addThreadItem(x_newThread);
+				WindowManager.getInstance().openComponent(x_newThread, 0);
+			}
+		}
+	}
     
     private void removeComponent() {
         int x_index = getSelectedRow();

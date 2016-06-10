@@ -8,11 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 class ThreadThreadPanel extends ComponentTablePanel implements Observer {
     private final Thread o_thread;
-	private final JButton o_addItemButton = new JButton("Add Item to Selected");
-	private final JButton o_addThreadButton = new JButton("Add Thread to Selected");
 	private final JButton o_removeButton = new JButton("Remove Selected");
 
     ThreadThreadPanel(Thread p_thread) {
@@ -26,22 +25,21 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
 		fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
 
-		o_addItemButton.setEnabled(false);
-		o_addThreadButton.setEnabled(false);
-		o_removeButton.setEnabled(false);
-
+		JButton o_addItemButton = new JButton("Add Item");
 		o_addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addItem(getSelectedRow());
 			}
 		});
 
+		JButton o_addThreadButton = new JButton("Add Thread");
 		o_addThreadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addThread(getSelectedRow());
 			}
 		});
 
+		o_removeButton.setEnabled(false);
 		o_removeButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				removeComponent(getSelectedRow());
@@ -58,8 +56,22 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 	}
 
 	protected void addItem(int p_index) {
+		List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
+		Thread x_thread;
+
 		if(p_index != -1) {
-			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
+			x_thread = x_threads.get(p_index);
+		} else {
+			x_threads.add(0, o_thread);
+
+			if(x_threads.size() > 1) {
+				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose thread", "Add new Item ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+			} else {
+				x_thread = o_thread;
+			}
+		}
+
+		if(x_thread != null) {
 			String x_text = (String) JOptionPane.showInputDialog(this, "Enter Item Text", "Add new Item to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Item");
 
 			if(x_text != null) {
@@ -71,8 +83,22 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 	}
 
 	private void addThread(int p_index) {
+		List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
+		Thread x_thread;
+
 		if(p_index != -1) {
-			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
+			x_thread = x_threads.get(p_index);
+		} else {
+			x_threads.add(0, o_thread);
+
+			if(x_threads.size() > 1) {
+				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose thread", "Add new Thread ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+			} else {
+				x_thread = o_thread;
+			}
+		}
+
+		if(x_thread != null) {
 			String x_name = (String) JOptionPane.showInputDialog(this, "Enter Thread Name", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
 
 			if(x_name != null) {
@@ -110,8 +136,6 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 
 	@Override
 	void tableRowClicked(int row, int col) {
-		o_addItemButton.setEnabled(row != -1);
-		o_addThreadButton.setEnabled(row != -1);
 		o_removeButton.setEnabled(row != -1);
 	}
 
