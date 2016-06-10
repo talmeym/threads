@@ -6,8 +6,8 @@ import util.*;
 
 import java.util.*;
 
-class UpdateItemTableModel extends ComponentTableModel {
-    UpdateItemTableModel (Thread p_thread) {
+class ThreadUpdateTableModel extends ComponentTableModel {
+	ThreadUpdateTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Creation Date", "Thread", "Update", "Updated"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }

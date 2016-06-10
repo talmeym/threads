@@ -19,7 +19,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 
 		o_tabs = new JTabbedPane();
         o_tabs.addTab("Contents", new ThreadContentsPanel(p_thread));
-        o_tabs.addTab("Threads", new ThreadListPanel(p_thread));
+        o_tabs.addTab("Threads", new ThreadThreadPanel(p_thread));
         o_tabs.addTab("Updates", new ThreadUpdatePanel(p_thread));
         o_tabs.addTab("Actions", new ThreadActionPanel(p_thread));
         o_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));

@@ -165,7 +165,7 @@ class DateSuggestionPanel extends JPanel {
 				Date x_currentDate = o_item.getDueDate();
 				o_item.setDueDate(x_dueDate);
 
-				if(o_item.getReminderCount() > 0 && JOptionPane.showConfirmDialog((JPanel) o_listener, MessagingConstants.s_moveRemindersDesc, MessagingConstants.s_moveReminderTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+				if(o_item.getReminderCount() > 0 && JOptionPane.showConfirmDialog((JPanel) o_listener, MessagingConstants.s_moveRemindersDesc, MessagingConstants.s_moveReminderTitle, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 					for(int i = 0; i < o_item.getReminderCount(); i++) {
 						Reminder x_reminder = o_item.getReminder(i);
 						x_reminder.setDueDate(new Date(x_dueDate.getTime() + (x_reminder.getDueDate().getTime() - x_currentDate.getTime())));

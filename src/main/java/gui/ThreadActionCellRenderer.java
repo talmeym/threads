@@ -11,7 +11,7 @@ import java.awt.Component;
 import java.text.*;
 import java.util.*;
 
-public class ActionCellRenderer extends DefaultTableCellRenderer {
+public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
 	public static final DateFormat s_createDateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy");
 	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mmaa");
@@ -19,7 +19,7 @@ public class ActionCellRenderer extends DefaultTableCellRenderer {
 
     private final Thread o_thread;
 
-    ActionCellRenderer(Thread p_thread) {
+    ThreadActionCellRenderer(Thread p_thread) {
         o_thread = p_thread;
     }
 

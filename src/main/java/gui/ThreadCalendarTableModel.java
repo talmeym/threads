@@ -42,7 +42,7 @@ public class ThreadCalendarTableModel extends ComponentTableModel {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.set(Calendar.MONTH, o_month);
 		x_calendar.set(Calendar.DAY_OF_MONTH, 1);
-		x_calendar.set(Calendar.HOUR, 0);
+		x_calendar.set(Calendar.HOUR_OF_DAY, 0);
 		x_calendar.set(Calendar.MINUTE, 0);
 		x_calendar.set(Calendar.MILLISECOND, 0);
 		x_calendar.add(Calendar.DAY_OF_MONTH, p_dayOfMonth);

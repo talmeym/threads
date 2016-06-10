@@ -6,10 +6,9 @@ import util.*;
 
 import java.util.*;
 
-class ReminderTableModel extends ComponentTableModel {
-    ReminderTableModel(Thread p_thread) {
+class ThreadReminderTableModel extends ComponentTableModel {
+    ThreadReminderTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Creation Date", "Action", "Reminder", "Due Date", "Due"});
-        TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
 
 	@Override

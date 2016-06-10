@@ -2,10 +2,12 @@ package gui;
 
 import data.*;
 import data.Thread;
+import util.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.List;
 
@@ -103,12 +105,16 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 		if(getSelectedRow() != -1) {
 			JPopupMenu x_menu = new JPopupMenu();
 			ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
-			Date x_date = x_model.getDate(row, col);
+			final Date x_date = x_model.getDate(row, col);
 			List<Item> x_actions = LookupHelper.getAllActions(o_thread, x_date);
 
 			for(final Item x_action: x_actions) {
-				JMenuItem x_menuItem = new JMenuItem(ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem(x_action));
+				String x_text = ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem(x_action);
+				JMenuItem x_menuItem = new JMenuItem(x_text);
+				x_menuItem.setToolTipText(x_action.getParentThread().getText() + ": " + x_text);
 				x_menuItem.setForeground(x_action.isActive() ? Color.black : Color.gray);
+				x_menuItem.setFont(x_action.isActive() ? x_menuItem.getFont() : getStrikeThroughFont(x_menuItem.getFont()));
+				x_menu.add(x_menuItem);
 
 				x_menuItem.addActionListener(new ActionListener() {
 					@Override
@@ -116,9 +122,37 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 						WindowManager.getInstance().openComponent(x_action, -1);
 					}
 				});
-
-				x_menu.add(x_menuItem);
 			}
+
+			JMenuItem x_newMenuItem = new JMenuItem("Add Action");
+			x_newMenuItem.setForeground(Color.gray);
+			x_menu.add(x_newMenuItem);
+			final JPanel x_this = this;
+
+			x_newMenuItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent actionEvent) {
+					List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
+					x_threads.add(0, o_thread);
+					Thread x_thread;
+
+					if(x_threads.size() > 1) {
+						x_thread = (Thread) JOptionPane.showInputDialog(x_this, "Choose thread", "Add new Action ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+					} else {
+						x_thread = o_thread;
+					}
+
+					if(x_thread != null) {
+						String x_text = (String) JOptionPane.showInputDialog(x_this, "Enter Action Text", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, null);
+
+						if(x_text != null) {
+							Item x_item = new Item(x_text);
+							x_item.setDueDate(x_date);
+							x_thread.addItem(x_item);
+						}
+					}
+				}
+			});
 
 			x_menu.show(o_table, ((o_table.getWidth() / 7) * col) - 14, (o_table.getHeight() / 5) * row + 21);
 		}
@@ -126,5 +160,11 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 
 	@Override
 	void tableRowDoubleClicked(int row, int col) {
+	}
+
+	private Font getStrikeThroughFont(Font x_font) {
+		Map attributes = x_font.getAttributes();
+		attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+		return new Font(attributes);
 	}
 }

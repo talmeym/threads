@@ -35,11 +35,11 @@ class ComponentTableModel extends DefaultTableModel implements TimeUpdateListene
         return false;
     }
     
-    public final void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg) {
         fireTableDataChanged();
     }
 
-    public final void timeUpdate() {
-        fireTableDataChanged();
+    public void timeUpdate() {
+        // do nothing by default
     }
 }

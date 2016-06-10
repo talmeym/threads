@@ -2,6 +2,7 @@ package gui;
 
 import data.*;
 import data.Thread;
+import util.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +12,7 @@ import java.util.*;
 public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 {
     private final Thread o_thread;
-	private final JButton o_removeButton = new JButton("Remove");
+	private final JButton o_removeButton = new JButton("Remove Selected");
 
 	public ThreadContentsPanel(final Thread p_thread) {
         super(new ThreadContentsTableModel(p_thread), new ComponentCellRenderer(p_thread));
@@ -34,7 +35,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 		JButton o_addThreadButton = new JButton("Add Thread");
 		o_addThreadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addNewThread();
+				addThread();
 			}
 		});
 
@@ -55,7 +56,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
     }
 
 	protected void addItem() {
-		String x_text = JOptionPane.showInputDialog(this, "Enter Item Text");
+		String x_text = (String) JOptionPane.showInputDialog(this, "Enter Item Text", "Add new Item to '" + o_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Item");
 
 		if(x_text != null) {
 			Item x_item = new Item(x_text);
@@ -64,8 +65,8 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 		}
 	}
     
-    private void addNewThread() {
-        String x_name = JOptionPane.showInputDialog(this, "Enter Thread Name");
+    private void addThread() {
+		String x_name = (String) JOptionPane.showInputDialog(this, "Enter Thread Name", "Add new Thread to '" + o_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
         
         if(x_name != null) {
             Thread x_thread = new Thread(x_name);
@@ -80,7 +81,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
         if(x_index != -1) {
             ThreadItem x_threadItem = o_thread.getThreadItem(x_index);
 
-			if(JOptionPane.showConfirmDialog(this, "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?", "Remove " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+			if(JOptionPane.showConfirmDialog(this, "Remove " + x_threadItem.getType().toLowerCase() + " '" + x_threadItem.getText() + "' ?", "Remove " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
                 o_thread.removeThreadItem(x_threadItem);
             }
         }

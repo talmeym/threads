@@ -1,6 +1,7 @@
 package gui;
 
 import data.*;
+import util.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.event.*;
 class ItemPanel extends ComponentTablePanel {
     private final Item o_item;
 	private final JButton o_addReminderButton = new JButton("Add Reminder");
-	private final JButton o_removeReminderButton = new JButton("Remove");
+	private final JButton o_removeReminderButton = new JButton("Remove Reminder");
     private final JButton o_closeButton = new JButton("Close");
 
     ItemPanel(Item p_item, ActionListener p_listener) {
@@ -55,7 +56,7 @@ class ItemPanel extends ComponentTablePanel {
 					if(x_index != -1) {
 						Reminder x_reminder = o_item.getReminder(x_index);
 
-						if(JOptionPane.showConfirmDialog(x_this, "Remove Reminder '" + x_reminder.getText() + "' ?", "Remove Reminder?", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+						if(JOptionPane.showConfirmDialog(x_this, "Remove Reminder '" + x_reminder.getText() + "' ?", "Remove Reminder?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 							o_item.removeReminder(x_reminder);
 						}
 					}

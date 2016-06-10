@@ -2,6 +2,7 @@ package gui;
 
 import data.*;
 import data.Thread;
+import util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,10 +11,10 @@ import java.util.*;
 
 public class ThreadReminderPanel extends ComponentTablePanel implements Observer {
     private final Thread o_thread;
-    private final JButton o_dismissButton = new JButton("Dismiss");
+    private final JButton o_dismissButton = new JButton("Dismiss Selected");
     
     ThreadReminderPanel(Thread p_thread) {
-        super(new ReminderTableModel(p_thread), new ComponentCellRenderer(null));
+        super(new ThreadReminderTableModel(p_thread), new ComponentCellRenderer(null));
 		o_thread = p_thread;
 
         fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
@@ -24,13 +25,8 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
 		o_dismissButton.setEnabled(false);
 		o_dismissButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int x_index = getSelectedRow();
-                
-                if(x_index != -1) {
-                    Reminder x_reminder = LookupHelper.getAllDueReminders(o_thread).get(x_index);
-                    x_reminder.setActive(false);
-                }
-            }
+				dismissReminder(getSelectedRow());
+			}
         });
         
         JPanel x_panel = new JPanel(new BorderLayout());
@@ -38,9 +34,27 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
         x_panel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         
         add(x_panel, BorderLayout.SOUTH);
+
+		TimeUpdater.getInstance().addTimeUpdateListener(new TimeUpdateListener() {
+			@Override
+			public void timeUpdate() {
+				((ComponentTableModel)o_table.getModel()).fireTableDataChanged();
+				tableRowClicked(-1, -1);
+			}
+		});
     }
-    
-    private void showReminder(int p_index) {
+
+	private void dismissReminder(int p_index) {
+		if(p_index != -1) {
+			Reminder x_reminder = LookupHelper.getAllDueReminders(o_thread).get(p_index);
+
+			if(JOptionPane.showConfirmDialog(this, "Set reminder inactive ?", "Dismiss Reminder ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				x_reminder.setActive(false);
+			}
+		}
+	}
+
+	private void showReminder(int p_index) {
         if(p_index != -1) {
             Reminder x_reminder = LookupHelper.getAllDueReminders(o_thread).get(p_index);
             WindowManager.getInstance().openComponent(x_reminder, -1);

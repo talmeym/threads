@@ -3,8 +3,8 @@ package gui;
 import data.Thread;
 import data.*;
 
-class ThreadListTableModel extends ComponentTableModel {
-    ThreadListTableModel(Thread p_thread) {
+class ThreadThreadTableModel extends ComponentTableModel {
+    ThreadThreadTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Creation Date", "Parent", "Thread", "Threads", "Updates", "Actions"});
     }
 

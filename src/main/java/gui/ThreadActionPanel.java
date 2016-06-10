@@ -2,6 +2,7 @@ package gui;
 
 import data.*;
 import data.Thread;
+import util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,11 +11,11 @@ import java.util.*;
 
 public class ThreadActionPanel extends ComponentTablePanel implements Observer {
     private final Thread o_thread;
-	private JButton o_addButton = new JButton("Add Action");
-	private JButton o_dismissButton = new JButton("Dismiss");
+	private final JButton o_addToButton = new JButton("Add to Selected");
+	private final JButton o_dismissButton = new JButton("Dismiss Selected");
 
 	ThreadActionPanel(Thread p_thread) {
-        super(new ActionItemTableModel(p_thread), new ActionCellRenderer(p_thread));
+        super(new ThreadActionTableModel(p_thread), new ThreadActionCellRenderer(p_thread));
         o_thread = p_thread;
 		o_thread.addObserver(this);
 
@@ -23,42 +24,70 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
         fixColumnWidth(3, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(4, GUIConstants.s_dateStatusColumnWidth);
 
-		o_addButton.setEnabled(false);
+		JButton o_addButton = new JButton("Add Action");
 		o_addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addAction(getSelectedRow());
+				addActionToThis();
+			}
+		});
+
+		o_addToButton.setEnabled(false);
+		o_addToButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addActionToSelected(getSelectedRow());
 			}
 		});
 
 		o_dismissButton.setEnabled(false);
 		o_dismissButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				int x_index = getSelectedRow();
-
-				if(x_index != -1) {
-					LookupHelper.getAllActiveActions(o_thread).get(getSelectedRow()).setActive(false);
-				}
+				dismissAction(getSelectedRow());
 			}
 		});
 
 		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 0, 0));
 		x_buttonPanel.add(o_addButton);
+		x_buttonPanel.add(o_addToButton);
 		x_buttonPanel.add(o_dismissButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
+
+		TimeUpdater.getInstance().addTimeUpdateListener(new TimeUpdateListener() {
+			@Override
+			public void timeUpdate() {
+				((ComponentTableModel)o_table.getModel()).fireTableDataChanged();
+				tableRowClicked(-1, -1);
+			}
+		});
     }
 
-	protected void addAction(int p_index) {
-		if(p_index != -1) {
-			String x_text = JOptionPane.showInputDialog(this, "Enter Action Text");
+	private void addActionToThis() {
+		addNewAction(o_thread);
+	}
 
-			if(x_text != null) {
-				Item x_threadItem = LookupHelper.getAllActiveActions(o_thread).get(p_index);
-				Thread x_thread = x_threadItem.getParentThread();
-				Item x_item = new Item(x_text);
-				x_thread.addThreadItem(x_item);
-				WindowManager.getInstance().openComponent(x_item, 0);
+	protected void addActionToSelected(int p_index) {
+		if(p_index != -1) {
+			addNewAction(LookupHelper.getAllActiveActions(o_thread).get(p_index).getParentThread());
+		}
+	}
+
+	private void addNewAction(Thread x_thread) {
+		String x_text = (String) JOptionPane.showInputDialog(this, "Enter action Text", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Action");
+
+		if(x_text != null) {
+			Item x_item = new Item(x_text);
+			x_thread.addThreadItem(x_item);
+			WindowManager.getInstance().openComponent(x_item, 0);
+		}
+	}
+
+	private void dismissAction(int p_index) {
+		if(p_index != -1) {
+			Item x_action = LookupHelper.getAllActiveActions(o_thread).get(p_index);
+
+			if(JOptionPane.showConfirmDialog(this, "Set action inactive ?", "Dismiss Action ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				x_action.setActive(false);
 			}
 		}
 	}
@@ -83,7 +112,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 
 	@Override
 	void tableRowClicked(int row, int col) {
-		o_addButton.setEnabled(row != -1);
+		o_addToButton.setEnabled(row != -1);
 		o_dismissButton.setEnabled(row != -1);
 	}
 
