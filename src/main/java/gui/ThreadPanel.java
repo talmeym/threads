@@ -13,8 +13,8 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs;
     
-    public ThreadPanel(Thread p_thread, int p_tabIndex) {
-        super(new BorderLayout(), "tab_index");
+    public ThreadPanel(Thread p_thread) {
+        super(new BorderLayout());
         o_thread = p_thread;
 
 		o_tabs = new JTabbedPane();
@@ -31,7 +31,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 
-		o_tabs.setSelectedIndex(p_tabIndex == -1 ? getMemoryValue(0) : setMemoryValue(p_tabIndex));
+		o_tabs.setSelectedIndex(getMemoryValue(0));
 		o_tabs.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent changeEvent) {
@@ -60,12 +60,6 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
         setReminderTabBackground();
     }
 
-	public void setTabIndex(int p_tabIndex) {
-		if(p_tabIndex != -1 && p_tabIndex != o_tabs.getSelectedIndex()) {
-			o_tabs.setSelectedIndex(p_tabIndex);
-		}
-	}
-
 	private void setActionTabBackground() {
         if(LookupHelper.getAllDueActions(o_thread).size() > 0) {
             o_tabs.setTitleAt(3, "Actions *");
@@ -89,5 +83,9 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 	@Override
 	public void componentInfoChanged(boolean saved) {
 		// do nothing
+	}
+
+	public static void setTabIndex(int p_tabIndex) {
+		MemoryPanel.setMemoryValue(ThreadPanel.class, p_tabIndex);
 	}
 }

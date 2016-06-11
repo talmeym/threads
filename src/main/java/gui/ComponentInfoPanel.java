@@ -31,7 +31,7 @@ public class ComponentInfoPanel extends JPanel {
 		x_parentButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				WindowManager.getInstance().openComponent(o_component.getParentComponent(), -1);
+				WindowManager.getInstance().openComponent(o_component.getParentComponent());
 			}
 		});
 

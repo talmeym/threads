@@ -100,14 +100,14 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
         if(p_index != -1) {
             Item x_threadItem = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
 			Thread x_thread = x_threadItem.getParentThread();
-			WindowManager.getInstance().openComponent(x_thread, -1);
+			WindowManager.getInstance().openComponent(x_thread);
         }
     }
 
     private void showItem(int p_index) {
         if(p_index != -1) {
             Item x_threadItem = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
-            WindowManager.getInstance().openComponent(x_threadItem, -1);
+            WindowManager.getInstance().openComponent(x_threadItem);
         }
     }
 

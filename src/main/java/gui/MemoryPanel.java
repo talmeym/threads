@@ -6,38 +6,41 @@ import java.util.*;
 import java.util.List;
 
 public class MemoryPanel extends JPanel {
-	private static Map<String, Integer> s_memory = new HashMap<String, Integer>();
-	private static Map<String, List<MemoryPanel>> s_panels = new HashMap<String, List<MemoryPanel>>();
+	private static Map<Class, Integer> s_memory = new HashMap<Class, Integer>();
+	private static Map<Class, List<MemoryPanel>> s_panels = new HashMap<Class, List<MemoryPanel>>();
 
-	private final String o_category;
-
-	public MemoryPanel(LayoutManager p_layoutManager, String p_category) {
+	public MemoryPanel(LayoutManager p_layoutManager) {
 	    super(p_layoutManager);
-		o_category = p_category;
+		Class x_clazz = getClass();
 
-		if(!s_panels.containsKey(p_category)) {
-			s_panels.put(p_category, new ArrayList<MemoryPanel>());
+		if(!s_panels.containsKey(x_clazz)) {
+			s_panels.put(x_clazz, new ArrayList<MemoryPanel>());
 		}
 
-		s_panels.get(p_category).add(this);
+		s_panels.get(x_clazz).add(this);
 	}
 
 	public Integer getMemoryValue(int p_defaultValue) {
-		return s_memory.containsKey(o_category) ? s_memory.get(o_category) : p_defaultValue;
+		Class x_clazz = getClass();
+		return s_memory.containsKey(x_clazz) ? s_memory.get(x_clazz) : p_defaultValue;
 	}
 
 	public int setMemoryValue(int p_memory) {
-		s_memory.put(o_category, p_memory);
-
-		List<MemoryPanel> x_panels = s_panels.get(o_category);
-
-		for(MemoryPanel x_panel: x_panels) {
-			if(x_panel != this) {
-				x_panel.memoryChanged(p_memory);
-			}
-		}
-
+		Class x_clazz = getClass();
+		s_memory.put(x_clazz, p_memory);
+		updatePanels(s_panels.get(x_clazz), p_memory);
 		return p_memory;
+	}
+
+	private static void updatePanels(List<MemoryPanel> x_panels, int p_memory) {
+		for(MemoryPanel x_panel: x_panels) {
+			x_panel.memoryChanged(p_memory);
+		}
+	}
+
+	protected static void setMemoryValue(Class p_clazz, int p_memoryValue) {
+		s_memory.put(p_clazz, p_memoryValue);
+		updatePanels(s_panels.get(p_clazz), p_memoryValue);
 	}
 
 	protected void memoryChanged(int p_newMemory) {

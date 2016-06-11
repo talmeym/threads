@@ -10,11 +10,7 @@ abstract class ComponentTablePanel extends MemoryPanel {
     protected final JTable o_table;
 
 	protected ComponentTablePanel(TableModel p_tableModel, TableCellRenderer p_cellRenderer) {
-		this(p_tableModel, p_cellRenderer, null);
-	}
-
-	protected ComponentTablePanel(TableModel p_tableModel, TableCellRenderer p_cellRenderer, String p_category) {
-        super(new BorderLayout(), p_category);
+        super(new BorderLayout());
         o_table = new JTable(p_tableModel);
         o_table.setRowHeight(GUIConstants.s_tableRowHeight);
         o_table.setDefaultRenderer(String.class, p_cellRenderer);

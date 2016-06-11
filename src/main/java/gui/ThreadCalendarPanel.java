@@ -18,7 +18,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 	private JButton o_currentMonthButton = new JButton(getMonthLabel(Calendar.getInstance().get(Calendar.MONTH)));
 
 	public ThreadCalendarPanel(Thread p_thread) {
-		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer(), "calendar_month");
+		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
 		o_thread = p_thread;
 		setMonth(getMemoryValue(Calendar.getInstance().get(Calendar.MONTH)));
 
@@ -119,7 +119,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 				x_menuItem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent actionEvent) {
-						WindowManager.getInstance().openComponent(x_action, -1);
+						WindowManager.getInstance().openComponent(x_action);
 					}
 				});
 			}

@@ -69,7 +69,7 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener {
 		if(p_treeSelectionEvent.getNewLeadSelectionPath() != null && !p_treeSelectionEvent.getNewLeadSelectionPath().equals(p_treeSelectionEvent.getOldLeadSelectionPath())) {
 			TreePath x_path = p_treeSelectionEvent.getPath();
 			ThreadItem x_threadItem = (ThreadItem) x_path.getLastPathComponent();
-			WindowManager.getInstance().openComponent(x_threadItem, -1);
+			WindowManager.getInstance().openComponent(x_threadItem);
 			o_openDocFolderButton.setEnabled(x_threadItem.getDocFolder() != null);
 			o_setDocFolderButton.setEnabled(true);
 		}

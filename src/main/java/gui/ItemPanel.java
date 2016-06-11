@@ -41,7 +41,7 @@ class ItemPanel extends ComponentTablePanel {
 				if(o_item.getDueDate() != null) {
 					Reminder x_reminder = new Reminder(o_item);
 					o_item.addReminder(x_reminder);
-					WindowManager.getInstance().openComponent(x_reminder, 0);
+					WindowManager.getInstance().openComponent(x_reminder);
 				}
 			}
 		});
@@ -85,7 +85,7 @@ class ItemPanel extends ComponentTablePanel {
 
 	void tableRowDoubleClicked(int row, int col) {
 		if(row != -1) {
-			WindowManager.getInstance().openComponent(o_item.getReminder(row), -1);
+			WindowManager.getInstance().openComponent(o_item.getReminder(row));
 		}
 	}
 }

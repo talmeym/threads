@@ -12,18 +12,6 @@ public class ComponentWindow <TYPE extends Component> extends JFrame implements 
 	public ComponentWindow(TYPE p_component) {
 		this.o_component = p_component;
 		o_component.addObserver(this);
-
-		addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentMoved(ComponentEvent componentEvent) {
-				WindowManager.getInstance().setComponentWindowDetails(getComponent(), getLocation(), getSize());
-			}
-
-			@Override
-			public void componentResized(ComponentEvent componentEvent) {
-				WindowManager.getInstance().setComponentWindowDetails(getComponent(), getLocation(), getSize());
-			}
-		});
 	}
 
 	public TYPE getComponent() {

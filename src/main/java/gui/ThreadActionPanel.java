@@ -76,7 +76,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 			if(x_text != null) {
 				Item x_item = new Item(x_text);
 				x_thread.addThreadItem(x_item);
-				WindowManager.getInstance().openComponent(x_item, 0);
+				WindowManager.getInstance().openComponent(x_item);
 			}
 		}
 	}
@@ -97,7 +97,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 			Thread x_thread = x_threadItem.getParentThread();
 
 			if(x_thread != o_thread) {
-				WindowManager.getInstance().openComponent(x_thread, -1);
+				WindowManager.getInstance().openComponent(x_thread);
 			}
         }
     }
@@ -105,7 +105,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
     private void showItem(int p_index) {
         if(p_index != -1) {
             Item x_threadItem = LookupHelper.getAllActiveActions(o_thread).get(p_index);
-            WindowManager.getInstance().openComponent(x_threadItem, -1);
+            WindowManager.getInstance().openComponent(x_threadItem);
         }
     }
 

@@ -64,15 +64,13 @@ public class WindowManager {
 		});
 	}
 
-	public void openComponent(final Component p_component, int p_tabIndex) {
+	public void openComponent(final Component p_component) {
 		for(JFrame x_frame: o_windows.values()) {
 			x_frame.setVisible(false);
 		}
 
 		if(!o_windows.containsKey(p_component)) {
-			o_windows.put(p_component, makeComponentWindow(p_component, p_tabIndex));
-		} else {
-			((ComponentWindow)o_windows.get(p_component)).setTabIndex(p_tabIndex);
+			o_windows.put(p_component, makeComponentWindow(p_component));
 		}
 
 		JFrame x_window = o_windows.get(p_component);
@@ -83,11 +81,11 @@ public class WindowManager {
 		o_navigationWindow.selectComponent(p_component);
     }
 
-	private JFrame makeComponentWindow(final Component p_component, int p_tabIndex) {
+	private JFrame makeComponentWindow(final Component p_component) {
 		JFrame x_window = null;
 
 		if(p_component instanceof Thread) {
-			x_window = new ThreadWindow((Thread) p_component, p_tabIndex);
+			x_window = new ThreadWindow((Thread) p_component);
 		}
 
 		if(p_component instanceof Item) {
@@ -96,6 +94,22 @@ public class WindowManager {
 
 		if(p_component instanceof Reminder) {
 			x_window = new ReminderWindow((Reminder) p_component);
+		}
+
+		if (x_window != null) {
+			x_window.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowDeactivated(WindowEvent windowEvent) {
+					Window x_window = windowEvent.getWindow();
+					setComponentWindowDetails(p_component, x_window.getLocation(), x_window.getSize());
+				}
+
+				@Override
+				public void windowClosing(WindowEvent windowEvent) {
+					Window x_window = windowEvent.getWindow();
+					setComponentWindowDetails(p_component, x_window.getLocation(), x_window.getSize());
+				}
+			});
 		}
 
 		ImageUtil.addIconToWindow(x_window);

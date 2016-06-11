@@ -77,7 +77,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 			if(x_text != null) {
 				Item x_item = new Item(x_text);
 				x_thread.addThreadItem(x_item);
-				WindowManager.getInstance().openComponent(x_item, 0);
+				WindowManager.getInstance().openComponent(x_item);
 			}
 		}
 	}
@@ -104,7 +104,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 			if(x_name != null) {
 				Thread x_newThread = new Thread(x_name);
 				x_thread.addThreadItem(x_newThread);
-				WindowManager.getInstance().openComponent(x_newThread, 0);
+				WindowManager.getInstance().openComponent(x_newThread);
 			}
 		}
 	}
@@ -123,15 +123,16 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
     private void showParentThread(int p_index) {
         if(p_index != -1) {
             Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
-            WindowManager.getInstance().openComponent(x_thread.getParentComponent(), -1);
+            WindowManager.getInstance().openComponent(x_thread.getParentComponent());
         }
     }
 
     private void showThread(int p_col, int p_row) {
         if(p_row != -1) {
 			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_row);
-            WindowManager.getInstance().openComponent(x_thread, p_col > 2 ? p_col - 2 : -1);
-        }
+			WindowManager.getInstance().openComponent(x_thread);
+			ThreadPanel.setTabIndex(p_col > 2 ? p_col - 2 : -1);
+		}
     }
 
 	@Override
