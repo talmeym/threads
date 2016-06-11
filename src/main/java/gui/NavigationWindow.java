@@ -2,9 +2,9 @@ package gui;
 
 import data.*;
 import data.Thread;
+import util.ImageUtil;
 
 import javax.swing.*;
-import java.awt.event.*;
 
 public class NavigationWindow extends JFrame {
 	private final NavigationPanel o_navigationPanel;
@@ -14,6 +14,7 @@ public class NavigationWindow extends JFrame {
 		setContentPane(o_navigationPanel);
 		setSize(GUIConstants.s_navWindowSize);
 		setTitle("Navigation");
+		ImageUtil.addIconToWindow(this);
 	}
 
 	public void selectComponent(Component p_component) {

@@ -1,9 +1,9 @@
 package gui;
 
 import data.*;
+import util.ImageUtil;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.util.*;
 
 public class ComponentWindow <TYPE extends Component> extends JFrame implements Observer {
@@ -12,6 +12,7 @@ public class ComponentWindow <TYPE extends Component> extends JFrame implements 
 	public ComponentWindow(TYPE p_component) {
 		this.o_component = p_component;
 		o_component.addObserver(this);
+		ImageUtil.addIconToWindow(this);
 	}
 
 	public TYPE getComponent() {

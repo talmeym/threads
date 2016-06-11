@@ -40,28 +40,16 @@ public class WindowManager {
 		o_navigationWindow.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
+				setNavigationWindowDetails(o_navigationWindow.getLocation(), o_navigationWindow.getSize());
 				TimedSaver.getInstance().stopRunning();
 				Saver.saveDocument(p_topLevelThread, filePath, o_windowSettings.getProperties());
 				System.exit(0);
 			}
 		});
 
-		ImageUtil.addIconToWindow(o_navigationWindow);
 		o_navigationWindow.setSize(o_windowSettings.getNavSize());
 		o_navigationWindow.setLocation(o_windowSettings.getNavLocation());
 		o_navigationWindow.setVisible(true);
-
-		o_navigationWindow.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentMoved(ComponentEvent componentEvent) {
-				setNavigationWindowDetails(o_navigationWindow.getLocation(), o_navigationWindow.getSize());
-			}
-
-			@Override
-			public void componentResized(ComponentEvent componentEvent) {
-				setNavigationWindowDetails(o_navigationWindow.getLocation(), o_navigationWindow.getSize());
-			}
-		});
 	}
 
 	public void openComponent(final Component p_component) {
@@ -112,7 +100,6 @@ public class WindowManager {
 			});
 		}
 
-		ImageUtil.addIconToWindow(x_window);
 		return x_window;
 	}
 
