@@ -26,15 +26,15 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
         fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
         fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
 
-		JButton o_addItemButton = new JButton("Add Item");
-		o_addItemButton.addActionListener(new ActionListener() {
+		JButton x_addItemButton = new JButton("Add Item");
+		x_addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addItem(getSelectedRow());
 			}
 		});
 
-		JButton o_addThreadButton = new JButton("Add Thread");
-		o_addThreadButton.addActionListener(new ActionListener() {
+		JButton x_addThreadButton = new JButton("Add Thread");
+		x_addThreadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addThread(getSelectedRow());
 			}
@@ -48,8 +48,8 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
         });
 
         JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 0, 0));
-        x_buttonPanel.add(o_addItemButton);
-        x_buttonPanel.add(o_addThreadButton);
+        x_buttonPanel.add(x_addItemButton);
+        x_buttonPanel.add(x_addThreadButton);
         x_buttonPanel.add(o_removeButton);
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         
@@ -59,14 +59,10 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 	protected void addItem(int p_index) {
 		Thread x_thread;
 
-		if(p_index != -1) {
-			if(o_thread.getThreadItem(p_index) instanceof Thread) {
-				x_thread = (Thread) o_thread.getThreadItem(p_index);
-			} else {
-				o_table.clearSelection();
-				x_thread = o_thread;
-			}
+		if(p_index != -1 && o_thread.getThreadItem(p_index) instanceof Thread) {
+			x_thread = (Thread) o_thread.getThreadItem(p_index);
 		} else {
+			o_table.clearSelection();
 			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
 			x_threads.add(0, o_thread);
 
@@ -91,14 +87,10 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 	private void addThread(int p_index) {
 		Thread x_thread;
 
-		if(p_index != -1) {
-			if(o_thread.getThreadItem(p_index) instanceof Thread) {
-				x_thread = (Thread) o_thread.getThreadItem(p_index);
-			} else {
-				o_table.clearSelection();
-				x_thread = o_thread;
-			}
+		if(p_index != -1 && o_thread.getThreadItem(p_index) instanceof Thread) {
+			x_thread = (Thread) o_thread.getThreadItem(p_index);
 		} else {
+			o_table.clearSelection();
 			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
 			x_threads.add(0, o_thread);
 

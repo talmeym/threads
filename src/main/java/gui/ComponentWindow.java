@@ -54,4 +54,8 @@ public class ComponentWindow <TYPE extends Component> extends JFrame implements 
 		x_title.append(p_component.getText());
 		setTitle(x_title.toString());
 	}
+
+	public void setTabIndex(int p_tabIndex) {
+		// do nothing by default
+	}
 }

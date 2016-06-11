@@ -71,6 +71,8 @@ public class WindowManager {
 
 		if(!o_windows.containsKey(p_component)) {
 			o_windows.put(p_component, makeComponentWindow(p_component, p_tabIndex));
+		} else {
+			((ComponentWindow)o_windows.get(p_component)).setTabIndex(p_tabIndex);
 		}
 
 		JFrame x_window = o_windows.get(p_component);

@@ -7,8 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class ReminderPanel extends JPanel {
-
-
     public ReminderPanel(Reminder p_reminder, final ActionListener p_listener) {
         super(new BorderLayout());
 

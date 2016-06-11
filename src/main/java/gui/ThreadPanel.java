@@ -60,6 +60,12 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
         setReminderTabBackground();
     }
 
+	public void setTabIndex(int p_tabIndex) {
+		if(p_tabIndex != -1 && p_tabIndex != o_tabs.getSelectedIndex()) {
+			o_tabs.setSelectedIndex(p_tabIndex);
+		}
+	}
+
 	private void setActionTabBackground() {
         if(LookupHelper.getAllDueActions(o_thread).size() > 0) {
             o_tabs.setTitleAt(3, "Actions *");
