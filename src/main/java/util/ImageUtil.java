@@ -9,7 +9,7 @@ import java.io.*;
 
 public class ImageUtil {
 
-	public static void addIconToWindow(Window p_window) {
+	public static void addIcon(Window p_window) {
 		Image image = getThreadsImage();
 		p_window.setIconImage(image);
 		//Application.getApplication().setDockIconImage(image);

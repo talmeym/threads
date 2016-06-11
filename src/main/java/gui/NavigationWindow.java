@@ -14,7 +14,7 @@ public class NavigationWindow extends JFrame {
 		setContentPane(o_navigationPanel);
 		setSize(GUIConstants.s_navWindowSize);
 		setTitle("Navigation");
-		ImageUtil.addIconToWindow(this);
+		ImageUtil.addIcon(this);
 	}
 
 	public void selectComponent(Component p_component) {

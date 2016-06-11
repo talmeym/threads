@@ -12,7 +12,7 @@ public class ComponentWindow <TYPE extends Component> extends JFrame implements 
 	public ComponentWindow(TYPE p_component) {
 		this.o_component = p_component;
 		o_component.addObserver(this);
-		ImageUtil.addIconToWindow(this);
+		ImageUtil.addIcon(this);
 	}
 
 	public TYPE getComponent() {

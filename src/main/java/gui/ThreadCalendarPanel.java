@@ -113,7 +113,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 				JMenuItem x_menuItem = new JMenuItem(x_text);
 				x_menuItem.setToolTipText(x_action.getParentThread().getText() + ": " + x_text);
 				x_menuItem.setForeground(x_action.isActive() ? Color.black : Color.gray);
-				x_menuItem.setFont(x_action.isActive() ? x_menuItem.getFont() : getStrikeThroughFont(x_menuItem.getFont()));
+				x_menuItem.setFont(x_action.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
 				x_menu.add(x_menuItem);
 
 				x_menuItem.addActionListener(new ActionListener() {
@@ -162,7 +162,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 	void tableRowDoubleClicked(int row, int col) {
 	}
 
-	private Font getStrikeThroughFont(Font x_font) {
+	private Font makeStrikeThrough(Font x_font) {
 		Map attributes = x_font.getAttributes();
 		attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
 		return new Font(attributes);
