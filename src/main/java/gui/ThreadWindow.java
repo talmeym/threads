@@ -12,9 +12,4 @@ public class ThreadWindow extends ComponentWindow<Thread> {
 		setSize(GUIConstants.s_threadWindowSize);
 		renameWindow(p_thread);
 	}
-
-	@Override
-	public void setTabIndex(int p_tabIndex) {
-		o_threadPanel.setTabIndex(p_tabIndex);
-	}
 }
