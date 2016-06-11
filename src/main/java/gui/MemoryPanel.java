@@ -20,12 +20,12 @@ public class MemoryPanel extends JPanel {
 		s_panels.get(x_clazz).add(this);
 	}
 
-	public Integer getMemoryValue(int p_defaultValue) {
+	public Integer recallValue(int p_defaultValue) {
 		Class x_clazz = getClass();
 		return s_memory.containsKey(x_clazz) ? s_memory.get(x_clazz) : p_defaultValue;
 	}
 
-	public int setMemoryValue(int p_memory) {
+	public int rememberValue(int p_memory) {
 		Class x_clazz = getClass();
 		s_memory.put(x_clazz, p_memory);
 		updatePanels(s_panels.get(x_clazz), p_memory);

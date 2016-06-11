@@ -20,7 +20,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 	public ThreadCalendarPanel(Thread p_thread) {
 		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
 		o_thread = p_thread;
-		setMonth(getMemoryValue(Calendar.getInstance().get(Calendar.MONTH)));
+		setMonth(recallValue(Calendar.getInstance().get(Calendar.MONTH)));
 
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -55,7 +55,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 			public void actionPerformed(ActionEvent actionEvent) {
 				int x_month = Calendar.getInstance().get(Calendar.MONTH);
 				setMonth(x_month);
-				setMemoryValue(x_month);
+				rememberValue(x_month);
 			}
 		});
 
@@ -81,7 +81,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 		int x_currentMonth = x_model.getMonth();
 		int x_month = up ? x_currentMonth == 11 ? 0 : x_currentMonth + 1 : x_currentMonth == 0 ? 11 : x_currentMonth - 1;
 		setMonth(x_month);
-		setMemoryValue(x_month);
+		rememberValue(x_month);
 	}
 
 	private void setMonth(int x_month) {

@@ -31,11 +31,11 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 
-		o_tabs.setSelectedIndex(getMemoryValue(0));
+		o_tabs.setSelectedIndex(recallValue(0));
 		o_tabs.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent changeEvent) {
-				setMemoryValue(o_tabs.getSelectedIndex());
+				rememberValue(o_tabs.getSelectedIndex());
 			}
 		});
 
