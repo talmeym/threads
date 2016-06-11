@@ -27,7 +27,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 		JButton o_addButton = new JButton("Add Action");
 		o_addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addActionSelected(getSelectedRow());
+				addAction(getSelectedRow());
 			}
 		});
 
@@ -54,7 +54,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 		});
     }
 
-	protected void addActionSelected(int p_index) {
+	protected void addAction(int p_index) {
 		Thread x_thread;
 
 		if(p_index != -1) {

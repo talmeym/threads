@@ -12,11 +12,9 @@ public class LookupHelper {
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
             
-            if(x_groupItem.isActive()) {
-                if(x_groupItem instanceof Thread) {
-                    x_result.addAll(getAllActiveUpdates((Thread) x_groupItem));
-                }
-            }
+            if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
+				x_result.addAll(getAllActiveUpdates((Thread) x_groupItem));
+			}
         }
 
         Collections.sort(x_result, new CreationDateComparator());
@@ -30,11 +28,9 @@ public class LookupHelper {
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
             
-            if(x_groupItem.isActive()) {
-                if(x_groupItem instanceof Thread) {
-                    x_result.addAll(getAllActiveActions((Thread) x_groupItem));
-                }
-            }
+            if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
+				x_result.addAll(getAllActiveActions((Thread) x_groupItem));
+			}
         }
         
         Collections.sort(x_result, new DueDateComparator());        
@@ -48,11 +44,9 @@ public class LookupHelper {
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
-            if(x_groupItem.isActive()) {
-                if(x_groupItem instanceof Thread) {
-                    x_result.addAll(getAllActions((Thread) x_groupItem, p_referenceDate));
-                }
-            }
+            if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
+				x_result.addAll(getAllActions((Thread) x_groupItem, p_referenceDate));
+			}
         }
 
         Collections.sort(x_result, new ActiveAwareDueDateComparator());
@@ -65,12 +59,10 @@ public class LookupHelper {
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
             
-            if(x_groupItem.isActive()) {
-                if(x_groupItem instanceof Thread) {
-					Thread x_thread = (Thread) x_groupItem;
-                    x_result.add(x_thread);
-                    x_result.addAll(getAllActiveThreads(x_thread));
-                }
+            if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
+				Thread x_thread = (Thread) x_groupItem;
+				x_result.add(x_thread);
+				x_result.addAll(getAllActiveThreads(x_thread));
             }
         }
         
@@ -85,11 +77,9 @@ public class LookupHelper {
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
-            if(x_groupItem.isActive()) {
-                if(x_groupItem instanceof Thread) {
-                    x_result.addAll(getAllDueActions((Thread) x_groupItem));
-                }
-            }
+            if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
+				x_result.addAll(getAllDueActions((Thread) x_groupItem));
+			}
         }
 
         Collections.sort(x_result, new DueDateComparator());
@@ -103,11 +93,9 @@ public class LookupHelper {
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
-            if(x_groupItem.isActive()) {
-                if(x_groupItem instanceof Thread) {
-                    x_result.addAll(getAllDueReminders((Thread) x_groupItem));
-                }
-            }
+            if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
+				x_result.addAll(getAllDueReminders((Thread) x_groupItem));
+			}
         }
 
         Collections.sort(x_result, new DueDateComparator());
