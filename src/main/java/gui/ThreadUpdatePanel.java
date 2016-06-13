@@ -18,8 +18,8 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
         o_thread = p_thread;
 		o_thread.addObserver(this);
 
-        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(1, GUIConstants.s_threadColumnWidth);
+        fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
+        fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(3, GUIConstants.s_lastUpdatedColumnWidth);
 
 		JButton o_addButton = new JButton("Add Update");
@@ -118,7 +118,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 
     void tableRowDoubleClicked(int row, int col) {
         switch(col) {
-			case 1: showThread(row); break;
+			case 0: showThread(row); break;
 			default: showItem(row); break;
         }
     }

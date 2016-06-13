@@ -35,13 +35,15 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 		x_list.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         x_list.setBackground(column > 4 ? ColourConstants.s_weekendColour : Color.white);
 
+		setColourForTime(x_date, x_list);
+
 		if(x_calendar.get(Calendar.MONTH) != o_month) {
 			x_list.setBackground(ColourConstants.s_offMonthColour);
 		}
 
-		if(x_today) {
-			x_list.setBackground(ColourConstants.s_selectedColour);
-		}
+//		if(x_today) {
+//			x_list.setBackground(ColourConstants.s_selectedColour);
+//		}
 
 		return x_list;
 	}
@@ -77,5 +79,17 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 			return x_builder.append(x_item.getText()).toString().replaceAll(":00", "");
 		}
 
+	}
+
+	private void setColourForTime(Date p_dueDate, JList x_list) {
+		Date x_now = new Date();
+
+		if(DateUtil.istoday(p_dueDate)) {
+			x_list.setBackground(ColourConstants.s_todayColour); // today
+		} else if(p_dueDate.after(DateUtil.getLastThingToday()) && p_dueDate.before(DateUtil.getLastThingTomorrow())) {
+			x_list.setBackground(ColourConstants.s_tomorrowColour); // tomorrow
+		} else if(p_dueDate.after(DateUtil.getLastThingToday()) && (p_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
+			x_list.setBackground(ColourConstants.s_thisWeekColour);
+		}
 	}
 }

@@ -19,10 +19,9 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
         o_thread = p_thread;
 		o_thread.addObserver(this);
 
-        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(1, GUIConstants.s_threadColumnWidth);
-        fixColumnWidth(3, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(4, GUIConstants.s_dateStatusColumnWidth);
+        fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
+        fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
+        fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
 
 		JButton o_addButton = new JButton("Add Action");
 		o_addButton.addActionListener(new ActionListener() {
@@ -116,7 +115,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 
 	void tableRowDoubleClicked(int row, int col) {
 		switch(col) {
-			case 1: showThread(row); break;
+			case 0: showThread(row); break;
 			default: showItem(row);
         }
     }

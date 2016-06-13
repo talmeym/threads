@@ -8,7 +8,7 @@ import java.util.*;
 
 class ThreadUpdateTableModel extends ComponentTableModel {
 	ThreadUpdateTableModel(Thread p_thread) {
-        super(p_thread, new String[]{"Creation Date", "Thread", "Update", "Updated"});
+        super(p_thread, new String[]{"Thread", "Update", "Update Date", "Updated"});
         TimeUpdater.getInstance().addTimeUpdateListener(this);
     }
 
@@ -36,9 +36,9 @@ class ThreadUpdateTableModel extends ComponentTableModel {
         Item x_updateItem = LookupHelper.getAllActiveUpdates((Thread) getComponent()).get(row);
         
         switch(col) {
-			case 0: return x_updateItem.getCreationDate();
-			case 1: return x_updateItem.getParentThread().getText();
-			case 2: return x_updateItem.getText();
+			case 0: return x_updateItem.getParentThread().getText();
+			case 1: return x_updateItem.getText();
+			case 2: return x_updateItem.getCreationDate();
 			default: return DateUtil.getDateStatus(x_updateItem.getCreationDate());
         }
     }

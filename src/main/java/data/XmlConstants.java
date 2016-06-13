@@ -3,7 +3,7 @@ package data;
 import java.text.*;
 
 public class XmlConstants {
-    public static final DateFormat s_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public static final DateFormat s_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
     public static final String s_THREADS = "threads";
     public static final String s_ITEM = "item";
     public static final String s_CREATED = "created";

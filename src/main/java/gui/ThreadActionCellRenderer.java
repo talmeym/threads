@@ -41,22 +41,22 @@ public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
         return x_component;
     }
 
-	private String getFormattedDate(Date x_dueDate) {
+	private String getFormattedDate(Date p_dueDate) {
 		Date x_now = new Date();
 		String x_value;
 
-		if(x_dueDate.before(x_now)) {
-			x_value = s_dateFormat.format(x_dueDate) + " " + s_12HrTimeFormat.format(x_dueDate).toLowerCase();
-		}else if(x_dueDate.before(DateUtil.getLastThingToday())) {
-			x_value = "Today " + s_12HrTimeFormat.format(x_dueDate).toLowerCase();
-		} else if(x_dueDate.before(DateUtil.getLastThingTomorrow())) {
-			x_value = "Tomorrow " + s_12HrTimeFormat.format(x_dueDate).toLowerCase();
-		} else if((x_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
-			x_value = s_dayFormat.format(x_dueDate).toLowerCase();
+		if(DateUtil.isAllDay(p_dueDate) ? p_dueDate.before(DateUtil.getFirstThingToday()) : p_dueDate.before(x_now)) {
+			x_value = s_dateFormat.format(p_dueDate) + " " + s_12HrTimeFormat.format(p_dueDate).toLowerCase();
+		}else if(p_dueDate.before(DateUtil.getLastThingToday())) {
+			x_value = "Today " + s_12HrTimeFormat.format(p_dueDate).toLowerCase();
+		} else if(p_dueDate.before(DateUtil.getLastThingTomorrow())) {
+			x_value = "Tomorrow " + s_12HrTimeFormat.format(p_dueDate).toLowerCase();
+		} else if((p_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
+			x_value = s_dayFormat.format(p_dueDate).toLowerCase();
 			String x_firstLetter = x_value.substring(0, 1);
 			x_value = x_value.replaceFirst(x_firstLetter, x_firstLetter.toUpperCase());
 		} else {
-		 	x_value = s_dateFormat.format(x_dueDate);
+		 	x_value = s_dateFormat.format(p_dueDate);
 		}
 
 		return x_value.replace(":00", "").replace(" 12am", "");
@@ -65,7 +65,7 @@ public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
 	private Color getColourForTime(Date p_dueDate) {
 		Date x_now = new Date();
 
-		if(p_dueDate.before(x_now)) {
+		if(DateUtil.isAllDay(p_dueDate) ? p_dueDate.before(DateUtil.getFirstThingToday()) : p_dueDate.before(x_now)) {
 			return ColourConstants.s_goneByColour; // gone by
 		} else if(p_dueDate.before(DateUtil.getLastThingToday())) {
 			return ColourConstants.s_todayColour; // today

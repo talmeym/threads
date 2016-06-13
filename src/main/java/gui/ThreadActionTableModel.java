@@ -9,7 +9,7 @@ import java.util.*;
 class ThreadActionTableModel extends ComponentTableModel
 {
     ThreadActionTableModel(Thread p_thread) {
-        super(p_thread, new String[] {"Creation Date", "Thread", "Action", "Due Date", "Due"});
+        super(p_thread, new String[] {"Thread", "Action", "Due Date", "Due"});
     }
     
     public int getRowCount() {
@@ -34,10 +34,9 @@ class ThreadActionTableModel extends ComponentTableModel
         Item x_item = LookupHelper.getAllActiveActions((Thread) getComponent()).get(row);
         
         switch(col) {
-			case 0: return x_item.getCreationDate();
-			case 1: return x_item.getParentThread().getText();
-			case 2: return x_item.getText();
-			case 3: return x_item.getDueDate();
+			case 0: return x_item.getParentThread().getText();
+			case 1: return x_item.getText();
+			case 2: return x_item.getDueDate();
 			default: return DateUtil.getDateStatus(x_item.getDueDate());
         }
     }

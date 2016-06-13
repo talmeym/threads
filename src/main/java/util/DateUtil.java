@@ -9,18 +9,21 @@ public class DateUtil {
         return getDateStatus(p_date, new Date(), " ago");
     }
     
-    private static String getDateStatus(Date p_date1, Date p_date2, String p_beforeStr) {
+    private static String getDateStatus(Date p_dueDate, Date p_refDate, String p_beforeStr) {
 		// make all day events be measure against start of today
-		p_date2 = isAllDay(p_date1) ? makeStartOfDay(p_date2) : p_date2;
+		p_refDate = isAllDay(p_dueDate) ? makeStartOfDay(p_refDate) : p_refDate;
 
 		int x_weeks = 0;
         int x_days;
         int x_hours;
-        int x_mins;
-        
-        long x_diff = p_date1.getTime() - p_date2.getTime();
+        int x_minutes;
+        int x_seconds;
+
+        long x_diff = p_dueDate.getTime() - p_refDate.getTime();
         long x_time = Math.abs(x_diff);
-        
+		boolean x_past = x_diff < 0;
+        x_diff = Math.abs(x_diff);
+
         x_days = (int) (x_time / (1000 * 60 * 60 * 24));
         
         if(x_days > 10) {
@@ -29,37 +32,62 @@ public class DateUtil {
         }
         
         x_hours = (int) ((x_time / (1000 * 60 * 60)) % 24);
-        x_mins = (int) ((x_time / (1000 * 60)) % 60);
-
-		// hack to correct minutes
-        x_mins++;
-
-		if(x_mins == 60) {
-			x_hours++;
-			x_mins = 0;
-		}
+        x_minutes = (int) ((x_time / (1000 * 60)) % 60);
+		x_seconds = (int) ((x_time / (1000)) % 60);
 
         StringBuilder x_buffer = new StringBuilder();
-        
-        if(showingWeeks(x_weeks)) {
-            x_buffer.append(x_weeks).append("W ");
+
+		if(!x_past && x_seconds > 0) {
+			x_minutes += 1;
+
+			if(x_minutes == 60) {
+				x_hours += 1;
+				x_minutes = 0;
+
+				if(x_hours == 24) {
+					x_days += 1;
+					x_hours %= 24;
+
+					if(x_days > 10) {
+						x_weeks += 1;
+						x_days %= 7;
+					}
+				}
+			}
+		}
+
+		if(x_days > 0 && !(x_past ? p_dueDate.after(DateUtil.getFirstThingYesterday()) : p_dueDate.before(DateUtil.getLastThingTomorrow()))) {
+			if(x_hours > 0 || x_minutes > 0 || x_seconds > 0) {
+				x_days = x_days + 1;
+
+				if((x_weeks == 0 && x_days > 10) || (x_weeks > 0 && x_days == 7)) {
+					x_weeks = x_weeks + 1;
+					x_days = x_days % 7;
+				}
+			}
         }
 
-        if(showingDays(x_weeks, x_days)) {
-            x_buffer.append(x_days).append("D ");
-        }
+		if(showingWeeks(x_weeks)) {
+			x_buffer.append(x_weeks).append("w ");
+		}
 
-        if(showingHours(x_weeks, x_days, x_hours)) {
-            x_buffer.append(x_hours).append("H ");
-        }
+		if(showingDays(x_weeks, x_days)) {
+			x_buffer.append(x_days).append("d ");
+		}
 
-        if(showingMinutes(x_weeks, x_days, x_mins)) {
-            x_buffer.append(x_mins).append("M ");
-        }
+		if(showingHours(x_past, x_hours, p_dueDate)) {
+			x_buffer.append(x_hours).append("h ");
+		}
 
-        if(x_diff < 0) {
+		if(showingMinutes(x_past, x_minutes, p_dueDate)) {
+			x_buffer.append(x_minutes).append("m ");
+		}
+
+		if(x_past) {
             x_buffer.append(p_beforeStr);
-        }
+        } else if(x_diff == 0) {
+			x_buffer.append("Today");
+		}
 
         return x_buffer.toString();
     }
@@ -96,16 +124,16 @@ public class DateUtil {
 				&& x_calendar1.get(Calendar.DAY_OF_MONTH) == x_calendar2.get(Calendar.DAY_OF_MONTH);
 	}
 
-	private static boolean showingMinutes(int x_weeks, int x_days, int x_mins) {
-		return x_mins > 0 && x_weeks == 0 && x_days < 2;
+	private static boolean showingMinutes(boolean x_past, int x_mins, Date p_dueDate) {
+		return x_mins > 0 && (x_past ? p_dueDate.after(DateUtil.getFirstThingYesterday()) : p_dueDate.before(DateUtil.getLastThingTomorrow()));
 	}
 
-	private static boolean showingHours(int x_weeks, int x_days, int x_hours) {
-		return x_hours > 0 && x_weeks == 0 && x_days < 7;
+	private static boolean showingHours(boolean x_past, int x_hours, Date p_dueDate) {
+		return x_hours > 0 && (x_past ? p_dueDate.after(DateUtil.getFirstThingYesterday()) : p_dueDate.before(DateUtil.getLastThingTomorrow()));
 	}
 
 	private static boolean showingDays(int x_weeks, int x_days) {
-		return x_days > 0 && x_weeks < 5;
+		return x_days > 0 && x_weeks < 6;
 	}
 
 	private static boolean showingWeeks(int x_weeks) {
@@ -128,6 +156,25 @@ public class DateUtil {
 		x_calendar.set(Calendar.SECOND, 59);
 		x_calendar.set(Calendar.MILLISECOND, 999);
 		x_calendar.roll(DATE, true);
+		return x_calendar.getTime();
+	}
+
+	public static Date getFirstThingToday() {
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(HOUR_OF_DAY, 0);
+		x_calendar.set(MINUTE, 0);
+		x_calendar.set(Calendar.SECOND, 0);
+		x_calendar.set(Calendar.MILLISECOND, 0);
+		return x_calendar.getTime();
+	}
+
+	public static Date getFirstThingYesterday() {
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(HOUR_OF_DAY, 0);
+		x_calendar.set(MINUTE, 0);
+		x_calendar.set(Calendar.SECOND, 0);
+		x_calendar.set(Calendar.MILLISECOND, 0);
+		x_calendar.roll(DATE, false);
 		return x_calendar.getTime();
 	}
 }

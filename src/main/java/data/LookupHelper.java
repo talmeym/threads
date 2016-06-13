@@ -163,9 +163,10 @@ public class LookupHelper {
 
 			if(x_groupItem instanceof Item) {
 				Item x_item = (Item) x_groupItem;
+				Date x_dueDate = x_item.getDueDate();
 
-				if(x_item.isActive() && x_item.getDueDate() != null) {
-					if(x_item.getDueDate().before(new Date())) {
+				if(x_item.isActive() && x_dueDate != null) {
+					if(DateUtil.isAllDay(x_dueDate) ? x_dueDate.before(DateUtil.getFirstThingToday()) : x_dueDate.before(new Date())) {
 						x_actions.add(x_item);
 					}
 				}

@@ -50,6 +50,8 @@ public class WindowManager {
 		o_navigationWindow.setSize(o_windowSettings.getNavSize());
 		o_navigationWindow.setLocation(o_windowSettings.getNavLocation());
 		o_navigationWindow.setVisible(true);
+
+		openComponent(p_topLevelThread);
 	}
 
 	public void openComponent(final Component p_component) {
