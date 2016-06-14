@@ -42,7 +42,7 @@ public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
     }
 
 	private String getFormattedDate(Date p_dueDate) {
-		Date x_now = new Date();
+		Date x_now = DateUtil.isAllDay(p_dueDate) ? DateUtil.makeStartOfDay(new Date()) : new Date();
 		String x_value;
 
 		if(DateUtil.isAllDay(p_dueDate) ? p_dueDate.before(DateUtil.getFirstThingToday()) : p_dueDate.before(x_now)) {
@@ -63,7 +63,7 @@ public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
 	}
 
 	private Color getColourForTime(Date p_dueDate) {
-		Date x_now = new Date();
+		Date x_now = DateUtil.isAllDay(p_dueDate) ? DateUtil.makeStartOfDay(new Date()) : new Date();
 
 		if(DateUtil.isAllDay(p_dueDate) ? p_dueDate.before(DateUtil.getFirstThingToday()) : p_dueDate.before(x_now)) {
 			return ColourConstants.s_goneByColour; // gone by

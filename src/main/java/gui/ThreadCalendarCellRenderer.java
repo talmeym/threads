@@ -82,7 +82,7 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 	}
 
 	private void setColourForTime(Date p_dueDate, JList x_list) {
-		Date x_now = new Date();
+		Date x_now = DateUtil.isAllDay(p_dueDate) ? DateUtil.makeStartOfDay(new Date()) : new Date();
 
 		if(DateUtil.istoday(p_dueDate)) {
 			x_list.setBackground(ColourConstants.s_todayColour); // today

@@ -84,15 +84,21 @@ public class DateUtil {
 		}
 
 		if(x_past) {
-            x_buffer.append(p_beforeStr);
-        } else if(x_diff == 0) {
-			x_buffer.append("Today");
+			if(x_diff < 60 * 1000) {
+				x_buffer.append("Now");
+			} else {
+				x_buffer.append(p_beforeStr);
+			}
+		} else {
+			if(x_diff == 0) {
+				x_buffer.append("Today");
+			}
 		}
 
         return x_buffer.toString();
     }
 
-	private static Date makeStartOfDay(Date p_date) {
+	public static Date makeStartOfDay(Date p_date) {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.setTime(p_date);
 		x_calendar.set(Calendar.HOUR_OF_DAY, 0);

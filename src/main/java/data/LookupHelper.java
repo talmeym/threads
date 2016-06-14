@@ -33,7 +33,7 @@ public class LookupHelper {
 			}
         }
         
-        Collections.sort(x_result, new DueDateComparator());        
+        Collections.sort(x_result, new AllDayAwareDueDateComparator());
         return x_result;
     }
 
@@ -82,7 +82,7 @@ public class LookupHelper {
 			}
         }
 
-        Collections.sort(x_result, new DueDateComparator());
+        Collections.sort(x_result, new AllDayAwareDueDateComparator());
         return x_result;
     }
 
@@ -98,7 +98,7 @@ public class LookupHelper {
 			}
         }
 
-        Collections.sort(x_result, new DueDateComparator());
+        Collections.sort(x_result, new AllDayAwareDueDateComparator());
         return x_result;
     }
 
