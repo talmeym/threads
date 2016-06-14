@@ -1,10 +1,13 @@
 package util;
 
+import java.text.*;
 import java.util.*;
 
 import static java.util.Calendar.*;
 
 public class DateUtil {
+	private static final SimpleDateFormat s_timeFormat = new SimpleDateFormat("HH:mm");
+
     public static String getDateStatus(Date p_date) {
         return getDateStatus(p_date, new Date(), " ago");
     }
@@ -57,7 +60,7 @@ public class DateUtil {
 		}
 
 		if(x_days > 0 && !(x_past ? p_dueDate.after(DateUtil.getFirstThingYesterday()) : p_dueDate.before(DateUtil.getLastThingTomorrow()))) {
-			if(x_hours > 0 || x_minutes > 0 || x_seconds > 0) {
+			if((x_hours > 0 || x_minutes > 0 || x_seconds > 0) && timeIsBefore(p_dueDate, p_refDate)) {
 				x_days = x_days + 1;
 
 				if((x_weeks == 0 && x_days > 10) || (x_weeks > 0 && x_days == 7)) {
@@ -97,6 +100,18 @@ public class DateUtil {
 
         return x_buffer.toString();
     }
+
+	private static boolean timeIsBefore(Date p_dueDate, Date p_refDate) {
+		try {
+			Date x_dueTime = s_timeFormat.parse(s_timeFormat.format(p_dueDate));
+			Date x_refTime = s_timeFormat.parse(s_timeFormat.format(p_refDate));
+			boolean x_before = x_dueTime.before(x_refTime);
+			return x_before;
+		} catch(ParseException pe) {
+			// do nothing, shouldn't happen
+			throw new RuntimeException("Something happened", pe);
+		}
+	}
 
 	public static Date makeStartOfDay(Date p_date) {
 		Calendar x_calendar = Calendar.getInstance();
