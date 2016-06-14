@@ -7,16 +7,12 @@ import javax.swing.*;
 import java.util.*;
 
 public class ComponentWindow <TYPE extends Component> extends JFrame implements Observer {
-	private final TYPE o_component;
+	protected final TYPE o_component;
 
 	public ComponentWindow(TYPE p_component) {
 		this.o_component = p_component;
 		o_component.addObserver(this);
 		ImageUtil.addIcon(this);
-	}
-
-	public TYPE getComponent() {
-		return o_component;
 	}
 
 	@Override

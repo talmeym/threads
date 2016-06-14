@@ -5,9 +5,11 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="thread" type="thread"/>
+				<xs:element name="settings" type="settings" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+
 	<xs:complexType name="thread">
 		<xs:complexContent>
 			<xs:extension base="component">
@@ -27,33 +29,37 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
 	<xs:complexType name="item">
 		<xs:complexContent>
 			<xs:extension base="component">
 				<xs:sequence>
-					<xs:element name="due_dt" type="xs:dateTime" minOccurs="0"/>
+					<xs:element name="due_dt" type="xs:string" minOccurs="0"/>
 					<xs:element name="reminder" type="reminder" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
 	<xs:complexType name="reminder">
 		<xs:complexContent>
 			<xs:extension base="component">
 				<xs:sequence>
-					<xs:element name="remind_dt" type="xs:dateTime"/>
+					<xs:element name="remind_dt" type="xs:string"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
 	<xs:complexType name="component">
 		<xs:sequence>
 			<xs:element name="text" type="text"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="uuid" use="required"/>
-		<xs:attribute name="created" type="xs:dateTime" use="required"/>
+		<xs:attribute name="created" type="xs:string" use="required"/>
 		<xs:attribute name="active" type="xs:boolean" use="required"/>
 	</xs:complexType>
+
 	<xs:simpleType name="text" final="restriction">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
@@ -65,4 +71,15 @@
 			<xs:pattern value="[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"/>
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:complexType name="settings">
+		<xs:sequence>
+			<xs:element name="property" type="property" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="property">
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="value" type="xs:string"/>
+	</xs:complexType>
 </xs:schema>

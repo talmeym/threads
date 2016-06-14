@@ -18,18 +18,16 @@ public class ItemWindow extends ComponentWindow<Item> implements ActionListener 
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
 		setVisible(false);
+		Thread x_thread = (Thread) o_component.getParentComponent();
 
-		Item x_item = getComponent();
-		Thread x_thread = (Thread) x_item.getParentComponent();
-
-		if(x_item.getDueDate() == null && LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(this, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+		if(o_component.getDueDate() == null && LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(this, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 			for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
 				ThreadItem x_groupItem = x_thread.getThreadItem(i);
 
 				if(x_groupItem instanceof Item)  {
 					Item x_otherItem = (Item) x_groupItem;
 
-					if(x_otherItem != x_item && x_otherItem.getDueDate() == null && x_otherItem.isActive()) {
+					if(x_otherItem != o_component && x_otherItem.getDueDate() == null && x_otherItem.isActive()) {
 						x_otherItem.setActive(false);
 					}
 				}

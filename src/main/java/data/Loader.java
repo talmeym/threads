@@ -12,7 +12,7 @@ public class Loader {
 	// TODO turn schema validation back on soon
 
     public static Thread loadDocumentThread(String p_xmlPath) {
-        SAXBuilder x_builder = new SAXBuilder(false);
+        SAXBuilder x_builder = new SAXBuilder(true);
         x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
         x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
         x_builder.setEntityResolver(new EntityResolver() {
@@ -36,7 +36,7 @@ public class Loader {
     }
     
     public static Properties loadDocumentSettings(String p_xmlPath) {
-        SAXBuilder x_builder = new SAXBuilder(false);
+        SAXBuilder x_builder = new SAXBuilder(true);
         x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
         x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
         x_builder.setEntityResolver(new EntityResolver() {
