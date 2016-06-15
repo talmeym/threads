@@ -1,6 +1,6 @@
 package data;
 
-import util.TextComparator;
+import util.*;
 
 import java.util.*;
 
@@ -46,6 +46,15 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
         o_dueDate = p_dueDate;
         changed();
     }
+
+	@Override
+	public boolean isDue() {
+		if(isActive() && o_dueDate != null) {
+			return DateUtil.isAllDay(o_dueDate) ? o_dueDate.before(DateUtil.getFirstThingToday()) : o_dueDate.before(new Date());
+		}
+
+		return false;
+	}
 
 	public String getType() {
 		return o_dueDate != null ? "Action" : "Update";

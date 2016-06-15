@@ -98,7 +98,7 @@ public class LookupHelper {
 			}
         }
 
-        Collections.sort(x_result, new AllDayAwareDueDateComparator());
+        Collections.sort(x_result, new DueDateComparator());
         return x_result;
     }
 
@@ -163,12 +163,9 @@ public class LookupHelper {
 
 			if(x_groupItem instanceof Item) {
 				Item x_item = (Item) x_groupItem;
-				Date x_dueDate = x_item.getDueDate();
 
-				if(x_item.isActive() && x_dueDate != null) {
-					if(DateUtil.isAllDay(x_dueDate) ? x_dueDate.before(DateUtil.getFirstThingToday()) : x_dueDate.before(new Date())) {
-						x_actions.add(x_item);
-					}
+				if(x_item.isActive() && x_item.isDue()) {
+					x_actions.add(x_item);
 				}
 			}
 		}
@@ -201,7 +198,7 @@ public class LookupHelper {
 			for(int i = 0; i < p_item.getReminderCount(); i++) {
 				Reminder x_reminder = p_item.getReminder(i);
 
-				if(x_reminder.isActive() && x_reminder.getDueDate().before(new Date())) {
+				if(x_reminder.isActive() && x_reminder.isDue()) {
 					x_dueActiveReminders.add(x_reminder);
 				}
 			}

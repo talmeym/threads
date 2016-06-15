@@ -41,10 +41,6 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 			x_list.setBackground(ColourConstants.s_offMonthColour);
 		}
 
-//		if(x_today) {
-//			x_list.setBackground(ColourConstants.s_selectedColour);
-//		}
-
 		return x_list;
 	}
 
@@ -83,8 +79,20 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 
 	private void setColourForTime(Date p_dueDate, JList x_list) {
 		Date x_now = DateUtil.isAllDay(p_dueDate) ? DateUtil.makeStartOfDay(new Date()) : new Date();
+		boolean x_dueAction = false;
 
-		if(DateUtil.istoday(p_dueDate)) {
+		for(int i = 0; i < x_list.getModel().getSize(); i++) {
+			Object x_obj = x_list.getModel().getElementAt(i);
+
+			if(x_obj instanceof Item && ((Item)x_obj).isDue()) {
+				x_dueAction = true;
+				break;
+			}
+		}
+
+		if(x_dueAction) {
+			x_list.setBackground(ColourConstants.s_goneByColour);
+		} else if(DateUtil.istoday(p_dueDate)) {
 			x_list.setBackground(ColourConstants.s_todayColour); // today
 		} else if(p_dueDate.after(DateUtil.getLastThingToday()) && p_dueDate.before(DateUtil.getLastThingTomorrow())) {
 			x_list.setBackground(ColourConstants.s_tomorrowColour); // tomorrow
