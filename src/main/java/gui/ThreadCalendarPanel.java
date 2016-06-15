@@ -66,6 +66,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 		x_buttonPanel.add(o_previousButton);
 		x_buttonPanel.add(o_todalButton);
 		x_buttonPanel.add(o_nextButton);
+		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0	));
 
 		add(o_currentMonthLabel, BorderLayout.NORTH);
 		add(x_buttonPanel, BorderLayout.SOUTH);

@@ -12,7 +12,9 @@ public class AllDayAwareDueDateComparator implements Comparator<HasDueDate>
 
 		if(x_dueDate1 != null && x_dueDate2 != null) {
 			if(DateUtil.isSameDay(x_dueDate1, x_dueDate2)) {
-				return DateUtil.isAllDay(x_dueDate2) && DateUtil.isAllDay(x_dueDate2)? 0 : DateUtil.isAllDay(x_dueDate1) ? 1 : -1;
+				if(DateUtil.isAllDay(x_dueDate1) || DateUtil.isAllDay(x_dueDate2)) {
+					return x_dueDate1.compareTo(obj2.getDueDate()) * -1;
+				}
 			}
 
 			return x_dueDate1.compareTo(obj2.getDueDate());
