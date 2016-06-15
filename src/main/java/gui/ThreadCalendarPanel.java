@@ -15,7 +15,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
 	private Thread o_thread;
-	private JButton o_currentMonthButton = new JButton(getMonthLabel(Calendar.getInstance().get(Calendar.MONTH)));
+	private JLabel o_currentMonthLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(Calendar.MONTH)));
 
 	public ThreadCalendarPanel(Thread p_thread) {
 		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
@@ -49,8 +49,8 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 			}
 		});
 
-		o_currentMonthButton.setToolTipText("Press to return to Today");
-		o_currentMonthButton.addActionListener(new ActionListener() {
+		JButton o_todalButton = new JButton("Today");
+		o_todalButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
 				int x_month = Calendar.getInstance().get(Calendar.MONTH);
@@ -59,21 +59,16 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 			}
 		});
 
-		o_currentMonthButton.setHorizontalAlignment(JLabel.CENTER);
+		o_currentMonthLabel.setHorizontalAlignment(JLabel.CENTER);
+		o_currentMonthLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
-		JPanel x_centrePanel = new JPanel();
-		BoxLayout boxLayout = new BoxLayout(x_centrePanel, BoxLayout.X_AXIS);
-		x_centrePanel.setLayout(boxLayout);
-		x_centrePanel.add(Box.createHorizontalGlue());
-		x_centrePanel.add(o_currentMonthButton);
-		x_centrePanel.add(Box.createHorizontalGlue());
+		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		x_buttonPanel.add(o_previousButton);
+		x_buttonPanel.add(o_todalButton);
+		x_buttonPanel.add(o_nextButton);
 
-		JPanel x_buttonPanel = new JPanel(new BorderLayout());
-		x_buttonPanel.add(o_previousButton, BorderLayout.WEST);
-		x_buttonPanel.add(x_centrePanel, BorderLayout.CENTER);
-		x_buttonPanel.add(o_nextButton, BorderLayout.EAST);
-
-		add(x_buttonPanel, BorderLayout.NORTH);
+		add(o_currentMonthLabel, BorderLayout.NORTH);
+		add(x_buttonPanel, BorderLayout.SOUTH);
 	}
 
 	private void changeMonth(boolean up) {
@@ -88,7 +83,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 		ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
 		((ThreadCalendarCellRenderer)o_table.getCellRenderer(0, 0)).setMonth(x_month);
 		x_model.setMonth(x_month);
-		o_currentMonthButton.setText(getMonthLabel(x_month));
+		o_currentMonthLabel.setText(getMonthLabel(x_month));
 	}
 
 	@Override
