@@ -131,7 +131,10 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
         if(p_row != -1) {
 			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_row);
 			WindowManager.getInstance().openComponent(x_thread);
-			ThreadPanel.setTabIndex(p_col > 2 ? p_col - 2 : -1);
+
+			if(p_col > 2) {
+				ThreadPanel.setTabIndex(p_col - 2);
+			}
 		}
     }
 

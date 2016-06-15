@@ -131,8 +131,12 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 
 	void tableRowDoubleClicked(int p_row, int p_col) {
 		if(p_row != -1) {
-			WindowManager.getInstance().openComponent(o_thread.getThreadItem(p_row));
-			ThreadPanel.setTabIndex(p_col > 2 ? p_col - 2 : -1);
+			ThreadItem x_threadItem = o_thread.getThreadItem(p_row);
+			WindowManager.getInstance().openComponent(x_threadItem);
+
+			if(x_threadItem instanceof Thread && p_col > 2) {
+				ThreadPanel.setTabIndex(p_col - 2);
+			}
 		}
     }
 
