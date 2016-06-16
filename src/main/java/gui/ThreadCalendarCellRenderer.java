@@ -24,7 +24,7 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 		Date x_date = (Date) x_values[0];
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.setTime(x_date);
-		boolean x_today = DateUtil.istoday(x_date);
+		boolean x_today = DateUtil.isToday(x_date);
 
 		Object[] x_listValues = new Object[x_values.length];
 		System.arraycopy(x_values, 1, x_listValues, 1, x_values.length - 1);
@@ -77,8 +77,7 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 
 	}
 
-	private void setColourForTime(Date p_dueDate, JList x_list) {
-		Date x_now = DateUtil.isAllDay(p_dueDate) ? DateUtil.makeStartOfDay(new Date()) : new Date();
+	private static void setColourForTime(Date p_dueDate, JList x_list) {
 		boolean x_dueAction = false;
 
 		for(int i = 0; i < x_list.getModel().getSize(); i++) {
@@ -92,12 +91,13 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 
 		if(x_dueAction) {
 			x_list.setBackground(ColourConstants.s_goneByColour);
-		} else if(DateUtil.istoday(p_dueDate)) {
-			x_list.setBackground(ColourConstants.s_todayColour); // today
-		} else if(p_dueDate.after(DateUtil.getLastThingToday()) && p_dueDate.before(DateUtil.getLastThingTomorrow())) {
-			x_list.setBackground(ColourConstants.s_tomorrowColour); // tomorrow
-		} else if(p_dueDate.after(DateUtil.getLastThingToday()) && (p_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
+		} else if(DateUtil.isToday(p_dueDate)) {
+			x_list.setBackground(ColourConstants.s_todayColour);
+		} else if(DateUtil.isTomorrow(p_dueDate)) {
+			x_list.setBackground(ColourConstants.s_tomorrowColour);
+		} else if(DateUtil.isWithin7Days(p_dueDate)) {
 			x_list.setBackground(ColourConstants.s_thisWeekColour);
 		}
 	}
+
 }

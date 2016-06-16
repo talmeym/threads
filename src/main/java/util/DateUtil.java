@@ -1,5 +1,8 @@
 package util;
 
+import gui.ColourConstants;
+
+import java.awt.*;
 import java.text.*;
 import java.util.*;
 
@@ -7,9 +10,14 @@ import static java.util.Calendar.*;
 
 public class DateUtil {
 	private static final SimpleDateFormat s_timeFormat = new SimpleDateFormat("HH:mm");
+	
+	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy");
+	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mmaa");
+	public static final DateFormat s_dayFormat = new SimpleDateFormat("EEEE h:mmaa");
 
-    public static String getDateStatus(Date p_date) {
-        return getDateStatus(p_date, new Date(), " ago");
+
+	public static String getDateStatus(Date p_date) {
+        return getDateStatus(p_date, new Date(), "ago");
     }
     
     private static String getDateStatus(Date p_dueDate, Date p_refDate, String p_beforeStr) {
@@ -59,7 +67,7 @@ public class DateUtil {
 			}
 		}
 
-		if(x_days > 0 && !(x_past ? p_dueDate.after(DateUtil.getFirstThingYesterday()) : p_dueDate.before(DateUtil.getLastThingTomorrow()))) {
+		if(x_days > 0 && !(x_past ? p_dueDate.after(getFirstThingYesterday()) : p_dueDate.before(getLastThingTomorrow()))) {
 			if((x_hours > 0 || x_minutes > 0 || x_seconds > 0) && timeIsBefore(p_dueDate, p_refDate)) {
 				x_days = x_days + 1;
 
@@ -86,16 +94,12 @@ public class DateUtil {
 			x_buffer.append(x_minutes).append("m ");
 		}
 
-		if(x_past) {
-			if(x_diff < 60 * 1000) {
-				x_buffer.append("Now");
-			} else {
-				x_buffer.append(p_beforeStr);
-			}
-		} else {
-			if(x_diff == 0) {
-				x_buffer.append("Today");
-			}
+		if(x_past ? x_diff < 60 * 1000 : x_diff == 0) {
+			x_buffer.append("Now");
+		}
+
+		if(x_past && x_diff >= 60 * 1000) {
+			x_buffer.append(p_beforeStr);
 		}
 
         return x_buffer.toString();
@@ -129,8 +133,21 @@ public class DateUtil {
 		return x_calendar.get(Calendar.HOUR_OF_DAY) == 0 && x_calendar.get(Calendar.MINUTE) == 0;
 	}
 
-	public static boolean istoday(Date p_date) {
-	    return isSameDay(p_date, new Date());
+	public static boolean isToday(Date p_date) {
+	    return isSameDay(p_date, getFirstThingToday());
+	}
+
+	public static boolean isYesterday(Date p_date) {
+	    return isSameDay(p_date, getFirstThingYesterday());
+	}
+
+	public static boolean isTomorrow(Date p_date) {
+	    return isSameDay(p_date, getLastThingTomorrow());
+	}
+
+	public static boolean isWithin7Days(Date p_dueDate) {
+		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
+		return Math.abs(p_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7);
 	}
 
 	public static boolean isSameDay(Date p_date, Date p_referenceDate) {
@@ -146,11 +163,11 @@ public class DateUtil {
 	}
 
 	private static boolean showingMinutes(boolean x_past, int x_mins, Date p_dueDate) {
-		return x_mins > 0 && (x_past ? p_dueDate.after(DateUtil.getFirstThingYesterday()) : p_dueDate.before(DateUtil.getLastThingTomorrow()));
+		return x_mins > 0 && (x_past ? p_dueDate.after(getFirstThingYesterday()) : p_dueDate.before(getLastThingTomorrow()));
 	}
 
 	private static boolean showingHours(boolean x_past, int x_hours, Date p_dueDate) {
-		return x_hours > 0 && (x_past ? p_dueDate.after(DateUtil.getFirstThingYesterday()) : p_dueDate.before(DateUtil.getLastThingTomorrow()));
+		return x_hours > 0 && (x_past ? p_dueDate.after(getFirstThingYesterday()) : p_dueDate.before(getLastThingTomorrow()));
 	}
 
 	private static boolean showingDays(int x_weeks, int x_days) {
@@ -197,5 +214,43 @@ public class DateUtil {
 		x_calendar.set(Calendar.MILLISECOND, 0);
 		x_calendar.roll(DATE, false);
 		return x_calendar.getTime();
+	}
+
+	public static String getFormattedDate(Date p_dueDate) {
+		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
+		String x_value;
+
+		if(isYesterday(p_dueDate)) {
+			x_value = "Yesterday " + s_12HrTimeFormat.format(p_dueDate).toLowerCase();
+		} else if(isToday(p_dueDate)) {
+			x_value = "Today " + s_12HrTimeFormat.format(p_dueDate).toLowerCase();
+		} else if(isYesterday(p_dueDate)) {
+			x_value = "Tomorrow " + s_12HrTimeFormat.format(p_dueDate).toLowerCase();
+		} else if(Math.abs(p_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
+			x_value = s_dayFormat.format(p_dueDate).toLowerCase();
+			String x_firstLetter = x_value.substring(0, 1);
+			x_value = x_value.replaceFirst(x_firstLetter, x_firstLetter.toUpperCase());
+		} else {
+			x_value = s_dateFormat.format(p_dueDate);
+		}
+
+		return x_value.replace(":00", "").replace(" 12am", "");
+	}
+
+
+	public static Color getColourForTime(Date p_dueDate) {
+		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
+
+		if(isAllDay(p_dueDate) ? p_dueDate.before(getFirstThingToday()) : p_dueDate.before(x_now)) {
+			return ColourConstants.s_goneByColour; // gone by
+		} else if(p_dueDate.before(getLastThingToday())) {
+			return ColourConstants.s_todayColour; // today
+		} else if(p_dueDate.before(getLastThingTomorrow())) {
+			return ColourConstants.s_tomorrowColour; // tomorrow
+		} else if((p_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
+			return ColourConstants.s_thisWeekColour;
+		}
+
+		return Color.WHITE;
 	}
 }
