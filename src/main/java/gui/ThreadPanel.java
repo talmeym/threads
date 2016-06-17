@@ -77,9 +77,11 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
     private void setReminderTabBackground() {
         if(LookupHelper.getAllDueReminders(o_thread).size() > 0) {
             o_tabs.setTitleAt(5, "Reminders *");
+            o_tabs.setForegroundAt(5, Color.black);
             o_tabs.setBackgroundAt(5, Color.red);
         } else {
 			o_tabs.setTitleAt(5, "Reminders");
+			o_tabs.setForegroundAt(5, Color.lightGray);
             o_tabs.setBackgroundAt(5, o_tabs.getBackgroundAt(1));
         }
     }

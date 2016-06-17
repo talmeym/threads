@@ -74,7 +74,7 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
 
 	void tableRowDoubleClicked(int row, int col) {
         switch(col) {
-			case 1: showItem(row); break;
+			case 0: showItem(row); break;
 			default: showReminder(row); break;
         }
     }
