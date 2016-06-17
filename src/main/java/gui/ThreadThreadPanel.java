@@ -20,11 +20,10 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		o_thread = p_thread;
 		o_thread.addObserver(this);
 
-        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(1, GUIConstants.s_threadColumnWidth);
+        fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
+		fixColumnWidth(2, GUIConstants.s_statsColumnWidth);
 		fixColumnWidth(3, GUIConstants.s_statsColumnWidth);
 		fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
-		fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
 
 		JButton o_addButton = new JButton("Add");
 		o_addButton.addActionListener(new ActionListener() {
@@ -116,8 +115,8 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_row);
 			WindowManager.getInstance().openComponent(x_thread);
 
-			if(p_col > 2) {
-				ThreadPanel.setTabIndex(p_col - 2);
+			if(p_col > 1) {
+				ThreadPanel.setTabIndex(p_col - 1);
 			}
 		}
     }
@@ -130,7 +129,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 
     void tableRowDoubleClicked(int p_row, int p_col) {
 		switch(p_col) {
-			case 1: showParentThread(p_row); break;
+			case 0: showParentThread(p_row); break;
 			default: showThread(p_col, p_row);
 		}
     }

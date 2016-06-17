@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class ItemReminderTableModel extends ComponentTableModel {
     public ItemReminderTableModel(Item p_item) {
-        super(p_item, new String[] {"Creation Date", "Text", "Due Date", "Due"});
+        super(p_item, new String[] {"Text", "Due Date", "Due"});
     }
 
 	@Override
@@ -24,8 +24,7 @@ public class ItemReminderTableModel extends ComponentTableModel {
 	@Override
     public Class getColumnClass(int col) {
         switch(col) {
-			case 0:
-			case 2: return Date.class;
+			case 1: return Date.class;
 			default: return String.class;
         }        
     }
@@ -35,9 +34,8 @@ public class ItemReminderTableModel extends ComponentTableModel {
 		Reminder x_reminder = ((Item)getComponent()).getReminder(row);
         
         switch(col) {
-			case 0: return x_reminder.getCreationDate();
-			case 1: return x_reminder.getText();
-			case 2: return x_reminder.getDueDate();
+			case 0: return x_reminder.getText();
+			case 1: return x_reminder.getDueDate();
 			default: return DateUtil.getDateStatus(x_reminder.getDueDate());
         }
     }    

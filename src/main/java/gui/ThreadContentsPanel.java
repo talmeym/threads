@@ -58,15 +58,17 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
     }
 
 	public void add(int p_index) {
-		int x_option = JOptionPane.showOptionDialog(this, "What would you like to add ?", "Choose Addition", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), new Object[]{"Thread", "Item"}, "Thread");
+		String[] x_options = {"Update", "Thread", "Action", "Cancel"};
+		int x_selection = JOptionPane.showOptionDialog(this, "What would you like to add ?", "Choose Addition", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_options, x_options[2]);
 
-		switch(x_option) {
-			case 0: addThread(p_index); break;
-			case 1: addItem(p_index); break;
+		switch(x_selection) {
+			case 0:
+			case 2: addItem(p_index, x_options[x_selection]); break;
+			case 1: addThread(p_index);
 		}
 	}
 
-	protected void addItem(int p_index) {
+	protected void addItem(int p_index, String p_type) {
 		Thread x_thread;
 
 		if(p_index != -1 && o_thread.getThreadItem(p_index) instanceof Thread) {
@@ -77,14 +79,14 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 			x_threads.add(0, o_thread);
 
 			if(x_threads.size() > 1) {
-				x_thread = (Thread) JOptionPane.showInputDialog(this, "What would you like to add to ?", "Choose Destination", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+				x_thread = (Thread) JOptionPane.showInputDialog(this, "What would you like to add it to ?", "Choose Destination", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 			} else {
 				x_thread = o_thread;
 			}
 		}
 
 		if(x_thread != null) {
-			String x_text = (String) JOptionPane.showInputDialog(this, "Please enter new Item text", "Add new Item to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Item");
+			String x_text = (String) JOptionPane.showInputDialog(this, "Please enter new " + p_type + " text", "Add new " + p_type + " to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Item");
 
 			if(x_text != null) {
 				Item x_item = new Item(x_text);

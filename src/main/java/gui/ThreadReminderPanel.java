@@ -17,10 +17,9 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
         super(new ThreadReminderTableModel(p_thread), new ComponentCellRenderer(null));
 		o_thread = p_thread;
 
-        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(1, GUIConstants.s_threadColumnWidth);
-        fixColumnWidth(3, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(4, GUIConstants.s_dateStatusColumnWidth);
+        fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
+        fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
+        fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
 
 		o_dismissButton.setEnabled(false);
 		o_dismissButton.addActionListener(new ActionListener() {

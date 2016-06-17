@@ -16,9 +16,8 @@ class ItemPanel extends ComponentTablePanel {
         super(new ItemReminderTableModel(p_item),  new ComponentCellRenderer(p_item));
         o_item = p_item;
 
-        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
+        fixColumnWidth(1, GUIConstants.s_creationDateColumnWidth);
+        fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
 
 		final JButton x_addReminderButton = new JButton("Add Reminder");
 		x_addReminderButton.setEnabled(o_item.getDueDate() != null);
@@ -101,7 +100,7 @@ class ItemPanel extends ComponentTablePanel {
 
         JPanel x_panel = new JPanel(new BorderLayout());
         x_panel.add(new ComponentInfoPanel(p_item, x_listener), BorderLayout.NORTH);
-        x_panel.add(new DateSuggestionPanel(o_item, x_listener), BorderLayout.CENTER);
+        x_panel.add(new DateSuggestionPanel(o_item, this, x_listener), BorderLayout.CENTER);
 
         JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
         x_buttonPanel.add(x_addReminderButton);

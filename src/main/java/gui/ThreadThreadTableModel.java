@@ -5,7 +5,7 @@ import data.*;
 
 class ThreadThreadTableModel extends ComponentTableModel {
     ThreadThreadTableModel(Thread p_thread) {
-        super(p_thread, new String[]{"Creation Date", "Parent", "Thread", "Threads", "Updates", "Actions"});
+        super(p_thread, new String[]{"Parent", "Thread", "Threads", "Updates", "Actions"});
     }
 
 	@Override
@@ -29,11 +29,10 @@ class ThreadThreadTableModel extends ComponentTableModel {
         Thread x_thread = LookupHelper.getAllActiveThreads((Thread) getComponent()).get(row);
         
         switch(col) {
-			case 0: return x_thread.getCreationDate();
-			case 1: return x_thread.getParentThread().getText();
-			case 2: return x_thread.getText();
-			case 3: return LookupHelper.getAllActiveThreads(x_thread).size();
-			case 4: return LookupHelper.getActiveUpdates(x_thread).size();
+			case 0: return x_thread.getParentThread().getText();
+			case 1: return x_thread.getText();
+			case 2: return LookupHelper.getAllActiveThreads(x_thread).size();
+			case 3: return LookupHelper.getActiveUpdates(x_thread).size();
 			default: return LookupHelper.getActiveActions(x_thread).size();
         }
     }
