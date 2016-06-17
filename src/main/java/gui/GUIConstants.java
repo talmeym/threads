@@ -10,7 +10,7 @@ class GUIConstants
     public static final int s_creationDateColumnWidth = 130;
     public static final int s_typeColumnWidth = 150;
     public static final int s_threadColumnWidth = 220;
-    public static final int s_dateStatusColumnWidth = 90;
+    public static final int s_dateStatusColumnWidth = 110;
     public static final int s_lastUpdatedColumnWidth = 110;
 	public static final int s_statsColumnWidth = 90;
 

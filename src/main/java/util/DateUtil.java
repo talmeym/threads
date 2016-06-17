@@ -145,9 +145,11 @@ public class DateUtil {
 	    return isSameDay(p_date, getLastThingTomorrow());
 	}
 
-	public static boolean isWithin7Days(Date p_dueDate) {
+	public static boolean isWithin7Days(Date p_dueDate, boolean p_includePast) {
 		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
-		return Math.abs(p_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7);
+		long x_diff = p_dueDate.getTime() - x_now.getTime();
+		int x_sevenDays = 1000 * 60 * 60 * 24 * 7;
+		return p_includePast ? Math.abs(x_diff) < x_sevenDays : x_diff > 0 && x_diff < x_sevenDays;
 	}
 
 	public static boolean isSameDay(Date p_date, Date p_referenceDate) {
@@ -217,16 +219,15 @@ public class DateUtil {
 	}
 
 	public static String getFormattedDate(Date p_dueDate) {
-		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
 		String x_value;
 
 		if(isYesterday(p_dueDate)) {
 			x_value = "Yesterday " + s_12HrTimeFormat.format(p_dueDate).toLowerCase();
 		} else if(isToday(p_dueDate)) {
 			x_value = "Today " + s_12HrTimeFormat.format(p_dueDate).toLowerCase();
-		} else if(isYesterday(p_dueDate)) {
+		} else if(isTomorrow(p_dueDate)) {
 			x_value = "Tomorrow " + s_12HrTimeFormat.format(p_dueDate).toLowerCase();
-		} else if(Math.abs(p_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
+		} else if(isWithin7Days(p_dueDate, true)) {
 			x_value = s_dayFormat.format(p_dueDate).toLowerCase();
 			String x_firstLetter = x_value.substring(0, 1);
 			x_value = x_value.replaceFirst(x_firstLetter, x_firstLetter.toUpperCase());
@@ -242,12 +243,12 @@ public class DateUtil {
 		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
 
 		if(isAllDay(p_dueDate) ? p_dueDate.before(getFirstThingToday()) : p_dueDate.before(x_now)) {
-			return ColourConstants.s_goneByColour; // gone by
-		} else if(p_dueDate.before(getLastThingToday())) {
-			return ColourConstants.s_todayColour; // today
-		} else if(p_dueDate.before(getLastThingTomorrow())) {
-			return ColourConstants.s_tomorrowColour; // tomorrow
-		} else if((p_dueDate.getTime() - x_now.getTime()) < (1000 * 60 * 60 * 24 * 7)) { // within 7 days
+			return ColourConstants.s_goneByColour;
+		} else if(isToday(p_dueDate)) {
+			return ColourConstants.s_todayColour;
+		} else if(isTomorrow(p_dueDate)) {
+			return ColourConstants.s_tomorrowColour;
+		} else if(isWithin7Days(p_dueDate, true)) {
 			return ColourConstants.s_thisWeekColour;
 		}
 

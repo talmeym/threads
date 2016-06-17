@@ -1,6 +1,7 @@
 package gui;
 
 import data.*;
+import data.Thread;
 import util.ImageUtil;
 
 import javax.swing.*;
@@ -9,11 +10,9 @@ import java.awt.event.*;
 
 class ItemPanel extends ComponentTablePanel {
     private final Item o_item;
-	private final JButton o_addReminderButton = new JButton("Add Reminder");
 	private final JButton o_removeReminderButton = new JButton("Remove Reminder");
-    private final JButton o_closeButton = new JButton("Close");
 
-    ItemPanel(Item p_item, ActionListener p_listener) {
+	ItemPanel(Item p_item) {
         super(new ItemReminderTableModel(p_item),  new ComponentCellRenderer(p_item));
         o_item = p_item;
 
@@ -21,32 +20,68 @@ class ItemPanel extends ComponentTablePanel {
         fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
 
-		o_addReminderButton.setEnabled(o_item.getDueDate() != null);
+		final JButton x_addReminderButton = new JButton("Add Reminder");
+		x_addReminderButton.setEnabled(o_item.getDueDate() != null);
 		o_removeReminderButton.setEnabled(false);
-		o_closeButton.addActionListener(p_listener);
+
+		final JPanel x_this = this;
+		final JButton x_closeButton = new JButton("Close");
+		x_closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				WindowManager.getInstance().closeComponent(o_item);
+				Thread x_thread = o_item.getParentThread();
+
+				if (o_item.getDueDate() == null && LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(x_this, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+					for (int i = 0; i < x_thread.getThreadItemCount(); i++) {
+						ThreadItem x_groupItem = x_thread.getThreadItem(i);
+
+						if (x_groupItem instanceof Item) {
+							Item x_otherItem = (Item) x_groupItem;
+
+							if (x_otherItem != o_item && x_otherItem.getDueDate() == null && x_otherItem.isActive()) {
+								x_otherItem.setActive(false);
+							}
+						}
+					}
+				}
+			}
+		});
+
+		JButton x_removeButton = new JButton("Remove");
+		x_removeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				Thread x_thread = o_item.getParentThread();
+
+				if (JOptionPane.showConfirmDialog(x_this, "Remove '" + o_item.getText() + "' from '" + x_thread.getText() + "' ?", "Remove " + o_item.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+					x_thread.removeThreadItem(o_item);
+					WindowManager.getInstance().closeComponent(o_item);
+					WindowManager.getInstance().openComponent(x_thread);
+				}
+			}
+		});
 
 		ComponentInfoChangeListener x_listener = new ComponentInfoChangeListener() {
 			@Override
 			public void componentInfoChanged(boolean saved) {
-				o_closeButton.setText(saved ? "Close" : "Cancel");
+				x_closeButton.setText(saved ? "Close" : "Cancel");
 
 				if(saved) {
-					o_addReminderButton.setEnabled(o_item.getDueDate() != null);
+					x_addReminderButton.setEnabled(o_item.getDueDate() != null);
 				}
 			}
 		};
 
-		o_addReminderButton.addActionListener(new ActionListener() {
+		x_addReminderButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(o_item.getDueDate() != null) {
+				if (o_item.getDueDate() != null) {
 					Reminder x_reminder = new Reminder(o_item);
 					o_item.addReminder(x_reminder);
 					WindowManager.getInstance().openComponent(x_reminder);
 				}
 			}
 		});
-
-		final JPanel x_this = this;
 
         o_removeReminderButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
@@ -56,7 +91,7 @@ class ItemPanel extends ComponentTablePanel {
 					if(x_index != -1) {
 						Reminder x_reminder = o_item.getReminder(x_index);
 
-						if(JOptionPane.showConfirmDialog(x_this, "Remove Reminder '" + x_reminder.getText() + "' ?", "Remove Reminder?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+						if(JOptionPane.showConfirmDialog(x_this, "Remove '" + x_reminder.getText() + "' from '" + o_item.getText() + "' ?", "Remove Reminder?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 							o_item.removeReminder(x_reminder);
 						}
 					}
@@ -69,9 +104,10 @@ class ItemPanel extends ComponentTablePanel {
         x_panel.add(new DateSuggestionPanel(o_item, x_listener), BorderLayout.CENTER);
 
         JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
-        x_buttonPanel.add(o_addReminderButton);
+        x_buttonPanel.add(x_addReminderButton);
         x_buttonPanel.add(o_removeReminderButton);
-        x_buttonPanel.add(o_closeButton);
+        x_buttonPanel.add(x_closeButton);
+        x_buttonPanel.add(x_removeButton);
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         
         add(x_panel, BorderLayout.NORTH);

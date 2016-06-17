@@ -12,7 +12,8 @@ import java.util.List;
 
 class ThreadThreadPanel extends ComponentTablePanel implements Observer {
     private final Thread o_thread;
-	private final JButton o_removeButton = new JButton("Remove Selected");
+	private final JButton o_dismissButton = new JButton("Dismiss");
+	private final JButton o_removeButton = new JButton("Remove");
 
     ThreadThreadPanel(Thread p_thread) {
         super(new ThreadThreadTableModel(p_thread), new ComponentCellRenderer(null));
@@ -25,17 +26,17 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
 		fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
 
-		JButton o_addItemButton = new JButton("Add Item");
-		o_addItemButton.addActionListener(new ActionListener() {
+		JButton o_addButton = new JButton("Add");
+		o_addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addItem(getSelectedRow());
+				addThread(getSelectedRow());
 			}
 		});
 
-		JButton o_addThreadButton = new JButton("Add Thread");
-		o_addThreadButton.addActionListener(new ActionListener() {
+		o_dismissButton.setEnabled(false);
+		o_dismissButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				addThread(getSelectedRow());
+				dismissThread(getSelectedRow());
 			}
 		});
 
@@ -47,39 +48,12 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		});
 
 		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
-		x_buttonPanel.add(o_addItemButton);
-		x_buttonPanel.add(o_addThreadButton);
+		x_buttonPanel.add(o_addButton);
+		x_buttonPanel.add(o_dismissButton);
 		x_buttonPanel.add(o_removeButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
-	}
-
-	protected void addItem(int p_index) {
-		List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
-		Thread x_thread;
-
-		if(p_index != -1) {
-			x_thread = x_threads.get(p_index);
-		} else {
-			x_threads.add(0, o_thread);
-
-			if(x_threads.size() > 1) {
-				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose thread", "Add new Item ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-			} else {
-				x_thread = o_thread;
-			}
-		}
-
-		if(x_thread != null) {
-			String x_text = (String) JOptionPane.showInputDialog(this, "Enter Item Text", "Add new Item to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Item");
-
-			if(x_text != null) {
-				Item x_item = new Item(x_text);
-				x_thread.addThreadItem(x_item);
-				WindowManager.getInstance().openComponent(x_item);
-			}
-		}
 	}
 
 	private void addThread(int p_index) {
@@ -92,14 +66,14 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 			x_threads.add(0, o_thread);
 
 			if(x_threads.size() > 1) {
-				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose thread", "Add new Thread ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+				x_thread = (Thread) JOptionPane.showInputDialog(this, "What would you like to add to ?", "Choose Destination", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 			} else {
 				x_thread = o_thread;
 			}
 		}
 
 		if(x_thread != null) {
-			String x_name = (String) JOptionPane.showInputDialog(this, "Enter Thread Name", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
+			String x_name = (String) JOptionPane.showInputDialog(this, "Please enter new Thread name", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
 
 			if(x_name != null) {
 				Thread x_newThread = new Thread(x_name);
@@ -109,12 +83,22 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		}
 	}
 
+	private void dismissThread(int p_index) {
+		if(p_index != -1) {
+			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
+
+			if(JOptionPane.showConfirmDialog(this, "Set '" + x_thread.getText() + "' inactive ?", "Dismiss Thread ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				x_thread.setActive(false);
+			}
+		}
+	}
+
 	private void removeComponent(int p_index) {
 		if(p_index != -1) {
 			ThreadItem x_threadItem = (ThreadItem) LookupHelper.getAllActiveThreads(o_thread).get(p_index);
 			Thread x_parent = (Thread) x_threadItem.getParentComponent();
 
-			if(JOptionPane.showConfirmDialog(this, "Remove " + x_threadItem.getType() + " '" + x_threadItem.getText() + "' ?", "Remove " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_threadItem.getText() + "' from '" + x_threadItem.getParentThread().getText() + "' ?", "Remove " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_parent.removeThreadItem(x_threadItem);
 			}
 		}
@@ -139,14 +123,15 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
     }
 
 	@Override
-	void tableRowClicked(int row, int col) {
-		o_removeButton.setEnabled(row != -1);
+	void tableRowClicked(int p_row, int p_col) {
+		o_dismissButton.setEnabled(p_row != -1);
+		o_removeButton.setEnabled(p_row != -1);
 	}
 
-    void tableRowDoubleClicked(int row, int col) {
-		switch(col) {
-			case 1: showParentThread(row); break;
-			default: showThread(col, row);
+    void tableRowDoubleClicked(int p_row, int p_col) {
+		switch(p_col) {
+			case 1: showParentThread(p_row); break;
+			default: showThread(p_col, p_row);
 		}
     }
 

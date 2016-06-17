@@ -71,6 +71,10 @@ public class WindowManager {
 		o_navigationWindow.selectComponent(p_component);
     }
 
+	public void closeComponent(final Component p_component) {
+		o_windows.get(p_component).setVisible(false);
+	}
+
 	private JFrame makeComponentWindow(final Component p_component) {
 		JFrame x_window = null;
 

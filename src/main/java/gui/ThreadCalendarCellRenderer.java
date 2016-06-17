@@ -95,7 +95,7 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 			x_list.setBackground(ColourConstants.s_todayColour);
 		} else if(DateUtil.isTomorrow(p_dueDate)) {
 			x_list.setBackground(ColourConstants.s_tomorrowColour);
-		} else if(DateUtil.isWithin7Days(p_dueDate)) {
+		} else if(DateUtil.isWithin7Days(p_dueDate, false)) {
 			x_list.setBackground(ColourConstants.s_thisWeekColour);
 		}
 	}

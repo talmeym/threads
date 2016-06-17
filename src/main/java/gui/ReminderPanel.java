@@ -1,22 +1,42 @@
 package gui;
 
-import data.Reminder;
+import data.*;
+import util.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class ReminderPanel extends JPanel {
-    public ReminderPanel(Reminder p_reminder, final ActionListener p_listener) {
+    public ReminderPanel(final Reminder p_reminder) {
         super(new BorderLayout());
 
-		final JButton o_closeButton = new JButton("Close");
-        o_closeButton.addActionListener(p_listener);
+		final JButton x_closeButton = new JButton("Close");
+        x_closeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				WindowManager.getInstance().closeComponent(p_reminder);
+			}
+		});
+
+		final JButton x_removeButton = new JButton("Remove");
+		final JPanel x_this = this;
+        x_removeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				Item x_item = p_reminder.getItem();
+				if (JOptionPane.showConfirmDialog(x_this, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Remove Reminder ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+					x_item.removeReminder(p_reminder);
+					WindowManager.getInstance().closeComponent(p_reminder);
+					WindowManager.getInstance().openComponent(x_item);
+				}
+			}
+		});
 
 		ComponentInfoChangeListener x_listener = new ComponentInfoChangeListener() {
 			@Override
 			public void componentInfoChanged(boolean saved) {
-				o_closeButton.setText(saved ? "Close" : "Cancel");
+				x_closeButton.setText(saved ? "Close" : "Cancel");
 			}
 		};
 
@@ -33,7 +53,8 @@ public class ReminderPanel extends JPanel {
 
 
         JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
-        x_buttonPanel.add(o_closeButton);
+        x_buttonPanel.add(x_closeButton);
+        x_buttonPanel.add(x_removeButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		add(x_panel, BorderLayout.NORTH);
