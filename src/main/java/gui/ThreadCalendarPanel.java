@@ -133,13 +133,13 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 					Thread x_thread;
 
 					if(x_threads.size() > 1) {
-						x_thread = (Thread) JOptionPane.showInputDialog(x_this, "Choose thread", "Add new Action ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+						x_thread = (Thread) JOptionPane.showInputDialog(x_this, "Choose a Thread to add it to:", "Add new Action ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 					} else {
 						x_thread = o_thread;
 					}
 
 					if(x_thread != null) {
-						String x_text = (String) JOptionPane.showInputDialog(x_this, "Enter Action Text", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, null);
+						String x_text = (String) JOptionPane.showInputDialog(x_this, "Enter new Action text:", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, null);
 
 						if(x_text != null) {
 							Item x_item = new Item(x_text);
