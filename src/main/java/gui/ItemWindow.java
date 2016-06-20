@@ -12,6 +12,5 @@ public class ItemWindow extends ComponentWindow<Item> {
 		super(p_item);
 		setContentPane(new ItemPanel(p_item));
 		setSize(GUIConstants.s_itemWindowSize);
-		renameWindow(p_item);
 	}
 }

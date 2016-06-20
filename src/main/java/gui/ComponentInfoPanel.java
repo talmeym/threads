@@ -5,10 +5,12 @@ import data.Component;
 import util.ImageUtil;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 public class ComponentInfoPanel extends JPanel {
     private final Component o_component;
@@ -25,11 +27,9 @@ public class ComponentInfoPanel extends JPanel {
 		x_parentLabel.setEnabled(o_component.getParentComponent() != null);
 		x_activeLabel.setEnabled(o_component.getParentComponent() != null && o_component.isActive());
 		x_removeLabel.setEnabled(o_component.getParentComponent() != null);
-		x_textField.setEnabled(p_component.getParentComponent() != null);
-
-		x_textField.setHorizontalAlignment(JTextField.CENTER);
 		x_textField.setForeground(p_component.isActive() ? Color.BLACK : Color.gray);
 
+		x_parentLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		x_parentLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -100,14 +100,38 @@ public class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-        JPanel x_parentButtonPanel = new JPanel(new BorderLayout());
+        JPanel x_parentButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         x_parentButtonPanel.add(x_parentLabel, BorderLayout.CENTER);
-        x_parentButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 10));
+
+		Component x_parent = o_component.getParentComponent();
+		List<JLabel> x_parentLabels = new ArrayList<JLabel>();
+
+		while(x_parent != null) {
+			JLabel x_label = new JLabel(x_parent.getText());
+			final Component x_comp = x_parent;
+
+			x_label.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent mouseEvent) {
+					WindowManager.getInstance().openComponent(x_comp);
+				}
+			});
+
+			x_label.setToolTipText("Go to '" + x_label.getText() + "'");
+			x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(" > ")));
+			x_parent = x_parent.getParentComponent();
+		}
+
+		for(JLabel x_label: x_parentLabels) {
+			x_parentButtonPanel.add(x_label);
+		}
+
+//		x_parentButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 5));
         
         JPanel x_activeCheckBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         x_activeCheckBoxPanel.add(x_activeLabel);
         x_activeCheckBoxPanel.add(x_removeLabel);
-        x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 15));
+        x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
         add(x_parentButtonPanel, BorderLayout.WEST);
         add(x_textField, BorderLayout.CENTER);

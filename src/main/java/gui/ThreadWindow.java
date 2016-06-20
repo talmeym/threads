@@ -7,6 +7,5 @@ public class ThreadWindow extends ComponentWindow<Thread> {
 		super(p_thread);
 		setContentPane(new ThreadPanel(p_thread));
 		setSize(GUIConstants.s_threadWindowSize);
-		renameWindow(p_thread);
 	}
 }

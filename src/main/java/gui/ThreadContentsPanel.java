@@ -29,7 +29,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
         fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
 
 		JLabel x_addItemLabel = new JLabel(ImageUtil.getPlusIcon());
-		x_addItemLabel.setToolTipText("Add");
+		x_addItemLabel.setToolTipText("Add Content");
 		x_addItemLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {

@@ -26,7 +26,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
         fixColumnWidth(3, GUIConstants.s_lastUpdatedColumnWidth);
 
 		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
-		x_addLabel.setToolTipText("Add");
+		x_addLabel.setToolTipText("Add Update");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				addSomething(getSelectedRow());

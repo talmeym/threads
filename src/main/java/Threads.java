@@ -18,8 +18,8 @@ public class Threads {
 		Thread x_topThread = x_file.exists() ? Loader.loadDocumentThread(x_filePath) : new Thread("Threads");
 		Properties x_settings = x_file.exists() ? Loader.loadDocumentSettings(x_filePath) : new Properties();
 
-		// TODO remove this soon
-		x_topThread.setText("Threads");
+//		// TODO remove this soon
+//		x_topThread.setText("Threads");
 
         TimedSaver.getInstance().setThread(x_topThread, x_filePath);
 		SystemTrayUtil.initialise(x_topThread);

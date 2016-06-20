@@ -31,7 +31,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 		o_tabs.setBackgroundAt(4, Color.gray);
 
 		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this, this);
-		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 3, 0, 3));
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 

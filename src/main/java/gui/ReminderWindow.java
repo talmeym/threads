@@ -9,6 +9,5 @@ public class ReminderWindow extends ComponentWindow<Reminder> {
 		super(p_reminder);
 		setContentPane(new ReminderPanel(p_reminder));
 		setSize(GUIConstants.s_reminderWindowSize);
-		renameWindow(p_reminder);
 	}
 }

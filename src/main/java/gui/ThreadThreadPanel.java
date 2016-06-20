@@ -27,7 +27,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
 
 		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
-		x_addLabel.setToolTipText("Add");
+		x_addLabel.setToolTipText("Add Thread");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				addSomething(getSelectedRow());
