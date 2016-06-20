@@ -25,7 +25,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent componentEvent) {
-				o_table.setRowHeight(getHeight() / 5 - 12);
+				o_table.setRowHeight(getHeight() / 5 - 19);
 			}
 		});
 
@@ -33,39 +33,39 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 		o_table.setShowGrid(true);
 		o_table.setGridColor(Color.lightGray);
 
-		JButton o_previousButton = new JButton("Previous");
-		o_previousButton.addActionListener(new ActionListener() {
+		JLabel x_previousLabel = new JLabel(ImageUtil.getLeftIcon());
+		x_previousLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
+			public void mouseClicked(MouseEvent e) {
 				changeMonth(false);
 			}
 		});
 
-		JButton o_nextButton = new JButton("Next");
-		o_nextButton.addActionListener(new ActionListener() {
+		JLabel x_todayLabel = new JLabel(ImageUtil.getCalendarIcon());
+		x_todayLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				changeMonth(true);
-			}
-		});
-
-		JButton o_todalButton = new JButton("Today");
-		o_todalButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
+			public void mouseClicked(MouseEvent e) {
 				int x_month = Calendar.getInstance().get(Calendar.MONTH);
 				setMonth(x_month);
 				rememberValue(x_month);
 			}
 		});
 
+		JLabel x_nextLabel = new JLabel(ImageUtil.getRightIcon());
+		x_nextLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				changeMonth(true);
+			}
+		});
+
 		o_currentMonthLabel.setHorizontalAlignment(JLabel.CENTER);
 		o_currentMonthLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
-		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
-		x_buttonPanel.add(o_previousButton);
-		x_buttonPanel.add(o_todalButton);
-		x_buttonPanel.add(o_nextButton);
+		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		x_buttonPanel.add(x_previousLabel);
+		x_buttonPanel.add(x_todayLabel);
+		x_buttonPanel.add(x_nextLabel);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0	));
 
 		add(o_currentMonthLabel, BorderLayout.NORTH);

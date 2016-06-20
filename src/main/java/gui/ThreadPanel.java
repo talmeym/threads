@@ -24,13 +24,13 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
         o_tabs.addTab("Actions", new ThreadActionPanel(p_thread));
         o_tabs.addTab("Calendar", new ThreadCalendarPanel(p_thread));
         o_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));
-        o_tabs.addTab("Tree", new ThreadTreePanel(p_thread));
 
-		o_tabs.setForegroundAt(0, Color.lightGray);
-		o_tabs.setForegroundAt(5, Color.lightGray);
-		o_tabs.setForegroundAt(6, Color.lightGray);
+		o_tabs.setBackgroundAt(1, Color.gray);
+		o_tabs.setBackgroundAt(2, Color.gray);
+		o_tabs.setBackgroundAt(3, Color.gray);
+		o_tabs.setBackgroundAt(4, Color.gray);
 
-		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this);
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this, this);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
@@ -77,12 +77,10 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
     private void setReminderTabBackground() {
         if(LookupHelper.getAllDueReminders(o_thread).size() > 0) {
             o_tabs.setTitleAt(5, "Reminders *");
-            o_tabs.setForegroundAt(5, Color.black);
             o_tabs.setBackgroundAt(5, Color.red);
         } else {
 			o_tabs.setTitleAt(5, "Reminders");
-			o_tabs.setForegroundAt(5, Color.lightGray);
-            o_tabs.setBackgroundAt(5, o_tabs.getBackgroundAt(1));
+            o_tabs.setBackgroundAt(5, o_tabs.getBackgroundAt(0));
         }
     }
 

@@ -34,4 +34,9 @@ public class Reminder extends Component implements HasDueDate
 	public boolean isDue() {
 		return o_dueDate != null && o_dueDate.before(new Date());
 	}
+
+	@Override
+	public String getType() {
+		return "Reminder";
+	}
 }

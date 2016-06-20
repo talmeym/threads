@@ -29,10 +29,10 @@ class ComponentCellRenderer extends DefaultTableCellRenderer {
 
 		if(o_component instanceof Thread) {
 			ThreadItem x_thread = ((Thread)o_component).getThreadItem(p_row);
-			x_component.setForeground(x_thread.isActive() || p_isSelected ? Color.BLACK : Color.gray);
+			x_component.setForeground(x_thread.isActive() ? Color.BLACK : Color.gray);
 		} else if(o_component instanceof Item) {
 			Reminder x_reminder = ((Item)o_component).getReminder(p_row);
-			x_component.setForeground(x_reminder.isActive() || p_isSelected ? Color.BLACK : Color.gray);
+			x_component.setForeground(x_reminder.isActive() ? Color.BLACK : Color.gray);
 		} else {
 			x_component.setForeground(Color.BLACK);
 		}

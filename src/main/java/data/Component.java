@@ -53,4 +53,6 @@ public abstract class Component extends ObservableObserver {
     public String toString() {
         return o_text;
     }
+
+	public abstract String getType();
 }

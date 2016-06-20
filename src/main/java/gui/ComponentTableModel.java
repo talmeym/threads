@@ -9,12 +9,12 @@ import java.util.*;
 class ComponentTableModel extends DefaultTableModel implements TimeUpdateListener, Observer {
     private final Component o_component;
     private final String[] o_columnNames;
-    
-    ComponentTableModel(Component p_component, String[] p_columnNames) {
+
+	ComponentTableModel(Component p_component, String[] p_columnNames) {
         o_component = p_component;
         o_columnNames = p_columnNames;
-        
-        if(o_component != null) {
+
+		if(o_component != null) {
             o_component.addObserver(this);
         }
     }
@@ -36,7 +36,7 @@ class ComponentTableModel extends DefaultTableModel implements TimeUpdateListene
     }
     
     public void update(Observable o, Object arg) {
-        fireTableDataChanged();
+		fireTableDataChanged();
     }
 
     public void timeUpdate() {

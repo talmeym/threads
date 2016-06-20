@@ -12,8 +12,9 @@ import java.util.List;
 
 public class ThreadActionPanel extends ComponentTablePanel implements Observer {
     private final Thread o_thread;
-	private final JButton o_dismissButton = new JButton("Dismiss");
-	private final JButton o_removeButton = new JButton("Remove");
+	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
+	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
+	private final JLabel o_moveLabel = new JLabel(ImageUtil.getMoveIcon());
 
 	ThreadActionPanel(Thread p_thread) {
         super(new ThreadActionTableModel(p_thread), new ThreadActionCellRenderer(p_thread));
@@ -24,32 +25,43 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
         fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
 
-		JButton o_addButton = new JButton("Add");
-		o_addButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addAction(getSelectedRow());
+		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
+		x_addLabel.setToolTipText("Add");
+		x_addLabel.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				addSomething(getSelectedRow());
 			}
 		});
 
-		o_dismissButton.setEnabled(false);
-		o_dismissButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				dismissAction(getSelectedRow());
+		o_dismissLabel.setEnabled(false);
+		o_dismissLabel.setToolTipText("Make Active/Inactive");
+		o_dismissLabel.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				dismissSomething(getSelectedRow());
 			}
 		});
 
-		o_removeButton.setEnabled(false);
-		o_removeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				removeAction(getSelectedRow());
+		o_removeLabel.setEnabled(false);
+		o_removeLabel.setToolTipText("Remove");
+		o_removeLabel.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				removeSomething(getSelectedRow());
 			}
 		});
 
-		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 0, 0));
-		x_buttonPanel.add(o_addButton);
-		x_buttonPanel.add(o_dismissButton);
-		x_buttonPanel.add(o_removeButton);
+		o_moveLabel.setEnabled(false);
+		o_moveLabel.setToolTipText("Move");
+		o_moveLabel.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				moveSomething(getSelectedRow());
+			}
+		});
+
+		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		x_buttonPanel.add(x_addLabel);
+		x_buttonPanel.add(o_removeLabel);
+		x_buttonPanel.add(o_dismissLabel);
+		x_buttonPanel.add(o_moveLabel);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
@@ -63,7 +75,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 		});
     }
 
-	protected void addAction(int p_index) {
+	protected void addSomething(int p_index) {
 		Thread x_thread;
 
 		if(p_index != -1) {
@@ -90,22 +102,44 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 		}
 	}
 
-	private void dismissAction(int p_index) {
+	private void dismissSomething(int p_index) {
 		if(p_index != -1) {
 			Item x_action = LookupHelper.getAllActiveActions(o_thread).get(p_index);
 
-			if(JOptionPane.showConfirmDialog(this, "Set '" + x_action.getText() + "' inactive ?", "Dismiss Action ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(this, "Set '" + x_action.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_action.setActive(false);
 			}
 		}
 	}
 
-	private void removeAction(int p_index) {
+	private void removeSomething(int p_index) {
 		if(p_index != -1) {
 			Item x_action = LookupHelper.getAllActiveActions(o_thread).get(p_index);
 
 			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_action.getText() + "' from '" + x_action.getParentThread().getText() + "' ?", "Remove " + x_action.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_action.getParentThread().removeThreadItem(x_action);
+			}
+		}
+	}
+
+	private void moveSomething(int p_index) {
+		if(p_index != -1) {
+			Item x_item = LookupHelper.getAllActiveActions(o_thread).get(p_index);
+			Thread x_thread = null;
+
+			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
+			x_threads.add(0, o_thread);
+			x_threads.remove(x_item.getParentThread());
+
+			if(x_threads.size() > 0) {
+				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to move it to:", "Move '" + x_item + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+			} else {
+				JOptionPane.showMessageDialog(this, "Nowhere to move to. Sorry");
+			}
+
+			if(x_thread != null) {
+				x_item.getParentThread().removeThreadItem(x_item);
+				x_thread.addThreadItem(x_item);
 			}
 		}
 	}
@@ -130,8 +164,9 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 
 	@Override
 	void tableRowClicked(int row, int col) {
-		o_dismissButton.setEnabled(row != -1);
-		o_removeButton.setEnabled(row != -1);
+		o_removeLabel.setEnabled(row != -1);
+		o_dismissLabel.setEnabled(row != -1);
+		o_moveLabel.setEnabled(row != -1);
 	}
 
 	void tableRowDoubleClicked(int row, int col) {

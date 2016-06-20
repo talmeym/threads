@@ -23,6 +23,4 @@ public abstract class ThreadItem <CONTENTS extends Component> extends Collection
         o_docFolder = p_docFolder;
         changed();
     }
-
-	public abstract String getType();
 }

@@ -19,6 +19,42 @@ public class ImageUtil {
 		return loadImage("/threads.gif");
 	}
 
+	public static Image getTickIconImage() {
+		return loadImage("/tick.png");
+	}
+
+	public static Image getMinusIconImage() {
+		return loadImage("/minus.png");
+	}
+
+	public static Image getPlusIconImage() {
+		return loadImage("/plus.png");
+	}
+
+	public static Image getUpIconImage() {
+		return loadImage("/up.png");
+	}
+
+	public static Image getCalendarIconImage() {
+		return loadImage("/calendar.png");
+	}
+
+	public static Image getLeftIconImage() {
+		return loadImage("/left.png");
+	}
+
+	public static Image getRightIconImage() {
+		return loadImage("/right.png");
+	}
+
+	public static Image getCrossIconImage() {
+		return loadImage("/cross.png");
+	}
+
+	public static Image getMoveIconImage() {
+		return loadImage("/move.png");
+	}
+
 	public static Image getThreadsIconImage() {
 		return loadImage("/threads_icon.gif");
 	}
@@ -44,5 +80,41 @@ public class ImageUtil {
 
 	public static Icon getThreadsIcon() {
 		return new ImageIcon(ImageUtil.getThreadsIconImage());
+	}
+
+	public static Icon getPlusIcon() {
+		return new ImageIcon(ImageUtil.getPlusIconImage());
+	}
+
+	public static Icon getMinusIcon() {
+		return new ImageIcon(ImageUtil.getMinusIconImage());
+	}
+
+	public static Icon getTickIcon() {
+		return new ImageIcon(ImageUtil.getTickIconImage());
+	}
+
+	public static Icon getUpIcon() {
+		return new ImageIcon(ImageUtil.getUpIconImage());
+	}
+
+	public static Icon getCalendarIcon() {
+		return new ImageIcon(ImageUtil.getCalendarIconImage());
+	}
+
+	public static Icon getLeftIcon() {
+		return new ImageIcon(ImageUtil.getLeftIconImage());
+	}
+
+	public static Icon getRightIcon() {
+		return new ImageIcon(ImageUtil.getRightIconImage());
+	}
+
+	public static Icon getCrossIcon() {
+		return new ImageIcon(ImageUtil.getCrossIconImage());
+	}
+
+	public static Icon getMoveIcon() {
+		return new ImageIcon(ImageUtil.getMoveIconImage());
 	}
 }
