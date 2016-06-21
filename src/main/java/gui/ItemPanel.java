@@ -26,30 +26,6 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 		o_removeLabel.setEnabled(false);
 		o_dismissLabel.setEnabled(false);
 
-		final JPanel x_this = this;
-//		final JButton x_closeButton = new JButton("Close");
-//		x_closeButton.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent actionEvent) {
-//				WindowManager.getInstance().closeComponent(o_item);
-//				Thread x_thread = o_item.getParentThread();
-//
-//				if (o_item.getDueDate() == null && LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(x_this, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-//					for (int i = 0; i < x_thread.getThreadItemCount(); i++) {
-//						ThreadItem x_groupItem = x_thread.getThreadItem(i);
-//
-//						if (x_groupItem instanceof Item) {
-//							Item x_otherItem = (Item) x_groupItem;
-//
-//							if (x_otherItem != o_item && x_otherItem.getDueDate() == null && x_otherItem.isActive()) {
-//								x_otherItem.setActive(false);
-//							}
-//						}
-//					}
-//				}
-//			}
-//		});
-
 		ComponentInfoChangeListener x_listener = new ComponentInfoChangeListener() {
 			@Override
 			public void componentInfoChanged(boolean saved) {
@@ -111,7 +87,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 		if (p_index != -1 && o_item.getDueDate() != null) {
 			Reminder x_reminder = o_item.getReminder(p_index);
 
-			if (JOptionPane.showConfirmDialog(this, "Remove '" + x_reminder.getText() + "' from '" + o_item.getText() + "' ?", "Remove Reminder?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if (JOptionPane.showConfirmDialog(this, "Remove '" + x_reminder.getText() + "' from '" + o_item.getText() + "' ?", "Remove Reminder ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				o_item.removeReminder(x_reminder);
 				o_removeLabel.setEnabled(false);
 			}

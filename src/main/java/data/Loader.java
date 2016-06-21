@@ -118,7 +118,8 @@ public class Loader {
 			}
 		}
 
-		return new Item(id, x_creationDate, x_active, x_text, x_dueDate, x_reminderList);
+		File x_docFolder = loadDocFolder(p_element);
+		return new Item(id, x_creationDate, x_active, x_text, x_dueDate, x_reminderList, x_docFolder);
     }
 
     private static Reminder loadReminder(Element p_element) {

@@ -2,10 +2,10 @@ package gui;
 
 import data.*;
 import data.Component;
+import data.Thread;
 import util.ImageUtil;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -23,10 +23,12 @@ public class ComponentInfoPanel extends JPanel {
 		final JTextField x_textField = new JTextField(p_component.getText());
 		final JLabel x_activeLabel = new JLabel(ImageUtil.getTickIcon());
 		final JLabel x_removeLabel = new JLabel(ImageUtil.getCrossIcon());
+		final JLabel x_duplicateLabel = new JLabel(ImageUtil.getDuplicateIcon());
 
 		x_parentLabel.setEnabled(o_component.getParentComponent() != null);
 		x_activeLabel.setEnabled(o_component.getParentComponent() != null && o_component.isActive());
 		x_removeLabel.setEnabled(o_component.getParentComponent() != null);
+		x_duplicateLabel.setEnabled(o_component.getParentComponent() != null);
 		x_textField.setForeground(p_component.isActive() ? Color.BLACK : Color.gray);
 
 		x_parentLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
@@ -40,9 +42,20 @@ public class ComponentInfoPanel extends JPanel {
 		});
 
 		x_textField.getDocument().addDocumentListener(new DocumentListener() {
-			@Override public void insertUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
-			@Override public void removeUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
-			@Override public void changedUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
+			@Override
+			public void insertUpdate(DocumentEvent documentEvent) {
+				p_listener.componentInfoChanged(false);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent documentEvent) {
+				p_listener.componentInfoChanged(false);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent documentEvent) {
+				p_listener.componentInfoChanged(false);
+			}
 		});
 
         x_textField.addActionListener(new ActionListener() {
@@ -90,6 +103,35 @@ public class ComponentInfoPanel extends JPanel {
 			}
 		});
 
+
+		x_duplicateLabel.setToolTipText("Duplicate");
+		x_duplicateLabel.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (x_parentLabel.isEnabled() && o_component.getParentComponent() != null) {
+					if (JOptionPane.showConfirmDialog(p_parentPanel, "Create duplicate of '" + o_component.getText() + "' ?", "Duplicate ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+						Component x_newComponent = null;
+
+						if(o_component instanceof Thread) {
+							x_newComponent = new Thread((Thread) o_component, true);
+							((Thread)o_component.getParentComponent()).addThreadItem((Thread) x_newComponent);
+						}
+
+						if(o_component instanceof Item) {
+							x_newComponent = new Item((Item) o_component, true);
+							((Thread)o_component.getParentComponent()).addThreadItem((Item) x_newComponent);
+						}
+
+						if(o_component instanceof Reminder) {
+							x_newComponent = new Reminder((Reminder) o_component, true);
+							((Item)o_component.getParentComponent()).addReminder((Reminder) x_newComponent);
+						}
+
+						WindowManager.getInstance().openComponent(x_newComponent);
+					}
+				}
+			}
+		});
+
 		o_component.addObserver(new Observer() {
 			@Override
 			public void update(Observable observable, Object o) {
@@ -126,12 +168,11 @@ public class ComponentInfoPanel extends JPanel {
 			x_parentButtonPanel.add(x_label);
 		}
 
-//		x_parentButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 5));
-        
         JPanel x_activeCheckBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         x_activeCheckBoxPanel.add(x_activeLabel);
         x_activeCheckBoxPanel.add(x_removeLabel);
-        x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        x_activeCheckBoxPanel.add(x_duplicateLabel);
+        x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 10));
 
         add(x_parentButtonPanel, BorderLayout.WEST);
         add(x_textField, BorderLayout.CENTER);
