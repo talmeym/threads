@@ -8,17 +8,18 @@ import util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.*;
 
 public class WindowManager {
     private static WindowManager s_INSTANCE;
 
-	public static void initialise(Thread p_topLevelThread, String p_filePath, Properties p_settings) {
+	public static void initialise(Thread p_topLevelThread, String p_dataFilePath, String p_settingsFilePath) {
 		if(s_INSTANCE != null) {
 			throw new IllegalStateException("Cannot initialise window manager twice");
 		}
 
-		s_INSTANCE = new WindowManager(p_topLevelThread, p_filePath, p_settings);
+		s_INSTANCE = new WindowManager(p_topLevelThread, new File(p_dataFilePath), new File(p_settingsFilePath));
 	}
 
     public static WindowManager getInstance() {
@@ -33,8 +34,7 @@ public class WindowManager {
 	private Map<Component, JFrame> o_windows = new HashMap<Component, JFrame>();
 	private WindowSettings o_windowSettings = new WindowSettings();
 
-	private WindowManager(final Thread p_topLevelThread, final String filePath, final Properties p_properties) {
-		o_windowSettings.applyProperties(p_properties);
+	private WindowManager(final Thread p_topLevelThread, final File p_dataFilePath, final File p_settingsFilePath) {
 
 		o_navigationWindow = new NavigationWindow(p_topLevelThread);
 		o_navigationWindow.addWindowListener(new WindowAdapter() {
@@ -42,16 +42,72 @@ public class WindowManager {
 			public void windowClosing(WindowEvent windowEvent) {
 				setNavigationWindowDetails(o_navigationWindow.getLocation(), o_navigationWindow.getSize());
 				TimedSaver.getInstance().stopRunning();
-				Saver.saveDocument(p_topLevelThread, filePath, o_windowSettings.getProperties());
+				Saver.saveDocument(p_topLevelThread, p_dataFilePath);
+				saveSettings(p_settingsFilePath);
 				System.exit(0);
 			}
 		});
+
+		String x_startingUuid = applySettings(p_settingsFilePath);
+		Component x_component = x_startingUuid != null ? p_topLevelThread.findComponent(UUID.fromString(x_startingUuid)) : null;
 
 		o_navigationWindow.setSize(o_windowSettings.getNavSize());
 		o_navigationWindow.setLocation(o_windowSettings.getNavLocation());
 		o_navigationWindow.setVisible(true);
 
-		openComponent(p_topLevelThread);
+		openComponent(x_component != null ? x_component : p_topLevelThread);
+	}
+
+	private void saveSettings(File p_settingsFile) {
+		try {
+			Properties x_properties = o_windowSettings.getProperties();
+			Integer x_tabMemory = MemoryPanel.getMemoryValue(ThreadPanel.class);
+			Integer x_monthMemory = MemoryPanel.getMemoryValue(ThreadCalendarPanel.class);
+
+			if(x_tabMemory != null) {
+				x_properties.setProperty(WindowSettings.s_TAB_INDEX, String.valueOf(x_tabMemory));
+			}
+
+			if(x_monthMemory != null) {
+				x_properties.setProperty(WindowSettings.s_MONTH, String.valueOf(x_monthMemory));
+			}
+
+			for(Component x_component: o_windows.keySet()) {
+				if(o_windows.get(x_component).isVisible()) {
+					x_properties.setProperty(WindowSettings.s_UUID, x_component.getId().toString());
+				}
+			}
+
+			x_properties.store(new FileWriter(p_settingsFile), "Threads settings");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String applySettings(File p_settingsFile) {
+		if(p_settingsFile.exists()) {
+			try {
+				Properties x_properties = new Properties();
+				x_properties.load(new FileInputStream(p_settingsFile));
+				o_windowSettings.applyProperties(x_properties);
+				String x_tabIndex = x_properties.getProperty(WindowSettings.s_TAB_INDEX);
+				String x_month = x_properties.getProperty(WindowSettings.s_MONTH);
+
+				if(x_tabIndex != null) {
+					MemoryPanel.setMemoryValue(ThreadPanel.class, Integer.parseInt(x_tabIndex));
+				}
+
+				if(x_month != null) {
+					MemoryPanel.setMemoryValue(ThreadCalendarPanel.class, Integer.parseInt(x_month));
+				}
+
+				return x_properties.getProperty(WindowSettings.s_UUID);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return null;
 	}
 
 	public void openComponent(final Component p_component) {
@@ -117,9 +173,5 @@ public class WindowManager {
 	public void setNavigationWindowDetails(Point p_location, Dimension p_size) {
 		o_windowSettings.setNavLocation(p_location);
 		o_windowSettings.setNavSize(p_size);
-	}
-
-	public Properties getSettings() {
-		return o_windowSettings.getProperties();
 	}
 }

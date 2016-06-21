@@ -33,14 +33,20 @@ public class MemoryPanel extends JPanel {
 	}
 
 	private static void updatePanels(List<MemoryPanel> x_panels, int p_memory) {
-		for(MemoryPanel x_panel: x_panels) {
-			x_panel.memoryChanged(p_memory);
+		if(x_panels != null) {
+			for(MemoryPanel x_panel: x_panels) {
+				x_panel.memoryChanged(p_memory);
+			}
 		}
 	}
 
 	protected static void setMemoryValue(Class p_clazz, int p_memoryValue) {
 		s_memory.put(p_clazz, p_memoryValue);
 		updatePanels(s_panels.get(p_clazz), p_memoryValue);
+	}
+
+	protected static Integer getMemoryValue(Class p_clazz) {
+		return s_memory.get(p_clazz);
 	}
 
 	protected void memoryChanged(int p_newMemory) {

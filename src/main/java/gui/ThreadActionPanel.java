@@ -134,7 +134,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 			if(x_threads.size() > 0) {
 				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to move it to:", "Move '" + x_item + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 			} else {
-				JOptionPane.showMessageDialog(this, "Nowhere to move to. Sorry");
+				JOptionPane.showMessageDialog(this, "This Thread has no child Threads to move this item to. Try moving it from further up the tree.");
 			}
 
 			if(x_thread != null) {

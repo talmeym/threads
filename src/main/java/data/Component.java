@@ -67,4 +67,6 @@ public abstract class Component extends ObservableObserver {
     }
 
 	public abstract String getType();
+
+	public abstract Component findComponent(UUID p_id);
 }

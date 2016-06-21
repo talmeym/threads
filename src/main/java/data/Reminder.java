@@ -44,4 +44,13 @@ public class Reminder extends Component implements HasDueDate
 	public String getType() {
 		return "Reminder";
 	}
+
+	@Override
+	public Component findComponent(UUID p_id) {
+		if(getId().equals(p_id)) {
+			return this;
+		}
+
+		return null;
+	}
 }

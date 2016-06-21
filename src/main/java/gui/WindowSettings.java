@@ -6,6 +6,10 @@ import java.awt.*;
 import java.util.*;
 
 public class WindowSettings {
+	public static final String s_TAB_INDEX = "tabindex";
+	public static final String s_MONTH = "month";
+	public static final String s_UUID = "uuid";
+
 	private Map<Class, Dimension> o_windowDimensions = new HashMap<Class, Dimension>();
 	private Point o_windowLocation;
 	private Dimension o_navSize = GUIConstants.s_navWindowSize;
@@ -106,7 +110,5 @@ public class WindowSettings {
 		if(p_properties.containsKey("navx")) {
 			o_navLocation = new Point(Integer.parseInt(p_properties.getProperty("navx")), Integer.parseInt(p_properties.getProperty("navy")));
 		}
-
-		// TODO remove if on navs soon
 	}
 }

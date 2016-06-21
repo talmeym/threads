@@ -9,9 +9,7 @@ import java.text.ParseException;
 import java.util.*;
 
 public class Loader {
-	// TODO turn schema validation back on soon
-
-    public static Thread loadDocumentThread(String p_xmlPath) {
+    public static Thread loadDocumentThread(File p_xmlFile) {
         SAXBuilder x_builder = new SAXBuilder(true);
         x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
         x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
@@ -24,7 +22,7 @@ public class Loader {
 		});
 
         try {
-            Document x_doc = x_builder.build(p_xmlPath);            
+            Document x_doc = x_builder.build(p_xmlFile);
             return loadThread(x_doc.getRootElement().getChild(XmlConstants.s_THREAD));
         }        
         catch(Exception ioe) {
@@ -34,47 +32,6 @@ public class Loader {
         
         return null;
     }
-    
-    public static Properties loadDocumentSettings(String p_xmlPath) {
-        SAXBuilder x_builder = new SAXBuilder(true);
-        x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
-        x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
-        x_builder.setEntityResolver(new EntityResolver() {
-			@Override
-			public InputSource resolveEntity(String something, String entityPath) throws SAXException, IOException {
-			    entityPath = entityPath.indexOf('/') != -1 ? entityPath.substring(entityPath.lastIndexOf('/')) : entityPath;
-				return new InputSource(getClass().getResourceAsStream(entityPath));
-			}
-		});
-
-        try {
-            Document x_doc = x_builder.build(p_xmlPath);
-            return loadSettings(x_doc.getRootElement().getChild(XmlConstants.s_SETTINGS));
-        }
-        catch(Exception ioe) {
-            System.err.println("Error loading threads file: " + ioe);
-            System.exit(1);
-        }
-
-        return null;
-    }
-
-	private static Properties loadSettings(Element p_element) {
-		Properties x_settings = new Properties();
-
-		if(p_element != null) {
-			List x_properties = p_element.getChildren();
-
-			for(Object x_property: x_properties) {
-				Element x_propertyElem = (Element) x_property;
-				x_settings.setProperty(x_propertyElem.getAttributeValue(XmlConstants.s_PROPERTY_NAME), x_propertyElem.getAttributeValue(XmlConstants.s_PROPERTY_VALUE));
-			}
-		}
-
-		// TODO remove if around settings soon
-
-		return x_settings;
-	}
 
 	private static Thread loadThread(Element p_element) {
 		UUID id = loadId(p_element);
@@ -130,14 +87,7 @@ public class Loader {
     }
 
 	private static UUID loadId(Element p_element) {
-		String id = p_element.getAttributeValue(XmlConstants.s_ID);
-
-		// TODO remove this soon
-		if(id == null) {
-			return UUID.randomUUID();
-		}
-
-		return UUID.fromString(id);
+		return UUID.fromString(p_element.getAttributeValue(XmlConstants.s_ID));
 	}
 
     private static Date loadCreatedDate(Element p_element) {

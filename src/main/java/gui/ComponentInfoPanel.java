@@ -32,6 +32,7 @@ public class ComponentInfoPanel extends JPanel {
 		x_duplicateLabel.setEnabled(o_component.getParentComponent() != null);
 		x_textField.setForeground(p_component.isActive() ? Color.BLACK : Color.gray);
 
+		x_parentLabel.setToolTipText("View Parent");
 		x_parentLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		x_parentLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -71,6 +72,7 @@ public class ComponentInfoPanel extends JPanel {
 			}
 		});
 
+		x_activeLabel.setToolTipText("Make Active/Inactive");
 		x_activeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -82,6 +84,7 @@ public class ComponentInfoPanel extends JPanel {
 			}
 		});
 
+		x_removeLabel.setToolTipText("Remove");
 		x_removeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {

@@ -5,7 +5,6 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="thread" type="thread"/>
-				<xs:element name="settings" type="settings" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -85,15 +84,4 @@
 			<xs:pattern value="[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"/>
 		</xs:restriction>
 	</xs:simpleType>
-
-	<xs:complexType name="settings">
-		<xs:sequence>
-			<xs:element name="property" type="property" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:complexType name="property">
-		<xs:attribute name="name" type="xs:string"/>
-		<xs:attribute name="value" type="xs:string"/>
-	</xs:complexType>
 </xs:schema>

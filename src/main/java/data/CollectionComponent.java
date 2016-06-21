@@ -43,4 +43,20 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
         Collections.sort(o_components, o_comparator);
 		changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_REMOVED, index));
     }
+
+	public Component findComponent(UUID p_id) {
+		if(getId().equals(p_id)) {
+			return this;
+		}
+
+		for(int i = 0; i < getComponentCount(); i++) {
+			Component p_component = getComponent(i).findComponent(p_id);
+
+			if(p_component != null) {
+				return p_component;
+			}
+		}
+
+		return null;
+	}
 }
