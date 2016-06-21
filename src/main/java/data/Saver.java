@@ -68,6 +68,7 @@ public class Saver {
 			}
 		}
 
+		addDocFolder(x_itemElem, p_item);
 		return x_itemElem;
     }
     
@@ -75,7 +76,8 @@ public class Saver {
         Element x_reminderElem = new Element(XmlConstants.s_REMINDER);
         addComponentData(x_reminderElem, p_reminder);        
         addContent(x_reminderElem, XmlConstants.s_REM_DATE, addDateTime(p_reminder.getDueDate()));
-        return x_reminderElem;
+		addDocFolder(x_reminderElem, p_reminder);
+		return x_reminderElem;
     }
 
     private static void addComponentData(Element p_element, Component p_component) {
@@ -103,9 +105,9 @@ public class Saver {
         p_document.getRootElement().setAttribute("noNamespaceSchemaLocation", "threads.xsd", x_nameSpace);
     }
     
-    private static void addDocFolder(Element p_element, ThreadItem p_item) {
-        if(p_item.getDocFolder() != null) {
-            p_element.addContent(new Element(XmlConstants.s_DOC_FOLDER).setText(p_item.getDocFolder().getAbsolutePath()));
+    private static void addDocFolder(Element p_element, Component p_component) {
+        if(p_component.getDocFolder() != null) {
+            p_element.addContent(new Element(XmlConstants.s_DOC_FOLDER).setText(p_component.getDocFolder().getAbsolutePath()));
         }
     }
 }

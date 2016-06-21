@@ -24,6 +24,7 @@ public class ComponentInfoPanel extends JPanel {
 		final JLabel x_activeLabel = new JLabel(ImageUtil.getTickIcon());
 		final JLabel x_removeLabel = new JLabel(ImageUtil.getCrossIcon());
 		final JLabel x_duplicateLabel = new JLabel(ImageUtil.getDuplicateIcon());
+		final JLabel x_folderLabel = new JLabel(ImageUtil.getFolderIcon());
 
 		x_parentLabel.setEnabled(o_component.getParentComponent() != null);
 		x_activeLabel.setEnabled(o_component.getParentComponent() != null && o_component.isActive());
@@ -111,24 +112,68 @@ public class ComponentInfoPanel extends JPanel {
 					if (JOptionPane.showConfirmDialog(p_parentPanel, "Create duplicate of '" + o_component.getText() + "' ?", "Duplicate ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 						Component x_newComponent = null;
 
-						if(o_component instanceof Thread) {
+						if (o_component instanceof Thread) {
 							x_newComponent = new Thread((Thread) o_component, true);
-							((Thread)o_component.getParentComponent()).addThreadItem((Thread) x_newComponent);
+							((Thread) o_component.getParentComponent()).addThreadItem((Thread) x_newComponent);
 						}
 
-						if(o_component instanceof Item) {
+						if (o_component instanceof Item) {
 							x_newComponent = new Item((Item) o_component, true);
-							((Thread)o_component.getParentComponent()).addThreadItem((Item) x_newComponent);
+							((Thread) o_component.getParentComponent()).addThreadItem((Item) x_newComponent);
 						}
 
-						if(o_component instanceof Reminder) {
+						if (o_component instanceof Reminder) {
 							x_newComponent = new Reminder((Reminder) o_component, true);
-							((Item)o_component.getParentComponent()).addReminder((Reminder) x_newComponent);
+							((Item) o_component.getParentComponent()).addReminder((Reminder) x_newComponent);
 						}
 
 						WindowManager.getInstance().openComponent(x_newComponent);
 					}
 				}
+			}
+		});
+
+		x_folderLabel.setToolTipText("Document Folder");
+		x_folderLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				JPopupMenu x_popupMenu = new JPopupMenu();
+
+				JMenuItem x_setItem = new JMenuItem("Set");
+				x_setItem.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent actionEvent) {
+						FolderManager.setDocFolder(o_component);
+					}
+				});
+
+				JMenuItem x_openItem = new JMenuItem("Open");
+				x_openItem.setEnabled(o_component.getDocFolder() != null);
+				x_openItem.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent actionEvent) {
+						FolderManager.openDocFolder(o_component);
+					}
+				});
+
+				JMenuItem x_clearItem = new JMenuItem("Clear");
+				x_clearItem.setEnabled(o_component.getDocFolder() != null);
+				x_clearItem.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent actionEvent) {
+						if(o_component.getDocFolder() != null) {
+							if (JOptionPane.showConfirmDialog(p_parentPanel, "Unset document folder '" + o_component.getDocFolder().getAbsolutePath() + "' ?", "Clear document folder for '" + o_component.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+								o_component.setDocFolder(null);
+							}
+						}
+					}
+				});
+
+				x_popupMenu.add(x_setItem);
+				x_popupMenu.add(x_openItem);
+				x_popupMenu.add(x_clearItem);
+
+				x_popupMenu.show(x_folderLabel, mouseEvent.getX(), mouseEvent.getY());
 			}
 		});
 
@@ -172,6 +217,7 @@ public class ComponentInfoPanel extends JPanel {
         x_activeCheckBoxPanel.add(x_activeLabel);
         x_activeCheckBoxPanel.add(x_removeLabel);
         x_activeCheckBoxPanel.add(x_duplicateLabel);
+        x_activeCheckBoxPanel.add(x_folderLabel);
         x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 10));
 
         add(x_parentButtonPanel, BorderLayout.WEST);

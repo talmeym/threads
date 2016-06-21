@@ -1,5 +1,6 @@
 package data;
 
+import java.io.File;
 import java.util.*;
 
 public abstract class Component extends ObservableObserver {
@@ -8,12 +9,14 @@ public abstract class Component extends ObservableObserver {
     private boolean o_active;
     private String o_text;
     private Component o_parentComponent;
+	private File o_docFolder;
 
-	Component(UUID p_id, Date p_creationDate, boolean p_activeFlag, String p_text) {
+	Component(UUID p_id, Date p_creationDate, boolean p_activeFlag, String p_text, File p_docFolder) {
 		o_id = p_id;
 		o_creationDate = p_creationDate;
         o_active = p_activeFlag;
         o_text = p_text;
+		o_docFolder = p_docFolder;
     }
 
 	public UUID getId() {
@@ -49,6 +52,15 @@ public abstract class Component extends ObservableObserver {
     void setParentComponent(Component p_parentComponent) {
         o_parentComponent = p_parentComponent;
     }
+
+	public File getDocFolder() {
+		return o_docFolder;
+	}
+
+	public void setDocFolder(File p_docFolder) {
+		o_docFolder = p_docFolder;
+		changed();
+	}
 
     public String toString() {
         return o_text;

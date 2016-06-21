@@ -23,7 +23,6 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 		for(int i = 0; i < p_item.getReminderCount(); i++) {
 			addReminder(new Reminder(p_item.getReminder(i), false));
 		}
-
 	}
 
     public Thread getParentThread() {

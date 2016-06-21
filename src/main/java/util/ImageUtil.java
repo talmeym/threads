@@ -59,6 +59,10 @@ public class ImageUtil {
 		return loadImage("/duplicate.png");
 	}
 
+	public static Image getFolderIconImage() {
+		return loadImage("/folder.png");
+	}
+
 	public static Image getThreadsIconImage() {
 		return loadImage("/threads_icon.gif");
 	}
@@ -124,5 +128,9 @@ public class ImageUtil {
 
 	public static Icon getDuplicateIcon() {
 		return new ImageIcon(ImageUtil.getDuplicateIconImage());
+	}
+
+	public static Icon getFolderIcon() {
+		return new ImageIcon(ImageUtil.getFolderIconImage());
 	}
 }

@@ -1,13 +1,14 @@
 package data;
 
+import java.io.File;
 import java.util.*;
 
 public abstract class CollectionComponent <CONTENTS extends Component> extends Component {
     private final List<CONTENTS> o_components = new ArrayList<CONTENTS>();
     private final Comparator<CONTENTS> o_comparator;
     
-    CollectionComponent(UUID id, Date p_creationDate, boolean p_active, String p_text, List<CONTENTS> p_components, Comparator<CONTENTS> p_comparator) {
-        super(id, p_creationDate, p_active, p_text);
+    CollectionComponent(UUID id, Date p_creationDate, boolean p_active, String p_text, List<CONTENTS> p_components, Comparator<CONTENTS> p_comparator, File p_docFolder) {
+        super(id, p_creationDate, p_active, p_text, p_docFolder);
         o_comparator = p_comparator;
         
         if(p_components != null) {

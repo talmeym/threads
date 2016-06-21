@@ -15,9 +15,6 @@ import java.util.List;
 public class NavigationPanel extends JPanel implements TreeSelectionListener {
 	private final JTree o_navigationTree;
 
-	JButton o_setDocFolderButton = new JButton("Set Doc Folder");
-	JButton o_openDocFolderButton = new JButton("Open Doc Folder");
-
 	public NavigationPanel(Thread p_topLevelThread) {
 		super(new BorderLayout());
 
@@ -29,29 +26,7 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener {
 		x_navigationPanel.add(new JScrollPane(o_navigationTree), BorderLayout.CENTER);
 		x_navigationPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		o_openDocFolderButton.setEnabled(false);
-		o_setDocFolderButton.setEnabled(false);
-
-		o_openDocFolderButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				FolderManager.openDocFolder((ThreadItem) o_navigationTree.getSelectionPath().getLastPathComponent());
-			}
-		});
-
-		o_setDocFolderButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ThreadItem x_component = (ThreadItem) o_navigationTree.getSelectionPath().getLastPathComponent();
-				FolderManager.setDocFolder(x_component);
-				o_openDocFolderButton.setEnabled(x_component.getDocFolder() != null);
-			}
-		});
-
-		JPanel x_buttonPanel = new JPanel(new GridLayout(0, 1, 0, 0));
-		x_buttonPanel.add(o_openDocFolderButton);
-		x_buttonPanel.add(o_setDocFolderButton);
-
 		add(x_navigationPanel, BorderLayout.CENTER);
-		add(x_buttonPanel, BorderLayout.SOUTH);
 	}
 
 	public void selectComponent(Component p_component) {
@@ -70,8 +45,6 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener {
 			TreePath x_path = p_treeSelectionEvent.getPath();
 			ThreadItem x_threadItem = (ThreadItem) x_path.getLastPathComponent();
 			WindowManager.getInstance().openComponent(x_threadItem);
-			o_openDocFolderButton.setEnabled(x_threadItem.getDocFolder() != null);
-			o_setDocFolderButton.setEnabled(true);
 		}
 	}
 

@@ -94,9 +94,8 @@ public class Loader {
 				x_itemList.add(loadItem(x_element));
 			}
 		}
-        
-        File x_docFolder = loadDocFolder(p_element);
-        return new Thread(id, x_creationDate, x_active, x_text, x_itemList, x_docFolder);
+
+		return new Thread(id, x_creationDate, x_active, x_text, x_itemList, loadDocFolder(p_element));
     }
 
     private static Item loadItem(Element p_element) {
@@ -118,8 +117,7 @@ public class Loader {
 			}
 		}
 
-		File x_docFolder = loadDocFolder(p_element);
-		return new Item(id, x_creationDate, x_active, x_text, x_dueDate, x_reminderList, x_docFolder);
+		return new Item(id, x_creationDate, x_active, x_text, x_dueDate, x_reminderList, loadDocFolder(p_element));
     }
 
     private static Reminder loadReminder(Element p_element) {
@@ -128,7 +126,7 @@ public class Loader {
         boolean x_active = loadActiveFlag(p_element);        
         String x_text = loadText(p_element);
         Date x_date = loadDateTime(p_element.getChildText(XmlConstants.s_REM_DATE));
-        return new Reminder(id, x_creationDate, x_active, x_text, x_date);
+		return new Reminder(id, x_creationDate, x_active, x_text, x_date, loadDocFolder(p_element));
     }
 
 	private static UUID loadId(Element p_element) {

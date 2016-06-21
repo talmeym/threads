@@ -1,5 +1,6 @@
 package data;
 
+import java.io.File;
 import java.util.*;
 
 public class Reminder extends Component implements HasDueDate
@@ -7,16 +8,16 @@ public class Reminder extends Component implements HasDueDate
     private Date o_dueDate;
     
     public Reminder(Item p_item) {
-        this(UUID.randomUUID(), new Date(), true, "New Reminder", p_item.getDueDate());
+        this(UUID.randomUUID(), new Date(), true, "New Reminder", p_item.getDueDate(), null);
     }
     
-    public Reminder(UUID id, Date p_creationDate, boolean p_active, String p_text, Date p_dueDate) {
-        super(id, p_creationDate, p_active, p_text);
+    public Reminder(UUID id, Date p_creationDate, boolean p_active, String p_text, Date p_dueDate, File p_docFolder) {
+        super(id, p_creationDate, p_active, p_text, p_docFolder);
         o_dueDate = p_dueDate;
     }
 
 	public Reminder(Reminder p_reminder, boolean p_addCopyText) {
-		this(UUID.randomUUID(), new Date(), p_reminder.isActive(), (p_addCopyText ? "Copy of " : "") + p_reminder.getText(), p_reminder.getDueDate());
+		this(UUID.randomUUID(), new Date(), p_reminder.isActive(), (p_addCopyText ? "Copy of " : "") + p_reminder.getText(), p_reminder.getDueDate(), p_reminder.getDocFolder());
 	}
 
     public Item getItem() {
