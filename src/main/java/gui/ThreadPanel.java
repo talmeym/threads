@@ -7,13 +7,15 @@ import util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Observer, ComponentInfoChangeListener {
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs;
-    
-    public ThreadPanel(Thread p_thread) {
+
+	public ThreadPanel(Thread p_thread) {
         super(new BorderLayout());
         o_thread = p_thread;
 
@@ -38,7 +40,16 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 		o_tabs.setToolTipTextAt(4, "A calendar view of all active child Actions");
 		o_tabs.setToolTipTextAt(5, "A view of all due Reminders of active child Actions");
 
-		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this, this);
+		final JLabel x_linkLabel = new JLabel(ImageUtil.getLinkIcon());
+		x_linkLabel.setToolTipText("Link to Google Calendar");
+		x_linkLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				linkToGoogle();
+			}
+		});
+
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this, this, x_linkLabel);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 3, 0, 3));
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
@@ -56,6 +67,23 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
         setActionTabBackground();
 		setReminderTabBackground();
     }
+
+	private void linkToGoogle() {
+		final JPanel x_this = this;
+		final List<Item> x_activeActions = LookupHelper.getAllActiveActions(o_thread);
+
+		if (x_activeActions.size() > 0) {
+			if (JOptionPane.showConfirmDialog(x_this, "Link " + x_activeActions.size() + " Actions to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(x_activeActions, new GoogleProgressWindow(x_this), new ProgressAdapter() {
+					@Override
+					public void finished() {
+						JOptionPane.showMessageDialog(x_this, x_activeActions.size() + " Actions were linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+					}
+				});
+				x_task.execute();
+			}
+		}
+	}
 
 	@Override
 	protected void memoryChanged(int p_newMemory) {

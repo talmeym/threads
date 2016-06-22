@@ -6,13 +6,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.emarte.threads</groupId>
 	<artifactId>threads</artifactId>
-	<version>0.0.57</version>
+	<version>0.0.59</version>
 	<packaging>jar</packaging>
 	<name>Threads</name>
 
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
+
+		<project.http.version>1.19.0</project.http.version>
+		<project.oauth.version>1.19.0</project.oauth.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
 	</properties>
 
 	<build>
@@ -34,6 +39,12 @@
 		</plugins>
 	</build>
 
+	<scm>
+		<connection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</connection>
+		<developerConnection>scm:hg:https://samples.google-api-java-client.googlecode.com/hg/</developerConnection>
+		<url>http://code.google.com/p/google-api-java-client/source/browse/?repo=samples</url>
+	</scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>jdom</groupId>
@@ -54,6 +65,22 @@
 			<groupId>com.apple</groupId>
 			<artifactId>AppleJavaExtensions</artifactId>
 			<version>1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-calendar</artifactId>
+			<version>v3-rev87-1.19.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client-jackson2</artifactId>
+			<version>${project.http.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-jetty</artifactId>
+			<version>${project.oauth.version}</version>
 		</dependency>
 	</dependencies>
 </project>

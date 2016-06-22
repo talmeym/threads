@@ -9,7 +9,7 @@ import java.io.*;
 
 public class Threads {
     public static void main(String[] args) {
-		doFontStuff();
+//		doFontStuff();
 
 		TimeUpdater.getInstance().start();
 		String x_dataFilePath = args.length > 0 ? args[0] : "threads.xml";
@@ -17,6 +17,7 @@ public class Threads {
 		Thread x_topThread = x_dataFile.exists() ? Loader.loadDocumentThread(x_dataFile) : new Thread("Threads");
 
         TimedSaver.getInstance().setThread(x_topThread, x_dataFile);
+		TimedGoogleSyncer.getInstance().setThread(x_topThread);
 		SystemTrayUtil.initialise(x_topThread);
 		WindowManager.initialise(x_topThread, x_dataFilePath, "threads.properties");
 	}

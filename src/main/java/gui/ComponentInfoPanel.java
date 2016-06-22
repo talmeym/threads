@@ -15,22 +15,59 @@ import java.util.List;
 public class ComponentInfoPanel extends JPanel {
     private final Component o_component;
 
-	public ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, final ComponentInfoChangeListener p_listener) {
+	private final JLabel o_activeLabel = new JLabel(ImageUtil.getTickIcon());
+	private final JTextField o_textField = new JTextField();
+	private boolean o_modified = false;
+
+	public ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, final ComponentInfoChangeListener p_listener, JLabel... p_extraLabels) {
         super(new BorderLayout());
         o_component = p_component;
 
+		final DocumentListener x_listener = new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent documentEvent) {
+				p_listener.componentInfoChanged(false);
+				o_modified = true;
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent documentEvent) {
+				p_listener.componentInfoChanged(false);
+				o_modified = true;
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent documentEvent) {
+				p_listener.componentInfoChanged(false);
+				o_modified = true;
+			}
+		};
+
+		o_component.addObserver(new Observer() {
+			@Override
+			public void update(Observable observable, Object o) {
+				o_textField.getDocument().removeDocumentListener(x_listener);
+				o_textField.setText(o_component.getText());
+				o_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
+				o_activeLabel.setEnabled(o_component.getParentComponent() != null && o_component.isActive());
+				o_textField.getDocument().addDocumentListener(x_listener);
+			}
+		});
+
 		final JLabel x_parentLabel = new JLabel(ImageUtil.getUpIcon());
-		final JTextField x_textField = new JTextField(p_component.getText());
-		final JLabel x_activeLabel = new JLabel(ImageUtil.getTickIcon());
 		final JLabel x_removeLabel = new JLabel(ImageUtil.getCrossIcon());
 		final JLabel x_duplicateLabel = new JLabel(ImageUtil.getDuplicateIcon());
 		final JLabel x_folderLabel = new JLabel(ImageUtil.getFolderIcon());
 
+		o_textField.setText(p_component.getText());
+		o_textField.setForeground(p_component.isActive() ? Color.BLACK : Color.gray);
+		o_textField.setToolTipText("Press enter to set");
+		o_textField.getDocument().addDocumentListener(x_listener);
+
 		x_parentLabel.setEnabled(o_component.getParentComponent() != null);
-		x_activeLabel.setEnabled(o_component.getParentComponent() != null && o_component.isActive());
+		o_activeLabel.setEnabled(o_component.getParentComponent() != null && o_component.isActive());
 		x_removeLabel.setEnabled(o_component.getParentComponent() != null);
 		x_duplicateLabel.setEnabled(o_component.getParentComponent() != null);
-		x_textField.setForeground(p_component.isActive() ? Color.BLACK : Color.gray);
 
 		x_parentLabel.setToolTipText("View Parent");
 		x_parentLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
@@ -43,43 +80,51 @@ public class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-		x_textField.getDocument().addDocumentListener(new DocumentListener() {
+		o_textField.addFocusListener(new FocusAdapter() {
 			@Override
-			public void insertUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-			}
+			public void focusLost(FocusEvent focusEvent) {
+				if(o_modified) {
+					if(JOptionPane.showConfirmDialog(p_parentPanel, "You've made modifications, would you like to keep them ?", "Rename to '" + o_textField.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == 0) {
+						if (o_textField.getText().length() > 0 && !o_textField.getText().equals(o_component.getText())) {
+							o_component.setText(o_textField.getText());
+						}
 
-			@Override
-			public void removeUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-			}
+						p_listener.componentInfoChanged(true);
+					}
 
-			@Override
-			public void changedUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
+					o_textField.setText(o_component.getText());
+					o_modified = false;
+				}
 			}
 		});
 
-        x_textField.addActionListener(new ActionListener() {
+        o_textField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				if (x_textField.getText().length() > 0 && !x_textField.getText().equals(o_component.getText())) {
-					o_component.setText(x_textField.getText());
+				if (o_textField.getText().length() > 0 && !o_textField.getText().equals(o_component.getText())) {
+					o_component.setText(o_textField.getText());
 				}
 
-				x_textField.setText(o_component.getText());
+				o_textField.setText(o_component.getText());
 				p_listener.componentInfoChanged(true);
+				o_modified = false;
 			}
 		});
 
-		x_activeLabel.setToolTipText("Make Active/Inactive");
-		x_activeLabel.addMouseListener(new MouseAdapter() {
+		o_activeLabel.setToolTipText("Make Active/Inactive");
+		o_activeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (x_parentLabel.isEnabled()) {
-					o_component.setActive(!o_component.isActive());
-					x_activeLabel.setEnabled(o_component.isActive());
-					x_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
+					boolean x_active = !o_component.isActive();
+
+					if(JOptionPane.showConfirmDialog(p_parentPanel, "Set '" + o_component.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+						o_component.setActive(x_active);
+						o_activeLabel.setEnabled(o_component.isActive());
+						o_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
+					}
+				} else {
+					JOptionPane.showMessageDialog(p_parentPanel, "The root Thread cannot be made inactive", "No can do", JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon());
 				}
 			}
 		});
@@ -103,6 +148,8 @@ public class ComponentInfoPanel extends JPanel {
 						WindowManager.getInstance().closeComponent(o_component);
 						WindowManager.getInstance().openComponent(x_parentComponent);
 					}
+				} else {
+					JOptionPane.showMessageDialog(p_parentPanel, "The root Thread cannot be removed", "No can do", JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon());
 				}
 			}
 		});
@@ -132,6 +179,8 @@ public class ComponentInfoPanel extends JPanel {
 
 						WindowManager.getInstance().openComponent(x_newComponent);
 					}
+				} else {
+					JOptionPane.showMessageDialog(p_parentPanel, "The root Thread cannot be duplicated", "No can do", JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon());
 				}
 			}
 		});
@@ -184,8 +233,8 @@ public class ComponentInfoPanel extends JPanel {
 			@Override
 			public void update(Observable observable, Object o) {
 				if(observable == ((ObservableChangeEvent)o).getObservableObserver()) {
-					x_activeLabel.setEnabled(o_component.isActive() && o_component.getParentComponent() != null);
-					x_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
+					o_activeLabel.setEnabled(o_component.isActive() && o_component.getParentComponent() != null);
+					o_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
 				}
 			}
 		});
@@ -217,14 +266,19 @@ public class ComponentInfoPanel extends JPanel {
 		}
 
         JPanel x_activeCheckBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        x_activeCheckBoxPanel.add(x_activeLabel);
+        x_activeCheckBoxPanel.add(o_activeLabel);
         x_activeCheckBoxPanel.add(x_removeLabel);
         x_activeCheckBoxPanel.add(x_duplicateLabel);
         x_activeCheckBoxPanel.add(x_folderLabel);
+
+		for(JLabel x_label: p_extraLabels) {
+			x_activeCheckBoxPanel.add(x_label);
+		}
+
         x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 10));
 
         add(x_parentButtonPanel, BorderLayout.WEST);
-        add(x_textField, BorderLayout.CENTER);
+        add(o_textField, BorderLayout.CENTER);
         add(x_activeCheckBoxPanel, BorderLayout.EAST);
     }
 }

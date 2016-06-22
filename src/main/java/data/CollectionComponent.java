@@ -7,8 +7,8 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
     private final List<CONTENTS> o_components = new ArrayList<CONTENTS>();
     private final Comparator<CONTENTS> o_comparator;
     
-    CollectionComponent(UUID id, Date p_creationDate, boolean p_active, String p_text, List<CONTENTS> p_components, Comparator<CONTENTS> p_comparator, File p_docFolder) {
-        super(id, p_creationDate, p_active, p_text, p_docFolder);
+    CollectionComponent(UUID id, Date p_creationDate, Date p_modifiedDate, boolean p_active, String p_text, List<CONTENTS> p_components, Comparator<CONTENTS> p_comparator, File p_docFolder) {
+        super(id, p_creationDate, p_modifiedDate, p_active, p_text, p_docFolder);
         o_comparator = p_comparator;
         
         if(p_components != null) {
@@ -42,6 +42,19 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
         o_components.remove(p_component);
         Collections.sort(o_components, o_comparator);
 		changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_REMOVED, index));
+    }
+
+    protected void removeAllComponents() {
+		Iterator<CONTENTS> iterator = o_components.iterator();
+		int index = 0;
+
+		while(iterator.hasNext()) {
+			Component x_component = iterator.next();
+			x_component.setParentComponent(null);
+			unobserve(x_component);
+			iterator.remove();
+			changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_REMOVED, index++));
+		}
     }
 
 	public Component findComponent(UUID p_id) {

@@ -34,7 +34,7 @@ public class FolderManager {
         });
 
         x_chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnVal = x_chooser.showDialog(null, "Select");
+        int returnVal = x_chooser.showDialog(null, "Set Document Folder");
 
 		if(returnVal == JFileChooser.APPROVE_OPTION)  {
             File x_folder = x_chooser.getSelectedFile(); 

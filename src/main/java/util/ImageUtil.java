@@ -63,6 +63,14 @@ public class ImageUtil {
 		return loadImage("/folder.png");
 	}
 
+	public static Image getLinkIconImage() {
+		return loadImage("/link.png");
+	}
+
+	public static Image getGoogleIconImage() {
+		return loadImage("/google.png");
+	}
+
 	public static Image getThreadsIconImage() {
 		return loadImage("/threads_icon.gif");
 	}
@@ -132,5 +140,13 @@ public class ImageUtil {
 
 	public static Icon getFolderIcon() {
 		return new ImageIcon(ImageUtil.getFolderIconImage());
+	}
+
+	public static Icon getLinkIcon() {
+		return new ImageIcon(ImageUtil.getLinkIconImage());
+	}
+
+	public static Icon getGoogleIcon() {
+		return new ImageIcon(ImageUtil.getGoogleIconImage());
 	}
 }

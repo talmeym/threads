@@ -102,7 +102,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 			JPopupMenu x_menu = new JPopupMenu();
 			ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
 			final Date x_date = x_model.getDate(row, col);
-			List<Item> x_actions = LookupHelper.getAllActions(o_thread, x_date);
+			final List<Item> x_actions = LookupHelper.getAllActions(o_thread, x_date);
 
 			for(final Item x_action: x_actions) {
 				String x_text = ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem(x_action);
@@ -149,6 +149,27 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 					}
 				}
 			});
+
+			if(x_actions.size() > 0) {
+				JMenuItem x_linkMenuItem = new JMenuItem("Link to Google");
+				x_linkMenuItem.setForeground(Color.gray);
+				x_menu.add(x_linkMenuItem);
+
+				x_linkMenuItem.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent actionEvent) {
+						if (JOptionPane.showConfirmDialog(x_this, "Link " + x_actions.size() + " Actions to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+							GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(x_this), new ProgressAdapter(){
+								@Override
+								public void finished() {
+									JOptionPane.showMessageDialog(x_this, x_actions.size() + " Actions were linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+								}
+							});
+							x_task.execute();
+						}
+					}
+				});
+			}
 
 			x_menu.show(o_table, ((o_table.getWidth() / 7) * col) - 14, (o_table.getHeight() / 5) * row + 21);
 		}

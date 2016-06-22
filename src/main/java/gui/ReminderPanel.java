@@ -1,19 +1,35 @@
 package gui;
 
 import data.*;
+import util.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.util.Arrays;
 
 public class ReminderPanel extends JPanel implements ComponentInfoChangeListener {
-    public ReminderPanel(final Reminder p_reminder) {
-        super(new BorderLayout());
+	private Reminder o_reminder;
 
-		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_reminder, this, this);
+	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
+
+	public ReminderPanel(final Reminder p_reminder) {
+        super(new BorderLayout());
+		o_reminder = p_reminder;
+
+		o_linkLabel.setToolTipText("Link to Google Calendar");
+		o_linkLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				linkToGoogle();
+			}
+		});
+
+		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_reminder, this, this, o_linkLabel);
 		o_compInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         JPanel x_remindDatePanel = new JPanel(new BorderLayout());
-		x_remindDatePanel.add(new RemindDateSuggestionPanel(p_reminder, this), BorderLayout.CENTER);
+		x_remindDatePanel.add(new RemindDateSuggestionPanel(p_reminder, this, this), BorderLayout.CENTER);
 		x_remindDatePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
         JPanel x_panel = new JPanel(new BorderLayout());
@@ -22,6 +38,22 @@ public class ReminderPanel extends JPanel implements ComponentInfoChangeListener
 
 		add(x_panel, BorderLayout.NORTH);
     }
+
+	private void linkToGoogle() {
+		final JPanel x_this = this;
+
+		if (o_linkLabel.isEnabled()) {
+			if (JOptionPane.showConfirmDialog(x_this, "Link '" + o_reminder.getText() + "' to Google Calendar ?", "Link to Google ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(o_reminder, new ProgressAdapter() {
+					@Override
+					public void finished() {
+						JOptionPane.showMessageDialog(x_this, "'" + o_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+					}
+				});
+				x_task.execute();
+			}
+		}
+	}
 
 	@Override
 	public void componentInfoChanged(boolean saved) {

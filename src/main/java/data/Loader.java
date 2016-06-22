@@ -36,7 +36,8 @@ public class Loader {
 	private static Thread loadThread(Element p_element) {
 		UUID id = loadId(p_element);
         Date x_creationDate = loadCreatedDate(p_element);
-        boolean x_active = loadActiveFlag(p_element);        
+		Date x_modifiedDate = loadModifiedDate(p_element);
+        boolean x_active = loadActiveFlag(p_element);
         String x_text = loadText(p_element); 
         List x_threads = p_element.getChildren();
         List<ThreadItem> x_itemList = new ArrayList<ThreadItem>();
@@ -52,13 +53,14 @@ public class Loader {
 			}
 		}
 
-		return new Thread(id, x_creationDate, x_active, x_text, x_itemList, loadDocFolder(p_element));
+		return new Thread(id, x_creationDate, x_modifiedDate, x_active, x_text, x_itemList, loadDocFolder(p_element));
     }
 
     private static Item loadItem(Element p_element) {
 		UUID id = loadId(p_element);
         Date x_creationDate = loadCreatedDate(p_element);
-        boolean x_active = loadActiveFlag(p_element);        
+		Date x_modifiedDate = loadModifiedDate(p_element);
+        boolean x_active = loadActiveFlag(p_element);
         String x_text = loadText(p_element);
 		String x_dueDateStr = p_element.getChildText(XmlConstants.s_DUE);
 		Date x_dueDate = null;
@@ -74,16 +76,17 @@ public class Loader {
 			}
 		}
 
-		return new Item(id, x_creationDate, x_active, x_text, x_dueDate, x_reminderList, loadDocFolder(p_element));
+		return new Item(id, x_creationDate, x_modifiedDate, x_active, x_text, x_dueDate, x_reminderList, loadDocFolder(p_element));
     }
 
     private static Reminder loadReminder(Element p_element) {
 		UUID id = loadId(p_element);
 		Date x_creationDate = loadCreatedDate(p_element);
-        boolean x_active = loadActiveFlag(p_element);        
+		Date x_modifiedDate = loadModifiedDate(p_element);
+        boolean x_active = loadActiveFlag(p_element);
         String x_text = loadText(p_element);
         Date x_date = loadDateTime(p_element.getChildText(XmlConstants.s_REM_DATE));
-		return new Reminder(id, x_creationDate, x_active, x_text, x_date, loadDocFolder(p_element));
+		return new Reminder(id, x_creationDate, x_modifiedDate, x_active, x_text, x_date, loadDocFolder(p_element));
     }
 
 	private static UUID loadId(Element p_element) {
@@ -94,6 +97,18 @@ public class Loader {
         return loadDateTime(p_element.getAttributeValue(XmlConstants.s_CREATED));
     }
     
+    private static Date loadModifiedDate(Element p_element) {
+		String x_modifiedValue = p_element.getAttributeValue(XmlConstants.s_MODIFIED);
+
+		// TODO remove soon
+
+		if(x_modifiedValue == null) {
+			return loadCreatedDate(p_element);
+		}
+
+		return loadDateTime(x_modifiedValue);
+    }
+
     private static boolean loadActiveFlag(Element p_element) {
         return loadBoolean(p_element.getAttributeValue(XmlConstants.s_ACTIVE));
     }

@@ -1,14 +1,14 @@
 package gui;
 
 import data.*;
-import util.DateUtil;
+import util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.*;
-import java.util.Date;
+import java.util.*;
 
 public class RemindDateSuggestionPanel extends JPanel {
     private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
@@ -44,22 +44,43 @@ public class RemindDateSuggestionPanel extends JPanel {
     private final JComboBox o_hourBox = new JComboBox(s_hourItems);
     private final JComboBox o_dayBox = new JComboBox(s_dayItems);
     private final JComboBox o_weekBox = new JComboBox(s_weekItems);
+	private boolean o_modified = false;
 
-	public RemindDateSuggestionPanel(Reminder p_reminder, final ComponentInfoChangeListener p_listener) {
+	public RemindDateSuggestionPanel(Reminder p_reminder, final JPanel p_parentPanel, final ComponentInfoChangeListener p_listener) {
         super(new BorderLayout());
 		o_reminder = p_reminder;
 		o_listener = p_listener;
 
 		final DocumentListener x_listener = new DocumentListener() {
-			@Override public void insertUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
-			@Override public void removeUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
-			@Override public void changedUpdate(DocumentEvent documentEvent) { p_listener.componentInfoChanged(false); }
+			@Override public void insertUpdate(DocumentEvent documentEvent) {
+				p_listener.componentInfoChanged(false);
+				o_modified = true;
+			}
+
+			@Override public void removeUpdate(DocumentEvent documentEvent) {
+				p_listener.componentInfoChanged(false);
+				o_modified = true;
+			}
+
+			@Override public void changedUpdate(DocumentEvent documentEvent) {
+				p_listener.componentInfoChanged(false);
+				o_modified = true;
+			}
 		};
+
+		o_reminder.addObserver(new Observer() {
+			@Override
+			public void update(Observable observable, Object o) {
+				o_dueDateField.getDocument().removeDocumentListener(x_listener);
+				o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
+				o_dueDateField.getDocument().addDocumentListener(x_listener);
+			}
+		});
 
 		o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
 		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
 		o_dueDateField.getDocument().addDocumentListener(x_listener);
-		o_dueDateField.setToolTipText("Press enter to set date");
+		o_dueDateField.setToolTipText("Press enter to set");
 
 		o_dueDateField.addActionListener(new ActionListener(){
 			@Override
@@ -80,6 +101,13 @@ public class RemindDateSuggestionPanel extends JPanel {
 			public void focusLost(FocusEvent focusEvent) {
 				if(o_dueDateField.getText().length() == 0) {
 					setDueDateText(s_defaultTextString, Color.gray);
+				} else if(o_modified) {
+					if(JOptionPane.showConfirmDialog(p_parentPanel, "You've made modifications, would you like to keep them ?", "Set date to '" + o_dueDateField.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == 0) {
+						setDueDate();
+					} else {
+						o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
+						o_modified = false;
+					}
 				}
 			}
 
@@ -170,6 +198,7 @@ public class RemindDateSuggestionPanel extends JPanel {
 
 		o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
 		o_listener.componentInfoChanged(true);
+		o_modified = false;
 	}
 
 	private String getDueDateText(Date x_dueDate) {

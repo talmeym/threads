@@ -6,14 +6,17 @@ import java.util.*;
 public abstract class Component extends ObservableObserver {
 	private final UUID o_id;
 	private final Date o_creationDate;
+	private Date o_modifiedDate;
     private boolean o_active;
     private String o_text;
     private Component o_parentComponent;
 	private File o_docFolder;
 
-	Component(UUID p_id, Date p_creationDate, boolean p_activeFlag, String p_text, File p_docFolder) {
+
+	Component(UUID p_id, Date p_creationDate, Date p_modifiedDate, boolean p_activeFlag, String p_text, File p_docFolder) {
 		o_id = p_id;
 		o_creationDate = p_creationDate;
+		o_modifiedDate = p_modifiedDate;
         o_active = p_activeFlag;
         o_text = p_text;
 		o_docFolder = p_docFolder;
@@ -27,26 +30,36 @@ public abstract class Component extends ObservableObserver {
         return o_creationDate;
     }
     
+	public Date getModifiedDate() {
+		return o_modifiedDate;
+	}
+
+	protected void modified() {
+		o_modifiedDate = new Date();
+	}
+
     public boolean isActive() {
         return o_active;
     }
-    
+
     public String getText() {
         return o_text;
     }
-    
+
     public Component getParentComponent() {
         return o_parentComponent;
     }
-    
+
     public void setActive(boolean p_active) {
         o_active = p_active;
         changed();
+		modified();
     }
 
     public void setText(String p_text) {
         o_text = p_text;
         changed();
+		modified();
     }
 
     void setParentComponent(Component p_parentComponent) {
@@ -60,6 +73,7 @@ public abstract class Component extends ObservableObserver {
 	public void setDocFolder(File p_docFolder) {
 		o_docFolder = p_docFolder;
 		changed();
+		modified();
 	}
 
     public String toString() {
