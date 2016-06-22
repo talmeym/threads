@@ -71,6 +71,10 @@ public class ImageUtil {
 		return loadImage("/google.png");
 	}
 
+	public static Image getGoogleSmallIconImage() {
+		return loadImage("/google_icon.png");
+	}
+
 	public static Image getThreadsIconImage() {
 		return loadImage("/threads_icon.gif");
 	}
@@ -148,5 +152,9 @@ public class ImageUtil {
 
 	public static Icon getGoogleIcon() {
 		return new ImageIcon(ImageUtil.getGoogleIconImage());
+	}
+
+	public static Icon getGoogleSmallIcon() {
+		return new ImageIcon(ImageUtil.getGoogleSmallIconImage());
 	}
 }

@@ -1,12 +1,14 @@
 package gui;
 
+import util.*;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Date;
 
-abstract class ComponentTablePanel extends MemoryPanel {
+abstract class ComponentTablePanel extends MemoryPanel implements TimeUpdateListener, GoogleSyncListener {
     protected final JTable o_table;
 
 	protected ComponentTablePanel(TableModel p_tableModel, TableCellRenderer p_cellRenderer) {
@@ -49,4 +51,14 @@ abstract class ComponentTablePanel extends MemoryPanel {
     abstract void tableRowClicked(int row, int col);
 
     abstract void tableRowDoubleClicked(int row, int col);
+
+	@Override
+	public void timeUpdate() {
+		// do nothing by default
+	}
+
+	@Override
+	public void googleSynced() {
+		// do nothing by default
+	}
 }

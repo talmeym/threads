@@ -25,6 +25,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
         fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
         fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
+        fixColumnWidth(4, 30);
 
 		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addLabel.setToolTipText("Add Action");
@@ -76,13 +77,8 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
 
-		TimeUpdater.getInstance().addTimeUpdateListener(new TimeUpdateListener() {
-			@Override
-			public void timeUpdate() {
-				((ComponentTableModel)o_table.getModel()).fireTableDataChanged();
-				tableRowClicked(-1, -1);
-			}
-		});
+		TimeUpdater.getInstance().addTimeUpdateListener(this);
+		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
 	protected void addSomething(int p_index) {
@@ -208,6 +204,18 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 
 	@Override
 	public void update(Observable observable, Object o) {
+		tableRowClicked(-1, -1);
+	}
+
+	@Override
+	public void timeUpdate() {
+		((ComponentTableModel)o_table.getModel()).fireTableDataChanged();
+		tableRowClicked(-1, -1);
+	}
+
+	@Override
+	public void googleSynced() {
+		((ComponentTableModel)o_table.getModel()).fireTableDataChanged();
 		tableRowClicked(-1, -1);
 	}
 }

@@ -2,12 +2,13 @@ package gui;
 
 import data.Thread;
 import data.*;
+import util.GoogleUtil;
 
 import java.util.Date;
 
 class ThreadContentsTableModel extends ComponentTableModel {
     ThreadContentsTableModel(Thread p_thread) {
-        super(p_thread, new String[]{"Creation Date", "Type", "Name", "Threads", "Updates", "Actions"});
+        super(p_thread, new String[]{"Creation Date", "Type", "Name", "Threads", "Updates", "Actions", ""});
     }
 
     public int getRowCount() {
@@ -36,7 +37,8 @@ class ThreadContentsTableModel extends ComponentTableModel {
 			case 2: return x_threadItem.getText();
 			case 3: return x_threadItem instanceof Thread ? LookupHelper.getAllActiveThreads((Thread) x_threadItem).size() : "";
 			case 4: return x_threadItem instanceof Thread ? LookupHelper.getAllActiveUpdates((Thread) x_threadItem).size() : "";
-			default: return x_threadItem instanceof Thread ? LookupHelper.getAllActiveActions((Thread) x_threadItem).size() : "";
+			case 5: return x_threadItem instanceof Thread ? LookupHelper.getAllActiveActions((Thread) x_threadItem).size() : "";
+			default: return GoogleUtil.isLinked(x_threadItem);
         }
     }
 }

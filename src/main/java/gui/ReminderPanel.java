@@ -1,14 +1,13 @@
 package gui;
 
 import data.*;
-import util.ImageUtil;
+import util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 
-public class ReminderPanel extends JPanel implements ComponentInfoChangeListener {
+public class ReminderPanel extends JPanel implements ComponentInfoChangeListener, GoogleSyncListener {
 	private Reminder o_reminder;
 
 	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
@@ -37,6 +36,8 @@ public class ReminderPanel extends JPanel implements ComponentInfoChangeListener
         x_panel.add(x_remindDatePanel, BorderLayout.CENTER);
 
 		add(x_panel, BorderLayout.NORTH);
+
+		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
 	private void linkToGoogle() {
@@ -48,6 +49,7 @@ public class ReminderPanel extends JPanel implements ComponentInfoChangeListener
 					@Override
 					public void finished() {
 						JOptionPane.showMessageDialog(x_this, "'" + o_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+						googleSynced();
 					}
 				});
 				x_task.execute();
@@ -58,5 +60,14 @@ public class ReminderPanel extends JPanel implements ComponentInfoChangeListener
 	@Override
 	public void componentInfoChanged(boolean saved) {
 		// do nothing
+	}
+
+	@Override
+	public void googleSynced() {
+		if(GoogleUtil.isLinked(o_reminder)) {
+			o_linkLabel.setIcon(ImageUtil.getGoogleSmallIcon());
+		} else {
+			o_linkLabel.setIcon(ImageUtil.getLinkIcon());
+		}
 	}
 }

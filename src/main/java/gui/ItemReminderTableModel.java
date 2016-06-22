@@ -1,13 +1,11 @@
 package gui;
 
 import data.*;
-import util.DateUtil;
-
-import java.util.Date;
+import util.*;
 
 public class ItemReminderTableModel extends ComponentTableModel {
     public ItemReminderTableModel(Item p_item) {
-        super(p_item, new String[] {"Text", "Due Date", "Due"});
+        super(p_item, new String[] {"Text", "Due Date", "Due", ""});
     }
 
 	@Override
@@ -23,10 +21,7 @@ public class ItemReminderTableModel extends ComponentTableModel {
 
 	@Override
     public Class getColumnClass(int col) {
-        switch(col) {
-			case 1: return Date.class;
-			default: return String.class;
-        }        
+		return String.class;
     }
 
 	@Override
@@ -35,8 +30,9 @@ public class ItemReminderTableModel extends ComponentTableModel {
         
         switch(col) {
 			case 0: return x_reminder.getText();
-			case 1: return x_reminder.getDueDate();
-			default: return DateUtil.getDateStatus(x_reminder.getDueDate());
+			case 1: return DateUtil.getFormattedDate(x_reminder.getDueDate());
+			case 2: return DateUtil.getDateStatus(x_reminder.getDueDate());
+			default: return GoogleUtil.isLinked(x_reminder);
         }
     }    
 }

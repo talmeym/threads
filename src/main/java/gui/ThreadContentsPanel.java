@@ -2,7 +2,7 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.ImageUtil;
+import util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +28,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
         fixColumnWidth(3, GUIConstants.s_statsColumnWidth);
         fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
         fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
+        fixColumnWidth(6, 30);
 
 		JLabel x_addItemLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addItemLabel.setToolTipText("Add Content");
@@ -80,8 +81,10 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
         x_buttonPanel.add(o_moveLabel);
         x_buttonPanel.add(o_linkLabel);
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-        
+
         add(x_buttonPanel, BorderLayout.SOUTH);
+
+		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
 	public void addSomething(int p_index) {

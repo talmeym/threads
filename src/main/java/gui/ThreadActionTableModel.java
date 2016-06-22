@@ -9,7 +9,7 @@ import java.util.*;
 class ThreadActionTableModel extends ComponentTableModel
 {
     ThreadActionTableModel(Thread p_thread) {
-        super(p_thread, new String[] {"Thread", "Action", "Due Date", "Due"});
+        super(p_thread, new String[] {"Thread", "Action", "Due Date", "Due", ""});
     }
     
     public int getRowCount() {
@@ -24,8 +24,7 @@ class ThreadActionTableModel extends ComponentTableModel
 
     public Class getColumnClass(int col) {
         switch(col) {
-			case 0:
-			case 3: return Date.class;
+			case 0: return Date.class;
 			default: return String.class;
         }        
     }
@@ -36,8 +35,9 @@ class ThreadActionTableModel extends ComponentTableModel
         switch(col) {
 			case 0: return x_item.getParentThread().getText();
 			case 1: return x_item.getText();
-			case 2: return x_item.getDueDate();
-			default: return DateUtil.getDateStatus(x_item.getDueDate());
+			case 2: return DateUtil.getFormattedDate(x_item.getDueDate());
+			case 3: return DateUtil.getDateStatus(x_item.getDueDate());
+			default: return GoogleUtil.isLinked(x_item);
         }
     }
 }

@@ -20,8 +20,9 @@ public class FolderManager {
         }
     }
     
-    public static void setDocFolder(Component p_component) {
+    public static void setDocFolder(Component p_component, JPanel p_panretPanel) {
         JFileChooser x_chooser = p_component.getDocFolder() != null ? new JFileChooser(p_component.getDocFolder()) : new JFileChooser();
+		x_chooser.setDialogTitle("Set Document Folder");
 
         x_chooser.setFileFilter(new FileFilter() {
             public boolean accept(File p_file) {
@@ -34,7 +35,7 @@ public class FolderManager {
         });
 
         x_chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnVal = x_chooser.showDialog(null, "Set Document Folder");
+        int returnVal = x_chooser.showDialog(p_panretPanel, "Set");
 
 		if(returnVal == JFileChooser.APPROVE_OPTION)  {
             File x_folder = x_chooser.getSelectedFile(); 

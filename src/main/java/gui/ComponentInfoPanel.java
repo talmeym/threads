@@ -195,7 +195,7 @@ public class ComponentInfoPanel extends JPanel {
 				x_setItem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent actionEvent) {
-						FolderManager.setDocFolder(o_component);
+						FolderManager.setDocFolder(o_component, p_parentPanel);
 					}
 				});
 

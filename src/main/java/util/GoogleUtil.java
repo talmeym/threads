@@ -29,6 +29,8 @@ public class GoogleUtil {
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	public static final String FROM_GOOGLE = "From Google";
 
+	public static Map<UUID, Component> linkedComponents = new HashMap<UUID, Component>();
+
 	/**
 	 * Be sure to specify the name of your application. If the application name is {@code null} or
 	 * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
@@ -70,6 +72,8 @@ public class GoogleUtil {
 	}
 
 	public static synchronized void syncWithGoogle(Thread thread) {
+		Map<UUID, Component> linkedComponents = new HashMap<UUID, Component>();
+
 		try {
 			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
@@ -98,6 +102,8 @@ public class GoogleUtil {
 						Component component = thread.findComponent(id);
 
 						if(component != null && component.isActive()) {
+							linkedComponents.put(component.getId(), component);
+
 							Date componentModified = component.getModifiedDate();
 							Date eventModified = new Date(event.getUpdated().getValue());
 
@@ -141,12 +147,14 @@ public class GoogleUtil {
 						Item item = new Item(summary);
 						item.setDueDate(start);
 						Thread threadToAddTo = null;
+						linkedComponents.put(item.getId(), item);
 
 						for(int i = 0; i< thread.getThreadItemCount(); i++) {
 							ThreadItem threadItem = thread.getThreadItem(i);
 
 							if(threadItem.getText().equals(FROM_GOOGLE) && threadItem instanceof Thread) {
 								threadToAddTo = (Thread) threadItem;
+								break;
 							}
 						}
 
@@ -162,6 +170,8 @@ public class GoogleUtil {
 					}
 				}
 			}
+
+			GoogleUtil.linkedComponents = linkedComponents;
 		} catch (Throwable t) {
 //			System.out.println("Error talking to Google: " + t.getMessage());
 			t.printStackTrace();
@@ -223,6 +233,8 @@ public class GoogleUtil {
 							addEvent(calendarId, reminder);
 						}
 					}
+
+					linkedComponents.put(reminder.getId(), reminder);
 				}
 
 				if (callbacks != null) {
@@ -230,6 +242,8 @@ public class GoogleUtil {
 						callback.progress(item.getText());
 					}
 				}
+
+				linkedComponents.put(item.getId(), item);
 			}
 
 			if(callbacks != null) {
@@ -237,6 +251,8 @@ public class GoogleUtil {
 					callback.finished();
 				}
 			}
+
+			GoogleSyncer.getInstance().googleSynced();
 		} catch (Throwable t) {
 //			System.out.println("Error talking to Google: " + t.getMessage());
 			t.printStackTrace();
@@ -281,6 +297,8 @@ public class GoogleUtil {
 						callback.progress(reminder.getText());
 					}
 				}
+
+				linkedComponents.put(reminder.getId(), reminder);
 			}
 
 			if(callbacks != null) {
@@ -288,6 +306,8 @@ public class GoogleUtil {
 					callback.finished();
 				}
 			}
+
+			GoogleSyncer.getInstance().googleSynced();
 		} catch (Throwable t) {
 			System.out.println("Error talking to Google: " + t.getMessage());
 		}
@@ -348,5 +368,9 @@ public class GoogleUtil {
 	private static List<Event> getEvents(String calendarId) throws IOException {
 		Events feed = client.events().list(calendarId).execute();
 		return feed.getItems();
+	}
+
+	public static boolean isLinked(Component component) {
+		return linkedComponents.containsKey(component.getId());
 	}
 }

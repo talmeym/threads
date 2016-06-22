@@ -4,7 +4,7 @@ import data.*;
 import data.Component;
 import data.Thread;
 import util.*;
-import util.TimedGoogleSyncer;
+import util.GoogleSyncer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +43,7 @@ public class WindowManager {
 			public void windowClosing(WindowEvent windowEvent) {
 				setNavigationWindowDetails(o_navigationWindow.getLocation(), o_navigationWindow.getSize());
 				TimedSaver.getInstance().stopRunning();
-				TimedGoogleSyncer.getInstance().stopRunning();
+				GoogleSyncer.getInstance().stopRunning();
 				Saver.saveDocument(p_topLevelThread, p_dataFilePath);
 				saveSettings(p_settingsFilePath);
 				System.exit(0);

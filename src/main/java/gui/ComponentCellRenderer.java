@@ -3,7 +3,7 @@ package gui;
 import data.Component;
 import data.*;
 import data.Thread;
-import util.DateUtil;
+import util.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -19,13 +19,27 @@ class ComponentCellRenderer extends DefaultTableCellRenderer {
     ComponentCellRenderer(Component p_component) {
         o_component = p_component;
     }
-    
-    public java.awt.Component getTableCellRendererComponent(JTable p_table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
-        if(p_value instanceof Date) {
-            p_value = p_col == 0 ? s_dateFormat.format((Date)p_value) : DateUtil.getFormattedDate((Date) p_value);
-        }
 
-        java.awt.Component x_component = super.getTableCellRendererComponent(p_table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
+	@Override
+	public void setValue(Object p_value) {
+		setText("");
+		setIcon(null);
+		setHorizontalAlignment(JTextField.LEFT);
+
+		if(p_value instanceof Boolean) {
+			if((Boolean) p_value) {
+				setIcon(ImageUtil.getGoogleSmallIcon());
+				setHorizontalAlignment(JTextField.CENTER);
+			}
+		} else if(p_value instanceof Date) {
+			setText(s_dateFormat.format((Date)p_value));
+		} else {
+			setText(String.valueOf(p_value));
+		}
+	}
+
+    public java.awt.Component getTableCellRendererComponent(JTable p_table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
+		java.awt.Component x_component = super.getTableCellRendererComponent(p_table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
 
 		if(o_component instanceof Thread) {
 			ThreadItem x_thread = ((Thread)o_component).getThreadItem(p_row);

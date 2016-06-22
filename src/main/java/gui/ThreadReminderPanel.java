@@ -34,13 +34,8 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
         
         add(x_panel, BorderLayout.SOUTH);
 
-		TimeUpdater.getInstance().addTimeUpdateListener(new TimeUpdateListener() {
-			@Override
-			public void timeUpdate() {
-				((ComponentTableModel)o_table.getModel()).fireTableDataChanged();
-				tableRowClicked(-1, -1);
-			}
-		});
+		TimeUpdater.getInstance().addTimeUpdateListener(this);
+		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
 	private void dismissReminder(int p_index) {
@@ -81,6 +76,18 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
 
 	@Override
 	public void update(Observable observable, Object o) {
+		tableRowClicked(-1, -1);
+	}
+
+	@Override
+	public void timeUpdate() {
+		((ComponentTableModel) o_table.getModel()).fireTableDataChanged();
+		tableRowClicked(-1, -1);
+	}
+
+	@Override
+	public void googleSynced() {
+		((ComponentTableModel) o_table.getModel()).fireTableDataChanged();
 		tableRowClicked(-1, -1);
 	}
 }
