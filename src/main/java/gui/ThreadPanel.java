@@ -31,14 +31,13 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 		o_tabs.setBackgroundAt(2, Color.gray);
 		o_tabs.setBackgroundAt(3, Color.gray);
 		o_tabs.setBackgroundAt(4, Color.gray);
-		o_tabs.setBackgroundAt(5, Color.gray);
 
 		o_tabs.setToolTipTextAt(0, "The contents of this Thread");
-		o_tabs.setToolTipTextAt(1, "A view of all active child Threads");
-		o_tabs.setToolTipTextAt(2, "A view of all active child Updates");
-		o_tabs.setToolTipTextAt(3, "A view of all active child Actions");
-		o_tabs.setToolTipTextAt(4, "A calendar view of all active child Actions");
-		o_tabs.setToolTipTextAt(5, "A view of all due Reminders of active child Actions");
+		o_tabs.setToolTipTextAt(1, "A view of all active Threads");
+		o_tabs.setToolTipTextAt(2, "A view of all active Updates");
+		o_tabs.setToolTipTextAt(3, "A view of all active Actions");
+		o_tabs.setToolTipTextAt(4, "A calendar view of all active Actions");
+		o_tabs.setToolTipTextAt(5, "A view of all due Reminders");
 
 		final JLabel x_linkLabel = new JLabel(ImageUtil.getLinkIcon());
 		x_linkLabel.setToolTipText("Link to Google Calendar");
@@ -116,7 +115,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
             o_tabs.setBackgroundAt(5, Color.red);
         } else {
 			o_tabs.setTitleAt(5, "Reminders");
-            o_tabs.setBackgroundAt(5, o_tabs.getBackgroundAt(1));
+            o_tabs.setBackgroundAt(5, o_tabs.getBackgroundAt(0));
         }
     }
 

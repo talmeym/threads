@@ -28,7 +28,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 		x_addLabel.setEnabled(o_item.getDueDate() != null);
 		o_removeLabel.setEnabled(false);
 		o_dismissLabel.setEnabled(false);
-		o_linkLabel.setEnabled(o_item.getDueDate() != null && o_item.isActive());
+		o_linkLabel.setEnabled(o_item.getDueDate() != null);
 		o_linkReminderLabel.setEnabled(false);
 
 		ComponentInfoChangeListener x_listener = new ComponentInfoChangeListener() {
@@ -167,7 +167,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 	void tableRowClicked(int row, int col) {
 		o_removeLabel.setEnabled(row != -1);
 		o_dismissLabel.setEnabled(row != -1 && o_item.getReminder(row).isActive());
-		o_linkReminderLabel.setEnabled(row != -1 && o_item.getReminder(row).isActive());
+		o_linkReminderLabel.setEnabled(row != -1);
 	}
 
 	void tableRowDoubleClicked(int row, int col) {
@@ -178,7 +178,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 
 	@Override
 	public void update(Observable observable, Object o) {
-		o_linkLabel.setEnabled(o_item.getDueDate() != null && o_item.isActive());
+		o_linkLabel.setEnabled(o_item.getDueDate() != null);
 		tableRowClicked(-1, -1);
 	}
 
