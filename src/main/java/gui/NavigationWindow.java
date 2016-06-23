@@ -13,7 +13,7 @@ public class NavigationWindow extends JFrame {
 		o_navigationPanel = new NavigationPanel(p_topLevelThread);
 		setContentPane(o_navigationPanel);
 		setSize(GUIConstants.s_navWindowSize);
-		setTitle("Navigation");
+		setTitle("Threads");
 		ImageUtil.addIcon(this);
 	}
 
