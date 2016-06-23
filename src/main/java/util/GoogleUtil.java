@@ -29,7 +29,7 @@ public class GoogleUtil {
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	public static final String FROM_GOOGLE = "From Google";
 
-	public static Map<UUID, Component> linkedComponents = new HashMap<UUID, Component>();
+	public static final List<UUID> linkedComponents = new ArrayList<UUID>();
 
 	/**
 	 * Be sure to specify the name of your application. If the application name is {@code null} or
@@ -71,15 +71,18 @@ public class GoogleUtil {
 		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
 	}
 
-	public static synchronized void syncWithGoogle(Thread thread) {
-		Map<UUID, Component> linkedComponents = new HashMap<UUID, Component>();
+	private static synchronized void initialise() throws Exception {
+		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+		dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+		Credential credential = authorize();
+		client = new com.google.api.services.calendar.Calendar.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
+	}
+
+	public static void syncWithGoogle(Thread thread) {
+		List<UUID> syncedComponents = new ArrayList<UUID>();
 
 		try {
-			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-			Credential credential = authorize();
-			client = new com.google.api.services.calendar.Calendar.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
-
+			initialise();
 			String calendarId = findCalendar();
 			List<Event> events = getEvents(calendarId);
 
@@ -101,8 +104,8 @@ public class GoogleUtil {
 						UUID id = UUID.fromString(description);
 						Component component = thread.findComponent(id);
 
-						if(component != null && component.isActive()) {
-							linkedComponents.put(component.getId(), component);
+						if(component != null) {
+							syncedComponents.add(component.getId());
 
 							Date componentModified = component.getModifiedDate();
 							Date eventModified = new Date(event.getUpdated().getValue());
@@ -147,7 +150,7 @@ public class GoogleUtil {
 						Item item = new Item(summary);
 						item.setDueDate(start);
 						Thread threadToAddTo = null;
-						linkedComponents.put(item.getId(), item);
+						syncedComponents.add(item.getId());
 
 						for(int i = 0; i< thread.getThreadItemCount(); i++) {
 							ThreadItem threadItem = thread.getThreadItem(i);
@@ -171,28 +174,28 @@ public class GoogleUtil {
 				}
 			}
 
-			GoogleUtil.linkedComponents = linkedComponents;
+			synchronized (linkedComponents) {
+				linkedComponents.clear();
+				linkedComponents.addAll(syncedComponents);
+			}
 		} catch (Throwable t) {
-//			System.out.println("Error talking to Google: " + t.getMessage());
 			t.printStackTrace();
 		}
 
 		System.out.println("Google Sync Done.");
 	}
 
-	public static synchronized void linkItemsToGoogle(List<Item> items, ProgressCallBack... callbacks) {
+	public static void linkItemsToGoogle(List<Item> items, ProgressCallBack... callbacks) {
 		if(callbacks != null) {
+			int x_count = LookupHelper.countActiveSyncableComponents(items);
+
 			for(ProgressCallBack callback: callbacks) {
-				callback.started(items.size());
+				callback.started(x_count);
 			}
 		}
 
 		try {
-			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-			Credential credential = authorize();
-			client = new com.google.api.services.calendar.Calendar.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
-
+			initialise();
 			String calendarId = findCalendar();
 			List<Event> events = getEvents(calendarId);
 
@@ -234,7 +237,13 @@ public class GoogleUtil {
 						}
 					}
 
-					linkedComponents.put(reminder.getId(), reminder);
+					if (callbacks != null) {
+						for(ProgressCallBack callback: callbacks) {
+							callback.progress(reminder.getText());
+						}
+					}
+
+					linkedComponents.add(reminder.getId());
 				}
 
 				if (callbacks != null) {
@@ -243,7 +252,7 @@ public class GoogleUtil {
 					}
 				}
 
-				linkedComponents.put(item.getId(), item);
+				linkedComponents.add(item.getId());
 			}
 
 			if(callbacks != null) {
@@ -254,12 +263,11 @@ public class GoogleUtil {
 
 			GoogleSyncer.getInstance().googleSynced();
 		} catch (Throwable t) {
-//			System.out.println("Error talking to Google: " + t.getMessage());
 			t.printStackTrace();
 		}
 	}
 
-	public static synchronized void linkRemindersToGoogle(List<Reminder> reminders, ProgressCallBack... callbacks) {
+	public static void linkRemindersToGoogle(List<Reminder> reminders, ProgressCallBack... callbacks) {
 		if(callbacks != null) {
 			for(ProgressCallBack callback: callbacks) {
 				callback.started(reminders.size());
@@ -267,11 +275,7 @@ public class GoogleUtil {
 		}
 
 		try {
-			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-			Credential credential = authorize();
-			client = new com.google.api.services.calendar.Calendar.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
-
+			initialise();
 			String calendarId = findCalendar();
 			List<Event> events = getEvents(calendarId);
 
@@ -298,7 +302,7 @@ public class GoogleUtil {
 					}
 				}
 
-				linkedComponents.put(reminder.getId(), reminder);
+				linkedComponents.add(reminder.getId());
 			}
 
 			if(callbacks != null) {
@@ -371,6 +375,8 @@ public class GoogleUtil {
 	}
 
 	public static boolean isLinked(Component component) {
-		return linkedComponents.containsKey(component.getId());
+		synchronized (linkedComponents) {
+			return linkedComponents.contains(component.getId());
+		}
 	}
 }

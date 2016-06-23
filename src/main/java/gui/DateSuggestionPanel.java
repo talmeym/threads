@@ -58,11 +58,12 @@ class DateSuggestionPanel extends JPanel {
 				o_dueDateField.getDocument().removeDocumentListener(x_listener);
 				o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
 				o_dueDateField.getDocument().addDocumentListener(x_listener);
+				o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
 			}
 		});
 
 		o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
-		o_dueDateField.setForeground(o_item.getDueDate() != null ? Color.black : Color.gray);
+		o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
 		o_dueDateField.setToolTipText("Press enter to set");
 		o_dueDateField.getDocument().addDocumentListener(x_listener);
 		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
@@ -71,16 +72,16 @@ class DateSuggestionPanel extends JPanel {
 			@Override
 			public void focusGained(FocusEvent focusEvent) {
 				if(o_dueDateField.getText().equals(s_defaultTextString)) {
-					setDueDateText("", Color.black);
+					setDueDateText("", o_item.isActive() ? Color.black : Color.gray);
 				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent focusEvent) {
-				if(o_dueDateField.getText().length() == 0) {
+				if(o_item.getDueDate() == null && o_dueDateField.getText().length() == 0) {
 					setDueDateText(s_defaultTextString, Color.gray);
 				} else if(o_modified) {
-					if(JOptionPane.showConfirmDialog(p_parentPanel, "You've made modifications, would you like to keep them ?", "Set date to '" + o_dueDateField.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == 0) {
+					if(JOptionPane.showConfirmDialog(p_parentPanel, "You've made modifications, would you like to keep them ?", "Set date to '" + o_dueDateField.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 						setDueDate();
 					} else {
 						o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
@@ -173,14 +174,14 @@ class DateSuggestionPanel extends JPanel {
         x_calendar.set(Calendar.DAY_OF_WEEK, ((DateItem)o_dayBox.getSelectedItem()).o_value);
 		x_calendar.add(Calendar.DATE, ((DateItem)o_weekBox.getSelectedItem()).o_value);
 		o_dueDateField.setText(getDueDateText(x_calendar.getTime()));
-		o_dueDateField.setForeground(Color.black);
+		o_dueDateField.setForeground(o_item.isActive() ? Color.black : Color.gray);
 		setDueDate();
     }
 
 	private void setDueDate() {
 		String x_text = o_dueDateField.getText();
 
-		if(!(StringUtils.isEmpty(x_text) || x_text.equals(s_defaultTextString))) {
+		if(!StringUtils.isEmpty(x_text)) {
 			Date x_dueDate = null;
 
 			try {
@@ -210,7 +211,7 @@ class DateSuggestionPanel extends JPanel {
 		}
 
 		o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
-		o_dueDateField.setForeground(o_item.getDueDate() != null ? Color.black : Color.gray);
+		o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
 		o_listener.componentInfoChanged(true);
 		o_modified = false;
 	}

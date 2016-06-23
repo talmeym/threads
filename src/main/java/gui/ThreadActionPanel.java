@@ -157,7 +157,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 			final Item x_action = LookupHelper.getAllActiveActions(o_thread).get(p_index);
 
 			if (JOptionPane.showConfirmDialog(x_this, "Link '" + x_action.getText() + "' to Google Calendar ?", "Link to Google ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(x_action), new ProgressAdapter() {
+				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(x_action), new GoogleProgressWindow(x_this), new ProgressAdapter() {
 					@Override
 					public void finished() {
 						JOptionPane.showMessageDialog(x_this, "'" + x_action.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());

@@ -45,7 +45,7 @@ public class ReminderPanel extends JPanel implements ComponentInfoChangeListener
 
 		if (o_linkLabel.isEnabled()) {
 			if (JOptionPane.showConfirmDialog(x_this, "Link '" + o_reminder.getText() + "' to Google Calendar ?", "Link to Google ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(o_reminder, new ProgressAdapter() {
+				GoogleLinkTask x_task = new GoogleLinkTask(o_reminder, new GoogleProgressWindow(x_this), new ProgressAdapter() {
 					@Override
 					public void finished() {
 						JOptionPane.showMessageDialog(x_this, "'" + o_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());

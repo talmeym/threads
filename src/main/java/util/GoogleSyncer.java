@@ -6,7 +6,7 @@ import java.util.*;
 
 public class GoogleSyncer extends java.lang.Thread {
     private static GoogleSyncer s_INSTANCE = null;
-    private static final int s_updateFrequency = 20000;
+    private static final int s_updateFrequency = 28000;
 
     public static GoogleSyncer getInstance() {
         if(s_INSTANCE == null) {
@@ -35,6 +35,8 @@ public class GoogleSyncer extends java.lang.Thread {
         while(continueRunning()) {
             try {
                 if(o_topThread != null) {
+					java.lang.Thread.sleep(2000);
+
 					GoogleUtil.syncWithGoogle(o_topThread);
 
 					googleSynced();

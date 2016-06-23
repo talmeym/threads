@@ -153,14 +153,14 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 	private void linkToGoogle(int p_index) {
 		final JPanel x_this = this;
 		Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
-		final List<Item> x_activeActions = LookupHelper.getAllActiveActions(x_thread);
+		final List<Item> x_actions = LookupHelper.getAllActions(x_thread);
 
-		if (x_activeActions.size() > 0) {
-			if (JOptionPane.showConfirmDialog(x_this, "Link " + x_activeActions.size() + " Actions to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(x_activeActions, new GoogleProgressWindow(x_this), new ProgressAdapter() {
+		if (x_actions.size() > 0) {
+			if (JOptionPane.showConfirmDialog(x_this, "Link " + x_actions.size() + " Actions to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(x_this), new ProgressAdapter() {
 					@Override
 					public void finished() {
-						JOptionPane.showMessageDialog(x_this, x_activeActions.size() + " Actions were linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+						JOptionPane.showMessageDialog(x_this, x_actions.size() + " Actions were linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 					}
 				});
 

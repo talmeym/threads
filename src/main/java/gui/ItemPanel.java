@@ -28,7 +28,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 		x_addLabel.setEnabled(o_item.getDueDate() != null);
 		o_removeLabel.setEnabled(false);
 		o_dismissLabel.setEnabled(false);
-		o_linkLabel.setEnabled(o_item.getDueDate() != null);
+		o_linkLabel.setEnabled(o_item.getDueDate() != null && o_item.isActive());
 		o_linkReminderLabel.setEnabled(false);
 
 		ComponentInfoChangeListener x_listener = new ComponentInfoChangeListener() {
@@ -134,7 +134,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 
 		if (o_linkLabel.isEnabled()) {
 			if (JOptionPane.showConfirmDialog(x_this, "Link '" + o_item.getText() + "' to Google Calendar ?", "Link to Google ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(o_item), new ProgressAdapter() {
+				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(o_item), new GoogleProgressWindow(x_this), new ProgressAdapter() {
 					@Override
 					public void finished() {
 						JOptionPane.showMessageDialog(x_this, "'" + o_item.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
@@ -152,7 +152,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 			final Reminder x_reminder = o_item.getReminder(p_index);
 
 			if (JOptionPane.showConfirmDialog(x_this, "Link '" + x_reminder.getText() + "' to Google Calendar ?", "Link to Google ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(x_reminder, new ProgressAdapter() {
+				GoogleLinkTask x_task = new GoogleLinkTask(x_reminder, new GoogleProgressWindow(x_this), new ProgressAdapter() {
 					@Override
 					public void finished() {
 						JOptionPane.showMessageDialog(x_this, "'" + x_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
@@ -178,7 +178,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 
 	@Override
 	public void update(Observable observable, Object o) {
-		o_linkLabel.setEnabled(o_item.getDueDate() != null);
+		o_linkLabel.setEnabled(o_item.getDueDate() != null && o_item.isActive());
 		tableRowClicked(-1, -1);
 	}
 

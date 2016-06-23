@@ -70,14 +70,14 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 
 	private void linkToGoogle() {
 		final JPanel x_this = this;
-		final List<Item> x_activeActions = LookupHelper.getAllActiveActions(o_thread);
+		final List<Item> x_actions = LookupHelper.getAllActions(o_thread);
 
-		if (x_activeActions.size() > 0) {
-			if (JOptionPane.showConfirmDialog(x_this, "Link " + x_activeActions.size() + " Actions to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(x_activeActions, new GoogleProgressWindow(x_this), new ProgressAdapter() {
+		if (x_actions.size() > 0) {
+			if (JOptionPane.showConfirmDialog(x_this, "Link " + x_actions.size() + " Action" + (x_actions.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(x_this), new ProgressAdapter() {
 					@Override
 					public void finished() {
-						JOptionPane.showMessageDialog(x_this, x_activeActions.size() + " Actions were linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+						JOptionPane.showMessageDialog(x_this, x_actions.size() + " Action" + (x_actions.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 					}
 				});
 				x_task.execute();
