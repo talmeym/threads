@@ -20,7 +20,7 @@ public class DateUtil {
         return getDateStatus(p_date, new Date(), "ago");
     }
     
-    private static String getDateStatus(Date p_dueDate, Date p_refDate, String p_beforeStr) {
+    public static String getDateStatus(Date p_dueDate, Date p_refDate, String p_beforeStr) {
 		// make all day events be measure against start of today
 		p_refDate = isAllDay(p_dueDate) ? makeStartOfDay(p_refDate) : p_refDate;
 
@@ -146,7 +146,9 @@ public class DateUtil {
 	}
 
 	public static boolean isWithin7Days(Date p_dueDate, boolean p_includePast) {
-		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
+		Date x_date = new Date();
+//		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(x_date) : x_date;
+		Date x_now = isAllDay(p_dueDate) || DateUtil.timeIsBefore(p_dueDate, x_date) ? makeStartOfDay(x_date) : x_date;
 		long x_diff = p_dueDate.getTime() - x_now.getTime();
 		int x_sevenDays = 1000 * 60 * 60 * 24 * 7;
 		return p_includePast ? Math.abs(x_diff) < x_sevenDays : x_diff > 0 && x_diff < x_sevenDays;

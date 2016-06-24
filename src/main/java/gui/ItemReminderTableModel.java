@@ -31,7 +31,7 @@ public class ItemReminderTableModel extends ComponentTableModel {
         switch(col) {
 			case 0: return x_reminder.getText();
 			case 1: return DateUtil.getFormattedDate(x_reminder.getDueDate());
-			case 2: return DateUtil.getDateStatus(x_reminder.getDueDate());
+			case 2: return DateUtil.getDateStatus(x_reminder.getDueDate(), x_reminder.getItem().getDueDate(), "before");
 			default: return GoogleUtil.isLinked(x_reminder);
         }
     }    

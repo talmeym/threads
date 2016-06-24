@@ -51,7 +51,7 @@ public class ComponentInfoPanel extends JPanel {
 				o_textField.getDocument().removeDocumentListener(x_listener);
 				o_textField.setText(o_component.getText());
 				o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
-				o_activeLabel.setEnabled(o_component.getParentComponent() != null && o_component.isActive());
+				o_activeLabel.setEnabled(o_component.isActive());
 				o_textField.getDocument().addDocumentListener(x_listener);
 			}
 		});
@@ -234,7 +234,7 @@ public class ComponentInfoPanel extends JPanel {
 			@Override
 			public void update(Observable observable, Object o) {
 				if(observable == ((ObservableChangeEvent)o).getObservableObserver()) {
-					o_activeLabel.setEnabled(o_component.isActive() && o_component.getParentComponent() != null);
+					o_activeLabel.setEnabled(o_component.isActive());
 					o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
 				}
 			}
