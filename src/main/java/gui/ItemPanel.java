@@ -87,6 +87,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
         JPanel x_panel = new JPanel(new BorderLayout());
         x_panel.add(new ComponentInfoPanel(p_item, this, x_listener, o_linkItemLabel), BorderLayout.NORTH);
         x_panel.add(new DateSuggestionPanel(o_item, this, x_listener), BorderLayout.SOUTH);
+		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addReminderLabel));
