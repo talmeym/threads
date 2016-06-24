@@ -67,6 +67,7 @@ class DateSuggestionPanel extends JPanel {
 		o_dueDateField.setToolTipText("Press enter to set");
 		o_dueDateField.getDocument().addDocumentListener(x_listener);
 		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
+		o_dueDateField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
 
 		o_dueDateField.addFocusListener(new FocusListener() {
 			@Override
@@ -127,9 +128,9 @@ class DateSuggestionPanel extends JPanel {
 
 		JPanel x_fieldPanel = new JPanel();
 		x_fieldPanel.setLayout(new BoxLayout(x_fieldPanel, BoxLayout.Y_AXIS));
-		x_fieldPanel.add(Box.createVerticalStrut(12));
+		x_fieldPanel.add(Box.createVerticalStrut(14));
 		x_fieldPanel.add(o_dueDateField);
-		x_fieldPanel.add(Box.createVerticalStrut(12));
+		x_fieldPanel.add(Box.createVerticalStrut(14));
 		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
 		add(x_labelPanel, BorderLayout.WEST);

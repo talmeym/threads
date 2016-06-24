@@ -2,13 +2,15 @@ package gui;
 
 import data.Thread;
 import data.*;
-import util.ImageUtil;
+import util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+
+import static util.GuiUtil.setUpButtonLabel;
 
 class ThreadThreadPanel extends ComponentTablePanel implements Observer {
     private final Thread o_thread;
@@ -36,7 +38,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		});
 
 		o_dismissLabel.setEnabled(false);
-		o_dismissLabel.setToolTipText("Make Active/Inactive");
+		o_dismissLabel.setToolTipText("Make Thread Active/Inactive");
 		o_dismissLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				dismissSomething(getSelectedRow());
@@ -44,7 +46,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		});
 
 		o_removeLabel.setEnabled(false);
-		o_removeLabel.setToolTipText("Remove");
+		o_removeLabel.setToolTipText("Remove Thread");
 		o_removeLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				removeSomething(getSelectedRow());
@@ -52,7 +54,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		});
 
 		o_moveLabel.setEnabled(false);
-		o_moveLabel.setToolTipText("Move");
+		o_moveLabel.setToolTipText("Move Thread");
 		o_moveLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				moveSomething(getSelectedRow());
@@ -60,7 +62,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		});
 
 		o_linkLabel.setEnabled(false);
-		o_linkLabel.setToolTipText("Link to Google Calendar");
+		o_linkLabel.setToolTipText("Link Thread to Google Calendar");
 		o_linkLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				linkToGoogle(getSelectedRow());
@@ -68,11 +70,11 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		});
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		x_buttonPanel.add(x_addLabel);
-		x_buttonPanel.add(o_removeLabel);
-		x_buttonPanel.add(o_dismissLabel);
-		x_buttonPanel.add(o_moveLabel);
-		x_buttonPanel.add(o_linkLabel);
+		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_removeLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_dismissLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_moveLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_linkLabel));
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);

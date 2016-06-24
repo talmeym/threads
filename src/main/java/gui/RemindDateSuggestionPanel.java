@@ -81,6 +81,7 @@ public class RemindDateSuggestionPanel extends JPanel {
 		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
 		o_dueDateField.getDocument().addDocumentListener(x_listener);
 		o_dueDateField.setToolTipText("Press enter to set");
+		o_dueDateField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
 
 		o_dueDateField.addActionListener(new ActionListener(){
 			@Override
@@ -126,16 +127,17 @@ public class RemindDateSuggestionPanel extends JPanel {
 			}
 		});
 
-		JPanel x_labelPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+		JPanel x_labelPanel = new JPanel(new GridLayout(0, 1, 0, 4));
 		x_labelPanel.add(new JLabel("Action"));
 		x_labelPanel.add(new JLabel("Due Date"));
-		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 5));
 
 		JTextField x_actionDueDateField = new JTextField(getDueDateText(((Item)p_reminder.getParentComponent()).getDueDate()));
 		x_actionDueDateField.setHorizontalAlignment(JTextField.CENTER);
 		x_actionDueDateField.setEnabled(false);
+		x_actionDueDateField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
 
-		JPanel x_fieldPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+		JPanel x_fieldPanel = new JPanel(new GridLayout(0, 1, 0, 4));
 		x_fieldPanel.add(x_actionDueDateField);
 		x_fieldPanel.add(o_dueDateField);
 		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
@@ -161,7 +163,7 @@ public class RemindDateSuggestionPanel extends JPanel {
 		JPanel x_borderedPanel = new JPanel(new BorderLayout());
 		x_borderedPanel.add(x_dropdownPanel, BorderLayout.CENTER);
 		x_borderedPanel.add(x_setPanel, BorderLayout.EAST);
-		x_borderedPanel.setBorder(BorderFactory.createTitledBorder("Quick Set"));
+		x_borderedPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5), BorderFactory.createTitledBorder("Quick Set")));
 
 		add(x_labelAndFieldPanel, BorderLayout.CENTER);
 		add(x_borderedPanel, BorderLayout.EAST);

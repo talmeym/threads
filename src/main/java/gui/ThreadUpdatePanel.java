@@ -2,13 +2,15 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.ImageUtil;
+import util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+
+import static util.GuiUtil.setUpButtonLabel;
 
 public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
     private final Thread o_thread;
@@ -34,7 +36,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		});
 
 		o_dismissLabel.setEnabled(false);
-		o_dismissLabel.setToolTipText("Make Active/Inactive");
+		o_dismissLabel.setToolTipText("Make Update Active/Inactive");
 		o_dismissLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				dismissSomething(getSelectedRow());
@@ -42,7 +44,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		});
 
 		o_removeLabel.setEnabled(false);
-		o_removeLabel.setToolTipText("Remove");
+		o_removeLabel.setToolTipText("Remove Update");
 		o_removeLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				removeSomething(getSelectedRow());
@@ -50,7 +52,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		});
 
 		o_moveLabel.setEnabled(false);
-		o_moveLabel.setToolTipText("Move");
+		o_moveLabel.setToolTipText("Move Update");
 		o_moveLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				moveSomething(getSelectedRow());
@@ -58,10 +60,10 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		});
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		x_buttonPanel.add(x_addLabel);
-		x_buttonPanel.add(o_removeLabel);
-		x_buttonPanel.add(o_dismissLabel);
-		x_buttonPanel.add(o_moveLabel);
+		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_removeLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_dismissLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_moveLabel));
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);

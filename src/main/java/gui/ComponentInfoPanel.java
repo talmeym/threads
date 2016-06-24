@@ -3,7 +3,7 @@ package gui;
 import data.*;
 import data.Component;
 import data.Thread;
-import util.ImageUtil;
+import util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+
+import static util.GuiUtil.setUpButtonLabel;
 
 public class ComponentInfoPanel extends JPanel {
     private final Component o_component;
@@ -48,7 +50,7 @@ public class ComponentInfoPanel extends JPanel {
 			public void update(Observable observable, Object o) {
 				o_textField.getDocument().removeDocumentListener(x_listener);
 				o_textField.setText(o_component.getText());
-				o_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
+				o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
 				o_activeLabel.setEnabled(o_component.getParentComponent() != null && o_component.isActive());
 				o_textField.getDocument().addDocumentListener(x_listener);
 			}
@@ -60,17 +62,17 @@ public class ComponentInfoPanel extends JPanel {
 		final JLabel x_folderLabel = new JLabel(ImageUtil.getFolderIcon());
 
 		o_textField.setText(p_component.getText());
-		o_textField.setForeground(p_component.isActive() ? Color.BLACK : Color.gray);
+		o_textField.setForeground(p_component.isActive() ? Color.black : Color.gray);
 		o_textField.setToolTipText("Press enter to set");
 		o_textField.getDocument().addDocumentListener(x_listener);
+		o_textField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
 
 		x_parentLabel.setEnabled(o_component.getParentComponent() != null);
-		o_activeLabel.setEnabled(o_component.getParentComponent() != null && o_component.isActive());
+		o_activeLabel.setEnabled(o_component.isActive());
 		x_removeLabel.setEnabled(o_component.getParentComponent() != null);
 		x_duplicateLabel.setEnabled(o_component.getParentComponent() != null);
 
 		x_parentLabel.setToolTipText("View Parent");
-		x_parentLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		x_parentLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -121,7 +123,7 @@ public class ComponentInfoPanel extends JPanel {
 					if(JOptionPane.showConfirmDialog(p_parentPanel, "Set '" + o_component.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 						o_component.setActive(x_active);
 						o_activeLabel.setEnabled(o_component.isActive());
-						o_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
+						o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
 					}
 				} else {
 					JOptionPane.showMessageDialog(p_parentPanel, "The root Thread cannot be made inactive", "No can do", JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon());
@@ -153,7 +155,6 @@ public class ComponentInfoPanel extends JPanel {
 				}
 			}
 		});
-
 
 		x_duplicateLabel.setToolTipText("Duplicate");
 		x_duplicateLabel.addMouseListener(new MouseAdapter() {
@@ -234,19 +235,21 @@ public class ComponentInfoPanel extends JPanel {
 			public void update(Observable observable, Object o) {
 				if(observable == ((ObservableChangeEvent)o).getObservableObserver()) {
 					o_activeLabel.setEnabled(o_component.isActive() && o_component.getParentComponent() != null);
-					o_textField.setForeground(o_component.isActive() ? Color.BLACK : Color.gray);
+					o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
 				}
 			}
 		});
 
-        JPanel x_parentButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        x_parentButtonPanel.add(x_parentLabel, BorderLayout.CENTER);
+        JPanel x_parentButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        x_parentButtonsPanel.add(setUpButtonLabel(x_parentLabel), BorderLayout.CENTER);
+		x_parentButtonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
 		Component x_parent = o_component.getParentComponent();
 		List<JLabel> x_parentLabels = new ArrayList<JLabel>();
 
 		while(x_parent != null) {
-			JLabel x_label = new JLabel(x_parent.getText());
+			final JLabel x_label = new JLabel(x_parent.getText());
+			setUpButtonLabel(x_label);
 			final Component x_comp = x_parent;
 
 			x_label.addMouseListener(new MouseAdapter() {
@@ -257,28 +260,34 @@ public class ComponentInfoPanel extends JPanel {
 			});
 
 			x_label.setToolTipText("Go to '" + x_label.getText() + "'");
-			x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(" > ")));
+			x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
 			x_parent = x_parent.getParentComponent();
 		}
 
 		for(JLabel x_label: x_parentLabels) {
-			x_parentButtonPanel.add(x_label);
+			x_parentButtonsPanel.add(x_label);
 		}
 
-        JPanel x_activeCheckBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        x_activeCheckBoxPanel.add(o_activeLabel);
-        x_activeCheckBoxPanel.add(x_removeLabel);
-        x_activeCheckBoxPanel.add(x_duplicateLabel);
-        x_activeCheckBoxPanel.add(x_folderLabel);
+        JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        x_buttonPanel.add(setUpButtonLabel(o_activeLabel));
+        x_buttonPanel.add(setUpButtonLabel(x_removeLabel));
+        x_buttonPanel.add(setUpButtonLabel(x_duplicateLabel));
+        x_buttonPanel.add(setUpButtonLabel(x_folderLabel));
+		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
 		for(JLabel x_label: p_extraLabels) {
-			x_activeCheckBoxPanel.add(x_label);
+			setUpButtonLabel(x_label);
+			x_buttonPanel.add(x_label);
 		}
 
-        x_activeCheckBoxPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 10));
+		JPanel x_fieldPanel = new JPanel();
+		x_fieldPanel.setLayout(new BoxLayout(x_fieldPanel, BoxLayout.Y_AXIS));
+		x_fieldPanel.add(Box.createVerticalStrut(6));
+		x_fieldPanel.add(o_textField);
+		x_fieldPanel.add(Box.createVerticalStrut(6));
 
-        add(x_parentButtonPanel, BorderLayout.WEST);
-        add(o_textField, BorderLayout.CENTER);
-        add(x_activeCheckBoxPanel, BorderLayout.EAST);
+		add(x_parentButtonsPanel, BorderLayout.WEST);
+        add(x_fieldPanel, BorderLayout.CENTER);
+        add(x_buttonPanel, BorderLayout.EAST);
     }
 }

@@ -8,11 +8,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+import static util.GuiUtil.setUpButtonLabel;
+
 class ItemPanel extends ComponentTablePanel implements Observer {
     private final Item o_item;
-	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
-	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
-	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
+	private final JLabel o_removeReminderLabel = new JLabel(ImageUtil.getMinusIcon());
+	private final JLabel o_dismissReminderLabel = new JLabel(ImageUtil.getTickIcon());
+	private final JLabel o_linkItemLabel = new JLabel(ImageUtil.getLinkIcon());
 	private final JLabel o_linkReminderLabel = new JLabel(ImageUtil.getLinkIcon());
 
 	ItemPanel(Item p_item) {
@@ -24,55 +26,57 @@ class ItemPanel extends ComponentTablePanel implements Observer {
         fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
         fixColumnWidth(3, 30);
 
-		final JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
-		x_addLabel.setEnabled(o_item.getDueDate() != null);
-		o_removeLabel.setEnabled(false);
-		o_dismissLabel.setEnabled(false);
-		o_linkLabel.setEnabled(o_item.getDueDate() != null);
+		o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
+		o_linkItemLabel.setToolTipText("Link to Google Calendar");
+
+		final JLabel x_addReminderLabel = new JLabel(ImageUtil.getPlusIcon());
+		x_addReminderLabel.setEnabled(o_item.getDueDate() != null);
+		o_removeReminderLabel.setEnabled(false);
+		o_dismissReminderLabel.setEnabled(false);
 		o_linkReminderLabel.setEnabled(false);
 
 		ComponentInfoChangeListener x_listener = new ComponentInfoChangeListener() {
 			@Override
 			public void componentInfoChanged(boolean saved) {
 				if(saved) {
-					x_addLabel.setEnabled(o_item.getDueDate() != null);
+					x_addReminderLabel.setEnabled(o_item.getDueDate() != null);
 				}
 			}
 		};
 
-		x_addLabel.setToolTipText("Add Reminder");
-		x_addLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				addSomething();
-			}
-		});
-
-		o_removeLabel.setToolTipText("Remove");
-        o_removeLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				removeSomething(getSelectedRow());
-			}
-		});
-
-		o_dismissLabel.setToolTipText("Make Active/Inactive");
-        o_dismissLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				dismissSomething(getSelectedRow());
-			}
-		});
-
-		o_linkLabel.setToolTipText("Link to Google Calendar");
-		o_linkLabel.addMouseListener(new MouseAdapter() {
+		o_linkItemLabel.setToolTipText("Link to Google Calendar");
+		o_linkItemLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
 				linkToGoogle();
 			}
 		});
 
-		o_linkReminderLabel.setToolTipText("Link to Google Calendar");
+		x_addReminderLabel.setToolTipText("Add Reminder");
+		x_addReminderLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				addSomething();
+			}
+		});
+
+		o_removeReminderLabel.setToolTipText("Remove Reminder");
+        o_removeReminderLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				removeSomething(getSelectedRow());
+			}
+		});
+
+		o_dismissReminderLabel.setToolTipText("Make Reminder Active/Inactive");
+        o_dismissReminderLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dismissSomething(getSelectedRow());
+			}
+		});
+
+		o_linkReminderLabel.setToolTipText("Link Reminder to Google Calendar");
 		o_linkReminderLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
@@ -81,14 +85,14 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 		});
 
         JPanel x_panel = new JPanel(new BorderLayout());
-        x_panel.add(new ComponentInfoPanel(p_item, this, x_listener, o_linkLabel), BorderLayout.NORTH);
+        x_panel.add(new ComponentInfoPanel(p_item, this, x_listener, o_linkItemLabel), BorderLayout.NORTH);
         x_panel.add(new DateSuggestionPanel(o_item, this, x_listener), BorderLayout.SOUTH);
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		x_buttonPanel.add(x_addLabel);
-        x_buttonPanel.add(o_removeLabel);
-        x_buttonPanel.add(o_dismissLabel);
-        x_buttonPanel.add(o_linkReminderLabel);
+		x_buttonPanel.add(setUpButtonLabel(x_addReminderLabel));
+        x_buttonPanel.add(setUpButtonLabel(o_removeReminderLabel));
+        x_buttonPanel.add(setUpButtonLabel(o_dismissReminderLabel));
+        x_buttonPanel.add(setUpButtonLabel(o_linkReminderLabel));
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_panel, BorderLayout.NORTH);
@@ -117,7 +121,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 
 			if (JOptionPane.showConfirmDialog(this, "Remove '" + x_reminder.getText() + "' from '" + o_item.getText() + "' ?", "Remove Reminder ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				o_item.removeReminder(x_reminder);
-				o_removeLabel.setEnabled(false);
+				o_removeReminderLabel.setEnabled(false);
 			}
 		}
 	}
@@ -132,7 +136,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 	private void linkToGoogle() {
 		final JPanel x_this = this;
 
-		if (o_linkLabel.isEnabled()) {
+		if (o_linkItemLabel.isEnabled()) {
 			if (JOptionPane.showConfirmDialog(x_this, "Link '" + o_item.getText() + "' to Google Calendar ?", "Link to Google ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(o_item), new GoogleProgressWindow(x_this), new ProgressAdapter() {
 					@Override
@@ -165,8 +169,8 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 
 	@Override
 	void tableRowClicked(int row, int col) {
-		o_removeLabel.setEnabled(row != -1);
-		o_dismissLabel.setEnabled(row != -1 && o_item.getReminder(row).isActive());
+		o_removeReminderLabel.setEnabled(row != -1);
+		o_dismissReminderLabel.setEnabled(row != -1 && o_item.getReminder(row).isActive());
 		o_linkReminderLabel.setEnabled(row != -1);
 	}
 
@@ -178,7 +182,7 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 
 	@Override
 	public void update(Observable observable, Object o) {
-		o_linkLabel.setEnabled(o_item.getDueDate() != null);
+		o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
 		tableRowClicked(-1, -1);
 	}
 
@@ -194,9 +198,9 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 		tableRowClicked(-1, -1);
 
 		if(GoogleUtil.isLinked(o_item)) {
-			o_linkLabel.setIcon(ImageUtil.getGoogleSmallIcon());
+			o_linkItemLabel.setIcon(ImageUtil.getGoogleSmallIcon());
 		} else {
-			o_linkLabel.setIcon(ImageUtil.getLinkIcon());
+			o_linkItemLabel.setIcon(ImageUtil.getLinkIcon());
 		}
 	}
 }

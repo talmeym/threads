@@ -33,7 +33,7 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener, Ti
 
 		o_dateTimeLabel = new JLabel(s_dateFormat.format(new Date()));
 		o_dateTimeLabel.setHorizontalAlignment(JLabel.CENTER);
-		o_dateTimeLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		o_dateTimeLabel.setBorder(BorderFactory.createEmptyBorder(3, 10, 10, 10));
 
 		add(x_navigationPanel, BorderLayout.CENTER);
 		add(o_dateTimeLabel, BorderLayout.SOUTH);

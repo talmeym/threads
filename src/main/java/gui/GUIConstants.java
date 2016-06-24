@@ -19,7 +19,7 @@ class GUIConstants
 	public static final Dimension s_navWindowSize = new Dimension(300, 600);
     public static final Dimension s_threadWindowSize = new Dimension(800, 600);
     public static final Dimension s_itemWindowSize = new Dimension(700, 270);
-    public static final Dimension s_reminderWindowSize = new Dimension(760, 140);
+    public static final Dimension s_reminderWindowSize = new Dimension(760, 135);
 
 	public static final Point s_navLocation = new Point(250, 200);
 

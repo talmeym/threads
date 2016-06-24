@@ -10,6 +10,8 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
+import static util.GuiUtil.setUpButtonLabel;
+
 public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 {
     private final Thread o_thread;
@@ -31,7 +33,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
         fixColumnWidth(6, 30);
 
 		JLabel x_addItemLabel = new JLabel(ImageUtil.getPlusIcon());
-		x_addItemLabel.setToolTipText("Add Content");
+		x_addItemLabel.setToolTipText("Add Item");
 		x_addItemLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
@@ -40,7 +42,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 		});
 
 		o_removeLabel.setEnabled(false);
-		o_removeLabel.setToolTipText("Remove");
+		o_removeLabel.setToolTipText("Remove Item");
 		o_removeLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				removeSomething(getSelectedRow());
@@ -48,7 +50,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 		});
 
 		o_dismissLabel.setEnabled(false);
-		o_dismissLabel.setToolTipText("Make Active/Inactive");
+		o_dismissLabel.setToolTipText("Make Item Active/Inactive");
         o_dismissLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
@@ -56,7 +58,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 			}
 		});
 
-		o_moveLabel.setToolTipText("Move");
+		o_moveLabel.setToolTipText("Move Item");
 		o_moveLabel.setEnabled(false);
 		o_moveLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -65,7 +67,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 			}
 		});
 
-		o_linkLabel.setToolTipText("Link to Google Calendar");
+		o_linkLabel.setToolTipText("Link Item to Google Calendar");
 		o_linkLabel.setEnabled(false);
 		o_linkLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -75,11 +77,11 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 		});
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        x_buttonPanel.add(x_addItemLabel);
-        x_buttonPanel.add(o_removeLabel);
-        x_buttonPanel.add(o_dismissLabel);
-        x_buttonPanel.add(o_moveLabel);
-        x_buttonPanel.add(o_linkLabel);
+        x_buttonPanel.add(setUpButtonLabel(x_addItemLabel));
+        x_buttonPanel.add(setUpButtonLabel(o_removeLabel));
+        x_buttonPanel.add(setUpButtonLabel(o_dismissLabel));
+        x_buttonPanel.add(setUpButtonLabel(o_moveLabel));
+        x_buttonPanel.add(setUpButtonLabel(o_linkLabel));
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         add(x_buttonPanel, BorderLayout.SOUTH);

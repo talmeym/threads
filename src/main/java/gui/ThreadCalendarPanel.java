@@ -11,6 +11,8 @@ import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.List;
 
+import static util.GuiUtil.setUpButtonLabel;
+
 public class ThreadCalendarPanel extends ComponentTablePanel {
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
@@ -63,9 +65,9 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 		o_currentMonthLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		x_buttonPanel.add(x_previousLabel);
-		x_buttonPanel.add(x_todayLabel);
-		x_buttonPanel.add(x_nextLabel);
+		x_buttonPanel.add(setUpButtonLabel(x_previousLabel));
+		x_buttonPanel.add(setUpButtonLabel(x_todayLabel));
+		x_buttonPanel.add(setUpButtonLabel(x_nextLabel));
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0	));
 
 		add(o_currentMonthLabel, BorderLayout.NORTH);
