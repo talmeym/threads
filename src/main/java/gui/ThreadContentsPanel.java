@@ -30,7 +30,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
         fixColumnWidth(3, GUIConstants.s_statsColumnWidth);
         fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
         fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
-        fixColumnWidth(6, 30);
+        fixColumnWidth(6, GUIConstants.s_googleStatusColumnWidth);
 
 		JLabel x_addItemLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addItemLabel.setToolTipText("Add Item");
@@ -246,7 +246,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 	}
 
 	@Override
-	void tableRowClicked(int p_row, int p_col) {
+	public void tableRowClicked(int p_row, int p_col) {
 		o_dismissLabel.setEnabled(p_row != -1 && o_thread.getThreadItem(p_row).isActive());
 		o_removeLabel.setEnabled(p_row != -1);
 		o_moveLabel.setEnabled(p_row != -1);
@@ -263,7 +263,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 		o_linkLabel.setEnabled(x_linkable);
 	}
 
-	void tableRowDoubleClicked(int p_row, int p_col) {
+	public void tableRowDoubleClicked(int p_row, int p_col) {
 		if(p_row != -1) {
 			ThreadItem x_threadItem = o_thread.getThreadItem(p_row);
 			WindowManager.getInstance().openComponent(x_threadItem);

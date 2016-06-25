@@ -24,7 +24,7 @@ public class ReminderPanel extends JPanel implements ComponentInfoChangeListener
 			}
 		});
 
-		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_reminder, this, this, o_linkLabel);
+		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_reminder, this, this, false, o_linkLabel);
 		o_compInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         JPanel x_remindDatePanel = new JPanel(new BorderLayout());

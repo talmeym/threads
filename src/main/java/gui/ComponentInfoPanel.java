@@ -21,7 +21,7 @@ public class ComponentInfoPanel extends JPanel {
 	private final JTextField o_textField = new JTextField();
 	private boolean o_modified = false;
 
-	public ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, final ComponentInfoChangeListener p_listener, JLabel... p_extraLabels) {
+	public ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, final ComponentInfoChangeListener p_listener, boolean p_showParents, JLabel... p_extraLabels) {
         super(new BorderLayout());
         o_component = p_component;
 
@@ -241,31 +241,33 @@ public class ComponentInfoPanel extends JPanel {
 		});
 
         JPanel x_parentButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        x_parentButtonsPanel.add(setUpButtonLabel(x_parentLabel), BorderLayout.CENTER);
-		x_parentButtonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+		if(p_showParents) {
+			x_parentButtonsPanel.add(setUpButtonLabel(x_parentLabel), BorderLayout.CENTER);
+			x_parentButtonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
-		Component x_parent = o_component.getParentComponent();
-		List<JLabel> x_parentLabels = new ArrayList<JLabel>();
+			Component x_parent = o_component.getParentComponent();
+			List<JLabel> x_parentLabels = new ArrayList<JLabel>();
 
-		while(x_parent != null) {
-			final JLabel x_label = new JLabel(x_parent.getText());
-			setUpButtonLabel(x_label);
-			final Component x_comp = x_parent;
+			while(x_parent != null) {
+				final JLabel x_label = new JLabel(x_parent.getText());
+				setUpButtonLabel(x_label);
+				final Component x_comp = x_parent;
 
-			x_label.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent mouseEvent) {
-					WindowManager.getInstance().openComponent(x_comp);
-				}
-			});
+				x_label.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent mouseEvent) {
+						WindowManager.getInstance().openComponent(x_comp);
+					}
+				});
 
-			x_label.setToolTipText("Go to '" + x_label.getText() + "'");
-			x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
-			x_parent = x_parent.getParentComponent();
-		}
+				x_label.setToolTipText("Go to '" + x_label.getText() + "'");
+				x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
+				x_parent = x_parent.getParentComponent();
+			}
 
-		for(JLabel x_label: x_parentLabels) {
-			x_parentButtonsPanel.add(x_label);
+			for(JLabel x_label: x_parentLabels) {
+				x_parentButtonsPanel.add(x_label);
+			}
 		}
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));

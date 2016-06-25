@@ -27,7 +27,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
         fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
         fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
-        fixColumnWidth(4, 30);
+        fixColumnWidth(4, GUIConstants.s_googleStatusColumnWidth);
 
 		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addLabel.setToolTipText("Add Action");
@@ -190,14 +190,14 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
     }
 
 	@Override
-	void tableRowClicked(int p_row, int p_col) {
+	public void tableRowClicked(int p_row, int p_col) {
 		o_removeLabel.setEnabled(p_row != -1);
 		o_dismissLabel.setEnabled(p_row != -1);
 		o_moveLabel.setEnabled(p_row != -1);
 		o_linkLabel.setEnabled(p_row != -1);
 	}
 
-	void tableRowDoubleClicked(int p_row, int p_col) {
+	public void tableRowDoubleClicked(int p_row, int p_col) {
 		switch(p_col) {
 			case 0: showThread(p_row); break;
 			default: showItem(p_row);

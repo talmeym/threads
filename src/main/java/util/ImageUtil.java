@@ -39,6 +39,10 @@ public class ImageUtil {
 		return loadImage("/calendar.png");
 	}
 
+	public static Image getCalendarSmallIconImage() {
+		return loadImage("/calendar_small.png");
+	}
+
 	public static Image getLeftIconImage() {
 		return loadImage("/left.png");
 	}
@@ -75,12 +79,25 @@ public class ImageUtil {
 		return loadImage("/google_icon.png");
 	}
 
+	public static Image getActionIconImage() {
+		return loadImage("/action.png");
+	}
+
+	public static Image getUpdateIconImage() {
+		return loadImage("/update.png");
+	}
+
 	public static Image getThreadsIconImage() {
 		return loadImage("/threads_icon.gif");
 	}
 
-	public static Image getTreeImage() {
+	public static Image getThreadImage() {
 		String filename = "/spool2.png";
+		return loadImage(filename);
+	}
+
+	public static Image getReminderIconImage() {
+		String filename = "/reminder.png";
 		return loadImage(filename);
 	}
 
@@ -122,6 +139,10 @@ public class ImageUtil {
 		return new ImageIcon(ImageUtil.getCalendarIconImage());
 	}
 
+	public static Icon getCalendarSmallIcon() {
+		return new ImageIcon(ImageUtil.getCalendarSmallIconImage());
+	}
+
 	public static Icon getLeftIcon() {
 		return new ImageIcon(ImageUtil.getLeftIconImage());
 	}
@@ -156,5 +177,21 @@ public class ImageUtil {
 
 	public static Icon getGoogleSmallIcon() {
 		return new ImageIcon(ImageUtil.getGoogleSmallIconImage());
+	}
+
+	public static Icon getActionIcon() {
+		return new ImageIcon(getActionIconImage());
+	}
+
+	public static Icon getUpdateIcon() {
+		return new ImageIcon(getUpdateIconImage());
+	}
+
+	public static Icon getThreadIcon() {
+		return new ImageIcon(getThreadImage());
+	}
+
+	public static Icon getReminderIcon() {
+		return new ImageIcon(getReminderIconImage());
 	}
 }

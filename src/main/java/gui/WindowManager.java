@@ -65,6 +65,7 @@ public class WindowManager {
 			Properties x_properties = o_windowSettings.getProperties();
 			Integer x_tabMemory = MemoryPanel.getMemoryValue(ThreadPanel.class);
 			Integer x_monthMemory = MemoryPanel.getMemoryValue(ThreadCalendarPanel.class);
+			Integer x_divMemory = MemoryPanel.getMemoryValue(ItemAndReminderPanel.class);
 
 			if(x_tabMemory != null) {
 				x_properties.setProperty(WindowSettings.s_TAB_INDEX, String.valueOf(x_tabMemory));
@@ -72,6 +73,10 @@ public class WindowManager {
 
 			if(x_monthMemory != null) {
 				x_properties.setProperty(WindowSettings.s_MONTH, String.valueOf(x_monthMemory));
+			}
+
+			if(x_divMemory != null) {
+				x_properties.setProperty(WindowSettings.s_DIVLOC, String.valueOf(x_divMemory));
 			}
 
 			for(Component x_component: o_windows.keySet()) {
@@ -94,6 +99,7 @@ public class WindowManager {
 				o_windowSettings.applyProperties(x_properties);
 				String x_tabIndex = x_properties.getProperty(WindowSettings.s_TAB_INDEX);
 				String x_month = x_properties.getProperty(WindowSettings.s_MONTH);
+				String x_divLoc = x_properties.getProperty(WindowSettings.s_DIVLOC);
 
 				if(x_tabIndex != null) {
 					MemoryPanel.setMemoryValue(ThreadPanel.class, Integer.parseInt(x_tabIndex));
@@ -101,6 +107,10 @@ public class WindowManager {
 
 				if(x_month != null) {
 					MemoryPanel.setMemoryValue(ThreadCalendarPanel.class, Integer.parseInt(x_month));
+				}
+
+				if(x_divLoc != null) {
+					MemoryPanel.setMemoryValue(ItemAndReminderPanel.class, Integer.parseInt(x_divLoc));
 				}
 
 				return x_properties.getProperty(WindowSettings.s_UUID);
@@ -112,25 +122,34 @@ public class WindowManager {
 		return null;
 	}
 
-	public void openComponent(final Component p_component) {
-		for(JFrame x_frame: o_windows.values()) {
-			x_frame.setVisible(false);
-		}
-
+	public void openComponent(Component p_component) {
 		if(!o_windows.containsKey(p_component)) {
 			o_windows.put(p_component, makeComponentWindow(p_component));
 		}
 
 		JFrame x_window = o_windows.get(p_component);
-		x_window.setSize(o_windowSettings.getWindowSize(p_component));
-		x_window.setLocation(o_windowSettings.getWindowLocation());
-		x_window.setVisible(true);
 
-		o_navigationWindow.selectComponent(p_component);
+		if(!x_window.isVisible()) {
+			for(JFrame x_frame: o_windows.values()) {
+				x_frame.setVisible(false);
+			}
+
+			x_window.setSize(o_windowSettings.getWindowSize());
+			x_window.setLocation(o_windowSettings.getWindowLocation());
+
+			if(p_component instanceof Reminder) {
+				((ItemAndReminderPanel)x_window.getContentPane()).showReminder((Reminder) p_component);
+			}
+
+			x_window.setVisible(true);
+			o_navigationWindow.selectComponent(p_component);
+		}
     }
 
 	public void closeComponent(final Component p_component) {
-		o_windows.get(p_component).setVisible(false);
+		if(o_windows.containsKey(p_component)) {
+			o_windows.get(p_component).setVisible(false);
+		}
 	}
 
 	private JFrame makeComponentWindow(final Component p_component) {
@@ -141,11 +160,11 @@ public class WindowManager {
 		}
 
 		if(p_component instanceof Item) {
-			x_window = new ItemWindow((Item) p_component);
+			x_window = new ItemAndReminderWindow((Item) p_component);
 		}
 
 		if(p_component instanceof Reminder) {
-			x_window = new ReminderWindow((Reminder) p_component);
+			x_window = new ItemAndReminderWindow((Reminder) p_component);
 		}
 
 		if (x_window != null) {
@@ -153,13 +172,13 @@ public class WindowManager {
 				@Override
 				public void windowDeactivated(WindowEvent windowEvent) {
 					Window x_window = windowEvent.getWindow();
-					setComponentWindowDetails(p_component, x_window.getLocation(), x_window.getSize());
+					setComponentWindowDetails(x_window.getLocation(), x_window.getSize());
 				}
 
 				@Override
 				public void windowClosing(WindowEvent windowEvent) {
 					Window x_window = windowEvent.getWindow();
-					setComponentWindowDetails(p_component, x_window.getLocation(), x_window.getSize());
+					setComponentWindowDetails(x_window.getLocation(), x_window.getSize());
 				}
 			});
 		}
@@ -167,9 +186,9 @@ public class WindowManager {
 		return x_window;
 	}
 
-	public void setComponentWindowDetails(Component p_component, Point p_location, Dimension p_size) {
+	public void setComponentWindowDetails(Point p_location, Dimension p_size) {
 		o_windowSettings.setWindowLocation(p_location);
-		o_windowSettings.setWindowSize(p_component, p_size);
+		o_windowSettings.setWindowSize(p_size);
 	}
 
 	public void setNavigationWindowDetails(Point p_location, Dimension p_size) {

@@ -128,7 +128,6 @@ public class RemindDateSuggestionPanel extends JPanel {
 		});
 
 		JPanel x_labelPanel = new JPanel(new GridLayout(0, 1, 0, 4));
-		x_labelPanel.add(new JLabel("Action"));
 		x_labelPanel.add(new JLabel("Due Date"));
 		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 5));
 
@@ -137,10 +136,12 @@ public class RemindDateSuggestionPanel extends JPanel {
 		x_actionDueDateField.setEnabled(false);
 		x_actionDueDateField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
 
-		JPanel x_fieldPanel = new JPanel(new GridLayout(0, 1, 0, 4));
-		x_fieldPanel.add(x_actionDueDateField);
+		JPanel x_fieldPanel = new JPanel();
+		x_fieldPanel.setLayout(new BoxLayout(x_fieldPanel, BoxLayout.Y_AXIS));
+		x_fieldPanel.add(Box.createVerticalStrut(14));
 		x_fieldPanel.add(o_dueDateField);
-		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		x_fieldPanel.add(Box.createVerticalStrut(14));
+		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
 		JPanel x_labelAndFieldPanel = new JPanel(new BorderLayout());
 		x_labelAndFieldPanel.add(x_labelPanel, BorderLayout.WEST);

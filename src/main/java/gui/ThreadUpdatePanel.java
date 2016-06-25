@@ -167,13 +167,13 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
     }
 
 	@Override
-	void tableRowClicked(int row, int col) {
+	public void tableRowClicked(int row, int col) {
 		o_removeLabel.setEnabled(row != -1);
 		o_dismissLabel.setEnabled(row != -1);
 		o_moveLabel.setEnabled(row != -1);
 	}
 
-    void tableRowDoubleClicked(int row, int col) {
+    public void tableRowDoubleClicked(int row, int col) {
         switch(col) {
 			case 0: showThread(row); break;
 			default: showItem(row); break;

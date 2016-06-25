@@ -1,7 +1,5 @@
 package gui;
 
-import data.Component;
-
 import java.awt.*;
 import java.util.*;
 
@@ -9,31 +7,22 @@ public class WindowSettings {
 	public static final String s_TAB_INDEX = "tabindex";
 	public static final String s_MONTH = "month";
 	public static final String s_UUID = "uuid";
+	public static final String s_DIVLOC = "divloc";
 
-	private Map<Class, Dimension> o_windowDimensions = new HashMap<Class, Dimension>();
-	private Point o_windowLocation;
 	private Dimension o_navSize = GUIConstants.s_navWindowSize;
 	private Point o_navLocation = GUIConstants.s_navLocation;
+	private Dimension o_windowSize = GUIConstants.s_itemWindowSize;
+	private Point o_windowLocation = new Point((int) o_navLocation.getX() + (int) o_navSize.getWidth() + 20, (int) o_navLocation.getY());
 
-	public Dimension getWindowSize(Component p_component) {
-		Class<? extends Component> x_clazz = p_component.getClass();
-
-		if(!o_windowDimensions.containsKey(x_clazz)) {
-			o_windowDimensions.put(x_clazz, GUIConstants.dimensionFor(p_component));
-		}
-
-		return o_windowDimensions.get(x_clazz);
+	public Dimension getWindowSize() {
+		return o_windowSize;
 	}
 
-	public void setWindowSize(Component p_component, Dimension p_size) {
-		o_windowDimensions.put(p_component.getClass(), p_size);
+	public void setWindowSize(Dimension p_size) {
+		o_windowSize = p_size;
 	}
 
 	public Point getWindowLocation() {
-		if(o_windowLocation == null) {
-			o_windowLocation = new Point((int) o_navLocation.getX() + (int) o_navSize.getWidth() + 20, (int) o_navLocation.getY());
-		}
-
 		return o_windowLocation;
 	}
 
@@ -60,9 +49,9 @@ public class WindowSettings {
 	public Properties getProperties() {
 		Properties x_properties = new Properties();
 
-		for(Class clazz: o_windowDimensions.keySet()) {
-			x_properties.setProperty("winw_" + clazz.getName(), String.valueOf((int)o_windowDimensions.get(clazz).getWidth()));
-			x_properties.setProperty("winh_" + clazz.getName(), String.valueOf((int)o_windowDimensions.get(clazz).getHeight()));
+		if(o_windowSize != null) {
+			x_properties.setProperty("winw", String.valueOf((int)o_windowSize.getWidth()));
+			x_properties.setProperty("winh", String.valueOf((int)o_windowSize.getHeight()));
 		}
 
 		if(o_windowLocation != null) {
@@ -80,23 +69,8 @@ public class WindowSettings {
 	}
 
 	public void applyProperties(Properties p_properties) {
-		Enumeration x_enumeration = p_properties.propertyNames();
-
-		while(x_enumeration.hasMoreElements()) {
-			String x_propertyName = (String) x_enumeration.nextElement();
-
-			if(x_propertyName.startsWith("winw_")) {
-				try {
-					Class x_clazz = Class.forName(x_propertyName.substring(5));
-					String x_widthStr = p_properties.getProperty(x_propertyName);
-					String x_heightStr = p_properties.getProperty("winh_" + x_clazz.getName());
-					int x_width = Integer.parseInt(x_widthStr);
-					int x_height = Integer.parseInt(x_heightStr);
-					o_windowDimensions.put(x_clazz, new Dimension(x_width, x_height));
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-			}
+		if(p_properties.containsKey("winw")) {
+			o_windowSize = new Dimension(Integer.parseInt(p_properties.getProperty("winw")), Integer.parseInt(p_properties.getProperty("winh")));
 		}
 
 		if(p_properties.containsKey("winx")) {

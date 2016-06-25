@@ -8,7 +8,7 @@ import java.util.*;
 
 class ThreadReminderTableModel extends ComponentTableModel {
     ThreadReminderTableModel(Thread p_thread) {
-        super(p_thread, new String[] {"Action", "Reminder", "Due Date", "Due"});
+        super(p_thread, new String[] {"Action", "Reminder", "Due Date", "Due", ""});
     }
 
 	@Override
@@ -38,7 +38,8 @@ class ThreadReminderTableModel extends ComponentTableModel {
 			case 0: return x_dueReminder.getItem().getText();
 			case 1: return x_dueReminder.getText();
 			case 2: return x_dueReminder.getDueDate();
-			default: return DateUtil.getDateStatus(x_dueReminder.getDueDate());
+			case 3: return DateUtil.getDateStatus(x_dueReminder.getDueDate());
+			default: return GoogleUtil.isLinked(x_dueReminder);
         }
     }
 }

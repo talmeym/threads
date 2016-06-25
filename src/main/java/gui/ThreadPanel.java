@@ -21,16 +21,17 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 
 		o_tabs = new JTabbedPane();
         o_tabs.addTab("Contents", new ThreadContentsPanel(p_thread));
-        o_tabs.addTab("Threads", new ThreadThreadPanel(p_thread));
-        o_tabs.addTab("Updates", new ThreadUpdatePanel(p_thread));
-        o_tabs.addTab("Actions", new ThreadActionPanel(p_thread));
-        o_tabs.addTab("Calendar", new ThreadCalendarPanel(p_thread));
-        o_tabs.addTab("Reminders", new ThreadReminderPanel(p_thread));
+        o_tabs.addTab("Threads", ImageUtil.getThreadIcon(), new ThreadThreadPanel(p_thread));
+        o_tabs.addTab("Updates", ImageUtil.getUpdateIcon(), new ThreadUpdatePanel(p_thread));
+        o_tabs.addTab("Actions", ImageUtil.getActionIcon(), new ThreadActionPanel(p_thread));
+        o_tabs.addTab("Calendar", ImageUtil.getCalendarSmallIcon(), new ThreadCalendarPanel(p_thread));
+        o_tabs.addTab("Reminders", ImageUtil.getReminderIcon(), new ThreadReminderPanel(p_thread));
 
 		o_tabs.setBackgroundAt(1, Color.gray);
 		o_tabs.setBackgroundAt(2, Color.gray);
 		o_tabs.setBackgroundAt(3, Color.gray);
 		o_tabs.setBackgroundAt(4, Color.gray);
+		o_tabs.setBackgroundAt(5, Color.gray);
 
 		o_tabs.setToolTipTextAt(0, "The contents of this Thread");
 		o_tabs.setToolTipTextAt(1, "A view of all active Threads");
@@ -48,7 +49,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 			}
 		});
 
-		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this, this, x_linkLabel);
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this, this, true, x_linkLabel);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 3, 0, 3));
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
@@ -115,7 +116,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
             o_tabs.setBackgroundAt(5, Color.red);
         } else {
 			o_tabs.setTitleAt(5, "Reminders");
-            o_tabs.setBackgroundAt(5, o_tabs.getBackgroundAt(0));
+            o_tabs.setBackgroundAt(5, o_tabs.getBackgroundAt(1));
         }
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 import static util.GuiUtil.setUpButtonLabel;
 
-public class ThreadCalendarPanel extends ComponentTablePanel {
+public class ThreadCalendarPanel extends ComponentTablePanel implements TableSelectionListener {
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
 	private Thread o_thread;
@@ -23,6 +23,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
 		o_thread = p_thread;
 		setMonth(recallValue(Calendar.getInstance().get(Calendar.MONTH)));
+		addTableSelectionListener(this);
 
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -99,7 +100,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 	}
 
 	@Override
-	void tableRowClicked(int row, int col) {
+	public void tableRowClicked(int row, int col) {
 		if(getSelectedRow() != -1) {
 			JPopupMenu x_menu = new JPopupMenu();
 			ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
@@ -178,7 +179,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel {
 	}
 
 	@Override
-	void tableRowDoubleClicked(int row, int col) {
+	public void tableRowDoubleClicked(int row, int col) {
 	}
 
 	private Font makeStrikeThrough(Font x_font) {

@@ -6,10 +6,10 @@ import util.ImageUtil;
 import javax.swing.*;
 import java.util.*;
 
-public class ComponentWindow <TYPE extends Component> extends JFrame implements Observer {
-	protected final TYPE o_component;
+public class ComponentWindow extends JFrame implements Observer {
+	protected final Component o_component;
 
-	public ComponentWindow(TYPE p_component) {
+	public ComponentWindow(Component p_component) {
 		this.o_component = p_component;
 		o_component.addObserver(this);
 		ImageUtil.addIcon(this);
