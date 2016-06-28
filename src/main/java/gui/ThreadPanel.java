@@ -11,7 +11,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Observer, ComponentInfoChangeListener {
+public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Observer {
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs;
 
@@ -20,7 +20,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
         o_thread = p_thread;
 
 		o_tabs = new JTabbedPane();
-        o_tabs.addTab("Contents", new ThreadContentsPanel(p_thread));
+        o_tabs.addTab("Contents", ImageUtil.getFolderSmallIcon(), new ThreadContentsPanel(p_thread));
         o_tabs.addTab("Threads", ImageUtil.getThreadIcon(), new ThreadThreadPanel(p_thread));
         o_tabs.addTab("Updates", ImageUtil.getUpdateIcon(), new ThreadUpdatePanel(p_thread));
         o_tabs.addTab("Actions", ImageUtil.getActionIcon(), new ThreadActionPanel(p_thread));
@@ -49,7 +49,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 			}
 		});
 
-		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this, this, true, x_linkLabel);
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this, true, x_linkLabel);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 3, 0, 3));
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
@@ -119,11 +119,6 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
             o_tabs.setBackgroundAt(5, o_tabs.getBackgroundAt(1));
         }
     }
-
-	@Override
-	public void componentInfoChanged(boolean saved) {
-		// do nothing
-	}
 
 	public static void setTabIndex(int p_tabIndex) {
 		MemoryPanel.setMemoryValue(ThreadPanel.class, p_tabIndex);

@@ -10,6 +10,8 @@ import java.awt.event.*;
 import java.text.*;
 import java.util.*;
 
+import static util.GuiUtil.setUpButtonLabel;
+
 class DateSuggestionPanel extends JPanel {
 	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
@@ -24,31 +26,35 @@ class DateSuggestionPanel extends JPanel {
     private JComboBox o_dayBox = new JComboBox(s_dayItems);
 
 	private final Item o_item;
-	private JPanel o_parentPanel;
-	private final ComponentInfoChangeListener o_listener;
-    private final JTextField o_dueDateField = new JTextField();
-	private boolean o_modified = false;
 
-    DateSuggestionPanel(Item p_item, final JPanel p_parentPanel, final ComponentInfoChangeListener p_listener) {
+	private JPanel o_parentPanel;
+    private final JTextField o_dueDateField = new JTextField();
+	final JLabel o_setLabel = new JLabel(ImageUtil.getReturnIcon());
+	final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
+
+    DateSuggestionPanel(Item p_item, final JPanel p_parentPanel) {
         super(new BorderLayout());
 		o_parentPanel = p_parentPanel;
 		o_item = p_item;
-		o_listener = p_listener;
+
 
 		final DocumentListener x_listener = new DocumentListener() {
 			@Override public void insertUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-				o_modified = true;
+				edited();
 			}
 
 			@Override public void removeUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-				o_modified = true;
+				edited();
 			}
 
 			@Override public void changedUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-				o_modified = true;
+				edited();
+			}
+
+			private void edited() {
+				o_dueDateField.setBackground(ColourConstants.s_editedColour);
+				o_setLabel.setEnabled(true);
+				o_revertLabel.setEnabled(true);
 			}
 		};
 
@@ -81,13 +87,6 @@ class DateSuggestionPanel extends JPanel {
 			public void focusLost(FocusEvent focusEvent) {
 				if(o_item.getDueDate() == null && o_dueDateField.getText().length() == 0) {
 					setDueDateText(s_defaultTextString, Color.gray);
-				} else if(o_modified) {
-					if(JOptionPane.showConfirmDialog(p_parentPanel, "You've made modifications, would you like to keep them ?", "Set date to '" + o_dueDateField.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-						setDueDate();
-					} else {
-						o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
-						o_modified = false;
-					}
 				}
 			}
 
@@ -96,6 +95,27 @@ class DateSuggestionPanel extends JPanel {
 				o_dueDateField.setText(p_text);
 				o_dueDateField.getDocument().addDocumentListener(x_listener);
 				o_dueDateField.setForeground(p_foreground);
+			}
+		});
+
+		o_setLabel.setEnabled(false);
+		o_setLabel.setToolTipText("Set");
+		o_setLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				setDueDate();
+			}
+		});
+
+		o_revertLabel.setEnabled(false);
+		o_revertLabel.setToolTipText("Revert");
+		o_revertLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
+				o_dueDateField.setBackground(Color.white);
+				o_setLabel.setEnabled(false);
+				o_revertLabel.setEnabled(false);
 			}
 		});
 
@@ -115,27 +135,34 @@ class DateSuggestionPanel extends JPanel {
 
 		setUpDropDowns();
 
-		JPanel x_labelPanel = new JPanel(new BorderLayout());
-		x_labelPanel.add(new JLabel("Due Date"), BorderLayout.CENTER);
-		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-
-		JPanel x_buttonPanel = new JPanel(new GridLayout(1, 0, 5, 5));
-		x_buttonPanel.add(o_timeBox);
-		x_buttonPanel.add(o_weekBox);
-		x_buttonPanel.add(o_dayBox);
-		x_buttonPanel.add(o_SetButton);
-		x_buttonPanel.setBorder(BorderFactory.createTitledBorder("Quick Set"));
-
 		JPanel x_fieldPanel = new JPanel();
 		x_fieldPanel.setLayout(new BoxLayout(x_fieldPanel, BoxLayout.Y_AXIS));
-		x_fieldPanel.add(Box.createVerticalStrut(14));
+		x_fieldPanel.add(Box.createVerticalStrut(13));
 		x_fieldPanel.add(o_dueDateField);
 		x_fieldPanel.add(Box.createVerticalStrut(14));
-		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
-		add(x_labelPanel, BorderLayout.WEST);
-		add(x_fieldPanel, BorderLayout.CENTER);
-		add(x_buttonPanel, BorderLayout.EAST);
+		JPanel x_buttonPanel = new JPanel();
+		x_buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		x_buttonPanel.add(setUpButtonLabel(o_setLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_revertLabel));
+		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(7, 0, 0, 0));
+
+		JPanel x_panel = new JPanel(new BorderLayout());
+		x_panel.add(new JLabel("Due Date"), BorderLayout.WEST);
+		x_panel.add(x_fieldPanel, BorderLayout.CENTER);
+		x_panel.add(x_buttonPanel, BorderLayout.EAST);
+		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+
+		JPanel x_quickSetPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		x_quickSetPanel.add(o_timeBox);
+		x_quickSetPanel.add(o_weekBox);
+		x_quickSetPanel.add(o_dayBox);
+		x_quickSetPanel.add(o_SetButton);
+		x_quickSetPanel.setBorder(BorderFactory.createTitledBorder("Quick Set"));
+
+		add(x_panel, BorderLayout.CENTER);
+		add(x_quickSetPanel, BorderLayout.EAST);
 	}
 
 	private void setUpDropDowns() {
@@ -213,8 +240,9 @@ class DateSuggestionPanel extends JPanel {
 
 		o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
 		o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
-		o_listener.componentInfoChanged(true);
-		o_modified = false;
+		o_setLabel.setEnabled(false);
+		o_revertLabel.setEnabled(false);
+		o_dueDateField.setBackground(Color.white);
 	}
 
 	private String getDueDateText(Date x_dueDate) {

@@ -10,6 +10,8 @@ import java.awt.event.*;
 import java.text.*;
 import java.util.*;
 
+import static util.GuiUtil.setUpButtonLabel;
+
 public class RemindDateSuggestionPanel extends JPanel {
     private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
@@ -38,33 +40,37 @@ public class RemindDateSuggestionPanel extends JPanel {
     }
 
 	private final Reminder o_reminder;
-	private final ComponentInfoChangeListener o_listener;
-    private final JTextField o_dueDateField = new JTextField();
-    private final JComboBox o_minBox = new JComboBox(s_minItems);
+
+	private final JTextField o_dueDateField = new JTextField();
+	private final JLabel o_setLabel = new JLabel(ImageUtil.getReturnIcon());
+	private final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
+
+	private final JComboBox o_minBox = new JComboBox(s_minItems);
     private final JComboBox o_hourBox = new JComboBox(s_hourItems);
     private final JComboBox o_dayBox = new JComboBox(s_dayItems);
     private final JComboBox o_weekBox = new JComboBox(s_weekItems);
-	private boolean o_modified = false;
 
-	public RemindDateSuggestionPanel(Reminder p_reminder, final JPanel p_parentPanel, final ComponentInfoChangeListener p_listener) {
+	public RemindDateSuggestionPanel(Reminder p_reminder, final JPanel p_parentPanel) {
         super(new BorderLayout());
 		o_reminder = p_reminder;
-		o_listener = p_listener;
 
 		final DocumentListener x_listener = new DocumentListener() {
 			@Override public void insertUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-				o_modified = true;
+				edited();
 			}
 
 			@Override public void removeUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-				o_modified = true;
+				edited();
 			}
 
 			@Override public void changedUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-				o_modified = true;
+				edited();
+			}
+
+			private void edited() {
+				o_setLabel.setEnabled(true);
+				o_revertLabel.setEnabled(true);
+				o_dueDateField.setBackground(ColourConstants.s_editedColour);
 			}
 		};
 
@@ -102,13 +108,6 @@ public class RemindDateSuggestionPanel extends JPanel {
 			public void focusLost(FocusEvent focusEvent) {
 				if(o_dueDateField.getText().length() == 0) {
 					setDueDateText(s_defaultTextString, Color.gray);
-				} else if(o_modified) {
-					if(JOptionPane.showConfirmDialog(p_parentPanel, "You've made modifications, would you like to keep them ?", "Set date to '" + o_dueDateField.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == 0) {
-						setDueDate();
-					} else {
-						o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
-						o_modified = false;
-					}
 				}
 			}
 
@@ -120,6 +119,27 @@ public class RemindDateSuggestionPanel extends JPanel {
 			}
 		});
 
+		o_setLabel.setEnabled(false);
+		o_setLabel.setToolTipText("Set");
+		o_setLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				setDueDate();
+			}
+		});
+
+		o_revertLabel.setEnabled(false);
+		o_revertLabel.setToolTipText("Revert");
+		o_revertLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
+				o_dueDateField.setBackground(Color.white);
+				o_setLabel.setEnabled(false);
+				o_revertLabel.setEnabled(false);
+			}
+		});
+
 		JButton o_setButton = new JButton("Set");
 		o_setButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -127,25 +147,29 @@ public class RemindDateSuggestionPanel extends JPanel {
 			}
 		});
 
-		JPanel x_labelPanel = new JPanel(new GridLayout(0, 1, 0, 4));
-		x_labelPanel.add(new JLabel("Due Date"));
-		x_labelPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 5));
-
-		JTextField x_actionDueDateField = new JTextField(getDueDateText(((Item)p_reminder.getParentComponent()).getDueDate()));
+		JTextField x_actionDueDateField = new JTextField(getDueDateText(((Item) p_reminder.getParentComponent()).getDueDate()));
 		x_actionDueDateField.setHorizontalAlignment(JTextField.CENTER);
 		x_actionDueDateField.setEnabled(false);
 		x_actionDueDateField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
 
 		JPanel x_fieldPanel = new JPanel();
 		x_fieldPanel.setLayout(new BoxLayout(x_fieldPanel, BoxLayout.Y_AXIS));
-		x_fieldPanel.add(Box.createVerticalStrut(14));
+		x_fieldPanel.add(Box.createVerticalStrut(13));
 		x_fieldPanel.add(o_dueDateField);
 		x_fieldPanel.add(Box.createVerticalStrut(14));
-		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
-		JPanel x_labelAndFieldPanel = new JPanel(new BorderLayout());
-		x_labelAndFieldPanel.add(x_labelPanel, BorderLayout.WEST);
-		x_labelAndFieldPanel.add(x_fieldPanel, BorderLayout.CENTER);
+		JPanel x_buttonPanel = new JPanel();
+		x_buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		x_buttonPanel.add(setUpButtonLabel(o_setLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_revertLabel));
+		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(7, 0, 0, 0));
+
+		JPanel x_panel = new JPanel(new BorderLayout());
+		x_panel.add(new JLabel("Due Date"), BorderLayout.WEST);
+		x_panel.add(x_fieldPanel, BorderLayout.CENTER);
+		x_panel.add(x_buttonPanel, BorderLayout.EAST);
+		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
 		JPanel x_dropdownPanel = new JPanel(new GridLayout(1, 0, 5, 5));
 		x_dropdownPanel.add(o_weekBox);
@@ -161,13 +185,13 @@ public class RemindDateSuggestionPanel extends JPanel {
 		x_setPanel.add(x_beforePanel, BorderLayout.WEST);
 		x_setPanel.add(o_setButton, BorderLayout.CENTER);
 
-		JPanel x_borderedPanel = new JPanel(new BorderLayout());
-		x_borderedPanel.add(x_dropdownPanel, BorderLayout.CENTER);
-		x_borderedPanel.add(x_setPanel, BorderLayout.EAST);
-		x_borderedPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5), BorderFactory.createTitledBorder("Quick Set")));
+		JPanel x_quickSetPanel = new JPanel(new BorderLayout());
+		x_quickSetPanel.add(x_dropdownPanel, BorderLayout.CENTER);
+		x_quickSetPanel.add(x_setPanel, BorderLayout.EAST);
+		x_quickSetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5), BorderFactory.createTitledBorder("Quick Set")));
 
-		add(x_labelAndFieldPanel, BorderLayout.CENTER);
-		add(x_borderedPanel, BorderLayout.EAST);
+		add(x_panel, BorderLayout.CENTER);
+		add(x_quickSetPanel, BorderLayout.EAST);
     }
 
 	private void suggestAndSet() {
@@ -200,8 +224,9 @@ public class RemindDateSuggestionPanel extends JPanel {
 		}
 
 		o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
-		o_listener.componentInfoChanged(true);
-		o_modified = false;
+		o_setLabel.setEnabled(false);
+		o_revertLabel.setEnabled(false);
+		o_dueDateField.setBackground(Color.white);
 	}
 
 	private String getDueDateText(Date x_dueDate) {

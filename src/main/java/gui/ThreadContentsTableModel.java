@@ -8,7 +8,7 @@ import java.util.Date;
 
 class ThreadContentsTableModel extends ComponentTableModel {
     ThreadContentsTableModel(Thread p_thread) {
-        super(p_thread, new String[]{"Creation Date", "Type", "Name", "Threads", "Updates", "Actions", ""});
+        super(p_thread, new String[]{"Creation Date", "Type", "Name", "Th.", "Up.", "Ac.", ""});
     }
 
     public int getRowCount() {

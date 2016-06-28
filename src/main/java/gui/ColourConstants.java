@@ -10,4 +10,6 @@ public class ColourConstants {
 	public static final Color s_thisWeekColour = new Color(175,255,155);
 	public static final Color s_offMonthColour = new Color(230, 230, 230);
 	public static final Color s_weekendColour = new Color(250, 250, 250);
+
+	public static final Color s_editedColour = new Color(255, 255, 185);
 }

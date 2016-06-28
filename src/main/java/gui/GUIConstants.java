@@ -9,7 +9,7 @@ class GUIConstants
     public static final int s_threadColumnWidth = 220;
     public static final int s_dateStatusColumnWidth = 110;
     public static final int s_lastUpdatedColumnWidth = 110;
-	public static final int s_statsColumnWidth = 90;
+	public static final int s_statsColumnWidth = 40;
 	public static final int s_googleStatusColumnWidth = 30;
 
 	public static final int s_tableRowHeight = 27;

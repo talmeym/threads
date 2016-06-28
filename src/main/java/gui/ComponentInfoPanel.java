@@ -19,29 +19,27 @@ public class ComponentInfoPanel extends JPanel {
 
 	private final JLabel o_activeLabel = new JLabel(ImageUtil.getTickIcon());
 	private final JTextField o_textField = new JTextField();
-	private boolean o_modified = false;
+	private final JLabel o_setLabel = new JLabel(ImageUtil.getReturnIcon());
+	private final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
 
-	public ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, final ComponentInfoChangeListener p_listener, boolean p_showParents, JLabel... p_extraLabels) {
+	public ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, boolean p_showParents, JLabel... p_extraLabels) {
         super(new BorderLayout());
         o_component = p_component;
 
+		final JLabel x_parentLabel = new JLabel(ImageUtil.getUpIcon());
+		final JLabel x_removeLabel = new JLabel(ImageUtil.getTrashIcon());
+		final JLabel x_duplicateLabel = new JLabel(ImageUtil.getDuplicateIcon());
+		final JLabel x_folderLabel = new JLabel(ImageUtil.getFolderIcon());
+
 		final DocumentListener x_listener = new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-				o_modified = true;
-			}
+			@Override public void insertUpdate(DocumentEvent documentEvent) { edited(); }
+			@Override public void removeUpdate(DocumentEvent documentEvent) { edited(); }
+			@Override public void changedUpdate(DocumentEvent documentEvent) { edited(); }
 
-			@Override
-			public void removeUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-				o_modified = true;
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent documentEvent) {
-				p_listener.componentInfoChanged(false);
-				o_modified = true;
+			private void edited() {
+				o_textField.setBackground(ColourConstants.s_editedColour);
+				o_setLabel.setEnabled(true);
+				o_revertLabel.setEnabled(true);
 			}
 		};
 
@@ -55,11 +53,6 @@ public class ComponentInfoPanel extends JPanel {
 				o_textField.getDocument().addDocumentListener(x_listener);
 			}
 		});
-
-		final JLabel x_parentLabel = new JLabel(ImageUtil.getUpIcon());
-		final JLabel x_removeLabel = new JLabel(ImageUtil.getCrossIcon());
-		final JLabel x_duplicateLabel = new JLabel(ImageUtil.getDuplicateIcon());
-		final JLabel x_folderLabel = new JLabel(ImageUtil.getFolderIcon());
 
 		o_textField.setText(p_component.getText());
 		o_textField.setForeground(p_component.isActive() ? Color.black : Color.gray);
@@ -82,34 +75,31 @@ public class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-		o_textField.addFocusListener(new FocusAdapter() {
+		o_setLabel.setEnabled(false);
+		o_setLabel.setToolTipText("Set");
+		o_setLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void focusLost(FocusEvent focusEvent) {
-				if(o_modified) {
-					if(JOptionPane.showConfirmDialog(p_parentPanel, "You've made modifications, would you like to keep them ?", "Rename to '" + o_textField.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == 0) {
-						if (o_textField.getText().length() > 0 && !o_textField.getText().equals(o_component.getText())) {
-							o_component.setText(o_textField.getText());
-						}
+			public void mouseClicked(MouseEvent mouseEvent) {
+				setText();
+			}
+		});
 
-						p_listener.componentInfoChanged(true);
-					}
-
-					o_textField.setText(o_component.getText());
-					o_modified = false;
-				}
+		o_revertLabel.setEnabled(false);
+		o_revertLabel.setToolTipText("Revert");
+		o_revertLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				o_textField.setText(o_component.getText());
+				o_textField.setBackground(Color.white);
+				o_setLabel.setEnabled(false);
+				o_revertLabel.setEnabled(false);
 			}
 		});
 
         o_textField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				if (o_textField.getText().length() > 0 && !o_textField.getText().equals(o_component.getText())) {
-					o_component.setText(o_textField.getText());
-				}
-
-				o_textField.setText(o_component.getText());
-				p_listener.componentInfoChanged(true);
-				o_modified = false;
+				setText();
 			}
 		});
 
@@ -271,7 +261,9 @@ public class ComponentInfoPanel extends JPanel {
 		}
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        x_buttonPanel.add(setUpButtonLabel(o_activeLabel));
+        x_buttonPanel.add(setUpButtonLabel(o_setLabel));
+        x_buttonPanel.add(setUpButtonLabel(o_revertLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_activeLabel));
         x_buttonPanel.add(setUpButtonLabel(x_removeLabel));
         x_buttonPanel.add(setUpButtonLabel(x_duplicateLabel));
         x_buttonPanel.add(setUpButtonLabel(x_folderLabel));
@@ -292,4 +284,15 @@ public class ComponentInfoPanel extends JPanel {
         add(x_fieldPanel, BorderLayout.CENTER);
         add(x_buttonPanel, BorderLayout.EAST);
     }
+
+	private void setText() {
+		if (o_textField.getText().length() > 0 && !o_textField.getText().equals(o_component.getText())) {
+			o_component.setText(o_textField.getText());
+		}
+
+		o_textField.setText(o_component.getText());
+		o_setLabel.setEnabled(false);
+		o_revertLabel.setEnabled(false);
+		o_textField.setBackground(Color.white);
+	}
 }

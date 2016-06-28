@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ReminderPanel extends JPanel implements ComponentInfoChangeListener, GoogleSyncListener {
+public class ReminderPanel extends JPanel implements GoogleSyncListener {
 	private Reminder o_reminder;
 
 	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
@@ -24,11 +24,11 @@ public class ReminderPanel extends JPanel implements ComponentInfoChangeListener
 			}
 		});
 
-		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_reminder, this, this, false, o_linkLabel);
+		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_reminder, this, false, o_linkLabel);
 		o_compInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         JPanel x_remindDatePanel = new JPanel(new BorderLayout());
-		x_remindDatePanel.add(new RemindDateSuggestionPanel(p_reminder, this, this), BorderLayout.CENTER);
+		x_remindDatePanel.add(new RemindDateSuggestionPanel(p_reminder, this), BorderLayout.CENTER);
 		x_remindDatePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
         JPanel x_panel = new JPanel(new BorderLayout());
@@ -55,11 +55,6 @@ public class ReminderPanel extends JPanel implements ComponentInfoChangeListener
 				x_task.execute();
 			}
 		}
-	}
-
-	@Override
-	public void componentInfoChanged(boolean saved) {
-		// do nothing
 	}
 
 	@Override

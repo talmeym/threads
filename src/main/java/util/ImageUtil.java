@@ -19,88 +19,6 @@ public class ImageUtil {
 		return loadImage("/threads.gif");
 	}
 
-	public static Image getTickIconImage() {
-		return loadImage("/tick.png");
-	}
-
-	public static Image getMinusIconImage() {
-		return loadImage("/minus.png");
-	}
-
-	public static Image getPlusIconImage() {
-		return loadImage("/plus.png");
-	}
-
-	public static Image getUpIconImage() {
-		return loadImage("/up.png");
-	}
-
-	public static Image getCalendarIconImage() {
-		return loadImage("/calendar.png");
-	}
-
-	public static Image getCalendarSmallIconImage() {
-		return loadImage("/calendar_small.png");
-	}
-
-	public static Image getLeftIconImage() {
-		return loadImage("/left.png");
-	}
-
-	public static Image getRightIconImage() {
-		return loadImage("/right.png");
-	}
-
-	public static Image getCrossIconImage() {
-		return loadImage("/cross.png");
-	}
-
-	public static Image getMoveIconImage() {
-		return loadImage("/move.png");
-	}
-
-	public static Image getDuplicateIconImage() {
-		return loadImage("/duplicate.png");
-	}
-
-	public static Image getFolderIconImage() {
-		return loadImage("/folder.png");
-	}
-
-	public static Image getLinkIconImage() {
-		return loadImage("/link.png");
-	}
-
-	public static Image getGoogleIconImage() {
-		return loadImage("/google.png");
-	}
-
-	public static Image getGoogleSmallIconImage() {
-		return loadImage("/google_icon.png");
-	}
-
-	public static Image getActionIconImage() {
-		return loadImage("/action.png");
-	}
-
-	public static Image getUpdateIconImage() {
-		return loadImage("/update.png");
-	}
-
-	public static Image getThreadsIconImage() {
-		return loadImage("/threads_icon.gif");
-	}
-
-	public static Image getThreadImage() {
-		String filename = "/spool2.png";
-		return loadImage(filename);
-	}
-
-	public static Image getReminderIconImage() {
-		String filename = "/reminder.png";
-		return loadImage(filename);
-	}
-
 	private static Image loadImage(String filename) {
 		try {
 			InputStream inputStream = SystemTrayUtil.class.getResourceAsStream(filename);
@@ -116,82 +34,94 @@ public class ImageUtil {
 	}
 
 	public static Icon getThreadsIcon() {
-		return new ImageIcon(ImageUtil.getThreadsIconImage());
+		return new ImageIcon(loadImage("/threads_icon.gif"));
 	}
 
 	public static Icon getPlusIcon() {
-		return new ImageIcon(ImageUtil.getPlusIconImage());
+		return new ImageIcon(loadImage("/plus.png"));
 	}
 
 	public static Icon getMinusIcon() {
-		return new ImageIcon(ImageUtil.getMinusIconImage());
+		return new ImageIcon(loadImage("/minus.png"));
 	}
 
 	public static Icon getTickIcon() {
-		return new ImageIcon(ImageUtil.getTickIconImage());
+		return new ImageIcon(loadImage("/tick.png"));
 	}
 
 	public static Icon getUpIcon() {
-		return new ImageIcon(ImageUtil.getUpIconImage());
+		return new ImageIcon(loadImage("/up.png"));
 	}
 
 	public static Icon getCalendarIcon() {
-		return new ImageIcon(ImageUtil.getCalendarIconImage());
+		return new ImageIcon(loadImage("/calendar.png"));
 	}
 
 	public static Icon getCalendarSmallIcon() {
-		return new ImageIcon(ImageUtil.getCalendarSmallIconImage());
+		return new ImageIcon(loadImage("/calendar_tab.png"));
 	}
 
 	public static Icon getLeftIcon() {
-		return new ImageIcon(ImageUtil.getLeftIconImage());
+		return new ImageIcon(loadImage("/left.png"));
 	}
 
 	public static Icon getRightIcon() {
-		return new ImageIcon(ImageUtil.getRightIconImage());
+		return new ImageIcon(loadImage("/right.png"));
 	}
 
 	public static Icon getCrossIcon() {
-		return new ImageIcon(ImageUtil.getCrossIconImage());
+		return new ImageIcon(loadImage("/revert.png"));
 	}
 
 	public static Icon getMoveIcon() {
-		return new ImageIcon(ImageUtil.getMoveIconImage());
+		return new ImageIcon(loadImage("/move.png"));
 	}
 
 	public static Icon getDuplicateIcon() {
-		return new ImageIcon(ImageUtil.getDuplicateIconImage());
+		return new ImageIcon(loadImage("/duplicate.png"));
 	}
 
 	public static Icon getFolderIcon() {
-		return new ImageIcon(ImageUtil.getFolderIconImage());
+		return new ImageIcon(loadImage("/folder.png"));
 	}
 
 	public static Icon getLinkIcon() {
-		return new ImageIcon(ImageUtil.getLinkIconImage());
+		return new ImageIcon(loadImage("/link.png"));
 	}
 
 	public static Icon getGoogleIcon() {
-		return new ImageIcon(ImageUtil.getGoogleIconImage());
+		return new ImageIcon(loadImage("/google.png"));
 	}
 
 	public static Icon getGoogleSmallIcon() {
-		return new ImageIcon(ImageUtil.getGoogleSmallIconImage());
+		return new ImageIcon(loadImage("/google_icon.png"));
 	}
 
 	public static Icon getActionIcon() {
-		return new ImageIcon(getActionIconImage());
+		return new ImageIcon(loadImage("/action_tab.png"));
 	}
 
 	public static Icon getUpdateIcon() {
-		return new ImageIcon(getUpdateIconImage());
+		return new ImageIcon(loadImage("/update.png"));
 	}
 
 	public static Icon getThreadIcon() {
-		return new ImageIcon(getThreadImage());
+		return new ImageIcon(loadImage("/thread.png"));
 	}
 
 	public static Icon getReminderIcon() {
-		return new ImageIcon(getReminderIconImage());
+		return new ImageIcon(loadImage("/reminder_tab.png"));
+	}
+
+	public static Icon getReturnIcon() {
+		return new ImageIcon(loadImage("/set.png"));
+	}
+
+	public static Icon getFolderSmallIcon() {
+		return new ImageIcon(loadImage("/contents_tab.png"));
+	}
+
+	public static Icon getTrashIcon() {
+		return new ImageIcon(loadImage("/trash.png"));
 	}
 }

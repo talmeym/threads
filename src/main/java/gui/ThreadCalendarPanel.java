@@ -123,6 +123,10 @@ public class ThreadCalendarPanel extends ComponentTablePanel implements TableSel
 				});
 			}
 
+			if(x_actions.size() > 0) {
+				x_menu.add(new JSeparator(JSeparator.HORIZONTAL));
+			}
+
 			JMenuItem x_newMenuItem = new JMenuItem("Add Action");
 			x_newMenuItem.setForeground(Color.gray);
 			x_menu.add(x_newMenuItem);

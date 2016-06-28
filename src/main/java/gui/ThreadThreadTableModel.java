@@ -5,7 +5,7 @@ import data.*;
 
 class ThreadThreadTableModel extends ComponentTableModel {
     ThreadThreadTableModel(Thread p_thread) {
-        super(p_thread, new String[]{"Parent", "Thread", "Threads", "Updates", "Actions"});
+        super(p_thread, new String[]{"Parent", "Thread", "Th.", "Up.", "Ac."});
     }
 
 	@Override

@@ -35,11 +35,11 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 		x_list.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         x_list.setBackground(column > 4 ? ColourConstants.s_weekendColour : Color.white);
 
-		setColourForTime(x_date, x_list);
-
 		if(x_calendar.get(Calendar.MONTH) != o_month) {
 			x_list.setBackground(ColourConstants.s_offMonthColour);
 		}
+
+		setColourForTime(x_date, x_list);
 
 		return x_list;
 	}

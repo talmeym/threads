@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-class ItemPanel extends ComponentTablePanel implements Observer, ComponentInfoChangeListener {
+class ItemPanel extends ComponentTablePanel implements Observer {
     private final Item o_item;
 	private final JLabel o_linkItemLabel = new JLabel(ImageUtil.getLinkIcon());
 
@@ -31,8 +31,8 @@ class ItemPanel extends ComponentTablePanel implements Observer, ComponentInfoCh
 		});
 
         JPanel x_panel = new JPanel(new BorderLayout());
-        x_panel.add(new ComponentInfoPanel(p_item, this, this, true, o_linkItemLabel), BorderLayout.NORTH);
-        x_panel.add(new DateSuggestionPanel(o_item, this, this), BorderLayout.SOUTH);
+        x_panel.add(new ComponentInfoPanel(p_item, this, true, o_linkItemLabel), BorderLayout.NORTH);
+        x_panel.add(new DateSuggestionPanel(o_item, this), BorderLayout.SOUTH);
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
 		add(x_panel, BorderLayout.NORTH);
@@ -88,10 +88,5 @@ class ItemPanel extends ComponentTablePanel implements Observer, ComponentInfoCh
 		} else {
 			o_linkItemLabel.setIcon(ImageUtil.getLinkIcon());
 		}
-	}
-
-	@Override
-	public void componentInfoChanged(boolean saved) {
-		// do nothing
 	}
 }
