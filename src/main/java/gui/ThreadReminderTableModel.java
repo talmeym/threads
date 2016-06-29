@@ -24,10 +24,7 @@ class ThreadReminderTableModel extends ComponentTableModel {
 
 	@Override
     public Class getColumnClass(int col) {
-        switch(col) {
-			case 2: return Date.class;
-			default: return String.class;
-        }        
+        return String.class;
     }
 
 	@Override
@@ -37,7 +34,7 @@ class ThreadReminderTableModel extends ComponentTableModel {
         switch(col) {
 			case 0: return x_dueReminder.getItem().getText();
 			case 1: return x_dueReminder.getText();
-			case 2: return x_dueReminder.getDueDate();
+			case 2: return DateUtil.getFormattedDate(x_dueReminder.getDueDate());
 			case 3: return DateUtil.getDateStatus(x_dueReminder.getDueDate());
 			default: return GoogleUtil.isLinked(x_dueReminder);
         }

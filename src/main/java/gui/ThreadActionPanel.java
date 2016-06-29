@@ -124,7 +124,7 @@ public class ThreadActionPanel extends ComponentTablePanel implements Observer {
 		if(p_index != -1) {
 			Item x_action = LookupHelper.getAllActiveActions(o_thread).get(p_index);
 
-			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_action.getText() + "' from '" + x_action.getParentThread().getText() + "' ?", "Remove " + x_action.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_action.getText() + "' from '" + x_action.getParentThread().getText() + "' ?", "Delete " + x_action.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_action.getParentThread().removeThreadItem(x_action);
 			}
 		}

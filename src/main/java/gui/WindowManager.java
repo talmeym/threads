@@ -7,7 +7,6 @@ import util.*;
 import util.GoogleSyncer;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
@@ -31,17 +30,24 @@ public class WindowManager {
         return s_INSTANCE;
     }
 
-	private NavigationWindow o_navigationWindow;
-	private Map<Component, JFrame> o_windows = new HashMap<Component, JFrame>();
+	private final JFrame o_window = new JFrame();
+	private final NavigationAndComponentPanel o_navigationAndComponentPanel;
 	private WindowSettings o_windowSettings = new WindowSettings();
 
 	private WindowManager(final Thread p_topLevelThread, final File p_dataFilePath, final File p_settingsFilePath) {
+		ImageUtil.addIcon(o_window);
 
-		o_navigationWindow = new NavigationWindow(p_topLevelThread);
-		o_navigationWindow.addWindowListener(new WindowAdapter() {
+		String x_startingUuid = applySettings(p_settingsFilePath);
+		Component x_firstComponent = x_startingUuid != null ? p_topLevelThread.findComponent(UUID.fromString(x_startingUuid)) : p_topLevelThread;
+
+		o_navigationAndComponentPanel = new NavigationAndComponentPanel(p_topLevelThread, x_firstComponent);
+		o_window.setContentPane(o_navigationAndComponentPanel);
+
+		o_window.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
-				setNavigationWindowDetails(o_navigationWindow.getLocation(), o_navigationWindow.getSize());
+				o_windowSettings.setWindowLocation(o_window.getLocation());
+				o_windowSettings.setWindowSize(o_window.getSize());
 				TimedSaver.getInstance().stopRunning();
 				GoogleSyncer.getInstance().stopRunning();
 				Saver.saveDocument(p_topLevelThread, p_dataFilePath);
@@ -50,14 +56,11 @@ public class WindowManager {
 			}
 		});
 
-		String x_startingUuid = applySettings(p_settingsFilePath);
-		Component x_component = x_startingUuid != null ? p_topLevelThread.findComponent(UUID.fromString(x_startingUuid)) : null;
+		o_window.setSize(o_windowSettings.getWindowSize());
+		o_window.setLocation(o_windowSettings.getWindowLocation());
+		o_window.setTitle(x_firstComponent.getType() + " : " + x_firstComponent.getText());
+		o_window.setVisible(true);
 
-		o_navigationWindow.setSize(o_windowSettings.getNavSize());
-		o_navigationWindow.setLocation(o_windowSettings.getNavLocation());
-		o_navigationWindow.setVisible(true);
-
-		openComponent(x_component != null ? x_component : p_topLevelThread);
 	}
 
 	private void saveSettings(File p_settingsFile) {
@@ -65,7 +68,9 @@ public class WindowManager {
 			Properties x_properties = o_windowSettings.getProperties();
 			Integer x_tabMemory = MemoryPanel.getMemoryValue(ThreadPanel.class);
 			Integer x_monthMemory = MemoryPanel.getMemoryValue(ThreadCalendarPanel.class);
-			Integer x_divMemory = MemoryPanel.getMemoryValue(ItemAndReminderPanel.class);
+			Integer x_itemDivMemory = MemoryPanel.getMemoryValue(ItemAndReminderPanel.class);
+			Integer x_navDivMemory = MemoryPanel.getMemoryValue(NavigationAndComponentPanel.class);
+
 
 			if(x_tabMemory != null) {
 				x_properties.setProperty(WindowSettings.s_TAB_INDEX, String.valueOf(x_tabMemory));
@@ -75,15 +80,15 @@ public class WindowManager {
 				x_properties.setProperty(WindowSettings.s_MONTH, String.valueOf(x_monthMemory));
 			}
 
-			if(x_divMemory != null) {
-				x_properties.setProperty(WindowSettings.s_DIVLOC, String.valueOf(x_divMemory));
+			if(x_itemDivMemory != null) {
+				x_properties.setProperty(WindowSettings.s_DIVLOC, String.valueOf(x_itemDivMemory));
 			}
 
-			for(Component x_component: o_windows.keySet()) {
-				if(o_windows.get(x_component).isVisible()) {
-					x_properties.setProperty(WindowSettings.s_UUID, x_component.getId().toString());
-				}
+			if(x_navDivMemory != null) {
+				x_properties.setProperty(WindowSettings.s_NAVDIVLOC, String.valueOf(x_navDivMemory));
 			}
+
+			x_properties.setProperty(WindowSettings.s_UUID, o_navigationAndComponentPanel.getComponent().getId().toString());
 
 			x_properties.store(new FileWriter(p_settingsFile), "Threads settings");
 		} catch (IOException e) {
@@ -99,7 +104,8 @@ public class WindowManager {
 				o_windowSettings.applyProperties(x_properties);
 				String x_tabIndex = x_properties.getProperty(WindowSettings.s_TAB_INDEX);
 				String x_month = x_properties.getProperty(WindowSettings.s_MONTH);
-				String x_divLoc = x_properties.getProperty(WindowSettings.s_DIVLOC);
+				String x_itemDivLoc = x_properties.getProperty(WindowSettings.s_DIVLOC);
+				String x_navDivLoc = x_properties.getProperty(WindowSettings.s_NAVDIVLOC);
 
 				if(x_tabIndex != null) {
 					MemoryPanel.setMemoryValue(ThreadPanel.class, Integer.parseInt(x_tabIndex));
@@ -109,8 +115,13 @@ public class WindowManager {
 					MemoryPanel.setMemoryValue(ThreadCalendarPanel.class, Integer.parseInt(x_month));
 				}
 
-				if(x_divLoc != null) {
-					MemoryPanel.setMemoryValue(ItemAndReminderPanel.class, Integer.parseInt(x_divLoc));
+				if(x_itemDivLoc != null) {
+					MemoryPanel.setMemoryValue(ItemAndReminderPanel.class, Integer.parseInt(x_itemDivLoc));
+				}
+
+
+				if(x_navDivLoc != null) {
+					MemoryPanel.setMemoryValue(NavigationAndComponentPanel.class, Integer.parseInt(x_navDivLoc));
 				}
 
 				return x_properties.getProperty(WindowSettings.s_UUID);
@@ -123,76 +134,11 @@ public class WindowManager {
 	}
 
 	public void openComponent(Component p_component) {
-		if(!o_windows.containsKey(p_component)) {
-			o_windows.put(p_component, makeComponentWindow(p_component));
-		}
-
-		JFrame x_window = o_windows.get(p_component);
-
-		if(!x_window.isVisible()) {
-			for(JFrame x_frame: o_windows.values()) {
-				x_frame.setVisible(false);
-			}
-
-			x_window.setSize(o_windowSettings.getWindowSize());
-			x_window.setLocation(o_windowSettings.getWindowLocation());
-
-			if(p_component instanceof Reminder) {
-				((ItemAndReminderPanel)x_window.getContentPane()).showReminder((Reminder) p_component);
-			}
-
-			x_window.setVisible(true);
-			o_navigationWindow.selectComponent(p_component);
-		}
-    }
+		o_navigationAndComponentPanel.showComponent(p_component);
+		o_window.setTitle(p_component.getType() + " : " + p_component.getText());
+	}
 
 	public void closeComponent(final Component p_component) {
-		if(o_windows.containsKey(p_component)) {
-			o_windows.get(p_component).setVisible(false);
-		}
-	}
-
-	private JFrame makeComponentWindow(final Component p_component) {
-		JFrame x_window = null;
-
-		if(p_component instanceof Thread) {
-			x_window = new ThreadWindow((Thread) p_component);
-		}
-
-		if(p_component instanceof Item) {
-			x_window = new ItemAndReminderWindow((Item) p_component);
-		}
-
-		if(p_component instanceof Reminder) {
-			x_window = new ItemAndReminderWindow((Reminder) p_component);
-		}
-
-		if (x_window != null) {
-			x_window.addWindowListener(new WindowAdapter() {
-				@Override
-				public void windowDeactivated(WindowEvent windowEvent) {
-					Window x_window = windowEvent.getWindow();
-					setComponentWindowDetails(x_window.getLocation(), x_window.getSize());
-				}
-
-				@Override
-				public void windowClosing(WindowEvent windowEvent) {
-					Window x_window = windowEvent.getWindow();
-					setComponentWindowDetails(x_window.getLocation(), x_window.getSize());
-				}
-			});
-		}
-
-		return x_window;
-	}
-
-	public void setComponentWindowDetails(Point p_location, Dimension p_size) {
-		o_windowSettings.setWindowLocation(p_location);
-		o_windowSettings.setWindowSize(p_size);
-	}
-
-	public void setNavigationWindowDetails(Point p_location, Dimension p_size) {
-		o_windowSettings.setNavLocation(p_location);
-		o_windowSettings.setNavSize(p_size);
+		// do nothing
 	}
 }

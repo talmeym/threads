@@ -122,7 +122,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 			ThreadItem x_threadItem = (ThreadItem) LookupHelper.getAllActiveThreads(o_thread).get(p_index);
 			Thread x_parent = (Thread) x_threadItem.getParentComponent();
 
-			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_threadItem.getText() + "' from '" + x_threadItem.getParentThread().getText() + "' ?", "Remove " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_threadItem.getText() + "' from '" + x_threadItem.getParentThread().getText() + "' ?", "Delete " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_parent.removeThreadItem(x_threadItem);
 			}
 		}

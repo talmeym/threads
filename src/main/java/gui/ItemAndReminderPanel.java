@@ -81,7 +81,6 @@ public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionL
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(o_addReminderLabel));
-//		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		JPanel x_bottomPanel = new JPanel(new BorderLayout());
 		x_bottomPanel.add(o_cardPanel, BorderLayout.CENTER);

@@ -120,7 +120,7 @@ public class RemindDateSuggestionPanel extends JPanel {
 		});
 
 		o_setLabel.setEnabled(false);
-		o_setLabel.setToolTipText("Set");
+		o_setLabel.setToolTipText("Apply Change");
 		o_setLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
@@ -129,7 +129,7 @@ public class RemindDateSuggestionPanel extends JPanel {
 		});
 
 		o_revertLabel.setEnabled(false);
-		o_revertLabel.setToolTipText("Revert");
+		o_revertLabel.setToolTipText("Revert Change");
 		o_revertLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {

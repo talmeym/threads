@@ -27,10 +27,8 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 
         fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(1, GUIConstants.s_typeColumnWidth);
-        fixColumnWidth(3, GUIConstants.s_statsColumnWidth);
-        fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
-        fixColumnWidth(5, GUIConstants.s_statsColumnWidth);
-        fixColumnWidth(6, GUIConstants.s_googleStatusColumnWidth);
+        fixColumnWidth(3, GUIConstants.s_threadItemStatusColumnWidth);
+        fixColumnWidth(4, GUIConstants.s_googleStatusColumnWidth);
 
 		JLabel x_addItemLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addItemLabel.setToolTipText("Add Item");
@@ -171,7 +169,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
         if(p_index != -1) {
             ThreadItem x_threadItem = o_thread.getThreadItem(p_index);
 
-			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_threadItem.getText() + "' from '" + x_threadItem.getParentThread().getText() + "' ?", "Remove " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_threadItem.getText() + "' from '" + x_threadItem.getParentThread().getText() + "' ?", "Delete " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
                 o_thread.removeThreadItem(x_threadItem);
             }
         }
@@ -268,7 +266,7 @@ public class ThreadContentsPanel extends ComponentTablePanel implements Observer
 			ThreadItem x_threadItem = o_thread.getThreadItem(p_row);
 			WindowManager.getInstance().openComponent(x_threadItem);
 
-			if(x_threadItem instanceof Thread && p_col > 2) {
+			if(x_threadItem instanceof Thread && p_col == 3) {
 				ThreadPanel.setTabIndex(p_col - 2);
 			}
 		}

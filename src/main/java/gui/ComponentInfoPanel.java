@@ -76,7 +76,7 @@ public class ComponentInfoPanel extends JPanel {
 		});
 
 		o_setLabel.setEnabled(false);
-		o_setLabel.setToolTipText("Set");
+		o_setLabel.setToolTipText("Apply Change");
 		o_setLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
@@ -85,7 +85,7 @@ public class ComponentInfoPanel extends JPanel {
 		});
 
 		o_revertLabel.setEnabled(false);
-		o_revertLabel.setToolTipText("Revert");
+		o_revertLabel.setToolTipText("Revert Change");
 		o_revertLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
@@ -121,14 +121,14 @@ public class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-		x_removeLabel.setToolTipText("Remove");
+		x_removeLabel.setToolTipText("Delete");
 		x_removeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
 				if(x_parentLabel.isEnabled()) {
 					Component x_parentComponent = o_component.getParentComponent();
 
-					if(JOptionPane.showConfirmDialog(p_parentPanel, "Remove '" + o_component.getText() + "' from '" + x_parentComponent.getText() + "' ?", "Remove " + o_component.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+					if(JOptionPane.showConfirmDialog(p_parentPanel, "Remove '" + o_component.getText() + "' from '" + x_parentComponent.getText() + "' ?", "Delete " + o_component.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 						if(o_component instanceof ThreadItem) {
 							ThreadItem x_threadItem = (ThreadItem) o_component;
 							x_threadItem.getParentThread().removeThreadItem(x_threadItem);
@@ -141,7 +141,7 @@ public class ComponentInfoPanel extends JPanel {
 						WindowManager.getInstance().openComponent(x_parentComponent);
 					}
 				} else {
-					JOptionPane.showMessageDialog(p_parentPanel, "The root Thread cannot be removed", "No can do", JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon());
+					JOptionPane.showMessageDialog(p_parentPanel, "The root Thread cannot be deleted", "No can do", JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon());
 				}
 			}
 		});

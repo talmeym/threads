@@ -123,7 +123,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		if(p_index != -1) {
 			Item x_update = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
 
-			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_update.getText() + "' from '" + x_update.getParentThread().getText() + "' ?", "Remove " + x_update.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_update.getText() + "' from '" + x_update.getParentThread().getText() + "' ?", "Delete " + x_update.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_update.getParentThread().removeThreadItem(x_update);
 			}
 		}
