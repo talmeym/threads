@@ -9,12 +9,15 @@ import java.util.*;
 import static java.util.Calendar.*;
 
 public class DateUtil {
+	public static final int TODAY = 0;
+	public static final int YESTERDAY = -1;
+	public static final int TOMORROW = 1;
+
 	private static final SimpleDateFormat s_timeFormat = new SimpleDateFormat("HH:mm");
 	
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy");
 	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mmaa");
 	public static final DateFormat s_dayFormat = new SimpleDateFormat("EEEE h:mmaa");
-
 
 	public static String getDateStatus(Date p_date) {
         return getDateStatus(p_date, new Date(), "ago");
@@ -67,7 +70,7 @@ public class DateUtil {
 			}
 		}
 
-		if(x_days > 0 && !(x_past ? p_dueDate.after(getFirstThingYesterday()) : p_dueDate.before(getLastThingTomorrow()))) {
+		if(x_days > 0 && !(x_past ? p_dueDate.after(getFirstThing(YESTERDAY)) : p_dueDate.before(getLastThing(TOMORROW)))) {
 			if((x_hours > 0 || x_minutes > 0 || x_seconds > 0) && timeIsBefore(p_dueDate, p_refDate)) {
 				x_days = x_days + 1;
 
@@ -134,15 +137,15 @@ public class DateUtil {
 	}
 
 	public static boolean isToday(Date p_date) {
-	    return isSameDay(p_date, getFirstThingToday());
+	    return isSameDay(p_date, getFirstThing(TODAY));
 	}
 
 	public static boolean isYesterday(Date p_date) {
-	    return isSameDay(p_date, getFirstThingYesterday());
+	    return isSameDay(p_date, getFirstThing(YESTERDAY));
 	}
 
 	public static boolean isTomorrow(Date p_date) {
-	    return isSameDay(p_date, getLastThingTomorrow());
+	    return isSameDay(p_date, getFirstThing(TOMORROW));
 	}
 
 	public static boolean isWithin7Days(Date p_dueDate, boolean p_includePast) {
@@ -167,11 +170,11 @@ public class DateUtil {
 	}
 
 	private static boolean showingMinutes(boolean x_past, int x_mins, Date p_dueDate) {
-		return x_mins > 0 && (x_past ? p_dueDate.after(getFirstThingYesterday()) : p_dueDate.before(getLastThingTomorrow()));
+		return x_mins > 0 && (x_past ? p_dueDate.after(getFirstThing(YESTERDAY)) : p_dueDate.before(getLastThing(TOMORROW)));
 	}
 
 	private static boolean showingHours(boolean x_past, int x_hours, Date p_dueDate) {
-		return x_hours > 0 && (x_past ? p_dueDate.after(getFirstThingYesterday()) : p_dueDate.before(getLastThingTomorrow()));
+		return x_hours > 0 && (x_past ? p_dueDate.after(getFirstThing(YESTERDAY)) : p_dueDate.before(getLastThing(TOMORROW)));
 	}
 
 	private static boolean showingDays(int x_weeks, int x_days) {
@@ -182,41 +185,23 @@ public class DateUtil {
 		return x_weeks > 0;
 	}
 
-	public static Date getLastThingToday() {
+	public static Date getLastThing(int p_offset) {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.set(HOUR_OF_DAY, 23);
 		x_calendar.set(MINUTE, 59);
 		x_calendar.set(Calendar.SECOND, 59);
 		x_calendar.set(Calendar.MILLISECOND, 999);
+		x_calendar.add(DATE, p_offset);
 		return x_calendar.getTime();
 	}
 
-	public static Date getLastThingTomorrow() {
-		Calendar x_calendar = Calendar.getInstance();
-		x_calendar.set(HOUR_OF_DAY, 23);
-		x_calendar.set(MINUTE, 59);
-		x_calendar.set(Calendar.SECOND, 59);
-		x_calendar.set(Calendar.MILLISECOND, 999);
-		x_calendar.roll(DATE, true);
-		return x_calendar.getTime();
-	}
-
-	public static Date getFirstThingToday() {
+	public static Date getFirstThing(int p_offset) {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.set(HOUR_OF_DAY, 0);
 		x_calendar.set(MINUTE, 0);
 		x_calendar.set(Calendar.SECOND, 0);
 		x_calendar.set(Calendar.MILLISECOND, 0);
-		return x_calendar.getTime();
-	}
-
-	public static Date getFirstThingYesterday() {
-		Calendar x_calendar = Calendar.getInstance();
-		x_calendar.set(HOUR_OF_DAY, 0);
-		x_calendar.set(MINUTE, 0);
-		x_calendar.set(Calendar.SECOND, 0);
-		x_calendar.set(Calendar.MILLISECOND, 0);
-		x_calendar.roll(DATE, false);
+		x_calendar.add(DATE, p_offset);
 		return x_calendar.getTime();
 	}
 
@@ -244,7 +229,7 @@ public class DateUtil {
 	public static Color getColourForTime(Date p_dueDate) {
 		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
 
-		if(isAllDay(p_dueDate) ? p_dueDate.before(getFirstThingToday()) : p_dueDate.before(x_now)) {
+		if(isAllDay(p_dueDate) ? p_dueDate.before(getFirstThing(TODAY)) : p_dueDate.before(x_now)) {
 			return ColourConstants.s_goneByColour;
 		} else if(isToday(p_dueDate)) {
 			return ColourConstants.s_todayColour;

@@ -5,6 +5,8 @@ import util.*;
 import java.io.File;
 import java.util.*;
 
+import static util.DateUtil.TODAY;
+
 public class Item extends ThreadItem<Reminder> implements HasDueDate {
     private Date o_dueDate;
     
@@ -64,7 +66,7 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 	@Override
 	public boolean isDue() {
 		if(isActive() && o_dueDate != null) {
-			return DateUtil.isAllDay(o_dueDate) ? o_dueDate.before(DateUtil.getFirstThingToday()) : o_dueDate.before(new Date());
+			return DateUtil.isAllDay(o_dueDate) ? o_dueDate.before(DateUtil.getFirstThing(TODAY)) : o_dueDate.before(new Date());
 		}
 
 		return false;

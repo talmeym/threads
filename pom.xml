@@ -6,18 +6,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.emarte.threads</groupId>
 	<artifactId>threads</artifactId>
-	<version>0.0.62</version>
+	<version>0.0.64</version>
 	<packaging>jar</packaging>
 	<name>Threads</name>
 
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
-
 		<project.http.version>1.19.0</project.http.version>
 		<project.oauth.version>1.19.0</project.oauth.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 	</properties>
 
 	<build>
