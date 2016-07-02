@@ -26,6 +26,7 @@ public class ComponentInfoPanel extends JPanel {
         super(new BorderLayout());
         o_component = p_component;
 
+		final JLabel x_homeLabel = new JLabel(ImageUtil.getHomeIcon());
 		final JLabel x_parentLabel = new JLabel(ImageUtil.getUpIcon());
 		final JLabel x_removeLabel = new JLabel(ImageUtil.getTrashIcon());
 		final JLabel x_duplicateLabel = new JLabel(ImageUtil.getDuplicateIcon());
@@ -60,6 +61,7 @@ public class ComponentInfoPanel extends JPanel {
 		o_textField.getDocument().addDocumentListener(x_listener);
 		o_textField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
 
+		x_homeLabel.setEnabled(o_component.getParentComponent() != null);
 		x_parentLabel.setEnabled(o_component.getParentComponent() != null);
 		o_activeLabel.setEnabled(o_component.isActive());
 		x_removeLabel.setEnabled(o_component.getParentComponent() != null);
@@ -232,6 +234,7 @@ public class ComponentInfoPanel extends JPanel {
 
         JPanel x_parentButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		if(p_showParents) {
+			x_parentButtonsPanel.add(setUpButtonLabel(x_homeLabel), BorderLayout.CENTER);
 			x_parentButtonsPanel.add(setUpButtonLabel(x_parentLabel), BorderLayout.CENTER);
 			x_parentButtonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
@@ -252,6 +255,18 @@ public class ComponentInfoPanel extends JPanel {
 
 				x_label.setToolTipText("Go to '" + x_label.getText() + "'");
 				x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
+
+				if(x_parent.getParentComponent() == null) {
+					final Component x_homeComponent = x_parent;
+
+					x_homeLabel.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent mouseEvent) {
+							WindowManager.getInstance().openComponent(x_homeComponent);
+						}
+					});
+				}
+
 				x_parent = x_parent.getParentComponent();
 			}
 
