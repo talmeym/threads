@@ -3,14 +3,14 @@ package gui;
 import data.Thread;
 import data.*;
 
-class ThreadThreadTableModel extends ComponentTableModel {
-    ThreadThreadTableModel(Thread p_thread) {
+class ThreadThreadTableModel extends ComponentTableModel<Thread, Thread> {
+		ThreadThreadTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Parent", "Thread", "Threads", "Updates", "Actions"});
     }
 
 	@Override
     public int getRowCount() {
-        Thread x_thread = (Thread) getComponent();
+        Thread x_thread = getComponent();
         
         if(x_thread == null) {
             return 0;
@@ -26,7 +26,7 @@ class ThreadThreadTableModel extends ComponentTableModel {
 
 	@Override
     public Object getValueAt(int row, int col) {
-        Thread x_thread = LookupHelper.getAllActiveThreads((Thread) getComponent()).get(row);
+        Thread x_thread = getDataItem(row, col);
         
         switch(col) {
 			case 0: return x_thread.getParentThread().getText();
@@ -36,4 +36,9 @@ class ThreadThreadTableModel extends ComponentTableModel {
 			default: return LookupHelper.getActiveActions(x_thread).size();
         }
     }
+
+	@Override
+	Thread getDataItem(int p_row, int p_col) {
+		return LookupHelper.getAllActiveThreads(getComponent()).get(p_row);
+	}
 }

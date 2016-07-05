@@ -4,16 +4,16 @@ import data.*;
 import data.Thread;
 import util.*;
 
-import java.util.*;
-
-class ThreadReminderTableModel extends ComponentTableModel {
+class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
     ThreadReminderTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Action", "Reminder", "Due Date", "Due", ""});
-    }
+		TimeUpdater.getInstance().addTimeUpdateListener(this);
+		GoogleSyncer.getInstance().addGoogleSyncListener(this);
+	}
 
 	@Override
 	public int getRowCount() {
-        Thread x_thread = (Thread) getComponent();
+        Thread x_thread = getComponent();
         
         if(x_thread == null) {
             return 0;
@@ -29,7 +29,7 @@ class ThreadReminderTableModel extends ComponentTableModel {
 
 	@Override
     public Object getValueAt(int row, int col) {
-        Reminder x_dueReminder = LookupHelper.getAllDueReminders((Thread) getComponent()).get(row);
+        Reminder x_dueReminder = getDataItem(row, col);
         
         switch(col) {
 			case 0: return x_dueReminder.getItem().getText();
@@ -39,4 +39,9 @@ class ThreadReminderTableModel extends ComponentTableModel {
 			default: return GoogleUtil.isLinked(x_dueReminder);
         }
     }
+
+	@Override
+	Reminder getDataItem(int p_row, int p_col) {
+		return LookupHelper.getAllDueReminders(getComponent()).get(p_row);
+	}
 }

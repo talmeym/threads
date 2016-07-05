@@ -13,7 +13,7 @@ import java.util.List;
 
 import static util.GuiUtil.setUpButtonLabel;
 
-public class ThreadCalendarPanel extends ComponentTablePanel implements TableSelectionListener {
+public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements TableSelectionListener<Date> {
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
 	private Thread o_thread;
@@ -100,12 +100,10 @@ public class ThreadCalendarPanel extends ComponentTablePanel implements TableSel
 	}
 
 	@Override
-	public void tableRowClicked(int row, int col) {
-		if(getSelectedRow() != -1) {
+	public void tableRowClicked(int row, int col, final Date p_date) {
+		if(p_date != null) {
 			JPopupMenu x_menu = new JPopupMenu();
-			ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
-			final Date x_date = x_model.getDate(row, col);
-			final List<Item> x_actions = LookupHelper.getAllActions(o_thread, x_date);
+			final List<Item> x_actions = LookupHelper.getAllActions(o_thread, p_date);
 
 			for(final Item x_action: x_actions) {
 				String x_text = ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem(x_action);
@@ -150,7 +148,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel implements TableSel
 
 						if(x_text != null) {
 							Item x_item = new Item(x_text);
-							x_item.setDueDate(x_date);
+							x_item.setDueDate(p_date);
 							x_thread.addItem(x_item);
 						}
 					}
@@ -180,10 +178,6 @@ public class ThreadCalendarPanel extends ComponentTablePanel implements TableSel
 
 			x_menu.show(o_table, ((o_table.getWidth() / 7) * col) - 14, (o_table.getHeight() / 5) * row + 21);
 		}
-	}
-
-	@Override
-	public void tableRowDoubleClicked(int row, int col) {
 	}
 
 	private Font makeStrikeThrough(Font x_font) {

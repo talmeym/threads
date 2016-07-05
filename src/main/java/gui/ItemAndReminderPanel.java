@@ -11,7 +11,7 @@ import java.util.*;
 
 import static util.GuiUtil.setUpButtonLabel;
 
-public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionListener, TimeUpdateListener, GoogleSyncListener {
+public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionListener<Reminder>, TimeUpdateListener, GoogleSyncListener {
 	private static final String s_none = "none";
 	private static final String s_noneSelected = "none selected";
 
@@ -125,11 +125,9 @@ public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionL
 	}
 
 	@Override
-	public void tableRowClicked(int p_row, int p_col) {
-		if(p_row != -1) {
-			Reminder x_reminder = o_item.getReminder(p_row);
-
-			showReminder(x_reminder);
+	public void tableRowClicked(int p_row, int p_col, Reminder p_reminder) {
+		if(p_reminder != null) {
+			showReminder(p_reminder);
 		} else {
 			o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
 		}
@@ -147,17 +145,17 @@ public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionL
 	}
 
 	@Override
-	public void tableRowDoubleClicked(int p_row, int p_col) {
+	public void tableRowDoubleClicked(int p_row, int p_col, Reminder p_reminder) {
 		// do nothing
 	}
 
 	@Override
 	public void timeUpdate() {
-		tableRowClicked(-1, -1);
+		tableRowClicked(-1, -1, null);
 	}
 
 	@Override
 	public void googleSynced() {
-		tableRowClicked(-1, -1);
+		tableRowClicked(-1, -1, null);
 	}
 }

@@ -1,16 +1,16 @@
 package gui;
 
-import data.Component;
-import util.TimeUpdateListener;
+import data.*;
+import util.*;
 
 import javax.swing.table.DefaultTableModel;
 import java.util.*;
 
-class ComponentTableModel extends DefaultTableModel implements TimeUpdateListener, Observer {
-    private final Component o_component;
+abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> extends DefaultTableModel implements TimeUpdateListener, GoogleSyncListener, Observer {
+    private final COMPONENT o_component;
     private final String[] o_columnNames;
 
-	ComponentTableModel(Component p_component, String[] p_columnNames) {
+	ComponentTableModel(COMPONENT p_component, String[] p_columnNames) {
         o_component = p_component;
         o_columnNames = p_columnNames;
 
@@ -19,7 +19,7 @@ class ComponentTableModel extends DefaultTableModel implements TimeUpdateListene
         }
     }
     
-    protected final Component getComponent() {
+    protected final COMPONENT getComponent() {
         return o_component;
     }
     
@@ -27,11 +27,11 @@ class ComponentTableModel extends DefaultTableModel implements TimeUpdateListene
         return o_columnNames != null ? o_columnNames.length : 0;
     }
     
-    public final String getColumnName(int col) {
-        return o_columnNames[col];
+    public final String getColumnName(int p_col) {
+        return o_columnNames[p_col];
     }
     
-    public final boolean isCellEditable(int row, int col) {
+    public final boolean isCellEditable(int p_row, int p_col) {
         return false;
     }
     
@@ -39,7 +39,14 @@ class ComponentTableModel extends DefaultTableModel implements TimeUpdateListene
 		fireTableDataChanged();
     }
 
+	@Override
     public void timeUpdate() {
-        // do nothing by default
+        fireTableDataChanged();
     }
+
+	public void googleSynced() {
+		fireTableDataChanged();
+	}
+
+	abstract DATA_TYPE getDataItem(int p_row, int p_col);
 }

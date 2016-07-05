@@ -9,15 +9,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class ThreadReminderPanel extends ComponentTablePanel implements Observer {
-    private final Thread o_thread;
+public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implements Observer {
 	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
 	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
 	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
 
     ThreadReminderPanel(Thread p_thread) {
         super(new ThreadReminderTableModel(p_thread), new ComponentCellRenderer(null));
-		o_thread = p_thread;
 
         fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
         fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
@@ -28,7 +26,7 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
 		o_removeLabel.setToolTipText("Remove Reminder");
 		o_removeLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				removeSomething(getSelectedRow());
+				remove(getSelectedObject());
 			}
 		});
 
@@ -37,7 +35,7 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
 		o_dismissLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				dismissReminder(getSelectedRow());
+				dismiss(getSelectedObject());
 			}
 		});
 
@@ -46,7 +44,7 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
 		o_linkLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				linkToGoogle(getSelectedRow());
+				link(getSelectedObject());
 			}
 		});
         
@@ -62,39 +60,35 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
-	private void dismissReminder(int p_index) {
+	private void dismiss(Reminder p_reminder) {
 		if(o_dismissLabel.isEnabled()) {
-			Reminder x_reminder = LookupHelper.getAllDueReminders(o_thread).get(p_index);
-			boolean x_active = !x_reminder.isActive();
+			boolean x_active = !p_reminder.isActive();
 
-			if(JOptionPane.showConfirmDialog(this, "Set '" + x_reminder.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				x_reminder.setActive(false);
+			if(JOptionPane.showConfirmDialog(this, "Set '" + p_reminder.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				p_reminder.setActive(false);
 			}
 		}
 	}
 
-	private void removeSomething(int p_index) {
-		if(p_index != -1) {
-			Reminder x_reminder = LookupHelper.getAllDueReminders(o_thread).get(p_index);
-			Item x_item = x_reminder.getItem();
+	private void remove(Reminder p_reminder) {
+		if(p_reminder != null) {
+			Item x_item = p_reminder.getItem();
 
-			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Delete " + x_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				x_item.removeReminder(x_reminder);
+			if(JOptionPane.showConfirmDialog(this, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Delete " + p_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				x_item.removeReminder(p_reminder);
 			}
 		}
 	}
 
-	private void linkToGoogle(int p_index) {
+	private void link(final Reminder p_reminder) {
 		final JPanel x_this = this;
 
 		if (o_linkLabel.isEnabled()) {
-			final Reminder x_reminder = LookupHelper.getAllDueReminders(o_thread).get(p_index);
-
-			if (JOptionPane.showConfirmDialog(x_this, "Link '" + x_reminder.getText() + "' to Google Calendar ?", "Link to Google ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(x_reminder, new GoogleProgressWindow(x_this), new ProgressAdapter() {
+			if (JOptionPane.showConfirmDialog(x_this, "Link '" + p_reminder.getText() + "' to Google Calendar ?", "Link to Google ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(p_reminder, new GoogleProgressWindow(x_this), new ProgressAdapter() {
 					@Override
 					public void finished() {
-						JOptionPane.showMessageDialog(x_this, "'" + x_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+						JOptionPane.showMessageDialog(x_this, "'" + p_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 					}
 				});
 
@@ -103,48 +97,33 @@ public class ThreadReminderPanel extends ComponentTablePanel implements Observer
 		}
 	}
 
-	private void showReminder(int p_index) {
-        if(p_index != -1) {
-            Reminder x_reminder = LookupHelper.getAllDueReminders(o_thread).get(p_index);
-            WindowManager.getInstance().openComponent(x_reminder);
-        }
-    }
-
-    private void showItem(int p_index) {
-        if(p_index != -1) {
-            Reminder x_reminder = LookupHelper.getAllDueReminders(o_thread).get(p_index);
-            WindowManager.getInstance().openComponent(x_reminder.getItem());
-        }
-    }
-
 	@Override
-	public void tableRowClicked(int row, int col) {
+	public void tableRowClicked(int row, int col, Reminder p_reminder) {
 		o_dismissLabel.setEnabled(row != -1);
 		o_removeLabel.setEnabled(row != -1);
 		o_linkLabel.setEnabled(row != -1);
 	}
 
-	public void tableRowDoubleClicked(int row, int col) {
+	@Override
+	public void tableRowDoubleClicked(int row, int col, Reminder p_reminder) {
         switch(col) {
-			case 0: showItem(row); break;
-			default: showReminder(row); break;
+			case 0: WindowManager.getInstance().openComponent(p_reminder.getItem()); break;
+			default: WindowManager.getInstance().openComponent(p_reminder); break;
         }
     }
 
 	@Override
 	public void update(Observable observable, Object o) {
-		tableRowClicked(-1, -1);
+		tableRowClicked(-1, -1, null);
 	}
 
 	@Override
 	public void timeUpdate() {
-		((ComponentTableModel) o_table.getModel()).fireTableDataChanged();
-		tableRowClicked(-1, -1);
+		tableRowClicked(-1, -1, null);
 	}
 
 	@Override
 	public void googleSynced() {
-		((ComponentTableModel) o_table.getModel()).fireTableDataChanged();
-		tableRowClicked(-1, -1);
+		tableRowClicked(-1, -1, null);
 	}
 }

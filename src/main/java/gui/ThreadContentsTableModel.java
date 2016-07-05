@@ -6,13 +6,15 @@ import util.*;
 
 import java.util.Date;
 
-class ThreadContentsTableModel extends ComponentTableModel {
+class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
     ThreadContentsTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Creation Date", "Type", "Name", "Info", ""});
+		TimeUpdater.getInstance().addTimeUpdateListener(this);
+		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
     public int getRowCount() {
-        Thread x_thread = (Thread) getComponent();
+        Thread x_thread = getComponent();
         
         if(x_thread == null) {
             return 0;
@@ -29,7 +31,7 @@ class ThreadContentsTableModel extends ComponentTableModel {
     }
 
     public Object getValueAt(int row, int col) {
-		ThreadItem x_threadItem = ((Thread)getComponent()).getThreadItem(row);
+		ThreadItem x_threadItem = getDataItem(row, col);
         
         switch(col) {
 			case 0: return x_threadItem.getCreationDate();
@@ -61,4 +63,9 @@ class ThreadContentsTableModel extends ComponentTableModel {
 			default: return GoogleUtil.isLinked(x_threadItem);
         }
     }
+
+	@Override
+	ThreadItem getDataItem(int p_row, int p_col) {
+		return getComponent().getThreadItem(p_row);
+	}
 }

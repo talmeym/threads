@@ -1,5 +1,6 @@
 package gui;
 
+import data.Component;
 import util.*;
 
 import javax.swing.*;
@@ -9,12 +10,14 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-abstract class ComponentTablePanel extends MemoryPanel implements TimeUpdateListener, GoogleSyncListener, TableSelectionListener {
-    protected final JTable o_table;
+abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends MemoryPanel implements TimeUpdateListener, GoogleSyncListener, TableSelectionListener<TYPE> {
+	protected final ComponentTableModel<COMPONENT, TYPE> o_tableModel;
+	protected final JTable o_table;
 	private final List<TableSelectionListener> o_listeners = new ArrayList<TableSelectionListener>();
 
-	protected ComponentTablePanel(TableModel p_tableModel, TableCellRenderer p_cellRenderer) {
+	protected ComponentTablePanel(ComponentTableModel<COMPONENT, TYPE> p_tableModel, TableCellRenderer p_cellRenderer) {
         super(new BorderLayout());
+		o_tableModel = p_tableModel;
 		o_listeners.add(this);
 		o_table = new JTable(p_tableModel);
         o_table.setRowHeight(GUIConstants.s_tableRowHeight);
@@ -28,13 +31,13 @@ abstract class ComponentTablePanel extends MemoryPanel implements TimeUpdateList
             public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 1) {
 					for(TableSelectionListener x_listener: o_listeners){
-						x_listener.tableRowClicked(o_table.getSelectedRow(), o_table.getSelectedColumn());
+						x_listener.tableRowClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject());
 					}
 				}
 
                 if(e.getClickCount() == 2) {
 					for(TableSelectionListener x_listener: o_listeners){
-						x_listener.tableRowDoubleClicked(o_table.getSelectedRow(), o_table.getSelectedColumn());
+						x_listener.tableRowDoubleClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject());
 					}
                 }
             }
@@ -55,17 +58,28 @@ abstract class ComponentTablePanel extends MemoryPanel implements TimeUpdateList
         x_model.getColumn(p_column).setMaxWidth(p_width);
     }
     
-    protected int getSelectedRow() {
-        return o_table.getSelectedRow();
+    protected TYPE getSelectedObject() {
+		int x_row = o_table.getSelectedRow();
+		return x_row != -1 ? o_tableModel.getDataItem(x_row, o_table.getSelectedColumn()) : null;
     }
 
 	@Override
-	public void timeUpdate() {
+	public void tableRowClicked(int p_row, int p_col, TYPE o_obj) {
 		// do nothing by default
 	}
 
 	@Override
-	public void googleSynced() {
+	public void tableRowDoubleClicked(int p_row, int p_col, TYPE o_obj) {
 		// do nothing by default
+	}
+
+	@Override
+	public void timeUpdate() {
+		tableRowClicked(-1, -1, null);
+	}
+
+	@Override
+	public void googleSynced() {
+		tableRowClicked(-1, -1, null);
 	}
 }

@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-class ItemPanel extends ComponentTablePanel implements Observer {
+class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Observer {
     private final Item o_item;
 	private final JLabel o_linkItemLabel = new JLabel(ImageUtil.getLinkIcon());
 
@@ -36,9 +36,6 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
 		add(x_panel, BorderLayout.NORTH);
-
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
-		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
 	private void linkToGoogle() {
@@ -58,31 +55,12 @@ class ItemPanel extends ComponentTablePanel implements Observer {
 	}
 
 	@Override
-	public void tableRowClicked(int row, int col) {
-		// do nothing
-	}
-
-	public void tableRowDoubleClicked(int row, int col) {
-		// do nothing
-	}
-
-	@Override
 	public void update(Observable observable, Object o) {
 		o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
-		tableRowClicked(-1, -1);
-	}
-
-	@Override
-	public void timeUpdate() {
-		((ComponentTableModel)o_table.getModel()).fireTableDataChanged();
-		tableRowClicked(-1, -1);
 	}
 
 	@Override
 	public void googleSynced() {
-		((ComponentTableModel)o_table.getModel()).fireTableDataChanged();
-		tableRowClicked(-1, -1);
-
 		if(GoogleUtil.isLinked(o_item)) {
 			o_linkItemLabel.setIcon(ImageUtil.getGoogleSmallIcon());
 		} else {

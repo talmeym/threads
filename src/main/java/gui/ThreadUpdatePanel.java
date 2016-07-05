@@ -12,7 +12,7 @@ import java.util.List;
 
 import static util.GuiUtil.setUpButtonLabel;
 
-public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
+public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> implements Observer {
     private final Thread o_thread;
 	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
 	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
@@ -31,7 +31,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		x_addLabel.setToolTipText("Add Update");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				addSomething(getSelectedRow());
+				add(getSelectedObject());
 			}
 		});
 
@@ -39,7 +39,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		o_dismissLabel.setToolTipText("Make Update Active/Inactive");
 		o_dismissLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				dismissSomething(getSelectedRow());
+				dismiss(getSelectedObject());
 			}
 		});
 
@@ -47,7 +47,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		o_removeLabel.setToolTipText("Remove Update");
 		o_removeLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				removeSomething(getSelectedRow());
+				remove(getSelectedObject());
 			}
 		});
 
@@ -55,7 +55,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		o_moveLabel.setToolTipText("Move Update");
 		o_moveLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				moveSomething(getSelectedRow());
+				move(getSelectedObject());
 			}
 		});
 
@@ -69,11 +69,11 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		add(x_buttonPanel, BorderLayout.SOUTH);
 	}
 
-	private void addSomething(int p_index) {
+	private void add(Item p_update) {
 		Thread x_thread;
 
-		if(p_index != -1) {
-			x_thread = LookupHelper.getAllActiveUpdates(o_thread).get(p_index).getParentThread();
+		if(p_update != null) {
+			x_thread = p_update.getParentThread();
 		} else {
 			java.util.List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
 			x_threads.add(0, o_thread);
@@ -109,79 +109,60 @@ public class ThreadUpdatePanel extends ComponentTablePanel implements Observer {
 		}
 	}
 
-	private void dismissSomething(int p_index) {
-		if(p_index != -1) {
-			Item x_update = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
-
-			if(JOptionPane.showConfirmDialog(this, "Set '" + x_update.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				x_update.setActive(false);
+	private void dismiss(Item p_update) {
+		if(p_update != null) {
+			if(JOptionPane.showConfirmDialog(this, "Set '" + p_update.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				p_update.setActive(false);
 			}
 		}
 	}
 
-	private void removeSomething(int p_index) {
-		if(p_index != -1) {
-			Item x_update = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
-
-			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_update.getText() + "' from '" + x_update.getParentThread().getText() + "' ?", "Delete " + x_update.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				x_update.getParentThread().removeThreadItem(x_update);
+	private void remove(Item p_update) {
+		if(p_update != null) {
+			if(JOptionPane.showConfirmDialog(this, "Remove '" + p_update.getText() + "' from '" + p_update.getParentThread().getText() + "' ?", "Delete " + p_update.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				p_update.getParentThread().removeThreadItem(p_update);
 			}
 		}
 	}
 
-	private void moveSomething(int p_index) {
-		if(p_index != -1) {
-			Item x_item = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
+	private void move(Item p_update) {
+		if(p_update != null) {
 			Thread x_thread = null;
 
 			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
 			x_threads.add(0, o_thread);
-			x_threads.remove(x_item.getParentThread());
+			x_threads.remove(p_update.getParentThread());
 
 			if(x_threads.size() > 0) {
-				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to move it to:", "Move '" + x_item + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to move it to:", "Move '" + p_update + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 			} else {
 				JOptionPane.showMessageDialog(this, "This Thread has no child Threads to move this item to. Try moving it from further up the tree.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
 			}
 
 			if(x_thread != null) {
-				x_item.getParentThread().removeThreadItem(x_item);
-				x_thread.addThreadItem(x_item);
+				p_update.getParentThread().removeThreadItem(p_update);
+				x_thread.addThreadItem(p_update);
 			}
 		}
 	}
 
-	private void showThread(int p_index) {
-        if(p_index != -1) {
-            Item x_update = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
-			Thread x_thread = x_update.getParentThread();
-			WindowManager.getInstance().openComponent(x_thread);
-        }
-    }
-
-    private void showItem(int p_index) {
-        if(p_index != -1) {
-            Item x_update = LookupHelper.getAllActiveUpdates(o_thread).get(p_index);
-            WindowManager.getInstance().openComponent(x_update);
-        }
-    }
-
 	@Override
-	public void tableRowClicked(int row, int col) {
-		o_removeLabel.setEnabled(row != -1);
-		o_dismissLabel.setEnabled(row != -1);
-		o_moveLabel.setEnabled(row != -1);
+	public void tableRowClicked(int row, int col, Item p_item) {
+		o_removeLabel.setEnabled(p_item != null);
+		o_dismissLabel.setEnabled(p_item != null);
+		o_moveLabel.setEnabled(p_item != null);
 	}
 
-    public void tableRowDoubleClicked(int row, int col) {
+	@Override
+    public void tableRowDoubleClicked(int row, int col, Item p_item) {
         switch(col) {
-			case 0: showThread(row); break;
-			default: showItem(row); break;
+			case 0: WindowManager.getInstance().openComponent(p_item.getParentThread()); break;
+			default: WindowManager.getInstance().openComponent(p_item);
         }
     }
 
 	@Override
 	public void update(Observable observable, Object o) {
-		tableRowClicked(-1, -1);
+		tableRowClicked(-1, -1, null);
 	}
 }

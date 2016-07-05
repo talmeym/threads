@@ -12,7 +12,7 @@ import java.util.List;
 
 import static util.GuiUtil.setUpButtonLabel;
 
-class ThreadThreadPanel extends ComponentTablePanel implements Observer {
+class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements Observer {
     private final Thread o_thread;
 	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
 	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
@@ -33,7 +33,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		x_addLabel.setToolTipText("Add Thread");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				addSomething(getSelectedRow());
+				add(getSelectedObject());
 			}
 		});
 
@@ -41,7 +41,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		o_dismissLabel.setToolTipText("Make Thread Active/Inactive");
 		o_dismissLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				dismissSomething(getSelectedRow());
+				dismiss(getSelectedObject());
 			}
 		});
 
@@ -49,7 +49,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		o_removeLabel.setToolTipText("Remove Thread");
 		o_removeLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				removeSomething(getSelectedRow());
+				remove(getSelectedObject());
 			}
 		});
 
@@ -57,7 +57,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		o_moveLabel.setToolTipText("Move Thread");
 		o_moveLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				moveSomething(getSelectedRow());
+				move(getSelectedObject());
 			}
 		});
 
@@ -65,7 +65,7 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		o_linkLabel.setToolTipText("Link Thread to Google Calendar");
 		o_linkLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				linkToGoogle(getSelectedRow());
+				link(getSelectedObject());
 			}
 		});
 
@@ -80,13 +80,11 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		add(x_buttonPanel, BorderLayout.SOUTH);
 	}
 
-	private void addSomething(int p_index) {
-		List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
-		Thread x_thread;
+	private void add(Thread p_thread) {
+		Thread x_thread = p_thread;
 
-		if(p_index != -1) {
-			x_thread = x_threads.get(p_index);
-		} else {
+		if(x_thread == null) {
+			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
 			x_threads.add(0, o_thread);
 
 			if(x_threads.size() > 1) {
@@ -107,55 +105,50 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		}
 	}
 
-	private void dismissSomething(int p_index) {
-		if(p_index != -1) {
-			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
-
-			if(JOptionPane.showConfirmDialog(this, "Set '" + x_thread.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				x_thread.setActive(false);
+	private void dismiss(Thread p_thread) {
+		if(p_thread != null) {
+			if(JOptionPane.showConfirmDialog(this, "Set '" + p_thread.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				p_thread.setActive(false);
 			}
 		}
 	}
 
-	private void removeSomething(int p_index) {
-		if(p_index != -1) {
-			ThreadItem x_threadItem = (ThreadItem) LookupHelper.getAllActiveThreads(o_thread).get(p_index);
-			Thread x_parent = (Thread) x_threadItem.getParentComponent();
+	private void remove(Thread x_thread) {
+		if(x_thread != null) {
+			Thread x_parent = x_thread.getParentThread();
 
-			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_threadItem.getText() + "' from '" + x_threadItem.getParentThread().getText() + "' ?", "Delete " + x_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				x_parent.removeThreadItem(x_threadItem);
+			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_thread.getText() + "' from '" + x_thread.getParentThread().getText() + "' ?", "Delete " + x_thread.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				x_parent.removeThreadItem(x_thread);
 			}
 		}
 	}
 
-	private void moveSomething(int p_index) {
-		if(p_index != -1) {
+	private void move(Thread p_thread) {
+		if(p_thread != null) {
 			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
-			ThreadItem x_threadItem = x_threads.get(p_index);
 			Thread x_thread = null;
 
 			x_threads.add(0, o_thread);
-			x_threads.remove(x_threadItem.getParentThread());
-			x_threads.remove(x_threadItem);
-			x_threads.removeAll(LookupHelper.getAllActiveThreads((Thread) x_threadItem));
+			x_threads.remove(p_thread.getParentThread());
+			x_threads.remove(p_thread);
+			x_threads.removeAll(LookupHelper.getAllActiveThreads(p_thread));
 
 			if(x_threads.size() > 0) {
-				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to move it to:", "Move '" + x_threadItem + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to move it to:", "Move '" + p_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 			} else {
 				JOptionPane.showMessageDialog(this, "This Thread has no child Threads to move this item to. Try moving it from further up the tree.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
 			}
 
 			if(x_thread != null) {
-				x_threadItem.getParentThread().removeThreadItem(x_threadItem);
-				x_thread.addThreadItem(x_threadItem);
+				p_thread.getParentThread().removeThreadItem(p_thread);
+				x_thread.addThreadItem(p_thread);
 			}
 		}
 	}
 
-	private void linkToGoogle(int p_index) {
+	private void link(Thread p_thread) {
 		final JPanel x_this = this;
-		Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
-		final List<Item> x_actions = LookupHelper.getAllActions(x_thread);
+		final List<Item> x_actions = LookupHelper.getAllActions(p_thread);
 
 		if (x_actions.size() > 0) {
 			if (JOptionPane.showConfirmDialog(x_this, "Link " + x_actions.size() + " Actions to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
@@ -171,41 +164,28 @@ class ThreadThreadPanel extends ComponentTablePanel implements Observer {
 		}
 	}
 
-    private void showParentThread(int p_index) {
-        if(p_index != -1) {
-            Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_index);
-            WindowManager.getInstance().openComponent(x_thread.getParentComponent());
-        }
-    }
-
-    private void showThread(int p_col, int p_row) {
-        if(p_row != -1) {
-			Thread x_thread = LookupHelper.getAllActiveThreads(o_thread).get(p_row);
-			WindowManager.getInstance().openComponent(x_thread);
-
-			if(p_col > 1) {
-				ThreadPanel.setTabIndex(p_col - 1);
-			}
-		}
-    }
-
 	@Override
-	public void tableRowClicked(int p_row, int p_col) {
+	public void tableRowClicked(int p_row, int p_col, Thread p_thread) {
 		o_dismissLabel.setEnabled(p_row != -1);
 		o_removeLabel.setEnabled(p_row != -1);
 		o_moveLabel.setEnabled(p_row != -1);
 		o_linkLabel.setEnabled(p_row != -1);
 	}
 
-    public void tableRowDoubleClicked(int p_row, int p_col) {
+    public void tableRowDoubleClicked(int p_row, int p_col, Thread p_thread) {
 		switch(p_col) {
-			case 0: showParentThread(p_row); break;
-			default: showThread(p_col, p_row);
+			case 0: WindowManager.getInstance().openComponent(p_thread.getParentComponent()); break;
+			default:
+				WindowManager.getInstance().openComponent(p_thread);
+
+				if(p_col > 1) {
+					ThreadPanel.setTabIndex(p_col - 1);
+				}
 		}
     }
 
 	@Override
 	public void update(Observable observable, Object o) {
-		tableRowClicked(-1, -1);
+		tableRowClicked(-1, -1, null);
 	}
 }

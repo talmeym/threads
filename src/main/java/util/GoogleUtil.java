@@ -29,7 +29,13 @@ public class GoogleUtil {
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	public static final String FROM_GOOGLE = "From Google";
 
+	public static final int COMP_UPDATED = 0;
+	public static final int EVENT_UPDATED = 1;
+	public static final int COMP_CREATED = 2;
+	public static final int EVENT_DELETED = 3;
+
 	public static final List<UUID> linkedComponents = new ArrayList<UUID>();
+	public static Thread s_topLevelThread = null;
 
 	/**
 	 * Be sure to specify the name of your application. If the application name is {@code null} or
@@ -79,7 +85,9 @@ public class GoogleUtil {
 	}
 
 	public static void syncWithGoogle(Thread thread) {
+		s_topLevelThread = thread;
 		List<UUID> syncedComponents = new ArrayList<UUID>();
+		int[] stats = new int[4]; // comp updated 0, event updated 1, comp created 2, event deleted 3
 
 		try {
 			initialise();
@@ -114,37 +122,44 @@ public class GoogleUtil {
 								if(component instanceof Item) {
 									Item item = (Item) component;
 
-									if(!summary.equals(item.getText())) {
+									if(!(summary.equals(item.getText()) && start.equals(item.getDueDate()))) {
 										item.setText(summary);
-									}
-									if(!start.equals(item.getDueDate())) {
 										item.setDueDate(start);
+										stats[COMP_UPDATED] = stats[COMP_UPDATED] + 1;
 									}
 								}
 								if(component instanceof Reminder) {
 									Reminder reminder = (Reminder) component;
 
-									if(!summary.equals(reminder.getText())) {
+									if(!(summary.equals(reminder.getText()) && start.equals(reminder.getDueDate()))) {
 										reminder.setText(summary);
-									}
-									if(!start.equals(reminder.getDueDate())) {
 										reminder.setDueDate(start);
+										stats[COMP_UPDATED] = stats[COMP_UPDATED] + 1;
 									}
 								}
 							} else {
 								if(component instanceof Item) {
 									Item item = (Item) component;
-									populateEvent(event, item.getId(), item.getText(), item.getDueDate());
-									client.events().update(calendarId, event.getId(), event).execute();
+
+									if(!(summary.equals(item.getText()) && start.equals(item.getDueDate()))) {
+										populateEvent(event, item.getId(), item.getText(), item.getDueDate());
+										client.events().update(calendarId, event.getId(), event).execute();
+										stats[EVENT_UPDATED] = stats[EVENT_UPDATED] + 1;
+									}
 								}
 								if(component instanceof Reminder) {
 									Reminder reminder = (Reminder) component;
-									populateEvent(event, reminder.getId(), reminder.getText(), reminder.getDueDate());
-									client.events().update(calendarId, event.getId(), event).execute();
+
+									if(!(summary.equals(reminder.getText()) && start.equals(reminder.getDueDate()))) {
+										populateEvent(event, reminder.getId(), reminder.getText(), reminder.getDueDate());
+										client.events().update(calendarId, event.getId(), event).execute();
+										stats[EVENT_UPDATED] = stats[EVENT_UPDATED] + 1;
+									}
 								}
 							}
 						} else {
 							client.events().delete(calendarId, event.getId()).execute();
+							stats[EVENT_DELETED] = stats[EVENT_DELETED] + 1;
 						}
 					} else {
 						Item item = new Item(summary);
@@ -170,6 +185,7 @@ public class GoogleUtil {
 
 						event.setDescription(item.getId().toString());
 						client.events().patch(calendarId, event.getId(), event).execute();
+						stats[COMP_CREATED] = stats[COMP_CREATED] + 1;
 					}
 				}
 			}
@@ -182,7 +198,7 @@ public class GoogleUtil {
 			t.printStackTrace();
 		}
 
-		System.out.println("Google Sync Done.");
+		System.out.println("Google Sync Done. " + stats[COMP_UPDATED] + " comps updated, " + stats[EVENT_UPDATED] + " events updated, " + stats[COMP_CREATED] + " comps created, " + stats[EVENT_DELETED] + " events deleted.");
 	}
 
 	public static void linkItemsToGoogle(List<Item> items, ProgressCallBack... callbacks) {
@@ -318,21 +334,26 @@ public class GoogleUtil {
 	}
 
 	private static String findCalendar() throws IOException {
+		if(s_topLevelThread == null) {
+			throw new IllegalStateException("Google not successfully synced");
+		}
+
 		CalendarList feed = client.calendarList().list().execute();
 
 		if (feed.getItems() != null) {
 			for (CalendarListEntry entry : feed.getItems()) {
 				String id = entry.getId();
-				String summary = entry.getSummary();
+				String description = entry.getDescription();
 
-				if(summary.equals("Threads")) {
+				if(description != null && description.equals(s_topLevelThread.getId().toString())) {
 					return id;
 				}
 			}
 		}
 
 		Calendar entry = new Calendar();
-		entry.setSummary("Threads");
+		entry.setSummary("Threads - " + s_topLevelThread.getText());
+		entry.setDescription(s_topLevelThread.getId().toString());
 		Calendar calendar = client.calendars().insert(entry).execute();
 		return calendar.getId();
 	}
