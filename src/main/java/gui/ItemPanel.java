@@ -36,6 +36,8 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Observer 
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
 		add(x_panel, BorderLayout.NORTH);
+
+		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
 	private void linkToGoogle() {

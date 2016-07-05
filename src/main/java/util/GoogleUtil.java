@@ -125,7 +125,7 @@ public class GoogleUtil {
 									if(!(summary.equals(item.getText()) && start.equals(item.getDueDate()))) {
 										item.setText(summary);
 										item.setDueDate(start);
-										stats[COMP_UPDATED] = stats[COMP_UPDATED] + 1;
+										stats[COMP_UPDATED] += 1;
 									}
 								}
 								if(component instanceof Reminder) {
@@ -134,7 +134,7 @@ public class GoogleUtil {
 									if(!(summary.equals(reminder.getText()) && start.equals(reminder.getDueDate()))) {
 										reminder.setText(summary);
 										reminder.setDueDate(start);
-										stats[COMP_UPDATED] = stats[COMP_UPDATED] + 1;
+										stats[COMP_UPDATED] += 1;
 									}
 								}
 							} else {
@@ -144,7 +144,7 @@ public class GoogleUtil {
 									if(!(summary.equals(item.getText()) && start.equals(item.getDueDate()))) {
 										populateEvent(event, item.getId(), item.getText(), item.getDueDate());
 										client.events().update(calendarId, event.getId(), event).execute();
-										stats[EVENT_UPDATED] = stats[EVENT_UPDATED] + 1;
+										stats[EVENT_UPDATED] += 1;
 									}
 								}
 								if(component instanceof Reminder) {
@@ -153,13 +153,13 @@ public class GoogleUtil {
 									if(!(summary.equals(reminder.getText()) && start.equals(reminder.getDueDate()))) {
 										populateEvent(event, reminder.getId(), reminder.getText(), reminder.getDueDate());
 										client.events().update(calendarId, event.getId(), event).execute();
-										stats[EVENT_UPDATED] = stats[EVENT_UPDATED] + 1;
+										stats[EVENT_UPDATED] += 1;
 									}
 								}
 							}
 						} else {
 							client.events().delete(calendarId, event.getId()).execute();
-							stats[EVENT_DELETED] = stats[EVENT_DELETED] + 1;
+							stats[EVENT_DELETED] += 1;
 						}
 					} else {
 						Item item = new Item(summary);
@@ -185,7 +185,7 @@ public class GoogleUtil {
 
 						event.setDescription(item.getId().toString());
 						client.events().patch(calendarId, event.getId(), event).execute();
-						stats[COMP_CREATED] = stats[COMP_CREATED] + 1;
+						stats[COMP_CREATED] += 1;
 					}
 				}
 			}

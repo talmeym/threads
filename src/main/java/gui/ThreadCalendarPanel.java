@@ -2,7 +2,7 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.ImageUtil;
+import util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -104,10 +104,12 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 		if(p_date != null) {
 			JPopupMenu x_menu = new JPopupMenu();
 			final List<Item> x_actions = LookupHelper.getAllActions(o_thread, p_date);
+			boolean x_anyGoogle = false;
 
 			for(final Item x_action: x_actions) {
 				String x_text = ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem(x_action);
-				JMenuItem x_menuItem = new JMenuItem(x_text);
+				Icon icon = GoogleUtil.isLinked(x_action) ? ImageUtil.getGoogleVerySmallIcon() : null;
+				JMenuItem x_menuItem = new JMenuItem(x_text, icon);
 				x_menuItem.setToolTipText(x_action.getParentThread().getText() + ": " + x_text);
 				x_menuItem.setForeground(x_action.isActive() ? Color.black : Color.gray);
 				x_menuItem.setFont(x_action.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
@@ -119,6 +121,8 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 						WindowManager.getInstance().openComponent(x_action);
 					}
 				});
+
+				x_anyGoogle = x_anyGoogle || icon != null;
 			}
 
 			if(x_actions.size() > 0) {
@@ -176,7 +180,13 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 				});
 			}
 
-			x_menu.show(o_table, ((o_table.getWidth() / 7) * col) - 14, (o_table.getHeight() / 5) * row + 21);
+			int x_xPosition = ((o_table.getWidth() / 7) * col) - 14;
+
+			if(x_anyGoogle) {
+				x_xPosition -= 18;
+			}
+
+			x_menu.show(o_table, x_xPosition, (o_table.getHeight() / 5) * row + 21);
 		}
 	}
 

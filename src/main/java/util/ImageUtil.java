@@ -94,7 +94,11 @@ public class ImageUtil {
 	}
 
 	public static Icon getGoogleSmallIcon() {
-		return new ImageIcon(loadImage("/google_icon.png"));
+		return new ImageIcon(loadImage("/google_small.png"));
+	}
+
+	public static Icon getGoogleVerySmallIcon() {
+		return new ImageIcon(loadImage("/google_very_small.png"));
 	}
 
 	public static Icon getActionIcon() {
