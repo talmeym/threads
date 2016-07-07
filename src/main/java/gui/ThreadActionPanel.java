@@ -104,6 +104,7 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 
 			if(x_text != null) {
 				Item x_item = new Item(x_text);
+				x_item.setDueDate(DateSuggestionPanel.getDateSuggestion());
 				x_thread.addThreadItem(x_item);
 				WindowManager.getInstance().openComponent(x_item);
 			}

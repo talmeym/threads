@@ -186,7 +186,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 				x_xPosition -= 18;
 			}
 
-			x_menu.show(o_table, x_xPosition, (o_table.getHeight() / 5) * row + 21);
+			x_menu.show(o_table, x_xPosition, (o_table.getHeight() / 5) * row + 16);
 		}
 	}
 

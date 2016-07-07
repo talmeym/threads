@@ -12,7 +12,7 @@ import java.util.*;
 
 import static util.GuiUtil.setUpButtonLabel;
 
-class DateSuggestionPanel extends JPanel {
+class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
 	private static final String s_defaultTextString = "dd/mm/yy [hh:mm]";
@@ -163,6 +163,8 @@ class DateSuggestionPanel extends JPanel {
 
 		add(x_panel, BorderLayout.CENTER);
 		add(x_quickSetPanel, BorderLayout.EAST);
+
+		TimeUpdater.getInstance().addTimeUpdateListener(this);
 	}
 
 	private void setUpDropDowns() {
@@ -191,6 +193,30 @@ class DateSuggestionPanel extends JPanel {
 				o_dayBox.setSelectedIndex(o_dayBox.getSelectedIndex() + 1);
 			}
 		}
+	}
+
+	public static Date getDateSuggestion() {
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(Calendar.MINUTE, 0);
+		x_calendar.set(Calendar.SECOND, 0);
+		x_calendar.set(Calendar.MILLISECOND, 0);
+
+		int x_hour = x_calendar.get(Calendar.HOUR_OF_DAY);
+
+		if(x_hour > 8) {
+			x_calendar.set(Calendar.HOUR_OF_DAY, 12);
+		}
+
+		if(x_hour > 11) {
+			x_calendar.set(Calendar.HOUR_OF_DAY, 18);
+		}
+
+		if(x_hour > 17) {
+			x_calendar.set(Calendar.HOUR_OF_DAY, 0);
+			x_calendar.add(Calendar.DATE, 1);
+		}
+
+		return x_calendar.getTime();
 	}
 
 	private void suggestAndSet() {
@@ -247,6 +273,11 @@ class DateSuggestionPanel extends JPanel {
 
 	private String getDueDateText(Date x_dueDate) {
 		return x_dueDate != null ? DateUtil.isAllDay(x_dueDate) ? s_dateFormat.format(x_dueDate) : s_dateTimeFormat.format(x_dueDate) : s_defaultTextString;
+	}
+
+	@Override
+	public void timeUpdate() {
+		setUpDropDowns();
 	}
 
 	private static class DateItem {

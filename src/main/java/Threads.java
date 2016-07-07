@@ -9,7 +9,7 @@ import java.io.*;
 
 public class Threads {
     public static void main(String[] args) {
-//		doFontStuff();
+		doFontStuff();
 
 		TimeUpdater.getInstance().start();
 		String x_dataFilePath = args.length > 0 ? args[0] : "threads.xml";
@@ -23,8 +23,8 @@ public class Threads {
 	}
 
 	public static void doFontStuff() {
-		String x_fontName = System.getProperty("os.name").equals("Mac OS X") ? "Avenir" : ((Font) UIManager.get("Button.font")).getFontName();
-		Font x_font = new Font(x_fontName, Font.PLAIN, 14);
+		String x_fontName = ((Font) UIManager.get("Button.font")).getFontName();
+		Font x_font = new Font(x_fontName, Font.PLAIN, 12);
 
 		UIManager.put("Button.font", x_font);
 		UIManager.put("CheckBox.font", x_font);

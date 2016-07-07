@@ -116,10 +116,15 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 		}
 
 		if(x_thread != null) {
-			String x_text = (String) JOptionPane.showInputDialog(this, "Enter new " + p_type + " text:", "Add new " + p_type + " to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Item");
+			String x_text = (String) JOptionPane.showInputDialog(this, "Enter new " + p_type + " text:", "Add new " + p_type + " to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New " + p_type);
 
 			if(x_text != null) {
 				Item x_item = new Item(x_text);
+
+				if(p_type.equals("Action")) {
+					x_item.setDueDate(DateSuggestionPanel.getDateSuggestion());
+				}
+
 				x_thread.addThreadItem(x_item);
 				WindowManager.getInstance().openComponent(x_item);
 			}
