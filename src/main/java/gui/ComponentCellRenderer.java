@@ -33,6 +33,7 @@ class ComponentCellRenderer extends DefaultTableCellRenderer {
 			}
 		} else if(p_value instanceof Icon) {
 			setIcon((Icon) p_value);
+			setHorizontalAlignment(JTextField.CENTER);
 		} else if(p_value instanceof Date) {
 			setText(s_dateFormat.format((Date)p_value));
 		} else {
@@ -42,6 +43,7 @@ class ComponentCellRenderer extends DefaultTableCellRenderer {
 
     public java.awt.Component getTableCellRendererComponent(JTable p_table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
 		java.awt.Component x_component = super.getTableCellRendererComponent(p_table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
+		setBorder(noFocusBorder);
 
 		if(o_component instanceof Thread) {
 			ThreadItem x_thread = ((Thread)o_component).getThreadItem(p_row);

@@ -40,6 +40,8 @@ public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
 
     public Component getTableCellRendererComponent(JTable p_table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
         java.awt.Component x_component = super.getTableCellRendererComponent(p_table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
+		setBorder(noFocusBorder);
+
 		x_component.setForeground(Color.black);
 
 		Item x_item = LookupHelper.getAllActiveActions(o_thread).get(p_row);
