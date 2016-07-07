@@ -15,7 +15,7 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
     }
     
     public Item(UUID id, Date p_creationDate, Date p_modifledDate, boolean p_active, String p_text, Date p_dueDate, List<Reminder> p_reminders, File p_docFolder) {
-        super(id, p_creationDate, p_modifledDate, p_active, p_text, p_reminders, new TextComparator<Reminder>(), p_docFolder);
+        super(id, p_creationDate, p_modifledDate, p_active, p_text, p_reminders, new DueDateComparator<Reminder>(), p_docFolder);
 		o_dueDate = p_dueDate;
     }
 

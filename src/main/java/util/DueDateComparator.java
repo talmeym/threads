@@ -1,10 +1,10 @@
 package util;
 
-import data.HasDueDate;
+import data.*;
 
 import java.util.*;
 
-public class DueDateComparator implements Comparator<HasDueDate> {
+public class DueDateComparator <TYPE extends HasDueDate> implements Comparator<TYPE> {
 	@Override
 	public int compare(HasDueDate obj1, HasDueDate obj2) {
 		Date x_dueDate1 = obj1.getDueDate();

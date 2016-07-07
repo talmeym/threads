@@ -10,7 +10,8 @@ class ObservableObserver extends Observable implements Observer {
     void unobserve(ObservableObserver p_observable) {
         p_observable.deleteObserver(this);
     }
-        
+
+	@Override
     public void update(Observable o, Object arg) {
         changed((ObservableChangeEvent)arg);
     }

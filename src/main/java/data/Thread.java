@@ -1,6 +1,6 @@
 package data;
 
-import util.TextComparator;
+import util.*;
 
 import java.io.File;
 import java.util.*;
@@ -11,7 +11,7 @@ public class Thread extends ThreadItem<ThreadItem> {
     }
     
     public Thread(UUID id, Date p_creationDate, Date p_modifiedDate, boolean p_active, String p_text, List<ThreadItem> p_items, File p_docFolder) {
-        super(id, p_creationDate, p_modifiedDate, p_active, p_text, p_items, new TextComparator<ThreadItem>(), p_docFolder);
+        super(id, p_creationDate, p_modifiedDate, p_active, p_text, p_items, new TypeAwareTextComparator<ThreadItem>(), p_docFolder);
     }
 
 	public Thread(Thread p_thread, boolean p_addCopyText) {

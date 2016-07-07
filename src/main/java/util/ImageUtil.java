@@ -132,4 +132,18 @@ public class ImageUtil {
 	public static Icon getHomeIcon() {
 		return new ImageIcon(loadImage("/home.png"));
 	}
+
+	public static Icon getIconForType(String p_type) {
+		if(p_type.equals("Thread")) {
+			return getThreadIcon();
+		}
+		if(p_type.equals("Update")) {
+			return getUpdateIcon();
+		}
+		if(p_type.equals("Action")) {
+			return getActionIcon();
+		}
+
+		throw new IllegalArgumentException("Wrong type: " + p_type);
+	}
 }

@@ -4,6 +4,7 @@ import data.Thread;
 import data.*;
 import util.*;
 
+import javax.swing.*;
 import java.util.Date;
 
 class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
@@ -26,6 +27,7 @@ class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
     public Class getColumnClass(int col) {
         switch(col) {
 			case 0: return Date.class;
+			case 1: return Icon.class;
 			default: return String.class;
         }         
     }
@@ -35,7 +37,8 @@ class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
         
         switch(col) {
 			case 0: return x_threadItem.getCreationDate();
-			case 1: return x_threadItem.getType();
+			case 1:
+				return ImageUtil.getIconForType(x_threadItem.getType());
 			case 2: return x_threadItem.getText();
 			case 3:
 				if(x_threadItem instanceof Thread) {

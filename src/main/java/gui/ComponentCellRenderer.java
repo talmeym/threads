@@ -31,6 +31,8 @@ class ComponentCellRenderer extends DefaultTableCellRenderer {
 				setIcon(ImageUtil.getGoogleSmallIcon());
 				setHorizontalAlignment(JTextField.CENTER);
 			}
+		} else if(p_value instanceof Icon) {
+			setIcon((Icon) p_value);
 		} else if(p_value instanceof Date) {
 			setText(s_dateFormat.format((Date)p_value));
 		} else {

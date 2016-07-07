@@ -4,11 +4,11 @@ import java.awt.*;
 
 class GUIConstants
 {
-    public static final int s_creationDateColumnWidth = 130;
-    public static final int s_typeColumnWidth = 90;
-    public static final int s_threadColumnWidth = 220;
+    public static final int s_creationDateColumnWidth = 110;
+    public static final int s_typeColumnWidth = 60;
+    public static final int s_threadColumnWidth = 180;
     public static final int s_dateStatusColumnWidth = 110;
-    public static final int s_threadItemStatusColumnWidth = 140;
+    public static final int s_threadItemInfoColumnWidth = 150;
     public static final int s_lastUpdatedColumnWidth = 110;
 	public static final int s_statsColumnWidth = 90;
 	public static final int s_googleStatusColumnWidth = 30;

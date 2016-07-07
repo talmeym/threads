@@ -72,4 +72,23 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
 
 		return null;
 	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		changed((ObservableChangeEvent)arg);
+
+		ObservableChangeEvent x_event = (ObservableChangeEvent) arg;
+		ObservableObserver x_source = x_event.getObservableObserver();
+
+		if(o_components.contains(x_source) && x_event.getType() == ObservableChangeEvent.s_CHANGE) {
+			int p_beforeIndex = o_components.indexOf(x_source);
+			Collections.sort(o_components, o_comparator);
+			int p_afterIndex = o_components.indexOf(x_source);
+
+			if(p_afterIndex != p_beforeIndex) {
+				changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_REMOVED, p_beforeIndex));
+				changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_ADDED, p_afterIndex));
+			}
+		}
+	}
 }

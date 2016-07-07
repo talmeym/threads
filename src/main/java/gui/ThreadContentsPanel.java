@@ -27,7 +27,7 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 
         fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(1, GUIConstants.s_typeColumnWidth);
-        fixColumnWidth(3, GUIConstants.s_threadItemStatusColumnWidth);
+        fixColumnWidth(3, GUIConstants.s_threadItemInfoColumnWidth);
         fixColumnWidth(4, GUIConstants.s_googleStatusColumnWidth);
 
 		JLabel x_addItemLabel = new JLabel(ImageUtil.getPlusIcon());
