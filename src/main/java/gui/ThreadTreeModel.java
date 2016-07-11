@@ -71,11 +71,12 @@ public class ThreadTreeModel implements TreeModel, Observer {
     }
 
     public void update(Observable o, Object arg) {
-		if(o instanceof Reminder) {
+		ObservableChangeEvent x_oce = (ObservableChangeEvent) arg;
+
+		if(o instanceof Reminder || x_oce.getType() == ObservableChangeEvent.s_MOVED) {
 			return;
 		}
 
-		ObservableChangeEvent x_oce = (ObservableChangeEvent) arg;
 		Component x_component = (Component) x_oce.getObservableObserver();
 		TreePath treePath = new TreePath(getPathObjs(x_component));
 

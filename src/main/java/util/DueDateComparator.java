@@ -11,7 +11,7 @@ public class DueDateComparator <TYPE extends HasDueDate> implements Comparator<T
 		Date x_dueDate2 = obj2.getDueDate();
 
 		if(x_dueDate1 != null && x_dueDate2 != null) {
-			return x_dueDate1.compareTo(obj2.getDueDate());
+			return x_dueDate1.compareTo(x_dueDate2);
 		}
 
 		throw new IllegalArgumentException("Invalid comparison object: " + obj1);

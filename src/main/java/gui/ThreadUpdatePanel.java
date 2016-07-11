@@ -24,8 +24,8 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
 		o_thread.addObserver(this);
 
         fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
-        fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(3, GUIConstants.s_lastUpdatedColumnWidth);
+        fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
+        fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
 
 		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addLabel.setToolTipText("Add Update");

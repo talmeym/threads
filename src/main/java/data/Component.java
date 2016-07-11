@@ -64,6 +64,7 @@ public abstract class Component extends ObservableObserver {
 
     void setParentComponent(Component p_parentComponent) {
         o_parentComponent = p_parentComponent;
+		changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_MOVED, -1));
     }
 
 	public File getDocFolder() {

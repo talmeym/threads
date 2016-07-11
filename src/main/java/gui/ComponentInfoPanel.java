@@ -21,6 +21,7 @@ public class ComponentInfoPanel extends JPanel {
 	private final JTextField o_textField = new JTextField();
 	private final JLabel o_setLabel = new JLabel(ImageUtil.getReturnIcon());
 	private final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
+	private final JPanel o_breadcrumbsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
 	public ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, boolean p_showParents, JLabel... p_extraLabels) {
         super(new BorderLayout());
@@ -225,14 +226,35 @@ public class ComponentInfoPanel extends JPanel {
 		o_component.addObserver(new Observer() {
 			@Override
 			public void update(Observable observable, Object o) {
-				if(observable == ((ObservableChangeEvent)o).getObservableObserver()) {
+				ObservableChangeEvent x_event = (ObservableChangeEvent) o;
+
+				if(observable == x_event.getObservableObserver()) {
 					o_activeLabel.setEnabled(o_component.isActive());
 					o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
+
+					if(x_event.getType() == ObservableChangeEvent.s_MOVED) {
+						o_breadcrumbsPanel.removeAll();
+
+						Component x_parent = o_component.getParentComponent();
+						List<JLabel> x_parentLabels = new ArrayList<JLabel>();
+
+						while(x_parent != null) {
+							x_parentLabels.addAll(0, Arrays.asList(getParentLabel(x_parent), new JLabel(">")));
+							x_parent = x_parent.getParentComponent();
+						}
+
+						for(JLabel x_label: x_parentLabels) {
+							o_breadcrumbsPanel.add(x_label);
+						}
+
+						repaint();
+					}
 				}
 			}
 		});
 
         JPanel x_parentButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
 		if(p_showParents) {
 			x_parentButtonsPanel.add(setUpButtonLabel(x_homeLabel), BorderLayout.CENTER);
 			x_parentButtonsPanel.add(setUpButtonLabel(x_parentLabel), BorderLayout.CENTER);
@@ -242,19 +264,7 @@ public class ComponentInfoPanel extends JPanel {
 			List<JLabel> x_parentLabels = new ArrayList<JLabel>();
 
 			while(x_parent != null) {
-				final JLabel x_label = new JLabel(x_parent.getText());
-				setUpButtonLabel(x_label);
-				final Component x_comp = x_parent;
-
-				x_label.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent mouseEvent) {
-						WindowManager.getInstance().openComponent(x_comp);
-					}
-				});
-
-				x_label.setToolTipText("Go to '" + x_label.getText() + "'");
-				x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
+				x_parentLabels.addAll(0, Arrays.asList(getParentLabel(x_parent), new JLabel(">")));
 
 				if(x_parent.getParentComponent() == null) {
 					final Component x_homeComponent = x_parent;
@@ -271,9 +281,11 @@ public class ComponentInfoPanel extends JPanel {
 			}
 
 			for(JLabel x_label: x_parentLabels) {
-				x_parentButtonsPanel.add(x_label);
+				o_breadcrumbsPanel.add(x_label);
 			}
 		}
+
+		x_parentButtonsPanel.add(o_breadcrumbsPanel);
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         x_buttonPanel.add(setUpButtonLabel(o_setLabel));
@@ -299,6 +311,21 @@ public class ComponentInfoPanel extends JPanel {
         add(x_fieldPanel, BorderLayout.CENTER);
         add(x_buttonPanel, BorderLayout.EAST);
     }
+
+	private JLabel getParentLabel(Component x_parent) {
+		final JLabel x_label = setUpButtonLabel(new JLabel(x_parent.getText()));
+		final Component x_comp = x_parent;
+
+		x_label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				WindowManager.getInstance().openComponent(x_comp);
+			}
+		});
+
+		x_label.setToolTipText("Go to '" + x_label.getText() + "'");
+		return x_label;
+	}
 
 	private void setText() {
 		if (o_textField.getText().length() > 0 && !o_textField.getText().equals(o_component.getText())) {

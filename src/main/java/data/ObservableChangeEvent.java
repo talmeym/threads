@@ -4,6 +4,7 @@ public class ObservableChangeEvent {
     public static final int s_CHANGE = 0;
     public static final int s_ADDED = 1;
     public static final int s_REMOVED = 2;
+    public static final int s_MOVED = 3;
 
     private final ObservableObserver o_component;
     private final int o_type;
