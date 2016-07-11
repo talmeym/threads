@@ -70,20 +70,20 @@ public class ThreadTreeModel implements TreeModel, Observer {
         // do nothing
     }
 
-    public void update(Observable o, Object arg) {
-		ObservableChangeEvent x_oce = (ObservableChangeEvent) arg;
+    public void update(Observable observable, Object o) {
+		ComponentChangeEvent x_cce = (ComponentChangeEvent) o;
 
-		if(o instanceof Reminder || x_oce.getType() == ObservableChangeEvent.s_MOVED) {
+		if(x_cce.getSource() instanceof Reminder || x_cce.getType() == ComponentChangeEvent.s_MOVED) {
 			return;
 		}
 
-		Component x_component = (Component) x_oce.getObservableObserver();
+		Component x_component = x_cce.getSource();
 		TreePath treePath = new TreePath(getPathObjs(x_component));
 
 		for(TreeModelListener x_listener: o_listeners) {
-			switch(x_oce.getType()) {
-				case ObservableChangeEvent.s_ADDED: x_listener.treeNodesInserted(new TreeModelEvent(this, treePath, new int[]{x_oce.getIndex()}, null)); break;
-				case ObservableChangeEvent.s_REMOVED: x_listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{x_oce.getIndex()}, null)); break;
+			switch(x_cce.getType()) {
+				case ComponentChangeEvent.s_ADDED: x_listener.treeNodesInserted(new TreeModelEvent(this, treePath, new int[]{x_cce.getIndex()}, null)); break;
+				case ComponentChangeEvent.s_REMOVED: x_listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{x_cce.getIndex()}, null)); break;
 				default: x_listener.treeNodesChanged(new TreeModelEvent(this, treePath));
 			}
 		}

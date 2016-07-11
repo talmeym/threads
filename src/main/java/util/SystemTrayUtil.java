@@ -63,10 +63,10 @@ public class SystemTrayUtil {
 		component.addObserver(new Observer() {
 			@Override
 			public void update(Observable observable, Object o) {
-				ObservableChangeEvent x_oce = (ObservableChangeEvent) o;
+				ComponentChangeEvent x_cce = (ComponentChangeEvent) o;
 
-				if(observable == x_oce.getObservableObserver() && x_oce.getType() == ObservableChangeEvent.s_CHANGE) {
-					Component x_component = (Component) x_oce.getObservableObserver();
+				if(observable == x_cce.getSource() && x_cce.getType() == ComponentChangeEvent.s_CHANGE) {
+					Component x_component = x_cce.getSource();
 					o_alertedComponents.remove(x_component);
 					x_component.deleteObserver(this);
 				}

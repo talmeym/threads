@@ -3,7 +3,7 @@ package data;
 import java.io.File;
 import java.util.*;
 
-public abstract class Component extends ObservableObserver {
+public abstract class Component extends Observable {
 	private final UUID o_id;
 	private final Date o_creationDate;
 	private Date o_modifiedDate;
@@ -11,7 +11,6 @@ public abstract class Component extends ObservableObserver {
     private String o_text;
     private Component o_parentComponent;
 	private File o_docFolder;
-
 
 	Component(UUID p_id, Date p_creationDate, Date p_modifiedDate, boolean p_activeFlag, String p_text, File p_docFolder) {
 		o_id = p_id;
@@ -64,7 +63,7 @@ public abstract class Component extends ObservableObserver {
 
     void setParentComponent(Component p_parentComponent) {
         o_parentComponent = p_parentComponent;
-		changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_MOVED, -1));
+		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_MOVED, -1));
     }
 
 	public File getDocFolder() {
@@ -84,4 +83,23 @@ public abstract class Component extends ObservableObserver {
 	public abstract String getType();
 
 	public abstract Component findComponent(UUID p_id);
+
+	protected void changed() {
+		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_CHANGE, -1));
+	}
+
+	protected void changed(ComponentChangeEvent p_event) {
+		setChanged();
+		notifyObservers(p_event);
+	}
+
+	protected List<Component> getParents() {
+		if(o_parentComponent == null) {
+			return new ArrayList<Component>(Arrays.asList(this));
+		}
+
+		List<Component> x_parents = o_parentComponent.getParents();
+		x_parents.add(this);
+		return x_parents;
+	}
 }

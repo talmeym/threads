@@ -226,13 +226,13 @@ public class ComponentInfoPanel extends JPanel {
 		o_component.addObserver(new Observer() {
 			@Override
 			public void update(Observable observable, Object o) {
-				ObservableChangeEvent x_event = (ObservableChangeEvent) o;
+				ComponentChangeEvent x_cce = (ComponentChangeEvent) o;
 
-				if(observable == x_event.getObservableObserver()) {
+				if(observable == x_cce.getSource()) {
 					o_activeLabel.setEnabled(o_component.isActive());
 					o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
 
-					if(x_event.getType() == ObservableChangeEvent.s_MOVED) {
+					if(x_cce.getType() == ComponentChangeEvent.s_MOVED) {
 						o_breadcrumbsPanel.removeAll();
 
 						Component x_parent = o_component.getParentComponent();

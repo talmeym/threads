@@ -90,7 +90,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 		o_tabs.setSelectedIndex(p_newMemory);
 	}
 
-    public void update(Observable o, Object arg) {
+    public void update(Observable observable, Object o) {
         setActionTabBackground();
         setReminderTabBackground();
     }

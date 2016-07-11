@@ -3,7 +3,7 @@ package data;
 import java.io.File;
 import java.util.*;
 
-public abstract class CollectionComponent <CONTENTS extends Component> extends Component {
+public abstract class CollectionComponent <CONTENTS extends Component> extends Component implements Observer {
     private final List<CONTENTS> o_components = new ArrayList<CONTENTS>();
     private final Comparator<CONTENTS> o_comparator;
     
@@ -28,20 +28,20 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
     
     protected void addComponent(CONTENTS p_component) {
         p_component.setParentComponent(this);
-        observe(p_component);
+        p_component.addObserver(this);
         o_components.add(p_component);
         Collections.sort(o_components, o_comparator);
 		int index = o_components.indexOf(p_component);
-		changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_ADDED, index));
+		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_ADDED, index));
     }
 
     protected void removeComponent(CONTENTS p_component) {
 		p_component.setParentComponent(null);
-        unobserve(p_component);
+        p_component.deleteObserver(this);
 		int index = o_components.indexOf(p_component);
         o_components.remove(p_component);
         Collections.sort(o_components, o_comparator);
-		changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_REMOVED, index));
+		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_REMOVED, index));
     }
 
     protected void removeAllComponents() {
@@ -51,9 +51,9 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
 		while(iterator.hasNext()) {
 			Component x_component = iterator.next();
 			x_component.setParentComponent(null);
-			unobserve(x_component);
+			x_component.deleteObserver(this);
 			iterator.remove();
-			changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_REMOVED, index++));
+			changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_REMOVED, index++));
 		}
     }
 
@@ -74,20 +74,19 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		changed((ObservableChangeEvent)arg);
+	public void update(Observable observable, Object o) {
+		ComponentChangeEvent x_cce = (ComponentChangeEvent) o;
+		changed(x_cce);
+		Component x_source = x_cce.getSource();
 
-		ObservableChangeEvent x_event = (ObservableChangeEvent) arg;
-		ObservableObserver x_source = x_event.getObservableObserver();
-
-		if(o_components.contains(x_source) && x_event.getType() == ObservableChangeEvent.s_CHANGE) {
+		if(o_components.contains(x_source) && x_cce.getType() == ComponentChangeEvent.s_CHANGE) {
 			int p_beforeIndex = o_components.indexOf(x_source);
 			Collections.sort(o_components, o_comparator);
 			int p_afterIndex = o_components.indexOf(x_source);
 
 			if(p_afterIndex != p_beforeIndex) {
-				changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_REMOVED, p_beforeIndex));
-				changed(new ObservableChangeEvent(this, ObservableChangeEvent.s_ADDED, p_afterIndex));
+				changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_REMOVED, p_beforeIndex));
+				changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_ADDED, p_afterIndex));
 			}
 		}
 	}

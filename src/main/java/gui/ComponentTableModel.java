@@ -35,7 +35,7 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
         return false;
     }
     
-    public void update(Observable o, Object arg) {
+    public void update(Observable observable, Object o) {
 		fireTableDataChanged();
     }
 
