@@ -58,13 +58,15 @@ class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 			}
 		};
 
-		o_item.addObserver(new Observer() {
+		o_item.addComponentChangeListener(new ComponentChangeListener() {
 			@Override
-			public void update(Observable observable, Object o) {
-				o_dueDateField.getDocument().removeDocumentListener(x_listener);
-				o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
-				o_dueDateField.getDocument().addDocumentListener(x_listener);
-				o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
+			public void componentChanged(ComponentChangeEvent p_event) {
+				if(p_event.getSource() == o_item) {
+					o_dueDateField.getDocument().removeDocumentListener(x_listener);
+					o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
+					o_dueDateField.getDocument().addDocumentListener(x_listener);
+					o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
+				}
 			}
 		});
 

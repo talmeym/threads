@@ -3,7 +3,10 @@ package data;
 import java.io.File;
 import java.util.*;
 
-public abstract class Component extends Observable {
+public abstract class Component implements ComponentMoveListener {
+	private List<ComponentChangeListener> o_changeListeners = new ArrayList<ComponentChangeListener>();
+	private List<ComponentMoveListener> o_moveListeners = new ArrayList<ComponentMoveListener>();
+
 	private final UUID o_id;
 	private final Date o_creationDate;
 	private Date o_modifiedDate;
@@ -61,9 +64,15 @@ public abstract class Component extends Observable {
 		modified();
     }
 
+	void unsetParentComponent() {
+		o_parentComponent.removeComponentMoveListener(this);
+		o_parentComponent = null;
+	}
+
     void setParentComponent(Component p_parentComponent) {
         o_parentComponent = p_parentComponent;
-		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_MOVED, -1));
+		o_parentComponent.addComponentMoveListener(this);
+		moved();
     }
 
 	public File getDocFolder() {
@@ -84,13 +93,40 @@ public abstract class Component extends Observable {
 
 	public abstract Component findComponent(UUID p_id);
 
+	public void addComponentChangeListener(ComponentChangeListener p_listener) {
+		o_changeListeners.add(p_listener);
+	}
+
+	public void removeComponentChangeListener(ComponentChangeListener p_listener) {
+		o_changeListeners.remove(p_listener);
+	}
+
+	public void addComponentMoveListener(ComponentMoveListener p_listener) {
+		o_moveListeners.add(p_listener);
+	}
+
+	public void removeComponentMoveListener(ComponentMoveListener p_listener) {
+		o_moveListeners.remove(p_listener);
+	}
+
 	protected void changed() {
-		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_CHANGE, -1));
+		changed(new ComponentChangeEvent(this));
 	}
 
 	protected void changed(ComponentChangeEvent p_event) {
-		setChanged();
-		notifyObservers(p_event);
+		for(ComponentChangeListener x_listener: o_changeListeners) {
+			x_listener.componentChanged(p_event);
+		}
+	}
+
+	protected void moved() {
+		moved(new ComponentMoveEvent(this));
+	}
+
+	protected void moved(ComponentMoveEvent p_event) {
+		for(ComponentMoveListener x_listener: o_moveListeners) {
+			x_listener.componentMoved(p_event);
+		}
 	}
 
 	protected List<Component> getParents() {
@@ -101,5 +137,10 @@ public abstract class Component extends Observable {
 		List<Component> x_parents = o_parentComponent.getParents();
 		x_parents.add(this);
 		return x_parents;
+	}
+
+	@Override
+	public void componentMoved(ComponentMoveEvent p_event) {
+		moved(p_event);
 	}
 }

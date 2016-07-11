@@ -8,14 +8,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Observer {
+class ItemPanel extends ComponentTablePanel<Item, Reminder> implements ComponentChangeListener {
     private final Item o_item;
 	private final JLabel o_linkItemLabel = new JLabel(ImageUtil.getLinkIcon());
 
 	ItemPanel(Item p_item) {
         super(new ItemReminderTableModel(p_item),  new ComponentCellRenderer(p_item));
         o_item = p_item;
-		o_item.addObserver(this);
+		o_item.addComponentChangeListener(this);
 
         fixColumnWidth(1, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
@@ -57,8 +57,10 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Observer 
 	}
 
 	@Override
-	public void update(Observable observable, Object o) {
-		o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
+	public void componentChanged(ComponentChangeEvent p_event) {
+		if(p_event.getSource() == o_item) {
+			o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
+		}
 	}
 
 	@Override

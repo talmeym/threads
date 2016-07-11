@@ -60,15 +60,13 @@ public class SystemTrayUtil {
 	private static void haveAlerted(final Component component) {
 		o_alertedComponents.add(component);
 
-		component.addObserver(new Observer() {
+		component.addComponentChangeListener(new ComponentChangeListener() {
 			@Override
-			public void update(Observable observable, Object o) {
-				ComponentChangeEvent x_cce = (ComponentChangeEvent) o;
-
-				if(observable == x_cce.getSource() && x_cce.getType() == ComponentChangeEvent.s_CHANGE) {
-					Component x_component = x_cce.getSource();
+			public void componentChanged(ComponentChangeEvent p_event) {
+				if (p_event.getType() == ComponentChangeEvent.s_CHANGE) {
+					Component x_component = p_event.getSource();
+					x_component.removeComponentChangeListener(this);
 					o_alertedComponents.remove(x_component);
-					x_component.deleteObserver(this);
 				}
 			}
 		});

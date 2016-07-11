@@ -74,9 +74,9 @@ public class RemindDateSuggestionPanel extends JPanel {
 			}
 		};
 
-		o_reminder.addObserver(new Observer() {
+		o_reminder.addComponentChangeListener(new ComponentChangeListener() {
 			@Override
-			public void update(Observable observable, Object o) {
+			public void componentChanged(ComponentChangeEvent p_event) {
 				o_dueDateField.getDocument().removeDocumentListener(x_listener);
 				o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
 				o_dueDateField.getDocument().addDocumentListener(x_listener);

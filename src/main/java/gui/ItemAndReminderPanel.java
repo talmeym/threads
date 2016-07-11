@@ -33,13 +33,11 @@ public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionL
 		super(new BorderLayout());
 		o_item = p_item;
 
-		o_item.addObserver(new Observer() {
+		o_item.addComponentChangeListener(new ComponentChangeListener() {
 			@Override
-			public void update(Observable observable, Object o) {
-				ComponentChangeEvent x_cce = (ComponentChangeEvent) o;
-
-				if(observable == x_cce.getSource()){
-					if(x_cce.getType() == ComponentChangeEvent.s_REMOVED) {
+			public void componentChanged(ComponentChangeEvent p_event) {
+				if (p_event.getSource() == o_item) {
+					if (p_event.getType() == ComponentChangeEvent.s_REMOVED) {
 						o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
 					}
 

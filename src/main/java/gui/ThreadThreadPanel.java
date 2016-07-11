@@ -7,12 +7,11 @@ import util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
 
 import static util.GuiUtil.setUpButtonLabel;
 
-class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements Observer {
+class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements ComponentChangeListener {
     private final Thread o_thread;
 	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
 	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
@@ -22,7 +21,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements O
     ThreadThreadPanel(Thread p_thread) {
         super(new ThreadThreadTableModel(p_thread), new ComponentCellRenderer(null));
 		o_thread = p_thread;
-		o_thread.addObserver(this);
+		o_thread.addComponentChangeListener(this);
 
         fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
 		fixColumnWidth(2, GUIConstants.s_statsColumnWidth);
@@ -185,7 +184,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements O
     }
 
 	@Override
-	public void update(Observable observable, Object o) {
+	public void componentChanged(ComponentChangeEvent p_event) {
 		tableRowClicked(-1, -1, null);
 	}
 }

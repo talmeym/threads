@@ -3,7 +3,9 @@ package data;
 import java.io.File;
 import java.util.*;
 
-public abstract class CollectionComponent <CONTENTS extends Component> extends Component implements Observer {
+import static java.util.Collections.sort;
+
+public abstract class CollectionComponent <CONTENTS extends Component> extends Component implements ComponentChangeListener {
     private final List<CONTENTS> o_components = new ArrayList<CONTENTS>();
     private final Comparator<CONTENTS> o_comparator;
     
@@ -28,19 +30,18 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
     
     protected void addComponent(CONTENTS p_component) {
         p_component.setParentComponent(this);
-        p_component.addObserver(this);
+        p_component.addComponentChangeListener(this);
         o_components.add(p_component);
-        Collections.sort(o_components, o_comparator);
+        sort(o_components, o_comparator);
 		int index = o_components.indexOf(p_component);
 		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_ADDED, index));
     }
 
     protected void removeComponent(CONTENTS p_component) {
-		p_component.setParentComponent(null);
-        p_component.deleteObserver(this);
+		p_component.unsetParentComponent();
+        p_component.removeComponentChangeListener(this);
 		int index = o_components.indexOf(p_component);
         o_components.remove(p_component);
-        Collections.sort(o_components, o_comparator);
 		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_REMOVED, index));
     }
 
@@ -50,8 +51,8 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
 
 		while(iterator.hasNext()) {
 			Component x_component = iterator.next();
-			x_component.setParentComponent(null);
-			x_component.deleteObserver(this);
+			x_component.unsetParentComponent();
+			x_component.removeComponentChangeListener(this);
 			iterator.remove();
 			changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_REMOVED, index++));
 		}
@@ -74,14 +75,13 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
 	}
 
 	@Override
-	public void update(Observable observable, Object o) {
-		ComponentChangeEvent x_cce = (ComponentChangeEvent) o;
-		changed(x_cce);
-		Component x_source = x_cce.getSource();
+	public void componentChanged(ComponentChangeEvent cce) {
+		changed(cce);
+		Component x_source = cce.getSource();
 
-		if(o_components.contains(x_source) && x_cce.getType() == ComponentChangeEvent.s_CHANGE) {
+		if(o_components.contains(x_source) && cce.getType() == ComponentChangeEvent.s_CHANGE) {
 			int p_beforeIndex = o_components.indexOf(x_source);
-			Collections.sort(o_components, o_comparator);
+			sort(o_components, o_comparator);
 			int p_afterIndex = o_components.indexOf(x_source);
 
 			if(p_afterIndex != p_beforeIndex) {

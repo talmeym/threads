@@ -7,13 +7,13 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.util.*;
 
-public class ThreadTreeModel implements TreeModel, Observer {
+public class ThreadTreeModel implements TreeModel, ComponentChangeListener {
     private final Thread o_thread;
     private final List<TreeModelListener> o_listeners = new ArrayList<TreeModelListener>();
     
     public ThreadTreeModel(Thread p_thread) {
         o_thread = p_thread;
-        o_thread.addObserver(this);
+        o_thread.addComponentChangeListener(this);
     }
     
     public Object getRoot() {
@@ -70,20 +70,19 @@ public class ThreadTreeModel implements TreeModel, Observer {
         // do nothing
     }
 
-    public void update(Observable observable, Object o) {
-		ComponentChangeEvent x_cce = (ComponentChangeEvent) o;
-
-		if(x_cce.getSource() instanceof Reminder || x_cce.getType() == ComponentChangeEvent.s_MOVED) {
+	@Override
+    public void componentChanged(ComponentChangeEvent p_event) {
+		if(p_event.getSource() instanceof Reminder) {
 			return;
 		}
 
-		Component x_component = x_cce.getSource();
+		Component x_component = p_event.getSource();
 		TreePath treePath = new TreePath(getPathObjs(x_component));
 
 		for(TreeModelListener x_listener: o_listeners) {
-			switch(x_cce.getType()) {
-				case ComponentChangeEvent.s_ADDED: x_listener.treeNodesInserted(new TreeModelEvent(this, treePath, new int[]{x_cce.getIndex()}, null)); break;
-				case ComponentChangeEvent.s_REMOVED: x_listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{x_cce.getIndex()}, null)); break;
+			switch(p_event.getType()) {
+				case ComponentChangeEvent.s_ADDED: x_listener.treeNodesInserted(new TreeModelEvent(this, treePath, new int[]{p_event.getIndex()}, null)); break;
+				case ComponentChangeEvent.s_REMOVED: x_listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{p_event.getIndex()}, null)); break;
 				default: x_listener.treeNodesChanged(new TreeModelEvent(this, treePath));
 			}
 		}

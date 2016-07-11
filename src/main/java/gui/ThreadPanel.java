@@ -8,10 +8,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
 
-public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Observer {
+public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, ComponentChangeListener {
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs;
 
@@ -62,7 +61,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 			}
 		});
 
-        o_thread.addObserver(this);
+        o_thread.addComponentChangeListener(this);
         TimeUpdater.getInstance().addTimeUpdateListener(this);
         setActionTabBackground();
 		setReminderTabBackground();
@@ -90,7 +89,8 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Obse
 		o_tabs.setSelectedIndex(p_newMemory);
 	}
 
-    public void update(Observable observable, Object o) {
+	@Override
+	public void componentChanged(ComponentChangeEvent p_event) {
         setActionTabBackground();
         setReminderTabBackground();
     }
