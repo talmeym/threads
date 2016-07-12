@@ -181,8 +181,9 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 		if(p_threadItem != null) {
 			Thread x_thread = null;
 
-			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
-			x_threads.add(0, o_thread);
+			Thread x_topThread = (Thread) o_thread.getHierarchy().get(0);
+			List<Thread> x_threads = LookupHelper.getAllActiveThreads(x_topThread);
+			x_threads.add(0, x_topThread);
 			x_threads.remove(p_threadItem.getParentThread());
 
 			if(p_threadItem instanceof Thread) {
@@ -193,7 +194,7 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 			if(x_threads.size() > 0) {
 				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to move it to:", "Move '" + p_threadItem + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 			} else {
-				JOptionPane.showMessageDialog(this, "This Thread has no child Threads to move this item to. Try moving it from further up the tree.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
+				JOptionPane.showMessageDialog(this, "This is no other Thread to move this Item to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
 			}
 
 			if(x_thread != null) {

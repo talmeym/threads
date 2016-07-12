@@ -129,12 +129,12 @@ public abstract class Component implements ComponentMoveListener {
 		}
 	}
 
-	protected List<Component> getParents() {
+	public List<Component> getHierarchy() {
 		if(o_parentComponent == null) {
 			return new ArrayList<Component>(Arrays.asList(this));
 		}
 
-		List<Component> x_parents = o_parentComponent.getParents();
+		List<Component> x_parents = o_parentComponent.getHierarchy();
 		x_parents.add(this);
 		return x_parents;
 	}

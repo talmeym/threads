@@ -47,7 +47,8 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener, Ti
 		}
 
 		o_navigationTree.removeTreeSelectionListener(this);
-		o_navigationTree.setSelectionPath(getTreePath(p_component));
+		List<Component> x_hierarchy = p_component.getHierarchy();
+		o_navigationTree.setSelectionPath(new TreePath(x_hierarchy.toArray(new Component[x_hierarchy.size()])));
 		o_navigationTree.addTreeSelectionListener(this);
 	}
 
@@ -58,18 +59,6 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener, Ti
 			ThreadItem x_threadItem = (ThreadItem) x_path.getLastPathComponent();
 			WindowManager.getInstance().openComponent(x_threadItem);
 		}
-	}
-
-	private TreePath getTreePath(Component p_component) {
-		List<Component> x_parentComponents = new ArrayList<Component>();
-		x_parentComponents.add(p_component);
-
-		while(p_component.getParentComponent() != null) {
-			x_parentComponents.add(0, p_component.getParentComponent());
-			p_component = p_component.getParentComponent();
-		}
-
-		return new TreePath(x_parentComponents.toArray(new Object[x_parentComponents.size()]));
 	}
 
 	@Override

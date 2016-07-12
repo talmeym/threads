@@ -77,7 +77,8 @@ public class ThreadTreeModel implements TreeModel, ComponentChangeListener {
 		}
 
 		Component x_component = p_event.getSource();
-		TreePath treePath = new TreePath(getPathObjs(x_component));
+		List<Component> x_hierarchy = x_component.getHierarchy();
+		TreePath treePath = new TreePath(x_hierarchy.toArray(new Component[x_hierarchy.size()]));
 
 		for(TreeModelListener x_listener: o_listeners) {
 			switch(p_event.getType()) {
@@ -86,17 +87,5 @@ public class ThreadTreeModel implements TreeModel, ComponentChangeListener {
 				default: x_listener.treeNodesChanged(new TreeModelEvent(this, treePath));
 			}
 		}
-	}
-
-	private Object[] getPathObjs(Component p_component) {
-		List<Component> parentComponents = new ArrayList<Component>();
-
-		while(p_component != o_thread) {
-			parentComponents.add(0, p_component);
-			p_component = p_component.getParentComponent();
-		}
-
-		parentComponents.add(0, o_thread);
-		return parentComponents.toArray(new Object[parentComponents.size()]);
 	}
 }
