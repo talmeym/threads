@@ -86,8 +86,6 @@ public class ComponentInfoPanel extends JPanel {
 				for(JLabel x_label: x_parentLabels) {
 					o_breadcrumbsPanel.add(x_label);
 				}
-
-				repaint();
 			}
 		});
 
