@@ -58,6 +58,11 @@ public class ReminderPanel extends JPanel implements GoogleSyncListener {
 	}
 
 	@Override
+	public void googleSyncStarted() {
+		// do nothing by default
+	}
+
+	@Override
 	public void googleSynced() {
 		if(GoogleUtil.isLinked(o_reminder)) {
 			o_linkLabel.setIcon(ImageUtil.getGoogleSmallIcon());

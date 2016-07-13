@@ -153,6 +153,11 @@ public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionL
 	}
 
 	@Override
+	public void googleSyncStarted() {
+		// do nothing by default
+	}
+
+	@Override
 	public void googleSynced() {
 		tableRowClicked(-1, -1, null);
 	}

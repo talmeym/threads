@@ -14,12 +14,12 @@ import java.util.*;
 public class WindowManager {
     private static WindowManager s_INSTANCE;
 
-	public static void initialise(Thread p_topLevelThread, String p_dataFilePath, String p_settingsFilePath) {
+	public static void initialise(Thread p_topLevelThread, File p_dataFile, File p_settingsFile) {
 		if(s_INSTANCE != null) {
 			throw new IllegalStateException("Cannot initialise window manager twice");
 		}
 
-		s_INSTANCE = new WindowManager(p_topLevelThread, new File(p_dataFilePath), new File(p_settingsFilePath));
+		s_INSTANCE = new WindowManager(p_topLevelThread, p_dataFile, p_settingsFile);
 	}
 
     public static WindowManager getInstance() {
@@ -46,11 +46,12 @@ public class WindowManager {
 		o_window.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
-				o_windowSettings.setWindowLocation(o_window.getLocation());
-				o_windowSettings.setWindowSize(o_window.getSize());
 				TimedSaver.getInstance().stopRunning();
 				GoogleSyncer.getInstance().stopRunning();
+				TimeUpdater.getInstance().stopRunning();
 				Saver.saveDocument(p_topLevelThread, p_dataFilePath);
+				o_windowSettings.setWindowLocation(o_window.getLocation());
+				o_windowSettings.setWindowSize(o_window.getSize());
 				saveSettings(p_settingsFilePath);
 				System.exit(0);
 			}
@@ -136,9 +137,5 @@ public class WindowManager {
 	public void openComponent(Component p_component) {
 		o_navigationAndComponentPanel.showComponent(p_component);
 		o_window.setTitle(p_component.getType() + " : " + p_component.getText());
-	}
-
-	public void closeComponent(final Component p_component) {
-		// do nothing
 	}
 }

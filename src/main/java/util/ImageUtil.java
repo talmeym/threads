@@ -133,6 +133,10 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/home.png"));
 	}
 
+	public static Icon getSaveIcon() {
+		return new ImageIcon(loadImage("/save.png"));
+	}
+
 	public static Icon getIconForType(String p_type) {
 		if(p_type.equals("Thread")) {
 			return getThreadIcon();

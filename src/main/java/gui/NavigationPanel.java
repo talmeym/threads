@@ -9,12 +9,11 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.*;
 import java.text.*;
 import java.util.*;
 import java.util.List;
 
-public class NavigationPanel extends JPanel implements TreeSelectionListener, TimeUpdateListener {
+public class NavigationPanel extends JPanel implements TreeSelectionListener, TimeUpdateListener, GoogleSyncListener, TimedSaveListener {
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm");
 
 	private final JTree o_navigationTree;
@@ -39,6 +38,8 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener, Ti
 		add(o_dateTimeLabel, BorderLayout.SOUTH);
 
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
+		GoogleSyncer.getInstance().addGoogleSyncListener(this);
+		TimedSaver.getInstance().addTimedSaveListener(this);
 	}
 
 	public void selectComponent(Component p_component) {
@@ -64,5 +65,33 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener, Ti
 	@Override
 	public void timeUpdate() {
 		o_dateTimeLabel.setText(s_dateFormat.format(new Date()));
+	}
+
+	@Override
+	public void googleSyncStarted() {
+		o_dateTimeLabel.setText("Syncing with Google ...");
+		o_dateTimeLabel.setIcon(ImageUtil.getGoogleVerySmallIcon());
+		repaint();
+	}
+
+	@Override
+	public void googleSynced() {
+		o_dateTimeLabel.setText(s_dateFormat.format(new Date()));
+		o_dateTimeLabel.setIcon(null);
+		repaint();
+	}
+
+	@Override
+	public void saveStarted() {
+		o_dateTimeLabel.setText("Saving data to Disc ...");
+		o_dateTimeLabel.setIcon(ImageUtil.getSaveIcon());
+		repaint();
+	}
+
+	@Override
+	public void saved() {
+		o_dateTimeLabel.setText(s_dateFormat.format(new Date()));
+		o_dateTimeLabel.setIcon(null);
+		repaint();
 	}
 }

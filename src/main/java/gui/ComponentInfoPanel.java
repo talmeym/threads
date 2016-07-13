@@ -67,15 +67,15 @@ public class ComponentInfoPanel extends JPanel {
 				List<JLabel> x_parentLabels = new ArrayList<JLabel>();
 
 				while(x_parent != null) {
-					final Component x_component = x_parent;
-					final JLabel x_label = getParentLabel(x_component);
+					final JLabel x_label = getParentLabel(x_parent);
 					x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
+					final Component x_parentFinal = x_parent;
 
-					x_component.addComponentChangeListener(new ComponentChangeListener() {
+					x_parentFinal.addComponentChangeListener(new ComponentChangeListener() {
 						@Override
 						public void componentChanged(ComponentChangeEvent p_event) {
-							if(p_event.getSource() == x_component) {
-								x_label.setText(x_component.getText());
+							if (p_event.getSource() == x_parentFinal) {
+								x_label.setText(x_parentFinal.getText());
 							}
 						}
 					});
@@ -175,7 +175,6 @@ public class ComponentInfoPanel extends JPanel {
 							x_item.removeReminder((Reminder)o_component);
 						}
 
-						WindowManager.getInstance().closeComponent(o_component);
 						WindowManager.getInstance().openComponent(x_parentComponent);
 					}
 				} else {
@@ -271,11 +270,14 @@ public class ComponentInfoPanel extends JPanel {
 			while(x_parent != null) {
 				final JLabel x_label = getParentLabel(x_parent);
 				x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
+				final Component x_parentFinal = x_parent;
 
 				x_parent.addComponentChangeListener(new ComponentChangeListener() {
 					@Override
 					public void componentChanged(ComponentChangeEvent p_event) {
-						x_label.setText(p_event.getSource().getText());
+						if(p_event.getSource() == x_parentFinal) {
+							x_label.setText(x_parentFinal.getText());
+						}
 					}
 				});
 

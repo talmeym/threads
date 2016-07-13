@@ -80,6 +80,11 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends M
 	}
 
 	@Override
+	public void googleSyncStarted() {
+		// do nothing by default
+	}
+
+	@Override
 	public void googleSynced() {
 		tableRowClicked(-1, -1, null);
 	}

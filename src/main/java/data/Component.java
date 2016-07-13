@@ -55,13 +55,11 @@ public abstract class Component implements ComponentMoveListener {
     public void setActive(boolean p_active) {
         o_active = p_active;
         changed();
-		modified();
     }
 
     public void setText(String p_text) {
         o_text = p_text;
         changed();
-		modified();
     }
 
 	void unsetParentComponent() {
@@ -110,6 +108,7 @@ public abstract class Component implements ComponentMoveListener {
 	}
 
 	protected void changed() {
+		modified();
 		changed(new ComponentChangeEvent(this));
 	}
 

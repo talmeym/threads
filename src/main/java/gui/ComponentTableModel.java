@@ -41,6 +41,11 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
         fireTableDataChanged();
     }
 
+	@Override
+	public void googleSyncStarted() {
+		// do nothing by default
+	}
+
 	public void googleSynced() {
 		fireTableDataChanged();
 	}

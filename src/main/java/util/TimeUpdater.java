@@ -3,17 +3,31 @@ package util;
 import java.util.*;
 
 public class TimeUpdater extends java.lang.Thread {
-    private static final int s_updateFrequency = 30000;
-    private static final TimeUpdater s_INSTANCE = new TimeUpdater();
+    private static TimeUpdater s_INSTANCE;
+    private static final int s_frequency = 60000;
+
+	public static void initialise() {
+		if(s_INSTANCE != null) {
+			throw new IllegalStateException("Cannot initialise time updater twice");
+		}
+
+		s_INSTANCE = new TimeUpdater();
+	}
+
+	public static TimeUpdater getInstance() {
+		if(s_INSTANCE == null) {
+			throw new IllegalStateException("Time updater not initialised");
+		}
+
+		return s_INSTANCE;
+	}
+
+	private boolean continueRunning = true;
+	private List<TimeUpdateListener> o_updateListeners = new ArrayList<TimeUpdateListener>();
     
-    public static TimeUpdater getInstance() {
-        return s_INSTANCE;
-    }
-    
-    private List<TimeUpdateListener> o_updateListeners;
-    
-    TimeUpdater() {
-        o_updateListeners = new ArrayList<TimeUpdateListener>();
+    private TimeUpdater() {
+		setDaemon(true);
+		start();
     }
     
     public synchronized void addTimeUpdateListener(TimeUpdateListener p_listener) {
@@ -21,9 +35,9 @@ public class TimeUpdater extends java.lang.Thread {
     }
     
     public void run() {
-        while(true) {
+        while(continueRunning()) {
             try {
-                java.lang.Thread.sleep(s_updateFrequency);
+                java.lang.Thread.sleep(s_frequency);
 
                 synchronized(this) {
 					for (TimeUpdateListener o_updateListener : o_updateListeners) {
@@ -36,4 +50,12 @@ public class TimeUpdater extends java.lang.Thread {
             }
         }
     }
+
+	public synchronized void stopRunning() {
+		continueRunning = false;
+	}
+
+	private synchronized boolean continueRunning() {
+		return continueRunning;
+	}
 }

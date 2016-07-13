@@ -63,10 +63,8 @@ public class SystemTrayUtil {
 		component.addComponentChangeListener(new ComponentChangeListener() {
 			@Override
 			public void componentChanged(ComponentChangeEvent p_event) {
-				if (p_event.getType() == ComponentChangeEvent.s_CHANGE) {
-					Component x_component = p_event.getSource();
-					x_component.removeComponentChangeListener(this);
-					o_alertedComponents.remove(x_component);
+				if (p_event.getSource() == component && p_event.getType() == ComponentChangeEvent.s_CHANGE) {
+					o_alertedComponents.remove(component);
 				}
 			}
 		});
@@ -77,7 +75,11 @@ public class SystemTrayUtil {
 		menuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				WindowManager.getInstance().openComponent(component);
+				if(component.getParentComponent() != null) {
+					WindowManager.getInstance().openComponent(component);
+				} else {
+					o_trayIcon.displayMessage("Threads", "The Item you've selected no longer exists", TrayIcon.MessageType.INFO);
+				}
 			}
 		});
 
