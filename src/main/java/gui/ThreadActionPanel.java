@@ -155,7 +155,7 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 		final JPanel x_this = this;
 
 		if (o_linkLabel.isEnabled()) {
-			if (JOptionPane.showConfirmDialog(x_this, "Link '" + p_action.getText() + "' to Google Calendar ?", "Link to Google ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+			if (JOptionPane.showConfirmDialog(x_this, "Link '" + p_action.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(p_action), new GoogleProgressWindow(x_this), new ProgressAdapter() {
 					@Override
 					public void finished() {

@@ -37,32 +37,12 @@ public class GoogleUtil {
 	public static final List<UUID> linkedComponents = new ArrayList<UUID>();
 	public static Thread s_topLevelThread = null;
 
-	/**
-	 * Be sure to specify the name of your application. If the application name is {@code null} or
-	 * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
-	 */
-	private static final String APPLICATION_NAME = "Threads";
-
-	/** Directory to store user credentials. */
-	private static final java.io.File DATA_STORE_DIR = new java.io.File("credstore");
-
-	/**
-	 * Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
-	 * globally shared instance across your application.
-	 */
-	private static FileDataStoreFactory dataStoreFactory;
-
-	/** Global instance of the HTTP transport. */
-	private static HttpTransport httpTransport;
-
-	/** Global instance of the JSON factory. */
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-
+	private static FileDataStoreFactory dataStoreFactory;
+	private static HttpTransport httpTransport;
 	private static com.google.api.services.calendar.Calendar client;
 
-	/** Authorizes the installed application to access user's protected data. */
 	private static Credential authorize() throws Exception {
-		// load client secrets
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(GoogleUtil.class.getResourceAsStream("/client_secrets.json")));
 
 		if (clientSecrets.getDetails().getClientId().startsWith("Enter") || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
@@ -70,18 +50,17 @@ public class GoogleUtil {
 			System.exit(1);
 		}
 
-		// set up authorization code flow
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(dataStoreFactory).build();
-
-		// authorize
 		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
 	}
 
 	private static synchronized void initialise() throws Exception {
-		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-		dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-		Credential credential = authorize();
-		client = new com.google.api.services.calendar.Calendar.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
+		if(client == null) {
+			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+			dataStoreFactory = new FileDataStoreFactory(new java.io.File("credstore"));
+			Credential credential = authorize();
+			client = new com.google.api.services.calendar.Calendar.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName("Threads").build();
+		}
 	}
 
 	public static void syncWithGoogle(Thread thread) {
@@ -194,11 +173,11 @@ public class GoogleUtil {
 				linkedComponents.clear();
 				linkedComponents.addAll(syncedComponents);
 			}
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
 
-		System.out.println("Google Sync Done. " + stats[COMP_UPDATED] + " comps updated, " + stats[EVENT_UPDATED] + " events updated, " + stats[COMP_CREATED] + " comps created, " + stats[EVENT_DELETED] + " events deleted.");
+			System.out.println("Google Calendar Sync: " + stats[COMP_UPDATED] + " components updated, " + stats[EVENT_UPDATED] + " events updated, " + stats[COMP_CREATED] + " components created, " + stats[EVENT_DELETED] + " events deleted.");
+		} catch (Throwable t) {
+			System.out.println("Error talking to Google Calendar: " + t.getClass().getName() + ":" + t.getMessage());
+		}
 	}
 
 	public static void linkItemsToGoogle(List<Item> items, ProgressCallBack... callbacks) {
@@ -279,7 +258,7 @@ public class GoogleUtil {
 
 			GoogleSyncer.getInstance().googleSynced();
 		} catch (Throwable t) {
-			t.printStackTrace();
+			System.out.println("Error talking to Google Calendar: " + t.getClass().getName() + ":" + t.getMessage());
 		}
 	}
 
@@ -329,7 +308,7 @@ public class GoogleUtil {
 
 			GoogleSyncer.getInstance().googleSynced();
 		} catch (Throwable t) {
-			System.out.println("Error talking to Google: " + t.getMessage());
+			System.out.println("Error talking to Google: " + t.getClass().getName() + ":" + t.getMessage());
 		}
 	}
 

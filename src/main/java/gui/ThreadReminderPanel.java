@@ -84,7 +84,7 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 		final JPanel x_this = this;
 
 		if (o_linkLabel.isEnabled()) {
-			if (JOptionPane.showConfirmDialog(x_this, "Link '" + p_reminder.getText() + "' to Google Calendar ?", "Link to Google ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+			if (JOptionPane.showConfirmDialog(x_this, "Link '" + p_reminder.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 				GoogleLinkTask x_task = new GoogleLinkTask(p_reminder, new GoogleProgressWindow(x_this), new ProgressAdapter() {
 					@Override
 					public void finished() {

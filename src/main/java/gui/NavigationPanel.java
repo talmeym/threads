@@ -69,7 +69,7 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener, Ti
 
 	@Override
 	public void googleSyncStarted() {
-		o_dateTimeLabel.setText("Syncing with Google ...");
+		o_dateTimeLabel.setText("Syncing with Google Calendar ...");
 		o_dateTimeLabel.setIcon(ImageUtil.getGoogleVerySmallIcon());
 		repaint();
 	}
