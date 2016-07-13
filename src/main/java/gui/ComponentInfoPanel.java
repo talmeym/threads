@@ -293,12 +293,14 @@ public class ComponentInfoPanel extends JPanel {
 				x_parent = x_parent.getParentComponent();
 			}
 
-			for(JLabel x_label: x_parentLabels) {
-				o_breadcrumbsPanel.add(x_label);
+			if(x_parentLabels.size() > 0) {
+				for(JLabel x_label: x_parentLabels) {
+					o_breadcrumbsPanel.add(x_label);
+				}
+
+				x_parentButtonsPanel.add(o_breadcrumbsPanel);
 			}
 		}
-
-		x_parentButtonsPanel.add(o_breadcrumbsPanel);
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         x_buttonPanel.add(setUpButtonLabel(o_setLabel));
