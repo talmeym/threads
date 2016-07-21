@@ -5,6 +5,7 @@ import util.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
 
 public class Threads {
@@ -13,15 +14,27 @@ public class Threads {
 
 		String x_dataFilePath = args.length > 0 ? args[0] : "threads.xml";
 		File x_dataFile = new File(x_dataFilePath);
+		File x_settingsFile = new File(x_dataFile.getParentFile(), "threads.properties");
 		Thread x_topThread = x_dataFile.exists() ? Loader.loadDocumentThread(x_dataFile) : new Thread("Threads");
 
 		TimeUpdater.initialise();
 		TimedSaver.initialise(x_topThread, x_dataFile);
-		SystemTrayUtil.initialise(x_topThread);
+		NotificationUpdater.initialise(x_topThread);
+		SystemTrayUtil.initialise();
 		GoogleSyncer.initialise(x_topThread);
+		SettingsUtil.load(x_settingsFile);
 
-		WindowManager.initialise(x_topThread, x_dataFile, new File("threads.properties"));
-
+		WindowManager.initialise(x_topThread, new WindowAdapter(){
+			@Override
+			public void windowClosing(WindowEvent e) {
+				TimedSaver.getInstance().stopRunning();
+				GoogleSyncer.getInstance().stopRunning();
+				TimeUpdater.getInstance().stopRunning();
+				Saver.saveDocument(x_topThread, x_dataFile);
+				SettingsUtil.save(x_settingsFile);
+				System.exit(0);
+			}
+		});
 	}
 
 	public static void doFontStuff() {

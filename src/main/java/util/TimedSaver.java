@@ -9,7 +9,7 @@ import static data.Saver.saveDocument;
 
 public class TimedSaver extends java.lang.Thread {
     private static TimedSaver s_INSTANCE = null;
-    private static final int s_frequency = 29000;
+    private static final int s_frequency = 59000;
 
 	public static void initialise(Thread p_topLevelThread, File p_dataFile) {
 		if(s_INSTANCE != null) {

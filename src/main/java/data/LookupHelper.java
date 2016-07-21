@@ -17,7 +17,7 @@ public class LookupHelper {
 			}
         }
 
-        Collections.sort(x_result, new CreationDateComparator());
+        Collections.sort(x_result, new ModifiedDateComparator());
         return x_result;
     }
     

@@ -15,9 +15,8 @@ public class NavigationAndComponentPanel extends MemoryPanel {
 
 	private final Map<UUID, JPanel> o_componentPanels = new HashMap<UUID, JPanel>();
 	private final NavigationPanel o_navigationPanel;
-	private Component o_component;
 
-	public NavigationAndComponentPanel(Thread p_topLevelThread, Component p_firstComponent) {
+	public NavigationAndComponentPanel(Thread p_topLevelThread) {
 		super(new BorderLayout());
 
 		o_navigationPanel = new NavigationPanel(p_topLevelThread);
@@ -37,13 +36,9 @@ public class NavigationAndComponentPanel extends MemoryPanel {
 		});
 
 		add(x_splitPane, BorderLayout.CENTER);
-
-		showComponent(p_firstComponent);
 	}
 
 	public void showComponent(Component p_component) {
-		o_component = p_component;
-
 		if(!o_componentPanels.containsKey(p_component.getId())) {
 			JPanel x_panel = makeComponentPanel(p_component);
 			o_cardPanel.add(x_panel, p_component.getId().toString());
@@ -71,9 +66,5 @@ public class NavigationAndComponentPanel extends MemoryPanel {
 		}
 
 		return x_panel;
-	}
-
-	public Component getComponent() {
-		return o_component;
 	}
 }

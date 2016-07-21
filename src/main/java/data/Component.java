@@ -3,6 +3,9 @@ package data;
 import java.io.File;
 import java.util.*;
 
+import static data.ComponentChangeEvent.s_ACTIVE;
+import static data.ComponentChangeEvent.s_TEXT;
+
 public abstract class Component implements ComponentMoveListener {
 	private List<ComponentChangeListener> o_changeListeners = new ArrayList<ComponentChangeListener>();
 	private List<ComponentMoveListener> o_moveListeners = new ArrayList<ComponentMoveListener>();
@@ -54,12 +57,12 @@ public abstract class Component implements ComponentMoveListener {
 
     public void setActive(boolean p_active) {
         o_active = p_active;
-        changed();
+        changed(s_ACTIVE);
     }
 
     public void setText(String p_text) {
         o_text = p_text;
-        changed();
+        changed(s_TEXT);
     }
 
 	void unsetParentComponent() {
@@ -79,8 +82,6 @@ public abstract class Component implements ComponentMoveListener {
 
 	public void setDocFolder(File p_docFolder) {
 		o_docFolder = p_docFolder;
-		changed();
-		modified();
 	}
 
     public String toString() {
@@ -107,9 +108,9 @@ public abstract class Component implements ComponentMoveListener {
 		o_moveListeners.remove(p_listener);
 	}
 
-	protected void changed() {
+	protected void changed(int p_field) {
 		modified();
-		changed(new ComponentChangeEvent(this));
+		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_CHANGE, p_field));
 	}
 
 	protected void changed(ComponentChangeEvent p_event) {

@@ -3,6 +3,8 @@ package data;
 import java.io.File;
 import java.util.*;
 
+import static data.ComponentChangeEvent.s_DUE_DATE;
+
 public class Reminder extends Component implements HasDueDate
 {
     private Date o_dueDate;
@@ -32,7 +34,7 @@ public class Reminder extends Component implements HasDueDate
 	@Override
     public void setDueDate(Date p_date) {
         o_dueDate = p_date;
-        changed();
+        changed(s_DUE_DATE);
 		modified();
     }
 

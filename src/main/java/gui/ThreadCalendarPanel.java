@@ -180,7 +180,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 				});
 			}
 
-			int x_xPosition = ((o_table.getWidth() / 7) * col) - 14;
+			int x_xPosition = ((o_table.getWidth() / 7) * col) - 12;
 
 			if(x_anyGoogle) {
 				x_xPosition -= 18;

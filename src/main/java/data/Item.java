@@ -5,6 +5,7 @@ import util.*;
 import java.io.File;
 import java.util.*;
 
+import static data.ComponentChangeEvent.s_DUE_DATE;
 import static util.DateUtil.TODAY;
 
 public class Item extends ThreadItem<Reminder> implements HasDueDate {
@@ -59,7 +60,7 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 	@Override
     public void setDueDate(Date p_dueDate) {
         o_dueDate = p_dueDate;
-        changed();
+        changed(s_DUE_DATE);
 		modified();
     }
 

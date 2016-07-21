@@ -2,7 +2,7 @@ package util;
 
 import data.HasDueDate;
 
-import java.util.Comparator;
+import java.util.*;
 
 public class ActiveAwareDueDateComparator implements Comparator<HasDueDate>
 {

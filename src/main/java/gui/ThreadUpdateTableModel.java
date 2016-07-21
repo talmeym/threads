@@ -38,8 +38,8 @@ class ThreadUpdateTableModel extends ComponentTableModel<Thread, Item> {
         switch(col) {
 			case 0: return x_update.getParentThread().getText();
 			case 1: return x_update.getText();
-			case 2: return x_update.getCreationDate();
-			default: return DateUtil.getDateStatus(x_update.getCreationDate());
+			case 2: return DateUtil.getFormattedDate(x_update.getModifiedDate());
+			default: return DateUtil.getDateStatus(x_update.getModifiedDate());
         }
     }
 
