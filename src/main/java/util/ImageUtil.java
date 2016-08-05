@@ -1,6 +1,6 @@
 package util;
 
-//import com.apple.eawt.Application;
+import com.apple.eawt.Application;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,7 +12,7 @@ public class ImageUtil {
 	public static void addIcon(Window p_window) {
 		Image image = getThreadsImage();
 		p_window.setIconImage(image);
-//		Application.getApplication().setDockIconImage(image);
+		Application.getApplication().setDockIconImage(image);
 	}
 
 	public static Image getThreadsImage() {

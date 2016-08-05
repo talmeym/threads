@@ -29,6 +29,7 @@ public class ComponentInfoPanel extends JPanel {
 
 		final JLabel x_homeLabel = new JLabel(ImageUtil.getHomeIcon());
 		final JLabel x_parentLabel = new JLabel(ImageUtil.getUpIcon());
+		final JLabel x_moveLabel = new JLabel(ImageUtil.getMoveIcon());
 		final JLabel x_removeLabel = new JLabel(ImageUtil.getTrashIcon());
 		final JLabel x_duplicateLabel = new JLabel(ImageUtil.getDuplicateIcon());
 		final JLabel x_folderLabel = new JLabel(ImageUtil.getFolderIcon());
@@ -98,6 +99,7 @@ public class ComponentInfoPanel extends JPanel {
 		x_homeLabel.setEnabled(o_component.getParentComponent() != null);
 		x_parentLabel.setEnabled(o_component.getParentComponent() != null);
 		o_activeLabel.setEnabled(o_component.isActive());
+		x_moveLabel.setEnabled(o_component.getParentComponent() != null);
 		x_removeLabel.setEnabled(o_component.getParentComponent() != null);
 		x_duplicateLabel.setEnabled(o_component.getParentComponent() != null);
 
@@ -153,6 +155,31 @@ public class ComponentInfoPanel extends JPanel {
 					}
 				} else {
 					JOptionPane.showMessageDialog(p_parentPanel, "The root Thread cannot be made inactive", "No can do", JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon());
+				}
+			}
+		});
+
+		x_moveLabel.setToolTipText("Move");
+		x_moveLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ThreadItem x_component = (ThreadItem) o_component;
+				Thread x_thread = null;
+
+				Thread x_topThread = (Thread) o_component.getHierarchy().get(0);
+				List<Thread> x_threads = LookupHelper.getAllActiveThreads(x_topThread);
+				x_threads.add(0, x_topThread);
+				x_threads.remove(x_component.getParentThread());
+
+				if(x_threads.size() > 0) {
+					x_thread = (Thread) JOptionPane.showInputDialog(p_parentPanel, "Choose a Thread to move it to:", "Move '" + o_component.getType() + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+				} else {
+					JOptionPane.showMessageDialog(p_parentPanel, "This is no other Thread to move this Action to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
+				}
+
+				if(x_thread != null) {
+					x_component.getParentThread().removeThreadItem(x_component);
+					x_thread.addThreadItem(x_component);
 				}
 			}
 		});
@@ -306,6 +333,11 @@ public class ComponentInfoPanel extends JPanel {
         x_buttonPanel.add(setUpButtonLabel(o_setLabel));
         x_buttonPanel.add(setUpButtonLabel(o_revertLabel));
 		x_buttonPanel.add(setUpButtonLabel(o_activeLabel));
+
+		if(!(o_component instanceof Reminder)) {
+			x_buttonPanel.add(setUpButtonLabel(x_moveLabel));
+		}
+
         x_buttonPanel.add(setUpButtonLabel(x_removeLabel));
         x_buttonPanel.add(setUpButtonLabel(x_duplicateLabel));
         x_buttonPanel.add(setUpButtonLabel(x_folderLabel));
