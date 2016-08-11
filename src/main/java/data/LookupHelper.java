@@ -69,22 +69,6 @@ public class LookupHelper {
         return x_result;
     }
 
-    public static List<Item> getAllActiveActions(Thread p_thread, Date p_referenceDate) {
-        List<Item> x_result = new ArrayList<Item>();
-		x_result.addAll(getActiveActions(p_thread, p_referenceDate));
-
-        for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
-            ThreadItem x_groupItem = p_thread.getThreadItem(i);
-
-            if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
-				x_result.addAll(getAllActiveActions((Thread) x_groupItem, p_referenceDate));
-			}
-        }
-
-        Collections.sort(x_result, new ActiveAwareDueDateComparator());
-        return x_result;
-    }
-
     public static List<Thread> getAllActiveThreads(Thread p_thread) {
         List<Thread> x_result = new ArrayList<Thread>();
 

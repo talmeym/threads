@@ -106,9 +106,13 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 			final List<Item> x_actions = LookupHelper.getAllActions(o_thread, p_date);
 			boolean x_anyGoogle = false;
 
+			for(Item x_item: x_actions) {
+				x_anyGoogle = x_anyGoogle || GoogleUtil.isLinked(x_item);
+			}
+
 			for(final Item x_action: x_actions) {
 				String x_text = ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem(x_action);
-				Icon icon = GoogleUtil.isLinked(x_action) ? ImageUtil.getGoogleVerySmallIcon() : null;
+				Icon icon = GoogleUtil.isLinked(x_action) ? ImageUtil.getGoogleVerySmallIcon() : x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null;
 				JMenuItem x_menuItem = new JMenuItem(x_text, icon);
 				x_menuItem.setToolTipText(x_action.getParentThread().getText() + ": " + x_text);
 				x_menuItem.setForeground(x_action.isActive() ? Color.black : Color.gray);
@@ -121,15 +125,13 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 						WindowManager.getInstance().openComponent(x_action);
 					}
 				});
-
-				x_anyGoogle = x_anyGoogle || icon != null;
 			}
 
 			if(x_actions.size() > 0) {
 				x_menu.add(new JSeparator(JSeparator.HORIZONTAL));
 			}
 
-			JMenuItem x_newMenuItem = new JMenuItem("Add Action");
+			JMenuItem x_newMenuItem = new JMenuItem("Add Action", x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null);
 			x_newMenuItem.setForeground(Color.gray);
 			x_menu.add(x_newMenuItem);
 			final JPanel x_this = this;
@@ -160,7 +162,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 			});
 
 			if(x_actions.size() > 0) {
-				JMenuItem x_linkMenuItem = new JMenuItem("Link to Google");
+				JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null);
 				x_linkMenuItem.setForeground(Color.gray);
 				x_menu.add(x_linkMenuItem);
 

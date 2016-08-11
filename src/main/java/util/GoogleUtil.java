@@ -86,7 +86,7 @@ public class GoogleUtil {
 						start = DateUtil.makeStartOfDay(start);
 					}
 
-					if(description != null) {
+					if(description != null && !description.trim().isEmpty()) {
 						UUID id = UUID.fromString(description);
 						Component component = thread.findComponent(id);
 

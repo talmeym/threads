@@ -101,6 +101,10 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/google_very_small.png"));
 	}
 
+	public static Icon getGoogleVerySmallBlankIcon() {
+		return new ImageIcon(loadImage("/google_very_small_blank.png"));
+	}
+
 	public static Icon getActionIcon() {
 		return new ImageIcon(loadImage("/action_tab.png"));
 	}
