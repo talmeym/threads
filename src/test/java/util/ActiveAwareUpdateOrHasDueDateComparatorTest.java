@@ -1,6 +1,6 @@
 package util;
 
-import data.HasDueDate;
+import data.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -12,7 +12,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ActiveAwareDueDateComparatorTest {
+public class ActiveAwareUpdateOrHasDueDateComparatorTest {
 	private static final Date NOW = new Date(System.currentTimeMillis());
 	private static final Date ANY_DATE_1 = new Date(System.currentTimeMillis() + new Random().nextInt());
 	private static final Date ANY_DATE_2 = new Date(System.currentTimeMillis() + new Random().nextInt());
@@ -20,10 +20,10 @@ public class ActiveAwareDueDateComparatorTest {
 	private static final Date AFTER_NOW = new Date(System.currentTimeMillis() + 10);
 	private static final int FIRST_BEFORE = -1, FIRST_AFTER = 1, THE_SAME = 0;
 
-	private ActiveAwareDueDateComparator toTest = new ActiveAwareDueDateComparator();
+	private ActiveAwareUpdateOrHasDueDateComparator toTest = new ActiveAwareUpdateOrHasDueDateComparator();
 
 	@Mock
-	HasDueDate mock1, mock2;
+	Item mock1, mock2;
 
 	@Test
 	public void testFirstActiveSecondInactiveMeansSecondIsLess() {

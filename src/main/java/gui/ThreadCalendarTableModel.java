@@ -9,6 +9,10 @@ import java.util.*;
 public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
 	private int o_month;
 
+	private boolean o_includeActions = true;
+	private boolean o_includeUpdates;
+	private boolean o_includeReminders;
+
 	ThreadCalendarTableModel(Thread p_thread) {
 		super(p_thread, new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"});
 		o_month = Calendar.getInstance().get(Calendar.MONTH);
@@ -28,10 +32,10 @@ public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> 
 	@Override
 	public Object getValueAt(int p_row, int p_col) {
 		Date x_date = getDataItem(p_row, p_col);
-		List<Item> x_actions = LookupHelper.getAllActions(getComponent(), x_date);
-		Object[] x_value = new Object[x_actions.size() + 1];
+		List<Component> x_components = LookupHelper.getAllItems(getComponent(), x_date, o_includeActions, o_includeUpdates, o_includeReminders);
+		Object[] x_value = new Object[x_components.size() + 1];
 		x_value[0] = x_date;
-		System.arraycopy(x_actions.toArray(new Item[x_actions.size()]), 0, x_value, 1, x_actions.size());
+		System.arraycopy(x_components.toArray(new Component[x_components.size()]), 0, x_value, 1, x_components.size());
 		return x_value;
 	}
 
@@ -66,5 +70,32 @@ public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> 
 	@Override
 	Date getDataItem(int p_row, int p_col) {
 		return getDate(p_col + (p_row * 7) + getOffset());
+	}
+
+	public boolean includeActions() {
+		return o_includeActions;
+	}
+
+	public void setIncludeActions(boolean p_includeActions) {
+		o_includeActions = p_includeActions;
+		fireTableDataChanged();
+	}
+
+	public boolean includeUpdates() {
+		return o_includeUpdates;
+	}
+
+	public void setIncludeUpdates(boolean p_includeUpdates) {
+		o_includeUpdates = p_includeUpdates;
+		fireTableDataChanged();
+	}
+
+	public boolean includeReminders() {
+		return o_includeReminders;
+	}
+
+	public void setIncludeReminders(boolean p_includeReminders) {
+		o_includeReminders = p_includeReminders;
+		fireTableDataChanged();
 	}
 }

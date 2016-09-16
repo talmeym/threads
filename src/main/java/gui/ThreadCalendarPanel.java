@@ -1,6 +1,7 @@
 package gui;
 
 import data.*;
+import data.Component;
 import data.Thread;
 import util.*;
 
@@ -10,6 +11,7 @@ import java.awt.event.*;
 import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static util.GuiUtil.setUpButtonLabel;
 
@@ -65,10 +67,41 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 		o_currentMonthLabel.setHorizontalAlignment(JLabel.CENTER);
 		o_currentMonthLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
+		ThreadCalendarTableModel x_tableModel = (ThreadCalendarTableModel) o_table.getModel();
+		JCheckBox x_includeActionsCheckBox = new JCheckBox("Actions", x_tableModel.includeActions());
+
+		x_includeActionsCheckBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				x_tableModel.setIncludeActions(x_includeActionsCheckBox.isSelected());
+			}
+		});
+
+		JCheckBox x_includeUpdatesCheckBox = new JCheckBox("Updates", x_tableModel.includeUpdates());
+
+		x_includeUpdatesCheckBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				x_tableModel.setIncludeUpdates(x_includeUpdatesCheckBox.isSelected());
+			}
+		});
+
+		JCheckBox x_includeRemindersCheckBox = new JCheckBox("Reminders", x_tableModel.includeReminders());
+
+		x_includeRemindersCheckBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				((ThreadCalendarTableModel)o_table.getModel()).setIncludeReminders(x_includeRemindersCheckBox.isSelected());
+			}
+		});
+
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_previousLabel));
 		x_buttonPanel.add(setUpButtonLabel(x_todayLabel));
 		x_buttonPanel.add(setUpButtonLabel(x_nextLabel));
+		x_buttonPanel.add(x_includeActionsCheckBox);
+		x_buttonPanel.add(x_includeUpdatesCheckBox);
+		x_buttonPanel.add(x_includeRemindersCheckBox);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0	));
 
 		add(o_currentMonthLabel, BorderLayout.NORTH);
@@ -102,32 +135,32 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 	@Override
 	public void tableRowClicked(int row, int col, final Date p_date) {
 		if(p_date != null) {
+			ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
 			JPopupMenu x_menu = new JPopupMenu();
-			final List<Item> x_actions = LookupHelper.getAllActions(o_thread, p_date);
+			final List<Component> x_components = LookupHelper.getAllItems(o_thread, p_date, x_model.includeActions(), x_model.includeUpdates(), x_model.includeReminders());
 			boolean x_anyGoogle = false;
 
-			for(Item x_item: x_actions) {
-				x_anyGoogle = x_anyGoogle || GoogleUtil.isLinked(x_item);
+			for(Component x_component: x_components) {
+				x_anyGoogle = x_anyGoogle || GoogleUtil.isLinked(x_component);
 			}
 
-			for(final Item x_action: x_actions) {
-				String x_text = ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem(x_action);
-				Icon icon = GoogleUtil.isLinked(x_action) ? ImageUtil.getGoogleVerySmallIcon() : x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null;
+			for(final Component x_component: x_components) {
+				String x_text = ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem(x_component);
+				Icon icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null;
 				JMenuItem x_menuItem = new JMenuItem(x_text, icon);
-				x_menuItem.setToolTipText(x_action.getParentThread().getText() + ": " + x_text);
-				x_menuItem.setForeground(x_action.isActive() ? Color.black : Color.gray);
-				x_menuItem.setFont(x_action.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
+				x_menuItem.setForeground(x_component.isActive() ? Color.black : Color.gray);
+				x_menuItem.setFont(x_component.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
 				x_menu.add(x_menuItem);
 
 				x_menuItem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent actionEvent) {
-						WindowManager.getInstance().openComponent(x_action);
+						WindowManager.getInstance().openComponent(x_component);
 					}
 				});
 			}
 
-			if(x_actions.size() > 0) {
+			if(x_components.size() > 0) {
 				x_menu.add(new JSeparator(JSeparator.HORIZONTAL));
 			}
 
@@ -161,7 +194,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 				}
 			});
 
-			if(x_actions.size() > 0) {
+			if(x_components.size() > 0) {
 				JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null);
 				x_linkMenuItem.setForeground(Color.gray);
 				x_menu.add(x_linkMenuItem);
@@ -169,11 +202,11 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 				x_linkMenuItem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent actionEvent) {
-						if (JOptionPane.showConfirmDialog(x_this, "Link " + x_actions.size() + " Action" + (x_actions.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-							GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(x_this), new ProgressAdapter(){
+						if (JOptionPane.showConfirmDialog(x_this, "Link " + x_components.size() + " Action" + (x_components.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+							GoogleLinkTask x_task = new GoogleLinkTask(getItems(x_components), new GoogleProgressWindow(x_this), new ProgressAdapter(){
 								@Override
 								public void finished() {
-									JOptionPane.showMessageDialog(x_this, x_actions.size() + " Action" + (x_actions.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+									JOptionPane.showMessageDialog(x_this, x_components.size() + " Action" + (x_components.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 								}
 							});
 							x_task.execute();
@@ -185,11 +218,17 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 			int x_xPosition = ((o_table.getWidth() / 7) * col) - 12;
 
 			if(x_anyGoogle) {
-				x_xPosition -= 18;
+				x_xPosition -= 19;
 			}
 
 			x_menu.show(o_table, x_xPosition, (o_table.getHeight() / 5) * row + 16);
 		}
+	}
+
+
+	private List<Item> getItems(List<Component> p_components) {
+		List<Component> collect = p_components.stream().filter(component -> component instanceof Item).collect(Collectors.toList());
+		return collect.stream().map(component -> (Item) component).collect(Collectors.toList());
 	}
 
 	private Font makeStrikeThrough(Font x_font) {

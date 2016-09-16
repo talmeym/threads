@@ -1,11 +1,12 @@
 package gui;
 
-import data.Item;
+import data.*;
 import util.DateUtil;
 
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.Component;
 import java.text.*;
 import java.util.*;
 
@@ -55,24 +56,26 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 				setText((String)p_value);
 				setForeground(Color.black);
 			} else {
-				Item x_item = (Item) p_value;
-				String x_text = buildTextForItem(x_item);
+				data.Component x_component = (data.Component) p_value;
+				String x_text = buildTextForItem(x_component);
 				setText(x_text);
-				setForeground(x_item.isActive() ? Color.black : Color.gray);
+				setForeground(x_component.isActive() ? Color.black : Color.gray);
 			}
 
 			setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
 			return this;
 		}
 
-		public static String buildTextForItem(Item x_item) {
+		public static String buildTextForItem(data.Component x_component) {
 			StringBuilder x_builder = new StringBuilder();
 
-			if(!DateUtil.isAllDay(x_item.getDueDate())) {
-				x_builder.append(s_12HrTimeFormat.format(x_item.getDueDate()).toLowerCase()).append(". ");
+			Date x_dueDate = x_component instanceof HasDueDate && ((HasDueDate)x_component).getDueDate() != null ? ((HasDueDate)x_component).getDueDate() : x_component.getModifiedDate();
+
+			if(!DateUtil.isAllDay(x_dueDate)) {
+				x_builder.append(s_12HrTimeFormat.format(x_dueDate).toLowerCase()).append(". ");
 			}
 
-			return x_builder.append(x_item.getText()).toString().replaceAll(":00", "");
+			return x_builder.append(x_component.getText()).toString().replaceAll(":00", "");
 		}
 
 	}

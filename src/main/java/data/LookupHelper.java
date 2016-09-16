@@ -53,19 +53,30 @@ public class LookupHelper {
         return x_result;
     }
 
-    public static List<Item> getAllActions(Thread p_thread, Date p_referenceDate) {
-        List<Item> x_result = new ArrayList<Item>();
-		x_result.addAll(getActions(p_thread, p_referenceDate));
+    public static List<Component> getAllItems(Thread p_thread, Date p_referenceDate, boolean p_includeActions, boolean p_includeUpdates, boolean p_includeReminders) {
+        List<Component> x_result = new ArrayList<Component>();
+
+		if(p_includeActions) {
+			x_result.addAll(getActions(p_thread, p_referenceDate));
+		}
+
+		if(p_includeUpdates) {
+			x_result.addAll(getUpdates(p_thread, p_referenceDate));
+		}
+
+		if(p_includeReminders) {
+			x_result.addAll(getReminders(p_thread, p_referenceDate));
+		}
 
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
             if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
-				x_result.addAll(getAllActions((Thread) x_groupItem, p_referenceDate));
+				x_result.addAll(getAllItems((Thread) x_groupItem, p_referenceDate, p_includeActions, p_includeUpdates, p_includeReminders));
 			}
         }
 
-        Collections.sort(x_result, new ActiveAwareDueDateComparator());
+        Collections.sort(x_result, new ActiveAwareUpdateOrHasDueDateComparator());
         return x_result;
     }
 
@@ -171,24 +182,6 @@ public class LookupHelper {
 		return x_actionItems;
 	}
 
-	public static List<Item> getActiveActions(Thread p_thread, Date p_date) {
-		List<Item> x_actionItems = new ArrayList<Item>();
-
-		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
-			ThreadItem x_groupItem = p_thread.getThreadItem(i);
-
-			if(x_groupItem instanceof Item) {
-				Item x_item = (Item) x_groupItem;
-
-				if(x_item.isActive() && x_item.getDueDate() != null && DateUtil.isSameDay(x_item.getDueDate(), p_date)) {
-					x_actionItems.add(x_item);
-				}
-			}
-		}
-
-		return x_actionItems;
-	}
-
 	public static List<Item> getActions(Thread p_thread, Date p_date) {
 		List<Item> x_actionItems = new ArrayList<Item>();
 
@@ -205,6 +198,23 @@ public class LookupHelper {
 		}
 
 		return x_actionItems;
+	}
+
+	public static List<Item> getUpdates(Thread p_thread, Date p_date) {
+		List<Item> x_updateItems = new ArrayList<Item>();
+		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
+			ThreadItem x_groupItem = p_thread.getThreadItem(i);
+
+			if(x_groupItem instanceof Item) {
+				Item x_item = (Item) x_groupItem;
+
+				if(x_item.getDueDate() == null && DateUtil.isSameDay(x_item.getModifiedDate(), p_date)) {
+					x_updateItems.add(x_item);
+				}
+			}
+		}
+
+		return x_updateItems;
 	}
 
 	public static List<Item> getDueActions(Thread p_thread) {
@@ -257,6 +267,35 @@ public class LookupHelper {
 		}
 
 		return x_dueActiveReminders;
+	}
+	public static List<Reminder> getReminders(Thread p_thread, Date p_date) {
+		List<Reminder> x_reminders = new ArrayList<Reminder>();
+
+		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
+			ThreadItem x_groupItem = p_thread.getThreadItem(i);
+
+			if(x_groupItem instanceof Item) {
+				x_reminders.addAll(getReminders((Item) x_groupItem, p_date));
+			}
+		}
+
+		return x_reminders;
+	}
+
+	public static List<Reminder> getReminders(Item p_item, Date p_date) {
+		List<Reminder> x_reminders = new ArrayList<Reminder>();
+
+		if(p_item.isActive() && p_item.getDueDate() != null) {
+			for(int i = 0; i < p_item.getReminderCount(); i++) {
+				Reminder x_reminder = p_item.getReminder(i);
+
+				if(DateUtil.isSameDay(x_reminder.getDueDate(), p_date)) {
+					x_reminders.add(x_reminder);
+				}
+			}
+		}
+
+		return x_reminders;
 	}
 
 	public static int countActiveSyncableComponents(List<Item> p_items) {

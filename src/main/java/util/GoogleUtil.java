@@ -173,7 +173,7 @@ public class GoogleUtil {
 				linkedComponents.addAll(syncedComponents);
 			}
 
-			System.out.println("Google Calendar Sync: " + stats[COMP_UPDATED] + " components updated, " + stats[EVENT_UPDATED] + " events updated, " + stats[COMP_CREATED] + " components created, " + stats[EVENT_DELETED] + " events deleted.");
+			System.out.println("Google Calendar Sync: " + events.size() + " events from google, " + stats[COMP_UPDATED] + " components updated, " + stats[EVENT_UPDATED] + " events updated, " + stats[COMP_CREATED] + " components created, " + stats[EVENT_DELETED] + " events deleted.");
 		} catch (Throwable t) {
 			System.out.println("Error talking to Google Calendar: " + t.getClass().getName() + ":" + t.getMessage());
 		}
@@ -369,8 +369,17 @@ public class GoogleUtil {
 	}
 
 	private static List<Event> getEvents(String calendarId) throws IOException {
-		Events feed = client.events().list(calendarId).execute();
-		return feed.getItems();
+		Events response = client.events().list("primary").setCalendarId(calendarId).execute();
+		List<Event> events = response.getItems();
+		String nextPageToken = response.getNextPageToken();
+
+		while(nextPageToken != null) {
+			response = client.events().list("primary").setCalendarId(calendarId).setPageToken(nextPageToken).execute();
+			events.addAll(response.getItems());
+			nextPageToken = response.getNextPageToken();
+		}
+
+		return events;
 	}
 
 	public static boolean isLinked(Component component) {
