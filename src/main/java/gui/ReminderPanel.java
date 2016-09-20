@@ -9,12 +9,14 @@ import java.awt.event.*;
 
 public class ReminderPanel extends JPanel implements GoogleSyncListener {
 	private Reminder o_reminder;
+	private JPanel o_parentPanel;
 
 	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
 
-	public ReminderPanel(final Reminder p_reminder) {
+	public ReminderPanel(final Reminder p_reminder, JPanel p_parentPanel) {
         super(new BorderLayout());
 		o_reminder = p_reminder;
+		o_parentPanel = p_parentPanel;
 
 		o_linkLabel.setToolTipText("Link to Google Calendar");
 		o_linkLabel.addMouseListener(new MouseAdapter() {
@@ -41,14 +43,12 @@ public class ReminderPanel extends JPanel implements GoogleSyncListener {
     }
 
 	private void linkToGoogle() {
-		final JPanel x_this = this;
-
 		if (o_linkLabel.isEnabled()) {
-			if (JOptionPane.showConfirmDialog(x_this, "Link '" + o_reminder.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(o_reminder, new GoogleProgressWindow(x_this), new ProgressAdapter() {
+			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link '" + o_reminder.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(o_reminder, new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
 					@Override
 					public void finished() {
-						JOptionPane.showMessageDialog(x_this, "'" + o_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+						JOptionPane.showMessageDialog(o_parentPanel, "'" + o_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 						googleSynced();
 					}
 				});

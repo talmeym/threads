@@ -10,11 +10,13 @@ import java.util.*;
 
 class ItemPanel extends ComponentTablePanel<Item, Reminder> implements ComponentChangeListener {
     private final Item o_item;
+	private JPanel o_parentPanel;
 	private final JLabel o_linkItemLabel = new JLabel(ImageUtil.getLinkIcon());
 
-	ItemPanel(Item p_item) {
+	ItemPanel(Item p_item, final JPanel p_parentPanel) {
         super(new ItemReminderTableModel(p_item),  new ComponentCellRenderer(p_item));
         o_item = p_item;
+		o_parentPanel = p_parentPanel;
 		o_item.addComponentChangeListener(this);
 
         fixColumnWidth(1, GUIConstants.s_creationDateColumnWidth);
@@ -32,7 +34,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
 
         JPanel x_panel = new JPanel(new BorderLayout());
         x_panel.add(new ComponentInfoPanel(p_item, this, true, o_linkItemLabel), BorderLayout.NORTH);
-        x_panel.add(new DateSuggestionPanel(o_item, this), BorderLayout.SOUTH);
+        x_panel.add(new DateSuggestionPanel(o_item, o_parentPanel), BorderLayout.SOUTH);
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
 		add(x_panel, BorderLayout.NORTH);
@@ -41,14 +43,12 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
     }
 
 	private void linkToGoogle() {
-		final JPanel x_this = this;
-
 		if (o_linkItemLabel.isEnabled()) {
-			if (JOptionPane.showConfirmDialog(x_this, "Link '" + o_item.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(o_item), new GoogleProgressWindow(x_this), new ProgressAdapter() {
+			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link '" + o_item.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(o_item), new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
 					@Override
 					public void finished() {
-						JOptionPane.showMessageDialog(x_this, "'" + o_item.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+						JOptionPane.showMessageDialog(o_parentPanel, "'" + o_item.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 					}
 				});
 				x_task.execute();

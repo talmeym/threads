@@ -46,7 +46,7 @@ public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionL
 			}
 		});
 
-		ItemPanel x_itemPanel = new ItemPanel(p_item);
+		ItemPanel x_itemPanel = new ItemPanel(p_item, this);
 		x_itemPanel.addTableSelectionListener(this);
 
 		JLabel x_noneLabelLabel = new JLabel("No Reminders");
@@ -133,7 +133,7 @@ public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionL
 
 	public void showReminder(Reminder x_reminder) {
 		if(!o_reminderPanels.containsKey(x_reminder.getId())) {
-			ReminderPanel x_reminderPanel = new ReminderPanel(x_reminder);
+			ReminderPanel x_reminderPanel = new ReminderPanel(x_reminder, this);
 			x_reminderPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createLoweredBevelBorder()));
 			o_cardPanel.add(x_reminderPanel, x_reminder.getId().toString());
 			o_reminderPanels.put(x_reminder.getId(), x_reminderPanel);
