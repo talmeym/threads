@@ -44,7 +44,7 @@ class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
 				if(x_threadItem instanceof Thread) {
 					int x_threads = LookupHelper.getAllActiveThreads((Thread) x_threadItem).size();
 					int x_updates = LookupHelper.getAllActiveUpdates((Thread) x_threadItem).size();
-					int x_actions = LookupHelper.getAllActiveActions((Thread) x_threadItem).size();
+					int x_actions = LookupHelper.getAllActiveActions((Thread) x_threadItem, false).size();
 					return "Ths: " + x_threads + " Ups: " + x_updates + " Acs:" + x_actions;
 				}
 

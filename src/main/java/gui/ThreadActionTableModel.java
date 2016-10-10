@@ -6,9 +6,10 @@ import util.*;
 
 import java.util.*;
 
-class ThreadActionTableModel extends ComponentTableModel<Thread, Item>
-{
-    ThreadActionTableModel(Thread p_thread) {
+class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
+	private boolean o_onlyNext7Days = true;
+
+	ThreadActionTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Thread", "Action", "Due Date", "Due", ""});
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
@@ -21,7 +22,7 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item>
             return 0;
         }
         
-        return LookupHelper.getAllActiveActions(x_thread).size();
+        return LookupHelper.getAllActiveActions(x_thread, o_onlyNext7Days).size();
     }
 
     public Class getColumnClass(int col) {
@@ -45,6 +46,15 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item>
 
 	@Override
 	Item getDataItem(int p_row, int p_col) {
-		return LookupHelper.getAllActiveActions(getComponent()).get(p_row);
+		return LookupHelper.getAllActiveActions(getComponent(), o_onlyNext7Days).get(p_row);
+	}
+
+	public boolean onlyNext7Days() {
+		return o_onlyNext7Days;
+	}
+
+	public void setOnlyNext7Days(boolean p_onlyNext7Days) {
+		o_onlyNext7Days = p_onlyNext7Days;
+		fireTableDataChanged();
 	}
 }

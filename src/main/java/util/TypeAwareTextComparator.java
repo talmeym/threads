@@ -1,6 +1,6 @@
 package util;
 
-import data.Component;
+import data.*;
 
 import java.util.*;
 
@@ -20,6 +20,17 @@ public class TypeAwareTextComparator<TYPE extends Component> implements Comparat
 			return result;
 		}
 
+		if(obj1.getText().equals(obj2.getText())) {
+			if (x_type1.equals("Update")) {
+				return obj1.getModifiedDate().compareTo(obj2.getModifiedDate());
+			}
+
+			if (x_type1.equals("Action")) {
+				return ((Item) obj1).getDueDate().compareTo(((Item) obj2).getDueDate());
+			}
+		}
+
+		// Thread
 		return obj1.getText().compareTo(obj2.getText());
 	}
 }

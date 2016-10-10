@@ -111,7 +111,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Comp
     }
 
     private void setReminderTabBackground() {
-        if(LookupHelper.getAllDueReminders(o_thread).size() > 0) {
+        if(LookupHelper.getAllActiveReminders(o_thread, true).size() > 0) {
             o_tabs.setTitleAt(4, "Reminders *");
             o_tabs.setBackgroundAt(4, Color.red);
         } else {

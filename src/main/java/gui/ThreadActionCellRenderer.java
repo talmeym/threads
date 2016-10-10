@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.Component;
 import java.text.*;
 import java.util.*;
+import java.util.List;
 
 public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
@@ -43,9 +44,13 @@ public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
 		setBorder(noFocusBorder);
 
 		x_component.setForeground(Color.black);
+		x_component.setBackground(Color.white);
 
-		Item x_item = LookupHelper.getAllActiveActions(o_thread).get(p_row);
-		x_component.setBackground(DateUtil.getColourForTime(x_item.getDueDate()));
+		List<Item> x_actions = LookupHelper.getAllActiveActions(o_thread, true);
+
+		if(p_row < x_actions.size()) {
+			x_component.setBackground(DateUtil.getColourForTime(x_actions.get(p_row).getDueDate()));
+		}
 
 		if(p_isSelected) {
 			x_component.setBackground(ColourConstants.s_selectedColour);

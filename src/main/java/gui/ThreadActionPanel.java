@@ -5,6 +5,7 @@ import data.Thread;
 import util.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -69,12 +70,29 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 			}
 		});
 
+		ThreadActionTableModel x_tableModel = (ThreadActionTableModel) o_table.getModel();
+		JRadioButton x_showNext7DaysRadioButton = new JRadioButton("7 Days", x_tableModel.onlyNext7Days());
+		JRadioButton x_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyNext7Days());
+
+		x_showNext7DaysRadioButton.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				x_tableModel.setOnlyNext7Days(x_showNext7DaysRadioButton.isSelected());
+			}
+		});
+
+		ButtonGroup x_group = new ButtonGroup();
+		x_group.add(x_showNext7DaysRadioButton);
+		x_group.add(x_showAllRadioButton);
+
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
 		x_buttonPanel.add(setUpButtonLabel(o_removeLabel));
 		x_buttonPanel.add(setUpButtonLabel(o_dismissLabel));
 		x_buttonPanel.add(setUpButtonLabel(o_moveLabel));
 		x_buttonPanel.add(setUpButtonLabel(o_linkLabel));
+		x_buttonPanel.add(x_showNext7DaysRadioButton);
+		x_buttonPanel.add(x_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);

@@ -43,6 +43,7 @@ public class Threads {
 
 		UIManager.put("Button.font", x_font);
 		UIManager.put("CheckBox.font", x_font);
+		UIManager.put("RadioButton.font", x_font);
 		UIManager.put("ComboBox.font", x_font);
 		UIManager.put("Label.font", x_font);
 		UIManager.put("List.font", x_font);

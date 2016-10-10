@@ -20,16 +20,16 @@ public class LookupHelper {
         Collections.sort(x_result, new ModifiedDateComparator());
         return x_result;
     }
-    
-    public static List<Item> getAllActiveActions(Thread p_thread) {
+
+    public static List<Item> getAllActiveActions(Thread p_thread, boolean p_onlyNext7Days) {
         List<Item> x_result = new ArrayList<Item>();
-		x_result.addAll(getActiveActions(p_thread));
+		x_result.addAll(getActiveActions(p_thread, p_onlyNext7Days));
 
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
             
             if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
-				x_result.addAll(getAllActiveActions((Thread) x_groupItem));
+				x_result.addAll(getAllActiveActions((Thread) x_groupItem, p_onlyNext7Days));
 			}
         }
         
@@ -113,15 +113,15 @@ public class LookupHelper {
         return x_result;
     }
 
-    public static List<Reminder> getAllDueReminders(Thread p_thread) {
+    public static List<Reminder> getAllActiveReminders(Thread p_thread, boolean p_onlyIfDue) {
         List<Reminder> x_result = new ArrayList<Reminder>();
-		x_result.addAll(getDueReminders(p_thread));
+		x_result.addAll(getActiveReminders(p_thread, p_onlyIfDue));
 
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
             if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
-				x_result.addAll(getAllDueReminders((Thread) x_groupItem));
+				x_result.addAll(getAllActiveReminders((Thread) x_groupItem, p_onlyIfDue));
 			}
         }
 
@@ -146,7 +146,7 @@ public class LookupHelper {
 		return x_updateItems;
 	}
 
-	public static List<Item> getActiveActions(Thread p_thread) {
+	public static List<Item> getActiveActions(Thread p_thread, boolean p_onlyNext7Days) {
 		List<Item> x_actionItems = new ArrayList<Item>();
 
 		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
@@ -156,7 +156,10 @@ public class LookupHelper {
 				Item x_item = (Item) x_groupItem;
 
 				if(x_item.isActive() && x_item.getDueDate() != null) {
-					x_actionItems.add(x_item);
+
+					if((!p_onlyNext7Days) || (DateUtil.isWithin7Days(x_item.getDueDate(), true))) {
+						x_actionItems.add(x_item);
+					}
 				}
 			}
 		}
@@ -235,7 +238,7 @@ public class LookupHelper {
 		return x_actions;
 	}
 
-	public static List<Reminder> getDueReminders(Thread p_thread) {
+	public static List<Reminder> getActiveReminders(Thread p_thread, boolean p_onlyIfDue) {
 		List<Reminder> x_reminders = new ArrayList<Reminder>();
 
 		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
@@ -245,7 +248,7 @@ public class LookupHelper {
 				Item x_item = (Item) x_groupItem;
 
 				if(x_item.isActive()) {
-					x_reminders.addAll(getDueReminders(x_item));
+					x_reminders.addAll(getActiveReminders(x_item, p_onlyIfDue));
 				}
 			}
 		}
@@ -253,14 +256,15 @@ public class LookupHelper {
 		return x_reminders;
 	}
 
-	public static List<Reminder> getDueReminders(Item p_item) {
+	public static List<Reminder> getActiveReminders(Item p_item, boolean p_onlyIfDue) {
 		List<Reminder> x_dueActiveReminders = new ArrayList<Reminder>();
 
 		if(p_item.isActive() && p_item.getDueDate() != null) {
 			for(int i = 0; i < p_item.getReminderCount(); i++) {
 				Reminder x_reminder = p_item.getReminder(i);
 
-				if(x_reminder.isActive() && x_reminder.isDue()) {
+				if(x_reminder.isActive()) {
+					if(!p_onlyIfDue || x_reminder.isDue())
 					x_dueActiveReminders.add(x_reminder);
 				}
 			}
@@ -268,6 +272,7 @@ public class LookupHelper {
 
 		return x_dueActiveReminders;
 	}
+
 	public static List<Reminder> getReminders(Thread p_thread, Date p_date) {
 		List<Reminder> x_reminders = new ArrayList<Reminder>();
 

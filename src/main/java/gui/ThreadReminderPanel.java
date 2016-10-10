@@ -5,9 +5,12 @@ import data.Thread;
 import util.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+
+import static util.GuiUtil.setUpButtonLabel;
 
 public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implements Observer {
 	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
@@ -47,11 +50,28 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 				link(getSelectedObject());
 			}
 		});
-        
-        JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		x_buttonPanel.add(o_dismissLabel, BorderLayout.CENTER);
-		x_buttonPanel.add(o_removeLabel, BorderLayout.CENTER);
-		x_buttonPanel.add(o_linkLabel, BorderLayout.CENTER);
+
+		ThreadReminderTableModel x_tableModel = (ThreadReminderTableModel) o_table.getModel();
+		JRadioButton x_showDueRadioButton = new JRadioButton("Due", x_tableModel.onlyDueReminders());
+		JRadioButton x_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyDueReminders());
+
+		x_showDueRadioButton.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				x_tableModel.setOnlyDueReminders(x_showDueRadioButton.isSelected());
+			}
+		});
+
+		ButtonGroup x_group = new ButtonGroup();
+		x_group.add(x_showDueRadioButton);
+		x_group.add(x_showAllRadioButton);
+
+		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		x_buttonPanel.add(setUpButtonLabel(o_dismissLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_removeLabel));
+		x_buttonPanel.add(setUpButtonLabel(o_linkLabel));
+		x_buttonPanel.add(x_showDueRadioButton);
+		x_buttonPanel.add(x_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         
         add(x_buttonPanel, BorderLayout.SOUTH);

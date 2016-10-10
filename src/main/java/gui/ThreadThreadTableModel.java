@@ -33,7 +33,7 @@ class ThreadThreadTableModel extends ComponentTableModel<Thread, Thread> {
 			case 1: return x_thread.getText();
 			case 2: return LookupHelper.getAllActiveThreads(x_thread).size();
 			case 3: return LookupHelper.getActiveUpdates(x_thread).size();
-			default: return LookupHelper.getActiveActions(x_thread).size();
+			default: return LookupHelper.getActiveActions(x_thread, false).size();
         }
     }
 

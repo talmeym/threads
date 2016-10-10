@@ -24,7 +24,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 	public ThreadCalendarPanel(Thread p_thread) {
 		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
 		o_thread = p_thread;
-		setMonth(recallValue(Calendar.getInstance().get(Calendar.MONTH)));
+		setTime(recallValue(Calendar.getInstance().get(Calendar.MONTH)));
 		addTableSelectionListener(this);
 
 		addComponentListener(new ComponentAdapter() {
@@ -51,7 +51,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int x_month = Calendar.getInstance().get(Calendar.MONTH);
-				setMonth(x_month);
+				setTime(x_month);
 				rememberValue(x_month);
 			}
 		});
@@ -102,7 +102,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 		x_buttonPanel.add(x_includeActionsCheckBox);
 		x_buttonPanel.add(x_includeUpdatesCheckBox);
 		x_buttonPanel.add(x_includeRemindersCheckBox);
-		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0	));
+		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(o_currentMonthLabel, BorderLayout.NORTH);
 		add(x_buttonPanel, BorderLayout.SOUTH);
@@ -112,20 +112,20 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 		ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
 		int x_currentMonth = x_model.getMonth();
 		int x_month = up ? x_currentMonth == 11 ? 0 : x_currentMonth + 1 : x_currentMonth == 0 ? 11 : x_currentMonth - 1;
-		setMonth(x_month);
+		setTime(x_month);
 		rememberValue(x_month);
 	}
 
-	private void setMonth(int x_month) {
+	private void setTime(int x_month) {
 		ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
-		((ThreadCalendarCellRenderer)o_table.getCellRenderer(0, 0)).setMonth(x_month);
 		x_model.setMonth(x_month);
+		((ThreadCalendarCellRenderer)o_table.getCellRenderer(0, 0)).setMonth(x_month);
 		o_currentMonthLabel.setText(getMonthLabel(x_month));
 	}
 
 	@Override
 	protected void memoryChanged(int p_newMemory) {
-		setMonth(p_newMemory);
+		setTime(p_newMemory);
 	}
 
 	private String getMonthLabel(int x_month) {

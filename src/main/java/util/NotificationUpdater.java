@@ -47,7 +47,7 @@ public class NotificationUpdater {
 
 	private void processAlerts() {
 		List<Component> x_dueComponents = new ArrayList<Component>();
-		x_dueComponents.addAll(LookupHelper.getAllDueReminders(o_topLevelThread));
+		x_dueComponents.addAll(LookupHelper.getAllActiveReminders(o_topLevelThread, true));
 		x_dueComponents.addAll(LookupHelper.getAllDueActions(o_topLevelThread));
 		x_dueComponents.removeAll(o_alertedComponents);
 

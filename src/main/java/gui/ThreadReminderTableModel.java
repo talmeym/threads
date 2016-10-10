@@ -4,8 +4,12 @@ import data.*;
 import data.Thread;
 import util.*;
 
+import static data.LookupHelper.getAllActiveReminders;
+
 class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
-    ThreadReminderTableModel(Thread p_thread) {
+	private boolean o_onlyDueReminders = true;
+
+	ThreadReminderTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Action", "Reminder", "Due Date", "Due", ""});
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
@@ -19,7 +23,7 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
             return 0;
         }
         
-        return LookupHelper.getAllDueReminders(x_thread).size();
+        return getAllActiveReminders(x_thread, o_onlyDueReminders).size();
     }
 
 	@Override
@@ -42,6 +46,15 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
 
 	@Override
 	Reminder getDataItem(int p_row, int p_col) {
-		return LookupHelper.getAllDueReminders(getComponent()).get(p_row);
+		return getAllActiveReminders(getComponent(), o_onlyDueReminders).get(p_row);
+	}
+
+	public boolean onlyDueReminders() {
+		return o_onlyDueReminders;
+	}
+
+	public void setOnlyDueReminders(boolean p_onlyDueReminders) {
+		o_onlyDueReminders = p_onlyDueReminders;
+		fireTableDataChanged();
 	}
 }
