@@ -157,7 +157,7 @@ public class LookupHelper {
 
 				if(x_item.isActive() && x_item.getDueDate() != null) {
 
-					if((!p_onlyNext7Days) || (DateUtil.isWithin7Days(x_item.getDueDate(), true))) {
+					if((!p_onlyNext7Days) || (DateUtil.isbefore7DaysFromNow(x_item.getDueDate()))) {
 						x_actionItems.add(x_item);
 					}
 				}
