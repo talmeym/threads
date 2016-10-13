@@ -20,7 +20,7 @@ public class Threads {
 		TimeUpdater.initialise();
 		TimedSaver.initialise(x_topThread, x_dataFile);
 		NotificationUpdater.initialise(x_topThread);
-		SystemTrayUtil.initialise();
+		SystemTrayUtil.initialise(x_topThread);
 		GoogleSyncer.initialise(x_topThread);
 		SettingsUtil.load(x_settingsFile);
 

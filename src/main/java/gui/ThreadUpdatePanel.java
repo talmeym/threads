@@ -26,11 +26,13 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
         fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
         fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
 
+		final JPanel x_enclosingPanel = this;
+
 		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addLabel.setToolTipText("Add Update");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				add(getSelectedObject());
+				Actions.addUpdate(getSelectedObject(), o_thread, x_enclosingPanel);
 			}
 		});
 
@@ -66,46 +68,6 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
-	}
-
-	private void add(Item p_update) {
-		Thread x_thread;
-
-		if(p_update != null) {
-			x_thread = p_update.getParentThread();
-		} else {
-			java.util.List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
-			x_threads.add(0, o_thread);
-
-			if(x_threads.size() > 1) {
-				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to add it to:", "Add an Update ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-			} else {
-				x_thread = o_thread;
-			}
-		}
-
-		if(x_thread != null) {
-			String x_text = (String) JOptionPane.showInputDialog(this, "Enter new Update text:", "Add new Update to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Update");
-
-			if(x_text != null) {
-				Item x_item = new Item(x_text);
-				x_thread.addItem(x_item);
-
-				if(LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(this, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-					for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
-						ThreadItem x_groupItem = x_thread.getThreadItem(i);
-
-						if(x_groupItem instanceof Item)  {
-							Item x_otherItem = (Item) x_groupItem;
-
-							if(x_otherItem != x_item && x_otherItem.getDueDate() == null && x_otherItem.isActive()) {
-								x_otherItem.setActive(false);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	private void dismiss(Item p_update) {

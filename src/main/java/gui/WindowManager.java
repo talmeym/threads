@@ -4,6 +4,7 @@ import data.Component;
 import data.Thread;
 import util.ImageUtil;
 
+import javax.script.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -28,6 +29,20 @@ public class WindowManager {
 
         return s_INSTANCE;
     }
+
+    public static void makeThreadsVisible() {
+		ScriptEngineManager mgr = new ScriptEngineManager();
+		ScriptEngine engine = mgr.getEngineByName("AppleScript");
+
+		try
+		{
+			engine.eval("tell me to activate");
+		}
+		catch (ScriptException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	private static Dimension o_windowSize = GUIConstants.s_windowSize;
 	private static Point o_windowLocation = GUIConstants.s_windowLocation;

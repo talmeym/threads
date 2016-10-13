@@ -1,7 +1,7 @@
 package gui;
 
 import data.*;
-import util.DateUtil;
+import util.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -52,18 +52,29 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 	public static class MyListCellRenderer extends JLabel implements ListCellRenderer {
 		@Override
 		public Component getListCellRendererComponent(JList jList, Object p_value, int p_index, boolean p_isSelected, boolean p_cellHasFocus) {
+			setIcon(null);
+
 			if(p_value instanceof String) {
 				setText((String)p_value);
 				setForeground(Color.black);
 			} else {
 				data.Component x_component = (data.Component) p_value;
-				String x_text = buildTextForItem(x_component);
-				setText(x_text);
+				setIcon(getIconForComponent(x_component));
+				setText(buildTextForItem(x_component));
 				setForeground(x_component.isActive() ? Color.black : Color.gray);
 			}
 
 			setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
 			return this;
+		}
+
+		private Icon getIconForComponent(data.Component x_component) {
+			if(x_component instanceof Item) {
+				Item x_item = (Item) x_component;
+				return x_item.getDueDate() != null ? ImageUtil.getActionIcon() : ImageUtil.getUpdateIcon();
+			}
+
+			return ImageUtil.getReminderIcon();
 		}
 
 		public static String buildTextForItem(data.Component x_component) {
