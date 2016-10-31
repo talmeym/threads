@@ -22,7 +22,7 @@ public class Threads {
 		NotificationUpdater.initialise(x_topThread);
 		SystemTrayUtil.initialise(x_topThread);
 		GoogleSyncer.initialise(x_topThread);
-		SettingsUtil.load(x_settingsFile);
+		Settings.load(x_settingsFile);
 
 		WindowManager.initialise(x_topThread, new WindowAdapter(){
 			@Override
@@ -31,7 +31,7 @@ public class Threads {
 				GoogleSyncer.getInstance().stopRunning();
 				TimeUpdater.getInstance().stopRunning();
 				Saver.saveDocument(x_topThread, x_dataFile);
-				SettingsUtil.save(x_settingsFile);
+				Settings.save(x_settingsFile);
 				System.exit(0);
 			}
 		});

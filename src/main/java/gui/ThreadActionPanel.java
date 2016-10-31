@@ -30,11 +30,13 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
         fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
         fixColumnWidth(4, GUIConstants.s_googleStatusColumnWidth);
 
+		final JPanel x_enclosingPanel = this;
+
 		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addLabel.setToolTipText("Add Action");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				add(getSelectedObject());
+				Actions.addAction(getSelectedObject(), o_thread, x_enclosingPanel);
 			}
 		});
 
@@ -100,34 +102,6 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
-
-	protected void add(Item o_action) {
-		Thread x_thread;
-
-		if(o_action != null) {
-			x_thread = o_action.getParentThread();
-		} else {
-			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
-			x_threads.add(0, o_thread);
-
-			if(x_threads.size() > 1) {
-				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to add it to:", "Add an Action", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-			} else {
-				x_thread = o_thread;
-			}
-		}
-
-		if(x_thread != null) {
-			String x_text = (String) JOptionPane.showInputDialog(this, "Enter new Action text:", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Action");
-
-			if(x_text != null) {
-				Item x_item = new Item(x_text);
-				x_item.setDueDate(DateSuggestionPanel.getDateSuggestion());
-				x_thread.addThreadItem(x_item);
-				WindowManager.getInstance().openComponent(x_item);
-			}
-		}
-	}
 
 	private void dismiss(Item o_action) {
 		if(o_action != null) {

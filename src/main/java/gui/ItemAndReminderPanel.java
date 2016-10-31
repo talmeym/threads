@@ -10,8 +10,10 @@ import java.beans.*;
 import java.util.*;
 
 import static util.GuiUtil.setUpButtonLabel;
+import static util.Settings.registerForSetting;
+import static util.Settings.updateSetting;
 
-public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionListener<Reminder>, TimeUpdateListener, GoogleSyncListener {
+public class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Reminder>, TimeUpdateListener, GoogleSyncListener, SettingChangeListener {
 	private static final String s_none = "none";
 	private static final String s_noneSelected = "none selected";
 
@@ -20,6 +22,7 @@ public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionL
 	private final CardLayout o_cardLayout = new CardLayout();
 	private final JPanel o_cardPanel = new JPanel(o_cardLayout);
 	private final Map<UUID, JPanel> o_reminderPanels = new HashMap<UUID, JPanel>();
+	private final JSplitPane o_splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
 	public ItemAndReminderPanel(Item p_item) {
 		this(p_item, null);
@@ -84,22 +87,21 @@ public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionL
 		x_bottomPanel.add(o_cardPanel, BorderLayout.CENTER);
 		x_bottomPanel.add(x_buttonPanel, BorderLayout.SOUTH);
 
-		JSplitPane x_splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		x_splitPane.setDividerLocation(recallValue(350));
+		o_splitPane.setDividerLocation(registerForSetting(Settings.s_DIVLOC, this, 350));
 
-		x_splitPane.setTopComponent(x_itemPanel);
-		x_splitPane.setBottomComponent(x_bottomPanel);
+		o_splitPane.setTopComponent(x_itemPanel);
+		o_splitPane.setBottomComponent(x_bottomPanel);
 
-		x_splitPane.addPropertyChangeListener(new PropertyChangeListener() {
+		o_splitPane.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 				if(propertyChangeEvent.getPropertyName().equals("dividerLocation")) {
-					rememberValue((Integer)propertyChangeEvent.getNewValue());
+					updateSetting(Settings.s_DIVLOC, "" + propertyChangeEvent.getNewValue());
 				}
 			}
 		});
 
-		add(x_splitPane, BorderLayout.CENTER);
+		add(o_splitPane, BorderLayout.CENTER);
 
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
@@ -160,5 +162,10 @@ public class ItemAndReminderPanel extends MemoryPanel implements TableSelectionL
 	@Override
 	public void googleSynced() {
 		tableRowClicked(-1, -1, null);
+	}
+
+	@Override
+	public void settingChanged(String name, Object value) {
+		o_splitPane.setDividerLocation(Integer.parseInt(value.toString()));
 	}
 }

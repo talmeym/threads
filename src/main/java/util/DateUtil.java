@@ -110,13 +110,19 @@ public class DateUtil {
 
 	private static boolean timeIsBefore(Date p_dueDate, Date p_refDate) {
 		try {
-			Date x_dueTime = s_timeFormat.parse(s_timeFormat.format(p_dueDate));
-			Date x_refTime = s_timeFormat.parse(s_timeFormat.format(p_refDate));
-			boolean x_before = x_dueTime.before(x_refTime);
-			return x_before;
-		} catch(ParseException pe) {
-			// do nothing, shouldn't happen
-			throw new RuntimeException("Something happened", pe);
+			String format1 = s_timeFormat.format(p_dueDate);
+			String format2 = s_timeFormat.format(p_refDate);
+
+			if(format1.trim().length() == 0 || format2.trim().length() == 0) {
+				System.out.println(p_dueDate + " => " + format1 + " *** " + p_refDate + " => " + format2);
+			}
+
+			Date x_dueTime = s_timeFormat.parse(format1);
+			Date x_refTime = s_timeFormat.parse(format2);
+			return x_dueTime.before(x_refTime);
+		} catch (Exception e) {
+			System.out.println("Exception p_dueDate " + p_dueDate + " p_refDate " + p_refDate);
+			throw new RuntimeException("Something happened", e);
 		}
 	}
 

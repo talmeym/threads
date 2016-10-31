@@ -10,7 +10,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, ComponentChangeListener {
+import static util.Settings.registerForSetting;
+import static util.Settings.updateSetting;
+
+public class ThreadPanel extends JPanel implements TimeUpdateListener, ComponentChangeListener, SettingChangeListener {
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs;
 
@@ -36,7 +39,7 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Comp
 		o_tabs.setToolTipTextAt(1, "A view of all active Threads");
 		o_tabs.setToolTipTextAt(2, "A view of all active Updates");
 		o_tabs.setToolTipTextAt(3, "A view of all active Actions");
-		o_tabs.setToolTipTextAt(4, "A view of all due Reminders");
+		o_tabs.setToolTipTextAt(4, "A view of all active Reminders");
 		o_tabs.setToolTipTextAt(5, "A calendar view of all Items");
 
 		final JLabel x_linkLabel = new JLabel(ImageUtil.getLinkIcon());
@@ -53,11 +56,11 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Comp
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 
-		o_tabs.setSelectedIndex(recallValue(0));
+		o_tabs.setSelectedIndex(registerForSetting(Settings.s_TAB_INDEX, this, 0));
 		o_tabs.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent changeEvent) {
-				rememberValue(o_tabs.getSelectedIndex());
+				updateSetting(Settings.s_TAB_INDEX, "" + o_tabs.getSelectedIndex());
 			}
 		});
 
@@ -82,11 +85,6 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Comp
 				x_task.execute();
 			}
 		}
-	}
-
-	@Override
-	protected void memoryChanged(int p_newMemory) {
-		o_tabs.setSelectedIndex(p_newMemory);
 	}
 
 	@Override
@@ -121,6 +119,11 @@ public class ThreadPanel extends MemoryPanel implements TimeUpdateListener, Comp
     }
 
 	public static void setTabIndex(int p_tabIndex) {
-		MemoryPanel.setMemoryValue(ThreadPanel.class, p_tabIndex);
+		updateSetting(Settings.s_TAB_INDEX, "" + p_tabIndex);
+	}
+
+	@Override
+	public void settingChanged(String name, Object value) {
+		o_tabs.setSelectedIndex(Integer.parseInt(value.toString()));
 	}
 }

@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
+import static gui.Actions.addUpdate;
 import static util.GuiUtil.setUpButtonLabel;
 
 public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> implements ComponentChangeListener {
@@ -32,7 +33,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
 		x_addLabel.setToolTipText("Add Update");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				Actions.addUpdate(getSelectedObject(), o_thread, x_enclosingPanel);
+				addUpdate(getSelectedObject(), o_thread, x_enclosingPanel);
 			}
 		});
 

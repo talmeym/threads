@@ -3,13 +3,17 @@ package gui;
 import data.*;
 import data.Component;
 import data.Thread;
+import util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.*;
 import java.util.*;
 
-public class NavigationAndComponentPanel extends MemoryPanel {
+import static util.Settings.registerForSetting;
+import static util.Settings.updateSetting;
+
+public class NavigationAndComponentPanel extends JPanel implements SettingChangeListener {
 	private final CardLayout o_cardLayout = new CardLayout();
 	private final JPanel o_cardPanel = new JPanel(o_cardLayout);
 
@@ -24,13 +28,13 @@ public class NavigationAndComponentPanel extends MemoryPanel {
 		JSplitPane x_splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		x_splitPane.setLeftComponent(o_navigationPanel);
 		x_splitPane.setRightComponent(o_cardPanel);
-		x_splitPane.setDividerLocation(recallValue(250));
+		x_splitPane.setDividerLocation(registerForSetting(Settings.s_NAVDIVLOC, this, 250));
 
 		x_splitPane.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
 				if(propertyChangeEvent.getPropertyName().equals("dividerLocation")) {
-					rememberValue((Integer)propertyChangeEvent.getNewValue());
+					updateSetting(Settings.s_NAVDIVLOC, "" + propertyChangeEvent.getNewValue());
 				}
 			}
 		});
@@ -66,5 +70,10 @@ public class NavigationAndComponentPanel extends MemoryPanel {
 		}
 
 		return x_panel;
+	}
+
+	@Override
+	public void settingChanged(String name, Object value) {
+		// do nothing
 	}
 }

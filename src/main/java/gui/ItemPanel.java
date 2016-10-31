@@ -33,7 +33,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
 		});
 
         JPanel x_panel = new JPanel(new BorderLayout());
-        x_panel.add(new ComponentInfoPanel(p_item, this, true, o_linkItemLabel), BorderLayout.NORTH);
+        x_panel.add(new ComponentInfoPanel(p_item, o_parentPanel, true, o_linkItemLabel), BorderLayout.NORTH);
         x_panel.add(new DateSuggestionPanel(o_item, o_parentPanel), BorderLayout.SOUTH);
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 

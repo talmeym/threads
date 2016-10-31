@@ -5,10 +5,12 @@ import data.*;
 import data.Thread;
 import gui.*;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+
+import static gui.Actions.addAction;
+import static gui.Actions.addUpdate;
 
 public class SystemTrayUtil {
 	private static PopupMenu o_popUpMenu;
@@ -21,6 +23,17 @@ public class SystemTrayUtil {
 		try {
 			o_popUpMenu = new PopupMenu();
 
+			MenuItem x_addActionItem = new MenuItem("Add Action");
+			o_popUpMenu.add(x_addActionItem);
+
+			x_addActionItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					WindowManager.makeThreadsVisible();
+					addAction(o_topLevelThread, null);
+				}
+			});
+
 			MenuItem x_addUpdateItem = new MenuItem("Add Update");
 			o_popUpMenu.add(x_addUpdateItem);
 
@@ -28,7 +41,7 @@ public class SystemTrayUtil {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					WindowManager.makeThreadsVisible();
-					Actions.addUpdate(o_topLevelThread, null);
+					addUpdate(o_topLevelThread, null);
 				}
 			});
 

@@ -154,10 +154,10 @@ public class LookupHelper {
 
 			if(x_groupItem instanceof Item) {
 				Item x_item = (Item) x_groupItem;
+				Date x_dueDate = x_item.getDueDate();
 
-				if(x_item.isActive() && x_item.getDueDate() != null) {
-
-					if((!p_onlyNext7Days) || (DateUtil.isbefore7DaysFromNow(x_item.getDueDate()))) {
+				if(x_item.isActive() && x_dueDate != null) {
+					if((!p_onlyNext7Days) || (DateUtil.isbefore7DaysFromNow(x_dueDate))) {
 						x_actionItems.add(x_item);
 					}
 				}

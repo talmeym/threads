@@ -2,7 +2,7 @@ package gui;
 
 import data.Component;
 import data.Thread;
-import util.ImageUtil;
+import util.*;
 
 import javax.script.*;
 import javax.swing.*;
@@ -10,8 +10,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class WindowManager {
-	public static final String s_UUID = "uuid";
+import static util.Settings.registerForSetting;
+import static util.Settings.updateSetting;
+
+public class WindowManager implements SettingChangeListener {
 	private static WindowManager s_INSTANCE;
 
 	public static void initialise(Thread p_topLevelThread, WindowListener p_listener) {
@@ -44,14 +46,15 @@ public class WindowManager {
 		}
 	}
 
-	private static Dimension o_windowSize = GUIConstants.s_windowSize;
-	private static Point o_windowLocation = GUIConstants.s_windowLocation;
+	private static Dimension o_windowSize;
+	private static Point o_windowLocation;
 	private static UUID o_uuid;
 
 	private final JFrame o_window = new JFrame();
 	private final NavigationAndComponentPanel o_navigationAndComponentPanel;
 
 	private WindowManager(final Thread p_topLevelThread, final WindowListener p_listener) {
+		doSettings(p_topLevelThread.getId());
 		ImageUtil.addIcon(o_window);
 		o_navigationAndComponentPanel = new NavigationAndComponentPanel(p_topLevelThread);
 		o_window.setContentPane(o_navigationAndComponentPanel);
@@ -59,8 +62,10 @@ public class WindowManager {
 		o_window.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
-				o_windowLocation = o_window.getLocation();
-				o_windowSize = o_window.getSize();
+				updateSetting(Settings.s_WINX, "" + new Double(o_window.getLocation().getX()).intValue());
+				updateSetting(Settings.s_WINY, "" + new Double(o_window.getLocation().getY()).intValue());
+				updateSetting(Settings.s_WINW, "" + new Double(o_window.getSize().getWidth()).intValue());
+				updateSetting(Settings.s_WINH, "" + new Double(o_window.getSize().getHeight()).intValue());
 				p_listener.windowClosing(windowEvent);
 			}
 		});
@@ -72,42 +77,22 @@ public class WindowManager {
 		o_window.setLocation(o_windowLocation);
 		o_window.setTitle(x_firstComponent.getType() + " : " + x_firstComponent.getText());
 		o_window.setVisible(true);
-
 	}
 
 	public void openComponent(Component p_component) {
 		o_navigationAndComponentPanel.showComponent(p_component);
 		o_window.setTitle(p_component.getType() + " : " + p_component.getText());
-		o_uuid = p_component.getId();
+		updateSetting(Settings.s_UUID, p_component.getId().toString());
 	}
 
-	public static void applySettingsFromProperties(Properties p_properties) {
-		if(p_properties.containsKey("winw")) {
-			o_windowSize = new Dimension(Integer.parseInt(p_properties.getProperty("winw")), Integer.parseInt(p_properties.getProperty("winh")));
-		}
-
-		if(p_properties.containsKey("winx")) {
-			o_windowLocation = new Point(Integer.parseInt(p_properties.getProperty("winx")), Integer.parseInt(p_properties.getProperty("winy")));
-		}
-
-		if(p_properties.containsKey(s_UUID)) {
-			o_uuid = UUID.fromString(p_properties.getProperty(s_UUID));
-		}
+	private void doSettings(UUID p_topLevelUuid) {
+		o_windowSize = new Dimension(registerForSetting(Settings.s_WINW, this, GUIConstants.s_windowWidth), registerForSetting(Settings.s_WINH, this, GUIConstants.s_windowHeight));
+		o_windowLocation = new Point(registerForSetting(Settings.s_WINX, this, GUIConstants.s_windowX), registerForSetting(Settings.s_WINY, this, GUIConstants.s_windowY));
+		o_uuid = UUID.fromString(registerForSetting(Settings.s_UUID, this, p_topLevelUuid.toString()));
 	}
 
-	public static void saveToProperties(Properties p_properties) {
-		if(o_windowSize != null) {
-			p_properties.setProperty("winw", String.valueOf((int) o_windowSize.getWidth()));
-			p_properties.setProperty("winh", String.valueOf((int) o_windowSize.getHeight()));
-		}
-
-		if(o_windowLocation != null) {
-			p_properties.setProperty("winx", String.valueOf((int) o_windowLocation.getX()));
-			p_properties.setProperty("winy", String.valueOf((int) o_windowLocation.getY()));
-		}
-
-		if(o_uuid != null) {
-			p_properties.setProperty(s_UUID, o_uuid.toString());
-		}
+	@Override
+	public void settingChanged(String name, Object value) {
+		// do nothing
 	}
 }

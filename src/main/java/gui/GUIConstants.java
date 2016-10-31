@@ -14,6 +14,9 @@ class GUIConstants
 
 	public static final int s_tableRowHeight = 27;
 
-	public static final Point s_windowLocation = new Point(150, 150);
-    public static final Dimension s_windowSize = new Dimension(1200, 800);
+	public static final int s_windowX = 150;
+	public static final int s_windowY = 150;
+
+	public static final int s_windowWidth = 1200;
+	public static final int s_windowHeight = 800;
 }
