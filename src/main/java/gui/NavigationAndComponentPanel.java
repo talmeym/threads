@@ -58,15 +58,15 @@ public class NavigationAndComponentPanel extends JPanel implements SettingChange
 		JPanel x_panel = null;
 
 		if(p_component instanceof data.Thread) {
-			x_panel = new ThreadPanel((Thread) p_component);
+			x_panel = new ThreadPanel((Thread) p_component, this);
 		}
 
 		if(p_component instanceof Item) {
-			x_panel = new ItemAndReminderPanel((Item) p_component);
+			x_panel = new ItemAndReminderPanel((Item) p_component, this);
 		}
 
 		if(p_component instanceof Reminder) {
-			x_panel = new ItemAndReminderPanel((Reminder) p_component);
+			x_panel = new ItemAndReminderPanel((Reminder) p_component, this);
 		}
 
 		return x_panel;

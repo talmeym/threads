@@ -16,11 +16,13 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
 	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
 	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
+	private final JPanel o_parentPanel;
 
-    ThreadReminderPanel(Thread p_thread) {
+	ThreadReminderPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadReminderTableModel(p_thread), new ComponentCellRenderer(null));
+		o_parentPanel = p_parentPanel;
 
-        fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
+		fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
         fixColumnWidth(2, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
         fixColumnWidth(4, GUIConstants.s_googleStatusColumnWidth);
@@ -84,7 +86,7 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 		if(o_dismissLabel.isEnabled()) {
 			boolean x_active = !p_reminder.isActive();
 
-			if(JOptionPane.showConfirmDialog(this, "Set '" + p_reminder.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(o_parentPanel, "Set '" + p_reminder.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				p_reminder.setActive(false);
 			}
 		}
@@ -94,21 +96,19 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 		if(p_reminder != null) {
 			Item x_item = p_reminder.getItem();
 
-			if(JOptionPane.showConfirmDialog(this, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Delete " + p_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Delete " + p_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_item.removeReminder(p_reminder);
 			}
 		}
 	}
 
 	private void link(final Reminder p_reminder) {
-		final JPanel x_this = this;
-
 		if (o_linkLabel.isEnabled()) {
-			if (JOptionPane.showConfirmDialog(x_this, "Link '" + p_reminder.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(p_reminder, new GoogleProgressWindow(x_this), new ProgressAdapter() {
+			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link '" + p_reminder.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(p_reminder, new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
 					@Override
 					public void finished() {
-						JOptionPane.showMessageDialog(x_this, "'" + p_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+						JOptionPane.showMessageDialog(o_parentPanel, "'" + p_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 					}
 				});
 

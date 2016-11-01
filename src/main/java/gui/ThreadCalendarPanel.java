@@ -22,6 +22,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
 	private Thread o_thread;
+	private JPanel o_parentPanel;
 	private JLabel o_currentMonthLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(Calendar.MONTH)));
 	private final JCheckBox o_includeActionsCheckBox = new JCheckBox("Actions");
 	private final JCheckBox o_includeUpdatesCheckBox = new JCheckBox("Updates");
@@ -29,9 +30,10 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 	private final JCheckBox o_allCheckBox = new JCheckBox("All");
 
 
-	public ThreadCalendarPanel(Thread p_thread) {
+	public ThreadCalendarPanel(Thread p_thread, JPanel p_parentPanel) {
 		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
 		o_thread = p_thread;
+		o_parentPanel = p_parentPanel;
 		setTime(registerForSetting(Settings.s_MONTH, this, Calendar.getInstance().get(Calendar.MONTH)));
 		addTableSelectionListener(this);
 
@@ -194,7 +196,6 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 			JMenuItem x_newMenuItem = new JMenuItem("Add Action", x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null);
 			x_newMenuItem.setForeground(Color.gray);
 			x_menu.add(x_newMenuItem);
-			final JPanel x_this = this;
 
 			x_newMenuItem.addActionListener(new ActionListener() {
 				@Override
@@ -204,13 +205,13 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 					Thread x_thread;
 
 					if(x_threads.size() > 1) {
-						x_thread = (Thread) JOptionPane.showInputDialog(x_this, "Choose a Thread to add it to:", "Add new Action ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+						x_thread = (Thread) JOptionPane.showInputDialog(o_parentPanel, "Choose a Thread to add it to:", "Add new Action ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 					} else {
 						x_thread = o_thread;
 					}
 
 					if(x_thread != null) {
-						String x_text = (String) JOptionPane.showInputDialog(x_this, "Enter new Action text:", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, null);
+						String x_text = (String) JOptionPane.showInputDialog(o_parentPanel, "Enter new Action text:", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, null);
 
 						if(x_text != null) {
 							Item x_item = new Item(x_text);
@@ -229,11 +230,11 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 				x_linkMenuItem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent actionEvent) {
-						if (JOptionPane.showConfirmDialog(x_this, "Link " + x_components.size() + " Action" + (x_components.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-							GoogleLinkTask x_task = new GoogleLinkTask(getItems(x_components), new GoogleProgressWindow(x_this), new ProgressAdapter(){
+						if (JOptionPane.showConfirmDialog(o_parentPanel, "Link " + x_components.size() + " Action" + (x_components.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+							GoogleLinkTask x_task = new GoogleLinkTask(getItems(x_components), new GoogleProgressWindow(o_parentPanel), new ProgressAdapter(){
 								@Override
 								public void finished() {
-									JOptionPane.showMessageDialog(x_this, x_components.size() + " Action" + (x_components.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+									JOptionPane.showMessageDialog(o_parentPanel, x_components.size() + " Action" + (x_components.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 								}
 							});
 							x_task.execute();

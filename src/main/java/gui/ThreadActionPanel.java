@@ -15,14 +15,16 @@ import static util.GuiUtil.setUpButtonLabel;
 
 public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements ComponentChangeListener {
     private final Thread o_thread;
+	private JPanel o_parentPanel;
 	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
 	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
 	private final JLabel o_moveLabel = new JLabel(ImageUtil.getMoveIcon());
 	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
 
-	ThreadActionPanel(Thread p_thread) {
+	ThreadActionPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadActionTableModel(p_thread), new ThreadActionCellRenderer(p_thread));
         o_thread = p_thread;
+		o_parentPanel = p_parentPanel;
 		o_thread.addComponentChangeListener(this);
 
         fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
@@ -30,13 +32,11 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
         fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
         fixColumnWidth(4, GUIConstants.s_googleStatusColumnWidth);
 
-		final JPanel x_enclosingPanel = this;
-
 		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addLabel.setToolTipText("Add Action");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				Actions.addAction(getSelectedObject(), o_thread, x_enclosingPanel);
+				Actions.addAction(getSelectedObject(), o_thread, p_parentPanel);
 			}
 		});
 
@@ -105,7 +105,7 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 
 	private void dismiss(Item o_action) {
 		if(o_action != null) {
-			if(JOptionPane.showConfirmDialog(this, "Set '" + o_action.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(o_parentPanel, "Set '" + o_action.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				o_action.setActive(false);
 			}
 		}
@@ -115,7 +115,7 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 		if(o_action != null) {
 			Thread x_thread = o_action.getParentThread();
 
-			if(JOptionPane.showConfirmDialog(this, "Remove '" + o_action.getText() + "' from '" + x_thread.getText() + "' ?", "Delete " + o_action.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + o_action.getText() + "' from '" + x_thread.getText() + "' ?", "Delete " + o_action.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_thread.removeThreadItem(o_action);
 			}
 		}
@@ -131,9 +131,9 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 			x_threads.remove(o_action.getParentThread());
 
 			if(x_threads.size() > 0) {
-				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to move it to:", "Move '" + o_action + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+				x_thread = (Thread) JOptionPane.showInputDialog(o_parentPanel, "Choose a Thread to move it to:", "Move '" + o_action + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 			} else {
-				JOptionPane.showMessageDialog(this, "This is no other Thread to move this Action to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
+				JOptionPane.showMessageDialog(o_parentPanel, "This is no other Thread to move this Action to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
 			}
 
 			if(x_thread != null) {
@@ -144,14 +144,12 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 	}
 
 	private void link(final Item p_action) {
-		final JPanel x_this = this;
-
 		if (o_linkLabel.isEnabled()) {
-			if (JOptionPane.showConfirmDialog(x_this, "Link '" + p_action.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(p_action), new GoogleProgressWindow(x_this), new ProgressAdapter() {
+			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link '" + p_action.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(p_action), new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
 					@Override
 					public void finished() {
-						JOptionPane.showMessageDialog(x_this, "'" + p_action.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+						JOptionPane.showMessageDialog(o_parentPanel, "'" + p_action.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 					}
 				});
 

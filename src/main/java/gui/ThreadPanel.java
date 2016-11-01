@@ -16,18 +16,20 @@ import static util.Settings.updateSetting;
 public class ThreadPanel extends JPanel implements TimeUpdateListener, ComponentChangeListener, SettingChangeListener {
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs;
+	private final JPanel o_parentPanel;
 
-	public ThreadPanel(Thread p_thread) {
+	public ThreadPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new BorderLayout());
         o_thread = p_thread;
+		o_parentPanel = p_parentPanel;
 
 		o_tabs = new JTabbedPane();
-        o_tabs.addTab("Contents", ImageUtil.getFolderSmallIcon(), new ThreadContentsPanel(p_thread));
-        o_tabs.addTab("Threads", ImageUtil.getThreadIcon(), new ThreadThreadPanel(p_thread));
-        o_tabs.addTab("Updates", ImageUtil.getUpdateIcon(), new ThreadUpdatePanel(p_thread));
-        o_tabs.addTab("Actions", ImageUtil.getActionIcon(), new ThreadActionPanel(p_thread));
-        o_tabs.addTab("Reminders", ImageUtil.getReminderIcon(), new ThreadReminderPanel(p_thread));
-        o_tabs.addTab("Calendar", ImageUtil.getCalendarSmallIcon(), new ThreadCalendarPanel(p_thread));
+        o_tabs.addTab("Contents", ImageUtil.getFolderSmallIcon(), new ThreadContentsPanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Threads", ImageUtil.getThreadIcon(), new ThreadThreadPanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Updates", ImageUtil.getUpdateIcon(), new ThreadUpdatePanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Actions", ImageUtil.getActionIcon(), new ThreadActionPanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Reminders", ImageUtil.getReminderIcon(), new ThreadReminderPanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Calendar", ImageUtil.getCalendarSmallIcon(), new ThreadCalendarPanel(p_thread, p_parentPanel));
 
 		o_tabs.setBackgroundAt(1, Color.gray);
 		o_tabs.setBackgroundAt(2, Color.gray);
@@ -51,7 +53,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
 			}
 		});
 
-		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, this, true, x_linkLabel);
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_parentPanel, true, x_linkLabel);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 3, 0, 3));
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
@@ -71,15 +73,14 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
     }
 
 	private void linkToGoogle() {
-		final JPanel x_this = this;
 		final List<Item> x_actions = LookupHelper.getAllActions(o_thread);
 
 		if (x_actions.size() > 0) {
-			if (JOptionPane.showConfirmDialog(x_this, "Link " + x_actions.size() + " Action" + (x_actions.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(x_this), new ProgressAdapter() {
+			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link " + x_actions.size() + " Action" + (x_actions.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
 					@Override
 					public void finished() {
-						JOptionPane.showMessageDialog(x_this, x_actions.size() + " Action" + (x_actions.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+						JOptionPane.showMessageDialog(o_parentPanel, x_actions.size() + " Action" + (x_actions.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 					}
 				});
 				x_task.execute();

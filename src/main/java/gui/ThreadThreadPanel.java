@@ -13,14 +13,16 @@ import static util.GuiUtil.setUpButtonLabel;
 
 class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements ComponentChangeListener {
     private final Thread o_thread;
+	private JPanel o_parentPanel;
 	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
 	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
 	private final JLabel o_moveLabel = new JLabel(ImageUtil.getMoveIcon());
 	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
 
-    ThreadThreadPanel(Thread p_thread) {
+    ThreadThreadPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadThreadTableModel(p_thread), new ComponentCellRenderer(null));
 		o_thread = p_thread;
+		o_parentPanel = p_parentPanel;
 		o_thread.addComponentChangeListener(this);
 
         fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
@@ -87,14 +89,14 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 			x_threads.add(0, o_thread);
 
 			if(x_threads.size() > 1) {
-				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to add it to:", "Add a Thread ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+				x_thread = (Thread) JOptionPane.showInputDialog(o_parentPanel, "Choose a Thread to add it to:", "Add a Thread ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 			} else {
 				x_thread = o_thread;
 			}
 		}
 
 		if(x_thread != null) {
-			String x_name = (String) JOptionPane.showInputDialog(this, "Enter new Thread name:", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
+			String x_name = (String) JOptionPane.showInputDialog(o_parentPanel, "Enter new Thread name:", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
 
 			if(x_name != null) {
 				Thread x_newThread = new Thread(x_name);
@@ -106,7 +108,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 
 	private void dismiss(Thread p_thread) {
 		if(p_thread != null) {
-			if(JOptionPane.showConfirmDialog(this, "Set '" + p_thread.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(o_parentPanel, "Set '" + p_thread.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				p_thread.setActive(false);
 			}
 		}
@@ -116,7 +118,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 		if(x_thread != null) {
 			Thread x_parent = x_thread.getParentThread();
 
-			if(JOptionPane.showConfirmDialog(this, "Remove '" + x_thread.getText() + "' from '" + x_thread.getParentThread().getText() + "' ?", "Delete " + x_thread.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + x_thread.getText() + "' from '" + x_thread.getParentThread().getText() + "' ?", "Delete " + x_thread.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_parent.removeThreadItem(x_thread);
 			}
 		}
@@ -134,9 +136,9 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 			x_threads.removeAll(LookupHelper.getAllActiveThreads(p_thread));
 
 			if(x_threads.size() > 0) {
-				x_thread = (Thread) JOptionPane.showInputDialog(this, "Choose a Thread to move it to:", "Move '" + p_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+				x_thread = (Thread) JOptionPane.showInputDialog(o_parentPanel, "Choose a Thread to move it to:", "Move '" + p_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 			} else {
-				JOptionPane.showMessageDialog(this, "This is no other Thread to move this Thread to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
+				JOptionPane.showMessageDialog(o_parentPanel, "This is no other Thread to move this Thread to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
 			}
 
 			if(x_thread != null) {
@@ -147,15 +149,14 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 	}
 
 	private void link(Thread p_thread) {
-		final JPanel x_this = this;
 		final List<Item> x_actions = LookupHelper.getAllActions(p_thread);
 
 		if (x_actions.size() > 0) {
-			if (JOptionPane.showConfirmDialog(x_this, "Link " + x_actions.size() + " Actions to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(x_this), new ProgressAdapter() {
+			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link " + x_actions.size() + " Actions to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
 					@Override
 					public void finished() {
-						JOptionPane.showMessageDialog(x_this, x_actions.size() + " Actions were linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+						JOptionPane.showMessageDialog(o_parentPanel, x_actions.size() + " Actions were linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
 					}
 				});
 

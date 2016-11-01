@@ -18,23 +18,25 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 	private static final String s_noneSelected = "none selected";
 
 	private final Item o_item;
+	private final JPanel o_parentPanel;
 	private final JLabel o_addReminderLabel = new JLabel(ImageUtil.getPlusIcon());
 	private final CardLayout o_cardLayout = new CardLayout();
 	private final JPanel o_cardPanel = new JPanel(o_cardLayout);
 	private final Map<UUID, JPanel> o_reminderPanels = new HashMap<UUID, JPanel>();
 	private final JSplitPane o_splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
-	public ItemAndReminderPanel(Item p_item) {
-		this(p_item, null);
+	public ItemAndReminderPanel(Item p_item, JPanel p_parentPanel) {
+		this(p_item, null, p_parentPanel);
 	}
 
-	public ItemAndReminderPanel(Reminder p_reminder) {
-		this(p_reminder.getItem(), p_reminder);
+	public ItemAndReminderPanel(Reminder p_reminder, JPanel p_parentPanel) {
+		this(p_reminder.getItem(), p_reminder, p_parentPanel);
 	}
 
-	public ItemAndReminderPanel(Item p_item, Reminder p_reminder) {
+	public ItemAndReminderPanel(Item p_item, Reminder p_reminder, JPanel p_parentPanel) {
 		super(new BorderLayout());
 		o_item = p_item;
+		o_parentPanel = p_parentPanel;
 
 		o_item.addComponentChangeListener(new ComponentChangeListener() {
 			@Override
@@ -49,7 +51,7 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 			}
 		});
 
-		ItemPanel x_itemPanel = new ItemPanel(p_item, this);
+		ItemPanel x_itemPanel = new ItemPanel(p_item, o_parentPanel);
 		x_itemPanel.addTableSelectionListener(this);
 
 		JLabel x_noneLabelLabel = new JLabel("No Reminders");
@@ -113,7 +115,7 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 
 	private void addSomething() {
 		if (o_item.getDueDate() != null) {
-			String x_text = (String) JOptionPane.showInputDialog(this, "Enter new Reminder text:", "Add new Reminder to '" + o_item + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Reminder");
+			String x_text = (String) JOptionPane.showInputDialog(o_parentPanel, "Enter new Reminder text:", "Add new Reminder to '" + o_item + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Reminder");
 
 			if(x_text != null) {
 				Reminder x_reminder = new Reminder(o_item);
@@ -135,7 +137,7 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 
 	public void showReminder(Reminder x_reminder) {
 		if(!o_reminderPanels.containsKey(x_reminder.getId())) {
-			ReminderPanel x_reminderPanel = new ReminderPanel(x_reminder, this);
+			ReminderPanel x_reminderPanel = new ReminderPanel(x_reminder, o_parentPanel);
 			x_reminderPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createLoweredBevelBorder()));
 			o_cardPanel.add(x_reminderPanel, x_reminder.getId().toString());
 			o_reminderPanels.put(x_reminder.getId(), x_reminderPanel);
