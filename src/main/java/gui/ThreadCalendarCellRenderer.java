@@ -89,6 +89,10 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 			return x_builder.append(x_component.getText()).toString().replaceAll(":00", "");
 		}
 
+		public static String buildToolTipTextForItem(data.Component x_component) {
+			return (x_component instanceof Reminder ? x_component.getParentComponent().getParentComponent().getText() + " : " : "") + x_component.getParentComponent().getText() + " : " + x_component.getText();
+		}
+
 	}
 
 	private static void setColourForTime(Date p_dueDate, JList x_list) {

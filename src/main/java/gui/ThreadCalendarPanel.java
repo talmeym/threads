@@ -13,6 +13,8 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem;
+import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.buildToolTipTextForItem;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
@@ -169,11 +171,12 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 			}
 
 			for(final Component x_component: x_components) {
-				String x_text = ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem(x_component);
-				Icon icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null;
-				JMenuItem x_menuItem = new JMenuItem(x_text, icon);
+				String x_text = buildTextForItem(x_component);
+				Icon x_icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null;
+				JMenuItem x_menuItem = new JMenuItem(x_text, x_icon);
 				x_menuItem.setForeground(x_component.isActive() ? Color.black : Color.gray);
 				x_menuItem.setFont(x_component.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
+				x_menuItem.setToolTipText(buildToolTipTextForItem(x_component));
 				x_menu.add(x_menuItem);
 
 				x_menuItem.addActionListener(new ActionListener() {
