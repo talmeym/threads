@@ -7,9 +7,10 @@ import util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
 
+import static gui.Actions.addThread;
+import static gui.Actions.linkToGoogle;
 import static util.GuiUtil.setUpButtonLabel;
 
 public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem> implements ComponentChangeListener
@@ -96,7 +97,7 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 		switch(x_selection) {
 			case 0:
 			case 2: addItem(p_threadItem, x_options[x_selection]); break;
-			case 1: addThread(p_threadItem);
+			case 1: addThread(p_threadItem, o_thread, o_parentPanel);
 		}
 	}
 
@@ -129,34 +130,6 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 
 				x_thread.addThreadItem(x_item);
 				WindowManager.getInstance().openComponent(x_item);
-			}
-		}
-	}
-
-	private void addThread(ThreadItem p_threadItem) {
-		Thread x_thread;
-
-		if(p_threadItem != null && p_threadItem instanceof Thread) {
-			x_thread = (Thread) p_threadItem;
-		} else {
-			o_table.clearSelection();
-			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
-			x_threads.add(0, o_thread);
-
-			if(x_threads.size() > 1) {
-				x_thread = (Thread) JOptionPane.showInputDialog(o_parentPanel, "Choose a Thread to add it to:", "Add a Thread ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-			} else {
-				x_thread = o_thread;
-			}
-		}
-
-		if(x_thread != null) {
-			String x_name = (String) JOptionPane.showInputDialog(o_parentPanel, "Enter new Thread name:", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
-
-			if(x_name != null) {
-				Thread x_newThread = new Thread(x_name);
-				x_thread.addThreadItem(x_newThread);
-				WindowManager.getInstance().openComponent(x_newThread);
 			}
 		}
 	}
@@ -209,36 +182,12 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 	private void link(ThreadItem p_threadItem) {
 		if (o_linkLabel.isEnabled()) {
 			if(p_threadItem instanceof Item) {
-				final Item x_action = (Item) p_threadItem;
-
-				if (JOptionPane.showConfirmDialog(o_parentPanel, "Link '" + x_action.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-					GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(x_action), new ProgressAdapter() {
-						@Override
-						public void finished() {
-							JOptionPane.showMessageDialog(o_parentPanel, "'" + x_action.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-						}
-					});
-
-					x_task.execute();
-				}
+				linkToGoogle((Item) p_threadItem, o_parentPanel);
 			}
 
 			if(p_threadItem instanceof Thread) {
 				final Thread x_thread = (Thread) p_threadItem;
-				final List<Item> x_actions = LookupHelper.getAllActions(x_thread);
-
-				if (x_actions.size() > 0) {
-					if (JOptionPane.showConfirmDialog(o_parentPanel, "Link " + x_actions.size() + " Actions to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-						GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
-							@Override
-							public void finished() {
-								JOptionPane.showMessageDialog(o_parentPanel, x_actions.size() + " Actions were linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-							}
-						});
-
-						x_task.execute();
-					}
-				}
+				Actions.linkToGoogle(x_thread, o_parentPanel);
 			}
 		}
 	}

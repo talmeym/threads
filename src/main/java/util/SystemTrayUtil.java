@@ -30,7 +30,7 @@ public class SystemTrayUtil {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					WindowManager.makeThreadsVisible();
-					addAction(o_topLevelThread, null);
+					addAction(null, o_topLevelThread, null);
 				}
 			});
 
@@ -41,7 +41,7 @@ public class SystemTrayUtil {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					WindowManager.makeThreadsVisible();
-					addUpdate(o_topLevelThread, null);
+					addUpdate(null, o_topLevelThread, null);
 				}
 			});
 

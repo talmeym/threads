@@ -8,9 +8,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
 
+import static gui.Actions.addAction;
 import static util.GuiUtil.setUpButtonLabel;
 
 public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements ComponentChangeListener {
@@ -36,7 +36,7 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 		x_addLabel.setToolTipText("Add Action");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				Actions.addAction(getSelectedObject(), o_thread, p_parentPanel);
+				addAction(getSelectedObject(), o_thread, p_parentPanel);
 			}
 		});
 
@@ -68,7 +68,9 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 		o_linkLabel.setToolTipText("Link Action to Google Calendar");
 		o_linkLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				link(getSelectedObject());
+				if (o_linkLabel.isEnabled()) {
+					Actions.linkToGoogle(getSelectedObject(), p_parentPanel);
+				}
 			}
 		});
 
@@ -139,21 +141,6 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 			if(x_thread != null) {
 				o_action.getParentThread().removeThreadItem(o_action);
 				x_thread.addThreadItem(o_action);
-			}
-		}
-	}
-
-	private void link(final Item p_action) {
-		if (o_linkLabel.isEnabled()) {
-			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link '" + p_action.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(p_action), new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
-					@Override
-					public void finished() {
-						JOptionPane.showMessageDialog(o_parentPanel, "'" + p_action.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-					}
-				});
-
-				x_task.execute();
 			}
 		}
 	}

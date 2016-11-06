@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+import static gui.Actions.linkToGoogle;
 import static util.GuiUtil.setUpButtonLabel;
 
 public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implements Observer {
@@ -49,7 +50,9 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 		o_linkLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				link(getSelectedObject());
+				if (o_linkLabel.isEnabled()) {
+					linkToGoogle(getSelectedObject(), o_parentPanel);
+				}
 			}
 		});
 
@@ -98,21 +101,6 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 
 			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Delete " + p_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_item.removeReminder(p_reminder);
-			}
-		}
-	}
-
-	private void link(final Reminder p_reminder) {
-		if (o_linkLabel.isEnabled()) {
-			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link '" + p_reminder.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(p_reminder, new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
-					@Override
-					public void finished() {
-						JOptionPane.showMessageDialog(o_parentPanel, "'" + p_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-					}
-				});
-
-				x_task.execute();
 			}
 		}
 	}

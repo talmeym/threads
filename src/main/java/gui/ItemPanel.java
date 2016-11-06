@@ -6,7 +6,8 @@ import util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+
+import static gui.Actions.linkToGoogle;
 
 class ItemPanel extends ComponentTablePanel<Item, Reminder> implements ComponentChangeListener {
     private final Item o_item;
@@ -28,7 +29,9 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
 		o_linkItemLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				linkToGoogle();
+				if (o_linkItemLabel.isEnabled()) {
+					linkToGoogle(o_item, p_parentPanel);
+				}
 			}
 		});
 
@@ -41,20 +44,6 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
 
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
-
-	private void linkToGoogle() {
-		if (o_linkItemLabel.isEnabled()) {
-			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link '" + o_item.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(o_item), new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
-					@Override
-					public void finished() {
-						JOptionPane.showMessageDialog(o_parentPanel, "'" + o_item.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-					}
-				});
-				x_task.execute();
-			}
-		}
-	}
 
 	@Override
 	public void componentChanged(ComponentChangeEvent p_event) {

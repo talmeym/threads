@@ -8,20 +8,17 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 
-import static util.Settings.registerForSetting;
-import static util.Settings.updateSetting;
+import static gui.Actions.linkToGoogle;
+import static util.Settings.*;
 
 public class ThreadPanel extends JPanel implements TimeUpdateListener, ComponentChangeListener, SettingChangeListener {
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs;
-	private final JPanel o_parentPanel;
 
 	public ThreadPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new BorderLayout());
         o_thread = p_thread;
-		o_parentPanel = p_parentPanel;
 
 		o_tabs = new JTabbedPane();
         o_tabs.addTab("Contents", ImageUtil.getFolderSmallIcon(), new ThreadContentsPanel(p_thread, p_parentPanel));
@@ -49,7 +46,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
 		x_linkLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				linkToGoogle();
+				linkToGoogle(o_thread, p_parentPanel);
 			}
 		});
 
@@ -71,22 +68,6 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
         setActionTabBackground();
 		setReminderTabBackground();
     }
-
-	private void linkToGoogle() {
-		final List<Item> x_actions = LookupHelper.getAllActions(o_thread);
-
-		if (x_actions.size() > 0) {
-			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link " + x_actions.size() + " Action" + (x_actions.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
-					@Override
-					public void finished() {
-						JOptionPane.showMessageDialog(o_parentPanel, x_actions.size() + " Action" + (x_actions.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-					}
-				});
-				x_task.execute();
-			}
-		}
-	}
 
 	@Override
 	public void componentChanged(ComponentChangeEvent p_event) {

@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
+import static gui.Actions.addThread;
+import static gui.Actions.linkToGoogle;
 import static util.GuiUtil.setUpButtonLabel;
 
 class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements ComponentChangeListener {
@@ -34,7 +36,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 		x_addLabel.setToolTipText("Add Thread");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				add(getSelectedObject());
+				addThread(getSelectedObject(), o_thread, p_parentPanel);
 			}
 		});
 
@@ -66,7 +68,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 		o_linkLabel.setToolTipText("Link Thread to Google Calendar");
 		o_linkLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				link(getSelectedObject());
+				linkToGoogle(getSelectedObject(), p_parentPanel);
 			}
 		});
 
@@ -79,31 +81,6 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
-	}
-
-	private void add(Thread p_thread) {
-		Thread x_thread = p_thread;
-
-		if(x_thread == null) {
-			List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
-			x_threads.add(0, o_thread);
-
-			if(x_threads.size() > 1) {
-				x_thread = (Thread) JOptionPane.showInputDialog(o_parentPanel, "Choose a Thread to add it to:", "Add a Thread ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-			} else {
-				x_thread = o_thread;
-			}
-		}
-
-		if(x_thread != null) {
-			String x_name = (String) JOptionPane.showInputDialog(o_parentPanel, "Enter new Thread name:", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
-
-			if(x_name != null) {
-				Thread x_newThread = new Thread(x_name);
-				x_thread.addThreadItem(x_newThread);
-				WindowManager.getInstance().openComponent(x_newThread);
-			}
-		}
 	}
 
 	private void dismiss(Thread p_thread) {
@@ -144,23 +121,6 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 			if(x_thread != null) {
 				p_thread.getParentThread().removeThreadItem(p_thread);
 				x_thread.addThreadItem(p_thread);
-			}
-		}
-	}
-
-	private void link(Thread p_thread) {
-		final List<Item> x_actions = LookupHelper.getAllActions(p_thread);
-
-		if (x_actions.size() > 0) {
-			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link " + x_actions.size() + " Actions to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
-					@Override
-					public void finished() {
-						JOptionPane.showMessageDialog(o_parentPanel, x_actions.size() + " Actions were linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-					}
-				});
-
-				x_task.execute();
 			}
 		}
 	}
