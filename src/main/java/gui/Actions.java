@@ -121,7 +121,7 @@ public class Actions {
 	}
 
 	public static void linkToGoogle(Thread x_thread, JPanel p_enclosingPanel) {
-		final List<Item> x_actions = LookupHelper.getAllActions(x_thread);
+		final List<Item> x_actions = LookupHelper.getAllActiveActions(x_thread);
 
 		if (x_actions.size() > 0) {
 			if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Link " + x_actions.size() + " Action" + (x_actions.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {

@@ -37,15 +37,15 @@ public class LookupHelper {
         return x_result;
     }
 
-    public static List<Item> getAllActions(Thread p_thread) {
+    public static List<Item> getAllActiveActions(Thread p_thread) {
         List<Item> x_result = new ArrayList<Item>();
-		x_result.addAll(getActions(p_thread));
+		x_result.addAll(getActiveActions(p_thread, false));
 
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
             if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
-				x_result.addAll(getAllActions((Thread) x_groupItem));
+				x_result.addAll(getAllActiveActions((Thread) x_groupItem));
 			}
         }
 
@@ -160,24 +160,6 @@ public class LookupHelper {
 					if((!p_onlyNext7Days) || (DateUtil.isbefore7DaysFromNow(x_dueDate))) {
 						x_actionItems.add(x_item);
 					}
-				}
-			}
-		}
-
-		return x_actionItems;
-	}
-
-	public static List<Item> getActions(Thread p_thread) {
-		List<Item> x_actionItems = new ArrayList<Item>();
-
-		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
-			ThreadItem x_groupItem = p_thread.getThreadItem(i);
-
-			if(x_groupItem instanceof Item) {
-				Item x_item = (Item) x_groupItem;
-
-				if(x_item.getDueDate() != null) {
-					x_actionItems.add(x_item);
 				}
 			}
 		}

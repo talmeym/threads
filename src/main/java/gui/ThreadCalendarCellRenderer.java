@@ -57,11 +57,12 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 			if(p_value instanceof String) {
 				setText((String)p_value);
 				setForeground(Color.black);
+				setEnabled(true);
 			} else {
 				data.Component x_component = (data.Component) p_value;
 				setIcon(getIconForComponent(x_component));
 				setText(buildTextForItem(x_component));
-				setForeground(x_component.isActive() ? Color.black : Color.gray);
+				setEnabled(x_component.isActive());
 			}
 
 			setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
