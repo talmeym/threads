@@ -2,12 +2,19 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.*;
+import util.GoogleSyncer;
+import util.ImageUtil;
+import util.TimeUpdater;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import static gui.Actions.addAction;
@@ -16,10 +23,10 @@ import static util.GuiUtil.setUpButtonLabel;
 public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements ComponentChangeListener {
     private final Thread o_thread;
 	private JPanel o_parentPanel;
-	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
-	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
-	private final JLabel o_moveLabel = new JLabel(ImageUtil.getMoveIcon());
-	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
+	private final JMenuItem o_dismissLabel = new JMenuItem("Make Inactive", ImageUtil.getTickIcon());
+	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
+	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
+	private final JMenuItem o_linkLabel = new JMenuItem("Link",ImageUtil.getLinkIcon());
 
 	ThreadActionPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadActionTableModel(p_thread), new ThreadActionCellRenderer(p_thread));
@@ -42,32 +49,36 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 
 		o_dismissLabel.setEnabled(false);
 		o_dismissLabel.setToolTipText("Make Action Active/Inactive");
-		o_dismissLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		o_dismissLabel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				dismiss(getSelectedObject());
 			}
 		});
 
 		o_removeLabel.setEnabled(false);
 		o_removeLabel.setToolTipText("Remove Action");
-		o_removeLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		o_removeLabel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				remove(getSelectedObject());
 			}
 		});
 
 		o_moveLabel.setEnabled(false);
 		o_moveLabel.setToolTipText("Move Action");
-		o_moveLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		o_moveLabel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				move(getSelectedObject());
 			}
 		});
 
 		o_linkLabel.setEnabled(false);
 		o_linkLabel.setToolTipText("Link Action to Google Calendar");
-		o_linkLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		o_linkLabel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				if (o_linkLabel.isEnabled()) {
 					Actions.linkToGoogle(getSelectedObject(), p_parentPanel);
 				}
@@ -91,10 +102,6 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_removeLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_dismissLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_moveLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_linkLabel));
 		x_buttonPanel.add(x_showNext7DaysRadioButton);
 		x_buttonPanel.add(x_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
@@ -142,6 +149,18 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 				o_action.getParentThread().removeThreadItem(o_action);
 				x_thread.addThreadItem(o_action);
 			}
+		}
+	}
+
+	@Override
+	void showContextMenu(int p_row, int p_col, Point p_point, Component p_origin, Item p_selectedObject) {
+		if(p_selectedObject != null) {
+			JPopupMenu x_menu = new JPopupMenu();
+			x_menu.add(o_removeLabel);
+			x_menu.add(o_dismissLabel);
+			x_menu.add(o_moveLabel);
+			x_menu.add(o_linkLabel);
+			x_menu.show(p_origin, p_point.x, p_point.y);
 		}
 	}
 

@@ -161,20 +161,20 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 	}
 
 	@Override
+	void showContextMenu(int p_row, int p_col, Point p_point, java.awt.Component p_origin, Date p_selectedObject) {
+
+	}
+
+	@Override
 	public void tableRowClicked(int row, int col, final Date p_date) {
 		if(p_date != null) {
 			ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
 			JPopupMenu x_menu = new JPopupMenu();
 			final List<Component> x_components = LookupHelper.getAllItems(o_thread, p_date, x_model.includeActions(), x_model.includeUpdates(), x_model.includeReminders());
-			boolean x_anyGoogle = false;
-
-			for(Component x_component: x_components) {
-				x_anyGoogle = x_anyGoogle || GoogleUtil.isLinked(x_component);
-			}
 
 			for(final Component x_component: x_components) {
 				String x_text = buildTextForItem(x_component);
-				Icon x_icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null;
+				Icon x_icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : ImageUtil.getGoogleVerySmallBlankIcon();
 				JMenuItem x_menuItem = new JMenuItem(x_text, x_icon);
 				x_menuItem.setForeground(x_component.isActive() ? Color.black : Color.gray);
 				x_menuItem.setFont(x_component.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
@@ -193,7 +193,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 				x_menu.add(new JSeparator(JSeparator.HORIZONTAL));
 			}
 
-			JMenuItem x_newMenuItem = new JMenuItem("Add Action", x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null);
+			JMenuItem x_newMenuItem = new JMenuItem("Add Action", ImageUtil.getPlusVerySmallIcon());
 			x_newMenuItem.setForeground(Color.gray);
 			x_menu.add(x_newMenuItem);
 
@@ -223,7 +223,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 			});
 
 			if(x_components.size() > 0) {
-				JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", x_anyGoogle ? ImageUtil.getGoogleVerySmallBlankIcon() : null);
+				JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", ImageUtil.getLinkVerySmallIcon());
 				x_linkMenuItem.setForeground(Color.gray);
 				x_menu.add(x_linkMenuItem);
 
@@ -244,10 +244,6 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 			}
 
 			int x_xPosition = ((o_table.getWidth() / 7) * col) - 12;
-
-			if(!x_anyGoogle) {
-				x_xPosition += 19;
-			}
 
 			x_menu.show(o_table, x_xPosition, (o_table.getHeight() / 5) * row + 16);
 		}

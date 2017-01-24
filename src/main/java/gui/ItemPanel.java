@@ -5,6 +5,7 @@ import util.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Component;
 import java.awt.event.*;
 
 import static gui.Actions.linkToGoogle;
@@ -50,6 +51,11 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
 		if(p_event.getSource() == o_item) {
 			o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
 		}
+	}
+
+	@Override
+	void showContextMenu(int p_row, int p_col, Point p_point, Component p_origin, Reminder p_selectedObject) {
+		// nothing to do here
 	}
 
 	@Override

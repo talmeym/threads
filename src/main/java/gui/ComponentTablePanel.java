@@ -30,23 +30,30 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
         o_table.addMouseListener(new MouseAdapter(){
 			@Override
             public void mouseClicked(MouseEvent e) {
-				if(e.getClickCount() == 1) {
+				if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
 					for(TableSelectionListener x_listener: o_listeners){
 						x_listener.tableRowClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject());
 					}
 				}
 
-                if(e.getClickCount() == 2) {
+                if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
 					for(TableSelectionListener x_listener: o_listeners){
 						x_listener.tableRowDoubleClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject());
 					}
                 }
+
+                if(e.getButton() == MouseEvent.BUTTON3) {
+					o_table.getSelectionModel().setSelectionInterval(o_table.rowAtPoint(e.getPoint()), o_table.rowAtPoint(e.getPoint()));
+					showContextMenu(o_table.rowAtPoint(e.getPoint()), o_table.columnAtPoint(e.getPoint()), e.getPoint(), o_table, getSelectedObject());
+				}
             }
         });
 
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(new JScrollPane(o_table), BorderLayout.CENTER);
     }
+
+    abstract void showContextMenu(int p_row, int p_col, Point p_point, java.awt.Component p_origin, TYPE p_selectedObject);
 
 	public void addTableSelectionListener(TableSelectionListener p_listener) {
 		o_listeners.add(p_listener);

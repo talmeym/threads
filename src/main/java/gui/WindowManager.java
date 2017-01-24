@@ -38,7 +38,9 @@ public class WindowManager implements SettingChangeListener {
 
 		try
 		{
-			engine.eval("tell me to activate");
+			if(engine != null) {
+				engine.eval("tell me to activate");
+			}
 		}
 		catch (ScriptException e)
 		{

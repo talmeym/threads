@@ -7,16 +7,16 @@ import util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
+import java.awt.Component;
 import java.awt.event.*;
 import java.util.*;
 
 import static gui.Actions.linkToGoogle;
-import static util.GuiUtil.setUpButtonLabel;
 
 public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implements Observer {
-	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
-	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
-	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
+	private final JMenuItem o_dismissLabel = new JMenuItem("Make Inactive", ImageUtil.getTickIcon());
+	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
+	private final JMenuItem o_linkLabel = new JMenuItem("Link", ImageUtil.getLinkIcon());
 	private final JPanel o_parentPanel;
 
 	ThreadReminderPanel(Thread p_thread, JPanel p_parentPanel) {
@@ -30,26 +30,26 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 
 		o_removeLabel.setEnabled(false);
 		o_removeLabel.setToolTipText("Remove Reminder");
-		o_removeLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		o_removeLabel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				remove(getSelectedObject());
 			}
 		});
 
 		o_dismissLabel.setEnabled(false);
 		o_dismissLabel.setToolTipText("Make Reminder Active/Inactive");
-		o_dismissLabel.addMouseListener(new MouseAdapter() {
+		o_dismissLabel.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void actionPerformed(ActionEvent e) {
 				dismiss(getSelectedObject());
 			}
 		});
 
 		o_linkLabel.setToolTipText("Link Reminder to Google Calendar");
 		o_linkLabel.setEnabled(false);
-		o_linkLabel.addMouseListener(new MouseAdapter() {
+		o_linkLabel.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void actionPerformed(ActionEvent e) {
 				if (o_linkLabel.isEnabled()) {
 					linkToGoogle(getSelectedObject(), o_parentPanel);
 				}
@@ -72,9 +72,6 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 		x_group.add(x_showAllRadioButton);
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		x_buttonPanel.add(setUpButtonLabel(o_dismissLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_removeLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_linkLabel));
 		x_buttonPanel.add(x_showDueRadioButton);
 		x_buttonPanel.add(x_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
@@ -102,6 +99,17 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Delete " + p_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_item.removeReminder(p_reminder);
 			}
+		}
+	}
+
+	@Override
+	void showContextMenu(int p_row, int p_col, Point p_point, Component p_origin, Reminder p_selectedObject) {
+		if(p_selectedObject != null) {
+			JPopupMenu x_menu = new JPopupMenu();
+			x_menu.add(o_removeLabel);
+			x_menu.add(o_dismissLabel);
+			x_menu.add(o_linkLabel);
+			x_menu.show(p_origin, p_point.x, p_point.y);
 		}
 	}
 

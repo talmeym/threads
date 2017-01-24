@@ -46,10 +46,37 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
 		x_linkLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				linkToGoogle(o_thread, p_parentPanel);
 			}
 		});
 
+		x_linkLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				JPopupMenu x_popupMenu = new JPopupMenu();
+
+				JMenuItem x_linkActive = new JMenuItem("Link Active");
+				x_linkActive.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent actionEvent) {
+						linkToGoogle(o_thread, p_parentPanel, true);
+					}
+				});
+
+				JMenuItem x_linkAll = new JMenuItem("Link All");
+				x_linkAll.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent actionEvent) {
+						linkToGoogle(o_thread, p_parentPanel, false);
+					}
+				});
+
+				x_popupMenu.add(x_linkActive);
+				x_popupMenu.add(x_linkAll);
+
+				x_popupMenu.show(x_linkLabel, mouseEvent.getX(), mouseEvent.getY());
+			}
+		});
+		
 		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_parentPanel, true, x_linkLabel);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 3, 0, 3));
 		add(componentInfoPanel, BorderLayout.NORTH);

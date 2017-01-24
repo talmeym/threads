@@ -41,6 +41,10 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/plus.png"));
 	}
 
+	public static Icon getPlusVerySmallIcon() {
+		return new ImageIcon(loadImage("/plus_very_small.png"));
+	}
+
 	public static Icon getMinusIcon() {
 		return new ImageIcon(loadImage("/minus.png"));
 	}
@@ -87,6 +91,10 @@ public class ImageUtil {
 
 	public static Icon getLinkIcon() {
 		return new ImageIcon(loadImage("/link.png"));
+	}
+
+	public static Icon getLinkVerySmallIcon() {
+		return new ImageIcon(loadImage("/link_very_small.png"));
 	}
 
 	public static Icon getGoogleIcon() {

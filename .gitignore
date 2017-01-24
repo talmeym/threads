@@ -1,3 +1,7 @@
 *.iml
 .idea/
 target/
+threads.xml
+threads.properties
+threads.sh
+credstore/

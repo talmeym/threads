@@ -37,6 +37,22 @@ public class LookupHelper {
         return x_result;
     }
 
+    public static List<Item> getAllActions(Thread p_thread) {
+        List<Item> x_result = new ArrayList<Item>();
+		x_result.addAll(getActions(p_thread));
+
+        for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
+            ThreadItem x_groupItem = p_thread.getThreadItem(i);
+
+            if(x_groupItem instanceof Thread) {
+				x_result.addAll(getAllActions((Thread) x_groupItem));
+			}
+        }
+
+        Collections.sort(x_result, new AllDayAwareDueDateComparator());
+        return x_result;
+    }
+
     public static List<Item> getAllActiveActions(Thread p_thread) {
         List<Item> x_result = new ArrayList<Item>();
 		x_result.addAll(getActiveActions(p_thread, false));
@@ -177,6 +193,24 @@ public class LookupHelper {
 				Item x_item = (Item) x_groupItem;
 
 				if(x_item.getDueDate() != null && DateUtil.isSameDay(x_item.getDueDate(), p_date)) {
+					x_actionItems.add(x_item);
+				}
+			}
+		}
+
+		return x_actionItems;
+	}
+
+	public static List<Item> getActions(Thread p_thread) {
+		List<Item> x_actionItems = new ArrayList<Item>();
+
+		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
+			ThreadItem x_groupItem = p_thread.getThreadItem(i);
+
+			if(x_groupItem instanceof Item) {
+				Item x_item = (Item) x_groupItem;
+
+				if(x_item.getDueDate() != null) {
 					x_actionItems.add(x_item);
 				}
 			}

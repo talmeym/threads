@@ -120,11 +120,11 @@ public class Actions {
 		}
 	}
 
-	public static void linkToGoogle(Thread x_thread, JPanel p_enclosingPanel) {
-		final List<Item> x_actions = LookupHelper.getAllActiveActions(x_thread);
+	public static void linkToGoogle(Thread x_thread, JPanel p_enclosingPanel, boolean p_activeOnly) {
+		final List<Item> x_actions = p_activeOnly ? LookupHelper.getAllActiveActions(x_thread) : LookupHelper.getAllActions(x_thread);
 
 		if (x_actions.size() > 0) {
-			if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Link " + x_actions.size() + " Action" + (x_actions.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+			if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Link " + x_actions.size() + (p_activeOnly ? " (Active)" : "") + " Action" + (x_actions.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 				GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
 					@Override
 					public void finished() {

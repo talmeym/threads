@@ -6,6 +6,7 @@ import util.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Component;
 import java.awt.event.*;
 import java.util.List;
 
@@ -15,9 +16,9 @@ import static util.GuiUtil.setUpButtonLabel;
 public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> implements ComponentChangeListener {
     private final Thread o_thread;
 	private JPanel o_parentPanel;
-	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
-	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
-	private final JLabel o_moveLabel = new JLabel(ImageUtil.getMoveIcon());
+	private final JMenuItem o_dismissLabel = new JMenuItem("Make Inactive", ImageUtil.getTickIcon());
+	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
+	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
 
 	public ThreadUpdatePanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadUpdateTableModel(p_thread), new ComponentCellRenderer(null));
@@ -39,33 +40,30 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
 
 		o_dismissLabel.setEnabled(false);
 		o_dismissLabel.setToolTipText("Make Update Active/Inactive");
-		o_dismissLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		o_dismissLabel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				dismiss(getSelectedObject());
 			}
 		});
 
 		o_removeLabel.setEnabled(false);
 		o_removeLabel.setToolTipText("Remove Update");
-		o_removeLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		o_removeLabel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				remove(getSelectedObject());
 			}
 		});
 
 		o_moveLabel.setEnabled(false);
 		o_moveLabel.setToolTipText("Move Update");
-		o_moveLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		o_moveLabel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				move(getSelectedObject());
 			}
 		});
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_removeLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_dismissLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_moveLabel));
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
@@ -106,6 +104,17 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
 				p_update.getParentThread().removeThreadItem(p_update);
 				x_thread.addThreadItem(p_update);
 			}
+		}
+	}
+
+	@Override
+	void showContextMenu(int p_row, int p_col, Point p_point, Component p_origin, Item p_selectedObject) {
+		if(p_selectedObject != null) {
+			JPopupMenu x_menu = new JPopupMenu();
+			x_menu.add(o_removeLabel);
+			x_menu.add(o_dismissLabel);
+			x_menu.add(o_moveLabel);
+			x_menu.show(p_origin, p_point.x, p_point.y);
 		}
 	}
 

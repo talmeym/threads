@@ -6,6 +6,7 @@ import util.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Component;
 import java.awt.event.*;
 import java.util.List;
 
@@ -17,10 +18,10 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 {
     private final Thread o_thread;
 	private JPanel o_parentPanel;
-	private final JLabel o_removeLabel = new JLabel(ImageUtil.getMinusIcon());
-	private final JLabel o_dismissLabel = new JLabel(ImageUtil.getTickIcon());
-	private final JLabel o_moveLabel = new JLabel(ImageUtil.getMoveIcon());
-	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
+	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
+	private final JMenuItem o_dismissLabel = new JMenuItem("Make Inactive", ImageUtil.getTickIcon());
+	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
+	private final JMenuItem o_linkLabel = new JMenuItem("Link", ImageUtil.getLinkIcon());
 
 	public ThreadContentsPanel(final Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadContentsTableModel(p_thread), new ComponentCellRenderer(p_thread));
@@ -44,45 +45,40 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 
 		o_removeLabel.setEnabled(false);
 		o_removeLabel.setToolTipText("Remove Item");
-		o_removeLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		o_removeLabel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				remove(getSelectedObject());
 			}
 		});
 
-		o_dismissLabel.setEnabled(false);
 		o_dismissLabel.setToolTipText("Make Item Active/Inactive");
-        o_dismissLabel.addMouseListener(new MouseAdapter() {
+        o_dismissLabel.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void actionPerformed(ActionEvent e) {
 				dismiss(getSelectedObject());
 			}
 		});
 
 		o_moveLabel.setToolTipText("Move Item");
 		o_moveLabel.setEnabled(false);
-		o_moveLabel.addMouseListener(new MouseAdapter() {
+		o_moveLabel.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void actionPerformed(ActionEvent e) {
 				move(getSelectedObject());
 			}
 		});
 
 		o_linkLabel.setToolTipText("Link Item to Google Calendar");
 		o_linkLabel.setEnabled(false);
-		o_linkLabel.addMouseListener(new MouseAdapter() {
+		o_linkLabel.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void actionPerformed(ActionEvent e) {
 				link(getSelectedObject());
 			}
 		});
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         x_buttonPanel.add(setUpButtonLabel(x_addItemLabel));
-        x_buttonPanel.add(setUpButtonLabel(o_removeLabel));
-        x_buttonPanel.add(setUpButtonLabel(o_dismissLabel));
-        x_buttonPanel.add(setUpButtonLabel(o_moveLabel));
-        x_buttonPanel.add(setUpButtonLabel(o_linkLabel));
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         add(x_buttonPanel, BorderLayout.SOUTH);
@@ -187,14 +183,27 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 
 			if(p_threadItem instanceof Thread) {
 				final Thread x_thread = (Thread) p_threadItem;
-				linkToGoogle(x_thread, o_parentPanel);
+				linkToGoogle(x_thread, o_parentPanel, false);
 			}
 		}
 	}
 
 	@Override
+	void showContextMenu(int p_row, int p_col, Point p_point, Component p_origin, ThreadItem p_selectedObject) {
+		if(p_selectedObject != null) {
+			o_dismissLabel.setText(p_selectedObject.isActive() ? "Make Inactive" : "Make Active");
+			JPopupMenu x_menu = new JPopupMenu();
+			x_menu.add(o_removeLabel);
+			x_menu.add(o_dismissLabel);
+			x_menu.add(o_moveLabel);
+			x_menu.add(o_linkLabel);
+			x_menu.show(p_origin, p_point.x, p_point.y);
+		}
+	}
+
+	@Override
 	public void tableRowClicked(int p_row, int p_col, ThreadItem p_threadItem) {
-		o_dismissLabel.setEnabled(p_threadItem != null && p_threadItem.isActive());
+//		o_dismissLabel.setEnabled(p_threadItem != null && p_threadItem.isActive());
 		o_removeLabel.setEnabled(p_threadItem != null);
 		o_moveLabel.setEnabled(p_threadItem != null);
 		boolean x_linkable = false;
