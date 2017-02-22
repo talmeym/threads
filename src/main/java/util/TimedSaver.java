@@ -10,7 +10,7 @@ import static data.Saver.saveDocument;
 
 public class TimedSaver extends java.lang.Thread {
     private static TimedSaver s_INSTANCE = null;
-    private static final int s_frequency = 299000;
+    private static final int s_frequency = 1199000;
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("yyMMddHH");
 
 	public static void initialise(Thread p_topLevelThread, File p_dataFile) {
