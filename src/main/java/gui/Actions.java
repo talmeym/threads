@@ -100,8 +100,13 @@ public class Actions {
 		if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Link '" + p_item.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 			GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(p_item), new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
 				@Override
-				public void finished() {
+				public void success() {
 					JOptionPane.showMessageDialog(p_enclosingPanel, "'" + p_item.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+				}
+
+				@Override
+				public void error(String errorDesc) {
+					JOptionPane.showMessageDialog(p_enclosingPanel, errorDesc, "Error linking to Google Calendar ...", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 			x_task.execute();
@@ -112,8 +117,13 @@ public class Actions {
 		if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Link '" + p_reminder.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 			GoogleLinkTask x_task = new GoogleLinkTask(p_reminder, new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
 				@Override
-				public void finished() {
+				public void success() {
 					JOptionPane.showMessageDialog(p_enclosingPanel, "'" + p_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+				}
+
+				@Override
+				public void error(String errorDesc) {
+					JOptionPane.showMessageDialog(p_enclosingPanel, errorDesc, "Error linking to Google Calendar ...", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 			x_task.execute();
@@ -127,8 +137,13 @@ public class Actions {
 			if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Link " + x_actions.size() + (p_activeOnly ? " (Active)" : "") + " Action" + (x_actions.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 				GoogleLinkTask x_task = new GoogleLinkTask(x_actions, new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
 					@Override
-					public void finished() {
+					public void success() {
 						JOptionPane.showMessageDialog(p_enclosingPanel, x_actions.size() + " Action" + (x_actions.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+					}
+
+					@Override
+					public void error(String errorDesc) {
+						JOptionPane.showMessageDialog(p_enclosingPanel, errorDesc, "Error linking to Google Calendar ...", JOptionPane.ERROR_MESSAGE);
 					}
 				});
 				x_task.execute();

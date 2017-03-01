@@ -34,7 +34,12 @@ public class GoogleProgressWindow extends JDialog implements ProgressCallBack {
 	}
 
 	@Override
-	public void finished() {
+	public void success() {
+		setVisible(false);
+	}
+
+	@Override
+	public void error(String errorDesc) {
 		setVisible(false);
 	}
 }

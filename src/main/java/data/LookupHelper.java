@@ -69,7 +69,7 @@ public class LookupHelper {
         return x_result;
     }
 
-    public static List<Component> getAllItems(Thread p_thread, Date p_referenceDate, boolean p_includeActions, boolean p_includeUpdates, boolean p_includeReminders) {
+    public static List<Component> getAllComponents(Thread p_thread, Date p_referenceDate, boolean p_includeActions, boolean p_includeUpdates, boolean p_includeReminders) {
         List<Component> x_result = new ArrayList<Component>();
 
 		if(p_includeActions) {
@@ -88,7 +88,7 @@ public class LookupHelper {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
             if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
-				x_result.addAll(getAllItems((Thread) x_groupItem, p_referenceDate, p_includeActions, p_includeUpdates, p_includeReminders));
+				x_result.addAll(getAllComponents((Thread) x_groupItem, p_referenceDate, p_includeActions, p_includeUpdates, p_includeReminders));
 			}
         }
 

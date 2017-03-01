@@ -12,7 +12,12 @@ public class ProgressAdapter implements ProgressCallBack {
 	}
 
 	@Override
-	public void finished() {
+	public void success() {
+		// do nothing
+	}
+
+	@Override
+	public void error(String errorDesc) {
 		// do nothing
 	}
 }

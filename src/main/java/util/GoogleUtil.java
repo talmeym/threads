@@ -251,13 +251,17 @@ public class GoogleUtil {
 
 			if(callbacks != null) {
 				for(ProgressCallBack callback: callbacks) {
-					callback.finished();
+					callback.success();
 				}
 			}
 
 			GoogleSyncer.getInstance().googleSynced();
 		} catch (Throwable t) {
-			System.out.println("Error talking to Google Calendar: " + t.getClass().getName() + ":" + t.getMessage());
+			if(callbacks != null) {
+				for(ProgressCallBack callback: callbacks) {
+					callback.error(t.getMessage());
+				}
+			}
 		}
 	}
 
@@ -301,13 +305,17 @@ public class GoogleUtil {
 
 			if(callbacks != null) {
 				for(ProgressCallBack callback: callbacks) {
-					callback.finished();
+					callback.success();
 				}
 			}
 
 			GoogleSyncer.getInstance().googleSynced();
 		} catch (Throwable t) {
-			System.out.println("Error talking to Google: " + t.getClass().getName() + ":" + t.getMessage());
+			if(callbacks != null) {
+				for(ProgressCallBack callback: callbacks) {
+					callback.error(t.getMessage());
+				}
+			}
 		}
 	}
 

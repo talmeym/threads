@@ -170,7 +170,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 		if(p_date != null) {
 			ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
 			JPopupMenu x_menu = new JPopupMenu();
-			final List<Component> x_components = LookupHelper.getAllItems(o_thread, p_date, x_model.includeActions(), x_model.includeUpdates(), x_model.includeReminders());
+			final List<Component> x_components = LookupHelper.getAllComponents(o_thread, p_date, x_model.includeActions(), x_model.includeUpdates(), x_model.includeReminders());
 
 			for(final Component x_component: x_components) {
 				String x_text = buildTextForItem(x_component);
@@ -233,8 +233,13 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 						if (JOptionPane.showConfirmDialog(o_parentPanel, "Link " + x_components.size() + " Action" + (x_components.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 							GoogleLinkTask x_task = new GoogleLinkTask(getItems(x_components), new GoogleProgressWindow(o_parentPanel), new ProgressAdapter(){
 								@Override
-								public void finished() {
+								public void success() {
 									JOptionPane.showMessageDialog(o_parentPanel, x_components.size() + " Action" + (x_components.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+								}
+
+								@Override
+								public void error(String errorDesc) {
+									JOptionPane.showMessageDialog(o_parentPanel, errorDesc, "Error linking to Google Calendar ...", JOptionPane.ERROR_MESSAGE);
 								}
 							});
 							x_task.execute();

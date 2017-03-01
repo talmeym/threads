@@ -22,7 +22,9 @@ public class ReminderPanel extends JPanel implements GoogleSyncListener {
 		o_linkLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				linkToGoogle();
+				if (o_linkLabel.isEnabled()) {
+                    Actions.linkToGoogle(o_reminder, o_parentPanel);
+                }
 			}
 		});
 
@@ -41,21 +43,6 @@ public class ReminderPanel extends JPanel implements GoogleSyncListener {
 
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
-
-	private void linkToGoogle() {
-		if (o_linkLabel.isEnabled()) {
-			if (JOptionPane.showConfirmDialog(o_parentPanel, "Link '" + o_reminder.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-				GoogleLinkTask x_task = new GoogleLinkTask(o_reminder, new GoogleProgressWindow(o_parentPanel), new ProgressAdapter() {
-					@Override
-					public void finished() {
-						JOptionPane.showMessageDialog(o_parentPanel, "'" + o_reminder.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-						googleSynced();
-					}
-				});
-				x_task.execute();
-			}
-		}
-	}
 
 	@Override
 	public void googleSyncStarted() {
