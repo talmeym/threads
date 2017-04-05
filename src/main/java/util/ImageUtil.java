@@ -53,6 +53,10 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/tick.png"));
 	}
 
+	public static Icon getTickVerySmallIcon() {
+		return new ImageIcon(loadImage("/tick_very_small.png"));
+	}
+
 	public static Icon getUpIcon() {
 		return new ImageIcon(loadImage("/up.png"));
 	}

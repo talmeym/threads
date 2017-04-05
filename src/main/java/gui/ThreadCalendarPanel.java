@@ -246,6 +246,21 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 						}
 					}
 				});
+
+				JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", ImageUtil.getTickVerySmallIcon());
+				x_makeInactiveItem.setForeground(Color.gray);
+				x_menu.add(x_makeInactiveItem);
+
+				x_makeInactiveItem.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent actionEvent) {
+						if (JOptionPane.showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+							for (Component x_component : x_components) {
+								x_component.setActive(false);
+							}
+						}
+					}
+				});
 			}
 
 			int x_xPosition = ((o_table.getWidth() / 7) * col) - 12;

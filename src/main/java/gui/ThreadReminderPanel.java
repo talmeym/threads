@@ -14,7 +14,7 @@ import java.util.*;
 import static gui.Actions.linkToGoogle;
 
 public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implements Observer {
-	private final JMenuItem o_dismissLabel = new JMenuItem("Make Inactive", ImageUtil.getTickIcon());
+	private final JMenuItem o_dismissLabel = new JMenuItem("Set Inactive", ImageUtil.getTickIcon());
 	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
 	private final JMenuItem o_linkLabel = new JMenuItem("Link", ImageUtil.getLinkIcon());
 	private final JPanel o_parentPanel;
@@ -37,7 +37,7 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 		});
 
 		o_dismissLabel.setEnabled(false);
-		o_dismissLabel.setToolTipText("Make Reminder Active/Inactive");
+		o_dismissLabel.setToolTipText("Set Reminder Active/Inactive");
 		o_dismissLabel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

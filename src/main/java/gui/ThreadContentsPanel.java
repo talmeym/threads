@@ -19,7 +19,7 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
     private final Thread o_thread;
 	private JPanel o_parentPanel;
 	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
-	private final JMenuItem o_dismissLabel = new JMenuItem("Make Inactive", ImageUtil.getTickIcon());
+	private final JMenuItem o_dismissLabel = new JMenuItem("Set Inactive", ImageUtil.getTickIcon());
 	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
 	private final JMenuItem o_linkLabel = new JMenuItem("Link", ImageUtil.getLinkIcon());
 
@@ -51,7 +51,7 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 			}
 		});
 
-		o_dismissLabel.setToolTipText("Make Item Active/Inactive");
+		o_dismissLabel.setToolTipText("Set Item Active/Inactive");
         o_dismissLabel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -191,7 +191,7 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 	@Override
 	void showContextMenu(int p_row, int p_col, Point p_point, Component p_origin, ThreadItem p_selectedObject) {
 		if(p_selectedObject != null) {
-			o_dismissLabel.setText(p_selectedObject.isActive() ? "Make Inactive" : "Make Active");
+			o_dismissLabel.setText(p_selectedObject.isActive() ? "Set Inactive" : "Set Active");
 			JPopupMenu x_menu = new JPopupMenu();
 			x_menu.add(o_removeLabel);
 			x_menu.add(o_dismissLabel);

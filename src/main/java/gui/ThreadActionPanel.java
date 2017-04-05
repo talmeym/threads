@@ -23,7 +23,7 @@ import static util.GuiUtil.setUpButtonLabel;
 public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements ComponentChangeListener {
     private final Thread o_thread;
 	private JPanel o_parentPanel;
-	private final JMenuItem o_dismissLabel = new JMenuItem("Make Inactive", ImageUtil.getTickIcon());
+	private final JMenuItem o_dismissLabel = new JMenuItem("Set Inactive", ImageUtil.getTickIcon());
 	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
 	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
 	private final JMenuItem o_linkLabel = new JMenuItem("Link",ImageUtil.getLinkIcon());
@@ -48,7 +48,7 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 		});
 
 		o_dismissLabel.setEnabled(false);
-		o_dismissLabel.setToolTipText("Make Action Active/Inactive");
+		o_dismissLabel.setToolTipText("Set Action Active/Inactive");
 		o_dismissLabel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -77,7 +77,7 @@ public class SystemTrayUtil {
 							}
 						});
 
-						if(o_popUpMenu.getItemCount() == 1) {
+						if(o_popUpMenu.getItemCount() == 2) {
 							o_popUpMenu.addSeparator();
 						}
 

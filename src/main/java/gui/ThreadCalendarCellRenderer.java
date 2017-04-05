@@ -97,18 +97,18 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 	}
 
 	private static void setColourForTime(Date p_dueDate, JList x_list) {
-		boolean x_dueAction = false;
+		boolean x_due = false;
 
 		for(int i = 0; i < x_list.getModel().getSize(); i++) {
 			Object x_obj = x_list.getModel().getElementAt(i);
 
-			if(x_obj instanceof Item && ((Item)x_obj).isDue()) {
-				x_dueAction = true;
+			if(x_obj instanceof HasDueDate && ((HasDueDate)x_obj).isDue()) {
+				x_due = true;
 				break;
 			}
 		}
 
-		if(x_dueAction) {
+		if(x_due) {
 			x_list.setBackground(ColourConstants.s_goneByColour);
 		} else if(DateUtil.isToday(p_dueDate)) {
 			x_list.setBackground(ColourConstants.s_todayColour);
