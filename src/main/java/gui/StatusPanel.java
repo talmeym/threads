@@ -7,51 +7,115 @@ import java.awt.*;
 import java.text.*;
 import java.util.Date;
 
-public class StatusPanel extends JPanel implements TimeUpdateListener, GoogleSyncListener, TimedSaveListener {
-	public static final DateFormat s_dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm");
+import static java.lang.Thread.sleep;
 
-	private final JLabel o_dateTimeLabel;
+public class StatusPanel extends JPanel implements Runnable, TimeUpdateListener, GoogleSyncListener, TimedSaveListener {
+	private static final DateFormat s_dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm");
+
+	private final JProgressBar o_updateProgress = new JProgressBar(JProgressBar.HORIZONTAL);
+	private final JProgressBar o_googleProgress = new JProgressBar(JProgressBar.HORIZONTAL);
+	private final JProgressBar o_saveProgress = new JProgressBar(JProgressBar.HORIZONTAL);
+	private final JLabel o_statusLabel;
+
+	private long o_lastUpdate = System.currentTimeMillis();
+	private long o_lastGoogle = System.currentTimeMillis();
+	private long o_lastSave = System.currentTimeMillis();
 
 	public StatusPanel() {
-		super(new BorderLayout());
+		super(new GridLayout(0, 1, 5, 5));
 
-		o_dateTimeLabel = new JLabel(s_dateFormat.format(new Date()));
-		o_dateTimeLabel.setHorizontalAlignment(JLabel.CENTER);
-		o_dateTimeLabel.setBorder(BorderFactory.createEmptyBorder(3, 10, 10, 10));
-		add(o_dateTimeLabel, BorderLayout.CENTER);
+        JLabel x_updateLabel = new JLabel(ImageUtil.getTimeUpdateIcon());
+        x_updateLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+		JPanel x_updatePanel = new JPanel(new BorderLayout());
+        x_updatePanel.add(x_updateLabel, BorderLayout.WEST);
+		x_updatePanel.add(o_updateProgress, BorderLayout.CENTER);
+		x_updatePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		add(x_updatePanel);
+
+        JLabel x_googleLabel = new JLabel(ImageUtil.getGoogleVerySmallIcon());
+        x_googleLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		JPanel x_googlePanel = new JPanel(new BorderLayout());
+        x_googlePanel.add(x_googleLabel, BorderLayout.WEST);
+		x_googlePanel.add(o_googleProgress, BorderLayout.CENTER);
+		x_googlePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		add(x_googlePanel);
+
+        JLabel x_saveLabel = new JLabel(ImageUtil.getSaveIcon());
+        x_saveLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		JPanel x_savePanel = new JPanel(new BorderLayout());
+        x_savePanel.add(x_saveLabel, BorderLayout.WEST);
+		x_savePanel.add(o_saveProgress, BorderLayout.CENTER);
+		x_savePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		add(x_savePanel);
+
+		o_statusLabel = new JLabel(s_dateFormat.format(new Date()));
+		o_statusLabel.setHorizontalAlignment(JLabel.CENTER);
+		o_statusLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		add(o_statusLabel);
 
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
 		TimedSaver.getInstance().addTimedSaveListener(this);
+
+		new java.lang.Thread(this).start();
 	}
 
 	@Override
 	public void timeUpdate() {
-		o_dateTimeLabel.setText(s_dateFormat.format(new Date()));
+		o_statusLabel.setText(s_dateFormat.format(new Date()));
+		o_lastUpdate = System.currentTimeMillis();
 	}
 
 	@Override
 	public void googleSyncStarted() {
-		o_dateTimeLabel.setText("Syncing with Google Calendar ...");
-		o_dateTimeLabel.setIcon(ImageUtil.getGoogleVerySmallIcon());
+		o_statusLabel.setText("Syncing with Google Calendar ...");
+		o_statusLabel.setIcon(ImageUtil.getGoogleVerySmallIcon());
 	}
 
 	@Override
 	public void googleSynced() {
-		o_dateTimeLabel.setText(s_dateFormat.format(new Date()));
-		o_dateTimeLabel.setIcon(null);
+		o_statusLabel.setText(s_dateFormat.format(new Date()));
+		o_statusLabel.setIcon(null);
+		o_lastGoogle = System.currentTimeMillis();
 	}
 
 	@Override
 	public void saveStarted() {
-		o_dateTimeLabel.setText("Saving data to Local Disc ...");
-		o_dateTimeLabel.setIcon(ImageUtil.getSaveIcon());
+		o_statusLabel.setText("Saving data to Local Disc ...");
+		o_statusLabel.setIcon(ImageUtil.getSaveIcon());
 	}
 
 	@Override
 	public void saved() {
-		o_dateTimeLabel.setText(s_dateFormat.format(new Date()));
-		o_dateTimeLabel.setIcon(null);
+		o_statusLabel.setText(s_dateFormat.format(new Date()));
+		o_statusLabel.setIcon(null);
+		o_lastSave = System.currentTimeMillis();
 	}
 
+	@Override
+	public void run() {
+		while(true) {
+            try {
+                sleep(1000);
+
+                int x_updateMax = (int) (TimeUpdater.getInstance().nextSync() - o_lastUpdate);
+                int x_googleMax = (int) (GoogleSyncer.getInstance().nextSync() - o_lastGoogle);
+                int x_saveMax = (int) (TimedSaver.getInstance().nextSync() - o_lastSave);
+
+                int x_updateNow = (int) (System.currentTimeMillis() - o_lastUpdate);
+                int x_googleNow = (int) (System.currentTimeMillis() - o_lastGoogle);
+                int x_saveNow = (int) (System.currentTimeMillis() - o_lastSave);
+
+                o_updateProgress.setMaximum(x_updateMax);
+                o_googleProgress.setMaximum(x_googleMax);
+                o_saveProgress.setMaximum(x_saveMax);
+
+                o_updateProgress.setValue(x_updateMax - x_updateNow);
+                o_googleProgress.setValue(x_googleMax - x_googleNow);
+                o_saveProgress.setValue(x_saveMax - x_saveNow);
+            } catch (InterruptedException e) {
+                // do nothing
+            }
+        }
+	}
 }

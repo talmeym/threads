@@ -7,11 +7,12 @@ import java.text.*;
 import java.util.*;
 
 import static data.Saver.saveDocument;
+import static java.lang.Thread.sleep;
 
 public class TimedSaver extends java.lang.Thread {
     private static TimedSaver s_INSTANCE = null;
-    private static final int s_frequency = 1199000;
-	public static final DateFormat s_dateFormat = new SimpleDateFormat("yyMMddHH");
+    private static final int s_frequency = 300000;
+	private static final DateFormat s_dateFormat = new SimpleDateFormat("yyMMddHH");
 
 	public static void initialise(Thread p_topLevelThread, File p_dataFile) {
 		if(s_INSTANCE != null) {
@@ -31,8 +32,9 @@ public class TimedSaver extends java.lang.Thread {
 
 	private final Thread o_topThread;
     private final File o_originalFile;
-    private boolean continueRunning = true;
-	private List<TimedSaveListener> o_saveListeners = new ArrayList<TimedSaveListener>();
+	private final List<TimedSaveListener> o_saveListeners = new ArrayList<TimedSaveListener>();
+    private boolean o_continueRunning = true;
+	private long o_nextSync = System.currentTimeMillis();
 
     private TimedSaver(Thread p_topThread, File p_orignalFile) {
 		o_topThread = p_topThread;
@@ -42,23 +44,37 @@ public class TimedSaver extends java.lang.Thread {
     }
 
 	public synchronized void addTimedSaveListener(TimedSaveListener p_listener) {
-		o_saveListeners.add(p_listener);
-		p_listener.saved();
+    	synchronized(o_saveListeners) {
+			o_saveListeners.add(p_listener);
+			p_listener.saved();
+		}
 	}
 
-	public void run() {
+    public long nextSync() {
+        synchronized(o_topThread) {
+            return o_nextSync;
+        }
+    }
+
+    public void run() {
         while(continueRunning()) {
             try {
-                java.lang.Thread.sleep(s_frequency);
+                sleep(1000);
 
-                if(o_topThread != null) {
-					saving();
+                if(o_nextSync < System.currentTimeMillis()) {
+                	synchronized(o_saveListeners) {
+						saving();
+						saveDocument(o_topThread, o_originalFile);
+						saveDocument(o_topThread, getBackupFile());
+						sleep(1000);
+						saved();
+                        System.out.println("Timed Save: " + new Date());
+					}
 
-					saveDocument(o_topThread, o_originalFile);
-					saveDocument(o_topThread, getBackupFile());
-                	java.lang.Thread.sleep(1000);
-					saved();
-                }
+					synchronized(o_topThread) {
+                        o_nextSync += s_frequency;
+                    }
+				}
             } catch (InterruptedException e) {
                 // do nothing
             }            
@@ -73,23 +89,23 @@ public class TimedSaver extends java.lang.Thread {
 		return new File(x_backupFolder, x_fileName.substring(0, x_fileName.indexOf(".xml")) + ".backup." + s_dateFormat.format(new Date()) + ".xml");
 	}
 
-	public void saving() {
+	private void saving() {
 		for(TimedSaveListener x_listener: o_saveListeners) {
 			x_listener.saveStarted();
 		}
 	}
 
-	public void saved() {
+	private void saved() {
 		for(TimedSaveListener x_listener: o_saveListeners) {
 			x_listener.saved();
 		}
 	}
 
     public synchronized void stopRunning() {
-        continueRunning = false;
+        o_continueRunning = false;
     }
     
     private synchronized boolean continueRunning() {
-        return continueRunning;
+        return o_continueRunning;
     }
 }

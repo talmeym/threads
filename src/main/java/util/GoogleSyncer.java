@@ -6,7 +6,7 @@ import java.util.*;
 
 public class GoogleSyncer extends java.lang.Thread {
     private static GoogleSyncer s_INSTANCE = null;
-    private static final int s_frequency = 59000;
+    private static final int s_frequency = 120000;
 
 	public static void initialise(Thread p_topLevelThread) {
 		if(s_INSTANCE != null) {
@@ -25,8 +25,9 @@ public class GoogleSyncer extends java.lang.Thread {
 	}
 
     private final Thread o_topThread;
-    private boolean continueRunning = true;
-	private List<GoogleSyncListener> o_googleListeners = new ArrayList<GoogleSyncListener>();
+	private final List<GoogleSyncListener> o_googleListeners = new ArrayList<GoogleSyncListener>();
+    private boolean o_continueRunning = true;
+    private long o_nextSync = System.currentTimeMillis();
 
     private GoogleSyncer(Thread p_topThread) {
 		o_topThread = p_topThread;
@@ -34,46 +35,65 @@ public class GoogleSyncer extends java.lang.Thread {
 		start();
     }
 
-	public synchronized void addGoogleSyncListener(GoogleSyncListener p_listener) {
-		o_googleListeners.add(p_listener);
+	public void addGoogleSyncListener(GoogleSyncListener p_listener) {
+        synchronized (o_googleListeners) {
+            o_googleListeners.add(p_listener);
+        }
+
 		p_listener.googleSynced();
 	}
 
-	public void run() {
-        while(continueRunning()) {
-            try {
-                if(o_topThread != null) {
-					java.lang.Thread.sleep(1000);
-
-					googleSyncing();
-					GoogleUtil.syncWithGoogle(o_topThread);
-					googleSynced();
-				}
-
-                java.lang.Thread.sleep(s_frequency);
-            } catch (InterruptedException e) {
-                // do nothing
-            }            
+	public long nextSync() {
+        synchronized(o_topThread) {
+            return o_nextSync;
         }
     }
 
-	public void googleSyncing() {
+	public void run() {
+		while(continueRunning()) {
+			try {
+				sleep(500);
+
+                if (o_nextSync < System.currentTimeMillis()) {
+                    synchronized (o_googleListeners) {
+                        googleSyncing();
+                        GoogleUtil.syncWithGoogle(o_topThread);
+                        googleSynced();
+                    }
+
+                    synchronized(o_topThread) {
+                        o_nextSync += s_frequency;
+                    }
+                }
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+        }
+    }
+
+	private void googleSyncing() {
 		for(GoogleSyncListener x_listener: o_googleListeners) {
 			x_listener.googleSyncStarted();
 		}
 	}
 
-	public void googleSynced() {
-		for(GoogleSyncListener x_listener: o_googleListeners) {
-			x_listener.googleSynced();
-		}
+	private void googleSynced() {
+        for (GoogleSyncListener x_listener : o_googleListeners) {
+            x_listener.googleSynced();
+        }
 	}
-    
+
+	void updateGoogleListeners() {
+        synchronized (o_googleListeners) {
+            googleSynced();
+        }
+    }
+
     public synchronized void stopRunning() {
-        continueRunning = false;
+        o_continueRunning = false;
     }
     
     private synchronized boolean continueRunning() {
-        return continueRunning;
+        return o_continueRunning;
     }
 }
