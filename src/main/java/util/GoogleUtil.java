@@ -175,7 +175,7 @@ public class GoogleUtil {
 
 			System.out.println("Google Calendar Sync [" + new Date() + "]: " + events.size() + " events from google, " + stats[COMP_UPDATED] + " components updated, " + stats[EVENT_UPDATED] + " events updated, " + stats[COMP_CREATED] + " components created, " + stats[EVENT_DELETED] + " events deleted.");
 		} catch (Throwable t) {
-			System.out.println("Error talking to Google Calendar: " + t.getClass().getName() + ":" + t.getMessage());
+			System.out.println("Google Calendar Sync [" + new Date() + "]: Error talking to Google Calendar: " + t.getClass().getName() + ":" + t.getMessage());
 		}
 	}
 

@@ -27,7 +27,7 @@ public class TimeUpdater extends Thread {
 	private final Object lockObj = new Object();
 	private final List<TimeUpdateListener> o_updateListeners = new ArrayList<TimeUpdateListener>();
 	private boolean o_continueRunning = true;
-	private long o_nextSync = System.currentTimeMillis();
+	private long o_nextSync = System.currentTimeMillis() + s_frequency;
 
     private TimeUpdater() {
 		setDaemon(true);
@@ -49,7 +49,7 @@ public class TimeUpdater extends Thread {
     public void run() {
         while(continueRunning()) {
             try {
-                sleep(500);
+                sleep(1000);
 
 				if (o_nextSync < System.currentTimeMillis()) {
 					synchronized(o_updateListeners) {
@@ -61,7 +61,9 @@ public class TimeUpdater extends Thread {
 					}
 
 					synchronized(lockObj) {
-						o_nextSync += s_frequency;
+						while(o_nextSync < System.currentTimeMillis()) {
+							o_nextSync += s_frequency;
+						}
 					}
 				}
             }

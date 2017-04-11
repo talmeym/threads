@@ -52,7 +52,7 @@ public class GoogleSyncer extends java.lang.Thread {
 	public void run() {
 		while(continueRunning()) {
 			try {
-				sleep(500);
+				sleep(1000);
 
                 if (o_nextSync < System.currentTimeMillis()) {
                     synchronized (o_googleListeners) {
@@ -62,7 +62,9 @@ public class GoogleSyncer extends java.lang.Thread {
                     }
 
                     synchronized(o_topThread) {
-                        o_nextSync += s_frequency;
+                        while(o_nextSync < System.currentTimeMillis()) {
+                            o_nextSync += s_frequency;
+                        }
                     }
                 }
 			} catch (InterruptedException e) {

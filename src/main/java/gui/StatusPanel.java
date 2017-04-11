@@ -24,6 +24,10 @@ public class StatusPanel extends JPanel implements Runnable, TimeUpdateListener,
 	public StatusPanel() {
 		super(new GridLayout(0, 1, 5, 5));
 
+		o_updateProgress.setMinimum(0);
+		o_googleProgress.setMinimum(0);
+		o_saveProgress.setMinimum(0);
+
         JLabel x_updateLabel = new JLabel(ImageUtil.getTimeUpdateIcon());
         x_updateLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 		JPanel x_updatePanel = new JPanel(new BorderLayout());

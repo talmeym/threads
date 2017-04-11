@@ -34,7 +34,7 @@ public class TimedSaver extends java.lang.Thread {
     private final File o_originalFile;
 	private final List<TimedSaveListener> o_saveListeners = new ArrayList<TimedSaveListener>();
     private boolean o_continueRunning = true;
-	private long o_nextSync = System.currentTimeMillis();
+	private long o_nextSync = System.currentTimeMillis() + s_frequency;
 
     private TimedSaver(Thread p_topThread, File p_orignalFile) {
 		o_topThread = p_topThread;
@@ -72,7 +72,9 @@ public class TimedSaver extends java.lang.Thread {
 					}
 
 					synchronized(o_topThread) {
-                        o_nextSync += s_frequency;
+						while(o_nextSync < System.currentTimeMillis()) {
+							o_nextSync += s_frequency;
+						}
                     }
 				}
             } catch (InterruptedException e) {
