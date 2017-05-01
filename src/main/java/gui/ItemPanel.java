@@ -7,23 +7,39 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.Component;
 import java.awt.event.*;
+import java.util.Calendar;
 
 import static gui.Actions.linkToGoogle;
+import static util.Settings.updateSetting;
 
 class ItemPanel extends ComponentTablePanel<Item, Reminder> implements ComponentChangeListener {
     private final Item o_item;
-	private JPanel o_parentPanel;
+	private final JLabel o_calendarLabel = new JLabel(ImageUtil.getCalendarIcon());
 	private final JLabel o_linkItemLabel = new JLabel(ImageUtil.getLinkIcon());
 
 	ItemPanel(Item p_item, final JPanel p_parentPanel) {
         super(new ItemReminderTableModel(p_item),  new ComponentCellRenderer(p_item));
         o_item = p_item;
-		o_parentPanel = p_parentPanel;
 		o_item.addComponentChangeListener(this);
 
         fixColumnWidth(1, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
         fixColumnWidth(3, 30);
+
+		o_calendarLabel.setEnabled(o_item.getDueDate() != null);
+		o_calendarLabel.setToolTipText("Show in Calendar");
+		o_calendarLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (o_calendarLabel.isEnabled()) {
+					Calendar x_calendar = Calendar.getInstance();
+					x_calendar.setTime(o_item.getDueDate());
+					updateSetting(Settings.s_TAB_INDEX, 5);
+					updateSetting(Settings.s_DATE, x_calendar.get(Calendar.MONTH) + "_" + x_calendar.get(Calendar.YEAR));
+					WindowManager.getInstance().openComponent(o_item.getParentThread());
+				}
+			}
+		});
 
 		o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
 		o_linkItemLabel.setToolTipText("Link to Google Calendar");
@@ -37,8 +53,8 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
 		});
 
         JPanel x_panel = new JPanel(new BorderLayout());
-        x_panel.add(new ComponentInfoPanel(p_item, o_parentPanel, true, o_linkItemLabel), BorderLayout.NORTH);
-        x_panel.add(new DateSuggestionPanel(o_item, o_parentPanel), BorderLayout.SOUTH);
+        x_panel.add(new ComponentInfoPanel(p_item, p_parentPanel, true, o_calendarLabel, o_linkItemLabel), BorderLayout.NORTH);
+        x_panel.add(new DateSuggestionPanel(o_item, p_parentPanel), BorderLayout.SOUTH);
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
 		add(x_panel, BorderLayout.NORTH);
@@ -49,6 +65,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
 	@Override
 	public void componentChanged(ComponentChangeEvent p_event) {
 		if(p_event.getSource() == o_item) {
+			o_calendarLabel.setEnabled(o_item.getDueDate() != null);
 			o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
 		}
 	}

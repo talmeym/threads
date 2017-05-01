@@ -7,6 +7,7 @@ import util.TimeUpdater;
 import java.util.*;
 
 public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
+	private int o_year;
 	private int o_month;
 
 	private boolean o_includeActions = true;
@@ -15,7 +16,11 @@ public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> 
 
 	ThreadCalendarTableModel(Thread p_thread) {
 		super(p_thread, new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"});
-		o_month = Calendar.getInstance().get(Calendar.MONTH);
+
+		Calendar x_calendar = Calendar.getInstance();
+		o_year = x_calendar.get(Calendar.YEAR);
+		o_month = x_calendar.get(Calendar.MONTH);
+
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
 	}
 
@@ -41,6 +46,7 @@ public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> 
 
 	private Date getDate(int p_dayOfMonth) {
 		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(Calendar.YEAR, o_year);
 		x_calendar.set(Calendar.MONTH, o_month);
 		x_calendar.set(Calendar.DAY_OF_MONTH, 1);
 		x_calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -52,17 +58,23 @@ public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> 
 
 	private int getOffset() {
 		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(Calendar.YEAR, o_year);
 		x_calendar.set(Calendar.MONTH, o_month);
 		x_calendar.set(Calendar.DAY_OF_MONTH, 0);
 		int x_firstDayOfWeek = x_calendar.get(Calendar.DAY_OF_WEEK);
 		return (x_firstDayOfWeek - 1) * -1;
 	}
 
+	public int getYear() {
+		return o_year;
+	}
+
 	public int getMonth() {
 		return o_month;
 	}
 
-	public void setMonth(int p_month) {
+	public void setTime(int p_year, int p_month) {
+		this.o_year = p_year;
 		this.o_month = p_month;
 		fireTableDataChanged();
 	}

@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Settings {
 	public static final String s_TAB_INDEX = "tabindex";
-	public static final String s_MONTH = "month";
+	public static final String s_DATE = "date";
 	public static final String s_DIVLOC = "divloc";
 	public static final String s_NAVDIVLOC = "navdivloc";
 	public static final String s_WINW = "winw";

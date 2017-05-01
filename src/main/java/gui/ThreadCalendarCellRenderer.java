@@ -13,10 +13,12 @@ import java.util.*;
 public class ThreadCalendarCellRenderer implements TableCellRenderer {
 	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mmaa");
 
+	private int o_year;
 	private int o_month;
 
 	public ThreadCalendarCellRenderer() {
-		o_month = Calendar.getInstance().get(Calendar.YEAR);
+		o_year = Calendar.getInstance().get(Calendar.YEAR);
+		o_month = Calendar.getInstance().get(Calendar.MONTH);
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 		x_list.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         x_list.setBackground(column > 4 ? ColourConstants.s_weekendColour : Color.white);
 
-		if(x_calendar.get(Calendar.MONTH) != o_month) {
+		if(!(x_calendar.get(Calendar.YEAR) == o_year && x_calendar.get(Calendar.MONTH) == o_month)) {
 			x_list.setBackground(ColourConstants.s_offMonthColour);
 		}
 
@@ -45,7 +47,8 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 		return x_list;
 	}
 
-	public void setMonth(int p_month) {
+	public void setTime(int p_year, int p_month) {
+		this.o_year = p_year;
 		this.o_month = p_month;
 	}
 

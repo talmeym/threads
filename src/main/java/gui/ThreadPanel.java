@@ -32,7 +32,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
 		o_tabs.setBackgroundAt(2, Color.gray);
 		o_tabs.setBackgroundAt(3, Color.gray);
 		o_tabs.setBackgroundAt(4, Color.gray);
-		o_tabs.setBackgroundAt(4, Color.white);
+		o_tabs.setBackgroundAt(5, Color.white);
 
 		o_tabs.setToolTipTextAt(0, "The contents of this Thread");
 		o_tabs.setToolTipTextAt(1, "A view of all active Threads");

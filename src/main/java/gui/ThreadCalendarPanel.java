@@ -23,7 +23,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 
 	private Thread o_thread;
 	private JPanel o_parentPanel;
-	private JLabel o_currentMonthLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(Calendar.MONTH)));
+	private JLabel o_currentMonthLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH)));
 	private final JCheckBox o_includeActionsCheckBox = new JCheckBox("Actions");
 	private final JCheckBox o_includeUpdatesCheckBox = new JCheckBox("Updates");
 	private final JCheckBox o_includeRemindersCheckBox = new JCheckBox("Reminders");
@@ -34,7 +34,8 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
 		o_thread = p_thread;
 		o_parentPanel = p_parentPanel;
-		setTime(registerForSetting(Settings.s_MONTH, this, Calendar.getInstance().get(Calendar.MONTH)));
+		Calendar x_calendar = Calendar.getInstance();
+		setTime(registerForSetting(Settings.s_DATE, this, x_calendar.get(Calendar.MONTH) + "_" + x_calendar.get(Calendar.YEAR)));
 		addTableSelectionListener(this);
 
 		addComponentListener(new ComponentAdapter() {
@@ -60,9 +61,11 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 		x_todayLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int x_month = Calendar.getInstance().get(Calendar.MONTH);
-				setTime(x_month);
-				updateSetting(Settings.s_MONTH, "" + x_month);
+				Calendar x_calendar = Calendar.getInstance();
+				int x_year = x_calendar.get(Calendar.YEAR);
+				int x_month = x_calendar.get(Calendar.MONTH);
+				setTime(x_year, x_month);
+				updateSetting(Settings.s_DATE, x_month + "_" + x_year);
 			}
 		});
 
@@ -143,21 +146,29 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 
 	private void changeMonth(boolean up) {
 		ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
+		int x_currentYear = x_model.getYear();
 		int x_currentMonth = x_model.getMonth();
+		int x_year = up ? x_currentMonth == 11 ? x_currentYear + 1 : x_currentYear : x_currentMonth == 0 ? x_currentYear - 1 : x_currentYear;
 		int x_month = up ? x_currentMonth == 11 ? 0 : x_currentMonth + 1 : x_currentMonth == 0 ? 11 : x_currentMonth - 1;
-		setTime(x_month);
-		updateSetting(Settings.s_MONTH, "" + x_month);
+		setTime(x_year, x_month);
+		updateSetting(Settings.s_DATE, x_month + "_" + x_year);
 	}
 
-	private void setTime(int x_month) {
+	private void setTime(String x_date) {
+		int x_year = Integer.parseInt(x_date.substring(x_date.indexOf("_") + 1));
+		int x_month = Integer.parseInt(x_date.substring(0, x_date.indexOf("_")));
+		setTime(x_year, x_month);
+	}
+
+	private void setTime(int p_year, int p_month) {
 		ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
-		x_model.setMonth(x_month);
-		((ThreadCalendarCellRenderer)o_table.getCellRenderer(0, 0)).setMonth(x_month);
-		o_currentMonthLabel.setText(getMonthLabel(x_month));
+		x_model.setTime(p_year, p_month);
+		((ThreadCalendarCellRenderer)o_table.getCellRenderer(0, 0)).setTime(p_year, p_month);
+		o_currentMonthLabel.setText(getMonthLabel(p_year, p_month));
 	}
 
-	private String getMonthLabel(int x_month) {
-		return s_monthNames[x_month] + " " + Calendar.getInstance().get(Calendar.YEAR);
+	private String getMonthLabel(int p_year, int x_month) {
+		return s_monthNames[x_month] + " " + p_year;
 	}
 
 	@Override
@@ -281,26 +292,26 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 	}
 
 	@Override
-	public void settingChanged(String name, Object value) {
-		if(name.equals(s_CALENDARACT)) {
-			((ThreadCalendarTableModel)o_table.getModel()).setIncludeActions(value.equals(1));
-			o_includeActionsCheckBox.setSelected(value.equals(1));
+	public void settingChanged(String p_name, Object p_value) {
+		if(p_name.equals(s_CALENDARACT)) {
+			((ThreadCalendarTableModel)o_table.getModel()).setIncludeActions(p_value.equals(1));
+			o_includeActionsCheckBox.setSelected(p_value.equals(1));
 		}
 
-		if(name.equals(s_CALENDARUP)) {
-			((ThreadCalendarTableModel)o_table.getModel()).setIncludeUpdates(value.equals(1));
-			o_includeUpdatesCheckBox.setSelected(value.equals(1));
+		if(p_name.equals(s_CALENDARUP)) {
+			((ThreadCalendarTableModel)o_table.getModel()).setIncludeUpdates(p_value.equals(1));
+			o_includeUpdatesCheckBox.setSelected(p_value.equals(1));
 		}
 
-		if(name.equals(s_CALENDARREM)) {
-			((ThreadCalendarTableModel)o_table.getModel()).setIncludeReminders(value.equals(1));
-			o_includeRemindersCheckBox.setSelected(value.equals(1));
+		if(p_name.equals(s_CALENDARREM)) {
+			((ThreadCalendarTableModel)o_table.getModel()).setIncludeReminders(p_value.equals(1));
+			o_includeRemindersCheckBox.setSelected(p_value.equals(1));
 		}
 
 		o_allCheckBox.setSelected(o_includeActionsCheckBox.isSelected() && o_includeUpdatesCheckBox.isSelected() && o_includeRemindersCheckBox.isSelected());
 
-		if(name.equals(Settings.s_MONTH)) {
-			setTime(Integer.parseInt(value.toString()));
+		if(p_name.equals(Settings.s_DATE)) {
+			setTime((String) p_value);
 		}
 	}
 }
