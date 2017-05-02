@@ -74,11 +74,6 @@ public class AllDayAwareDueDateComparatorTest {
 
 		return new HasDueDate() {
 			@Override
-			public boolean isActive() {
-				return true;
-			}
-
-			@Override
 			public Date getDueDate() {
 				return calendar.getTime();
 			}

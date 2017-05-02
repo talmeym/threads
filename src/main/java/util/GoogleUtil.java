@@ -20,28 +20,29 @@ import gui.ProgressCallBack;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.GeneralSecurityException;
 import java.text.*;
 import java.util.*;
 
 public class GoogleUtil {
 
-	public static final DateFormat s_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	public static final String FROM_GOOGLE = "From Google";
+	private static final DateFormat s_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private static final String FROM_GOOGLE = "From Google";
 
-	public static final int COMP_UPDATED = 0;
-	public static final int EVENT_UPDATED = 1;
-	public static final int COMP_CREATED = 2;
-	public static final int EVENT_DELETED = 3;
+	private static final int COMP_UPDATED = 0;
+	private static final int EVENT_UPDATED = 1;
+	private static final int COMP_CREATED = 2;
+	private static final int EVENT_DELETED = 3;
 
-	public static final List<UUID> linkedComponents = new ArrayList<UUID>();
-	public static Thread s_topLevelThread = null;
+	private static final List<UUID> linkedComponents = new ArrayList<UUID>();
+	private static Thread s_topLevelThread = null;
 
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	private static FileDataStoreFactory dataStoreFactory;
 	private static HttpTransport httpTransport;
 	private static com.google.api.services.calendar.Calendar client;
 
-	private static Credential authorize() throws Exception {
+	private static Credential authorize() throws IOException {
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(GoogleUtil.class.getResourceAsStream("/client_secrets.json")));
 
 		if (clientSecrets.getDetails().getClientId().startsWith("Enter") || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
@@ -53,7 +54,9 @@ public class GoogleUtil {
 		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
 	}
 
-	private static synchronized void initialise() throws Exception {
+	static synchronized void initialise(Thread p_topLevelThread) throws GeneralSecurityException, IOException {
+		s_topLevelThread = p_topLevelThread;
+
 		if(client == null) {
 			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 			dataStoreFactory = new FileDataStoreFactory(new java.io.File("credstore"));
@@ -62,13 +65,11 @@ public class GoogleUtil {
 		}
 	}
 
-	public static void syncWithGoogle(Thread thread) {
-		s_topLevelThread = thread;
+	static void syncWithGoogle() {
 		List<UUID> syncedComponents = new ArrayList<UUID>();
 		int[] stats = new int[4]; // comp updated 0, event updated 1, comp created 2, event deleted 3
 
 		try {
-			initialise();
 			String calendarId = findCalendar();
 			List<Event> events = getEvents(calendarId);
 
@@ -81,14 +82,13 @@ public class GoogleUtil {
 					DateTime dateTime = event.getStart().getDateTime();
 					Date start = new Date(date != null ? date.getValue() : dateTime.getValue());
 
-					// TODO hack ??
 					if(date != null && date.isDateOnly()) {
 						start = DateUtil.makeStartOfDay(start);
 					}
 
 					if(description != null && !description.trim().isEmpty()) {
 						UUID id = UUID.fromString(description);
-						Component component = thread.findComponent(id);
+						Component component = s_topLevelThread.findComponent(id);
 
 						if(component != null) {
 							syncedComponents.add(component.getId());
@@ -145,8 +145,8 @@ public class GoogleUtil {
 						Thread threadToAddTo = null;
 						syncedComponents.add(item.getId());
 
-						for(int i = 0; i< thread.getThreadItemCount(); i++) {
-							ThreadItem threadItem = thread.getThreadItem(i);
+						for(int i = 0; i< s_topLevelThread.getThreadItemCount(); i++) {
+							ThreadItem threadItem = s_topLevelThread.getThreadItem(i);
 
 							if(threadItem.getText().equals(FROM_GOOGLE) && threadItem instanceof Thread) {
 								threadToAddTo = (Thread) threadItem;
@@ -156,7 +156,7 @@ public class GoogleUtil {
 
 						if(threadToAddTo == null) {
 							threadToAddTo = new Thread(FROM_GOOGLE);
-							thread.addThreadItem(threadToAddTo);
+							s_topLevelThread.addThreadItem(threadToAddTo);
 						}
 
 						threadToAddTo.addThreadItem(item);
@@ -189,7 +189,6 @@ public class GoogleUtil {
 		}
 
 		try {
-			initialise();
 			String calendarId = findCalendar();
 			List<Event> events = getEvents(calendarId);
 
@@ -273,7 +272,6 @@ public class GoogleUtil {
 		}
 
 		try {
-			initialise();
 			String calendarId = findCalendar();
 			List<Event> events = getEvents(calendarId);
 

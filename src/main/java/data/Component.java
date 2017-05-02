@@ -88,7 +88,7 @@ public abstract class Component implements ComponentMoveListener {
         return o_text;
     }
 
-	public abstract String getType();
+	public abstract ComponentType getType();
 
 	public abstract Component findComponent(UUID p_id);
 
@@ -131,7 +131,7 @@ public abstract class Component implements ComponentMoveListener {
 
 	public List<Component> getHierarchy() {
 		if(o_parentComponent == null) {
-			return new ArrayList<Component>(Arrays.asList(this));
+			return new ArrayList<>(Collections.singletonList(this));
 		}
 
 		List<Component> x_parents = o_parentComponent.getHierarchy();

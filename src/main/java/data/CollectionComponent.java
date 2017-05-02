@@ -75,11 +75,11 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
 	}
 
 	@Override
-	public void componentChanged(ComponentChangeEvent cce) {
-		changed(cce);
-		Component x_source = cce.getSource();
+	public void componentChanged(ComponentChangeEvent p_cce) {
+		changed(p_cce);
+		Component x_source = p_cce.getSource();
 
-		if(o_components.contains(x_source) && cce.getType() == ComponentChangeEvent.s_CHANGE) {
+		if(o_components.contains(x_source) && p_cce.getType() == ComponentChangeEvent.s_CHANGE) {
 			int p_beforeIndex = o_components.indexOf(x_source);
 			sort(o_components, o_comparator);
 			int p_afterIndex = o_components.indexOf(x_source);

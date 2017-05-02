@@ -94,7 +94,7 @@ public class WindowManager implements SettingChangeListener {
 	}
 
 	@Override
-	public void settingChanged(String name, Object value) {
+	public void settingChanged(String p_name, Object p_value) {
 		// do nothing
 	}
 }

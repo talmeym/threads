@@ -16,6 +16,8 @@ public class Settings {
 	public static final String s_CALENDARACT = "calendaract";
 	public static final String s_CALENDARUP = "calendarup";
 	public static final String s_CALENDARREM = "calendarrem";
+	public static final String s_ONLYDUE = "onlydue";
+	public static final String s_SEVENDAYS = "sevendays";
 
 	private static Map<String, List<SettingChangeListener>> interestedParties = new HashMap<>();
 	private static Properties settings = new Properties();

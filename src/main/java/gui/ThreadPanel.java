@@ -97,7 +97,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
     }
 
 	@Override
-	public void componentChanged(ComponentChangeEvent p_event) {
+	public void componentChanged(ComponentChangeEvent p_cce) {
         setActionTabBackground();
         setReminderTabBackground();
     }
@@ -132,7 +132,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
 	}
 
 	@Override
-	public void settingChanged(String name, Object value) {
-		o_tabs.setSelectedIndex(Integer.parseInt(value.toString()));
+	public void settingChanged(String p_name, Object p_value) {
+		o_tabs.setSelectedIndex(Integer.parseInt(p_value.toString()));
 	}
 }

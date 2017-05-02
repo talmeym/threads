@@ -63,8 +63,8 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
     }
 
 	@Override
-	public void componentChanged(ComponentChangeEvent p_event) {
-		if(p_event.getSource() == o_item) {
+	public void componentChanged(ComponentChangeEvent p_cce) {
+		if(p_cce.getSource() == o_item) {
 			o_calendarLabel.setEnabled(o_item.getDueDate() != null);
 			o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
 		}

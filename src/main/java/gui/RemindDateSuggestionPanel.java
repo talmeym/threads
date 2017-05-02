@@ -76,7 +76,7 @@ public class RemindDateSuggestionPanel extends JPanel {
 
 		o_reminder.addComponentChangeListener(new ComponentChangeListener() {
 			@Override
-			public void componentChanged(ComponentChangeEvent p_event) {
+			public void componentChanged(ComponentChangeEvent p_cce) {
 				o_dueDateField.getDocument().removeDocumentListener(x_listener);
 				o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
 				o_dueDateField.getDocument().addDocumentListener(x_listener);
@@ -201,7 +201,7 @@ public class RemindDateSuggestionPanel extends JPanel {
         x_timeToSubtract += ((DateItem)o_hourBox.getSelectedItem()).o_value;
         x_timeToSubtract += ((DateItem)o_minBox.getSelectedItem()).o_value;
         
-        Date x_dueDate = o_reminder.getItem().getDueDate();
+        Date x_dueDate = o_reminder.getParentItem().getDueDate();
         o_dueDateField.setText(getDueDateText(new Date(x_dueDate.getTime() - x_timeToSubtract)));
 		setDueDate();
     }

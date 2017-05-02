@@ -47,7 +47,7 @@ public class Thread extends ThreadItem<ThreadItem> {
 		removeComponent(p_item);
 	}
 
-	public String getType() {
-		return "Thread";
+	public ComponentType getType() {
+		return ComponentType.Thread;
 	}
 }

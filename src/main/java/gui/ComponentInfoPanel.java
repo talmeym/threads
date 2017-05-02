@@ -48,8 +48,8 @@ public class ComponentInfoPanel extends JPanel {
 
 		o_component.addComponentChangeListener(new ComponentChangeListener() {
 			@Override
-			public void componentChanged(ComponentChangeEvent p_event) {
-				if(p_event.getSource() == o_component) {
+			public void componentChanged(ComponentChangeEvent p_cce) {
+				if(p_cce.getSource() == o_component) {
 					o_textField.getDocument().removeDocumentListener(x_listener);
 					o_textField.setText(o_component.getText());
 					o_textField.getDocument().addDocumentListener(x_listener);
@@ -74,8 +74,8 @@ public class ComponentInfoPanel extends JPanel {
 
 					x_parentFinal.addComponentChangeListener(new ComponentChangeListener() {
 						@Override
-						public void componentChanged(ComponentChangeEvent p_event) {
-							if (p_event.getSource() == x_parentFinal) {
+						public void componentChanged(ComponentChangeEvent p_cce) {
+							if (p_cce.getSource() == x_parentFinal) {
 								x_label.setText(x_parentFinal.getText());
 							}
 						}
@@ -87,6 +87,8 @@ public class ComponentInfoPanel extends JPanel {
 				for(JLabel x_label: x_parentLabels) {
 					o_breadcrumbsPanel.add(x_label);
 				}
+
+				repaint();
 			}
 		});
 
@@ -184,14 +186,14 @@ public class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-		x_removeLabel.setToolTipText("Delete");
+		x_removeLabel.setToolTipText("Remove");
 		x_removeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
 				if(x_parentLabel.isEnabled()) {
 					Component x_parentComponent = o_component.getParentComponent();
 
-					if(JOptionPane.showConfirmDialog(p_parentPanel, "Remove '" + o_component.getText() + "' from '" + x_parentComponent.getText() + "' ?", "Delete " + o_component.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+					if(JOptionPane.showConfirmDialog(p_parentPanel, "Remove '" + o_component.getText() + "' from '" + x_parentComponent.getText() + "' ?", "Remove " + o_component.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 						if(o_component instanceof ThreadItem) {
 							ThreadItem x_threadItem = (ThreadItem) o_component;
 							x_threadItem.getParentThread().removeThreadItem(x_threadItem);
@@ -299,8 +301,8 @@ public class ComponentInfoPanel extends JPanel {
 
 				x_parent.addComponentChangeListener(new ComponentChangeListener() {
 					@Override
-					public void componentChanged(ComponentChangeEvent p_event) {
-						if(p_event.getSource() == x_parentFinal) {
+					public void componentChanged(ComponentChangeEvent p_cce) {
+						if(p_cce.getSource() == x_parentFinal) {
 							x_label.setText(x_parentFinal.getText());
 						}
 					}

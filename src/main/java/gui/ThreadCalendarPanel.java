@@ -18,12 +18,12 @@ import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.buildToolTipText
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
-public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements TableSelectionListener<Date>, SettingChangeListener {
+public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements SettingChangeListener {
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
-	private Thread o_thread;
-	private JPanel o_parentPanel;
-	private JLabel o_currentMonthLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH)));
+	private final Thread o_thread;
+	private final JPanel o_parentPanel;
+	private final JLabel o_currentMonthLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH)));
 	private final JCheckBox o_includeActionsCheckBox = new JCheckBox("Actions");
 	private final JCheckBox o_includeUpdatesCheckBox = new JCheckBox("Updates");
 	private final JCheckBox o_includeRemindersCheckBox = new JCheckBox("Reminders");
@@ -34,6 +34,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
 		o_thread = p_thread;
 		o_parentPanel = p_parentPanel;
+
 		Calendar x_calendar = Calendar.getInstance();
 		setTime(registerForSetting(Settings.s_DATE, this, x_calendar.get(Calendar.MONTH) + "_" + x_calendar.get(Calendar.YEAR)));
 		addTableSelectionListener(this);

@@ -2,6 +2,8 @@ package util;
 
 import data.Thread;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.*;
 
 public class GoogleSyncer extends java.lang.Thread {
@@ -24,13 +26,18 @@ public class GoogleSyncer extends java.lang.Thread {
 		return s_INSTANCE;
 	}
 
-    private final Thread o_topThread;
+	private final Object o_lockObj = new Object();
 	private final List<GoogleSyncListener> o_googleListeners = new ArrayList<GoogleSyncListener>();
     private boolean o_continueRunning = true;
     private long o_nextSync = System.currentTimeMillis();
 
     private GoogleSyncer(Thread p_topThread) {
-		o_topThread = p_topThread;
+		try {
+			GoogleUtil.initialise(p_topThread);
+		} catch (GeneralSecurityException | IOException e) {
+			throw new RuntimeException("Error initialising google util", e);
+		}
+
 		setDaemon(true);
 		start();
     }
@@ -44,7 +51,7 @@ public class GoogleSyncer extends java.lang.Thread {
 	}
 
 	public long nextSync() {
-        synchronized(o_topThread) {
+        synchronized(o_lockObj) {
             return o_nextSync;
         }
     }
@@ -57,11 +64,11 @@ public class GoogleSyncer extends java.lang.Thread {
                 if (o_nextSync < System.currentTimeMillis()) {
                     synchronized (o_googleListeners) {
                         googleSyncing();
-                        GoogleUtil.syncWithGoogle(o_topThread);
+                        GoogleUtil.syncWithGoogle();
                         googleSynced();
                     }
 
-                    synchronized(o_topThread) {
+                    synchronized(o_lockObj) {
                         while(o_nextSync < System.currentTimeMillis()) {
                             o_nextSync += s_frequency;
                         }

@@ -32,7 +32,7 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
     }
 
 	@Override
-    public void componentChanged(ComponentChangeEvent p_event) {
+    public void componentChanged(ComponentChangeEvent p_cce) {
 		fireTableDataChanged();
     }
 

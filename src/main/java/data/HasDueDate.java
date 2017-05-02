@@ -3,8 +3,7 @@ package data;
 import java.util.Date;
 
 public interface HasDueDate {
-	public boolean isActive();
-	public Date getDueDate();
-	public void setDueDate(Date dueDate);
-	public boolean isDue();
+	Date getDueDate();
+	void setDueDate(Date dueDate);
+	boolean isDue();
 }

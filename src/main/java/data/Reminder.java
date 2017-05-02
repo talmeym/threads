@@ -25,7 +25,7 @@ public class Reminder extends Component implements HasDueDate
 		this(UUID.randomUUID(), new Date(), new Date(), p_reminder.isActive(), (p_addCopyText ? "Copy of " : "") + p_reminder.getText(), p_reminder.getDueDate(), p_reminder.getDocFolder());
 	}
 
-    public Item getItem() {
+    public Item getParentItem() {
         return (Item) getParentComponent();
     }
 
@@ -52,8 +52,8 @@ public class Reminder extends Component implements HasDueDate
 	}
 
 	@Override
-	public String getType() {
-		return "Reminder";
+	public ComponentType getType() {
+		return ComponentType.Reminder;
 	}
 
 	@Override

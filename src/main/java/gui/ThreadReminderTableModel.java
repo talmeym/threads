@@ -36,7 +36,7 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
         Reminder x_dueReminder = getDataItem(row, col);
         
         switch(col) {
-			case 0: return x_dueReminder.getItem().getText();
+			case 0: return x_dueReminder.getParentItem().getText();
 			case 1: return x_dueReminder.getText();
 			case 2: return DateUtil.getFormattedDate(x_dueReminder.getDueDate());
 			case 3: return DateUtil.getDateStatus(x_dueReminder.getDueDate());

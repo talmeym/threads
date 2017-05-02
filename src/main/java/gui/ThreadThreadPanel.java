@@ -92,7 +92,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 		if(x_thread != null) {
 			Thread x_parent = x_thread.getParentThread();
 
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + x_thread.getText() + "' from '" + x_thread.getParentThread().getText() + "' ?", "Delete " + x_thread.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + x_thread.getText() + "' from '" + x_thread.getParentThread().getText() + "' ?", "Remove " + x_thread.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_parent.removeThreadItem(x_thread);
 			}
 		}
@@ -154,7 +154,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
     }
 
 	@Override
-	public void componentChanged(ComponentChangeEvent p_event) {
+	public void componentChanged(ComponentChangeEvent p_cce) {
 		tableRowClicked(-1, -1, null);
 	}
 }

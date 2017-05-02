@@ -1,11 +1,14 @@
 package util;
 
 import com.apple.eawt.Application;
+import data.ComponentType;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+
+import static data.ComponentType.*;
 
 public class ImageUtil {
 
@@ -157,14 +160,14 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/timeUpdate.png"));
 	}
 
-	public static Icon getIconForType(String p_type) {
-		if(p_type.equals("Thread")) {
+	public static Icon getIconForType(ComponentType p_type) {
+		if(p_type == Thread) {
 			return getThreadIcon();
 		}
-		if(p_type.equals("Update")) {
+		if(p_type == Update) {
 			return getUpdateIcon();
 		}
-		if(p_type.equals("Action")) {
+		if(p_type == Action) {
 			return getActionIcon();
 		}
 

@@ -19,7 +19,7 @@ public class GoogleLinkTask extends SwingWorker<Void, Void> {
 
 	public GoogleLinkTask(Reminder p_reminder, ProgressCallBack... p_callbacks) {
 		this.o_items = null;
-		this.o_reminders = Arrays.asList(p_reminder);
+		this.o_reminders = Collections.singletonList(p_reminder);
 		this.o_callbacks = p_callbacks;
 	}
 

@@ -98,7 +98,7 @@ public class Actions {
 
 	public static void linkToGoogle(final Item p_item, final JPanel p_enclosingPanel) {
 		if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Link '" + p_item.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-			GoogleLinkTask x_task = new GoogleLinkTask(Arrays.asList(p_item), new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
+			GoogleLinkTask x_task = new GoogleLinkTask(Collections.singletonList(p_item), new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
 				@Override
 				public void success() {
 					JOptionPane.showMessageDialog(p_enclosingPanel, "'" + p_item.getText() + "' was linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());

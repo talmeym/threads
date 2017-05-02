@@ -71,19 +71,19 @@ public class ThreadTreeModel implements TreeModel, ComponentChangeListener {
     }
 
 	@Override
-    public void componentChanged(ComponentChangeEvent p_event) {
-		if(p_event.getSource() instanceof Reminder) {
+    public void componentChanged(ComponentChangeEvent p_cce) {
+		if(p_cce.getSource() instanceof Reminder) {
 			return;
 		}
 
-		Component x_component = p_event.getSource();
+		Component x_component = p_cce.getSource();
 		List<Component> x_hierarchy = x_component.getHierarchy();
 		TreePath treePath = new TreePath(x_hierarchy.toArray(new Component[x_hierarchy.size()]));
 
 		for(TreeModelListener x_listener: o_listeners) {
-			switch(p_event.getType()) {
-				case ComponentChangeEvent.s_ADDED: x_listener.treeNodesInserted(new TreeModelEvent(this, treePath, new int[]{p_event.getIndex()}, null)); break;
-				case ComponentChangeEvent.s_REMOVED: x_listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{p_event.getIndex()}, null)); break;
+			switch(p_cce.getType()) {
+				case ComponentChangeEvent.s_ADDED: x_listener.treeNodesInserted(new TreeModelEvent(this, treePath, new int[]{p_cce.getIndex()}, null)); break;
+				case ComponentChangeEvent.s_REMOVED: x_listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{p_cce.getIndex()}, null)); break;
 				default: x_listener.treeNodesChanged(new TreeModelEvent(this, treePath));
 			}
 		}

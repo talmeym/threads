@@ -5,6 +5,7 @@ import util.TextComparator;
 
 import java.util.*;
 
+import static data.ComponentType.Thread;
 import static org.junit.Assert.assertEquals;
 
 public class ComponentTest {
@@ -31,8 +32,8 @@ public class ComponentTest {
 		}
 
 		@Override
-		public String getType() {
-			return "test";
+		public ComponentType getType() {
+			return Thread;
 		}
 
 		@Override

@@ -60,8 +60,8 @@ class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 
 		o_item.addComponentChangeListener(new ComponentChangeListener() {
 			@Override
-			public void componentChanged(ComponentChangeEvent p_event) {
-				if(p_event.getSource() == o_item) {
+			public void componentChanged(ComponentChangeEvent p_cce) {
+				if(p_cce.getSource() == o_item) {
 					o_dueDateField.getDocument().removeDocumentListener(x_listener);
 					o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
 					o_dueDateField.getDocument().addDocumentListener(x_listener);

@@ -1,5 +1,5 @@
 package util;
 
 public interface SettingChangeListener {
-	void settingChanged(String name, Object value);
+	void settingChanged(String p_name, Object p_value);
 }

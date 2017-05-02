@@ -30,7 +30,7 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 	}
 
 	public ItemAndReminderPanel(Reminder p_reminder, JPanel p_parentPanel) {
-		this(p_reminder.getItem(), p_reminder, p_parentPanel);
+		this(p_reminder.getParentItem(), p_reminder, p_parentPanel);
 	}
 
 	public ItemAndReminderPanel(Item p_item, Reminder p_reminder, JPanel p_parentPanel) {
@@ -40,9 +40,9 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 
 		o_item.addComponentChangeListener(new ComponentChangeListener() {
 			@Override
-			public void componentChanged(ComponentChangeEvent p_event) {
-				if (p_event.getSource() == o_item) {
-					if (p_event.getType() == ComponentChangeEvent.s_REMOVED) {
+			public void componentChanged(ComponentChangeEvent p_cce) {
+				if (p_cce.getSource() == o_item) {
+					if (p_cce.getType() == ComponentChangeEvent.s_REMOVED) {
 						o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
 					}
 
@@ -167,7 +167,7 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 	}
 
 	@Override
-	public void settingChanged(String name, Object value) {
-		o_splitPane.setDividerLocation(Integer.parseInt(value.toString()));
+	public void settingChanged(String p_name, Object p_value) {
+		o_splitPane.setDividerLocation(Integer.parseInt(p_value.toString()));
 	}
 }

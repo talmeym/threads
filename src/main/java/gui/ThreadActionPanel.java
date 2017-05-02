@@ -2,9 +2,7 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.GoogleSyncer;
-import util.ImageUtil;
-import util.TimeUpdater;
+import util.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -19,14 +17,17 @@ import java.util.List;
 
 import static gui.Actions.addAction;
 import static util.GuiUtil.setUpButtonLabel;
+import static util.Settings.*;
 
-public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements ComponentChangeListener {
+public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements ComponentChangeListener, SettingChangeListener {
     private final Thread o_thread;
-	private JPanel o_parentPanel;
+	private final JPanel o_parentPanel;
 	private final JMenuItem o_dismissLabel = new JMenuItem("Set Inactive", ImageUtil.getTickIcon());
 	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
 	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
 	private final JMenuItem o_linkLabel = new JMenuItem("Link",ImageUtil.getLinkIcon());
+	private final JRadioButton o_showNext7DaysRadioButton;
+	private final JRadioButton o_showAllRadioButton;
 
 	ThreadActionPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadActionTableModel(p_thread), new ThreadActionCellRenderer(p_thread));
@@ -86,24 +87,28 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 		});
 
 		ThreadActionTableModel x_tableModel = (ThreadActionTableModel) o_table.getModel();
-		JRadioButton x_showNext7DaysRadioButton = new JRadioButton("7 Days", x_tableModel.onlyNext7Days());
-		JRadioButton x_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyNext7Days());
+		x_tableModel.setOnlyNext7Days(registerForSetting(s_SEVENDAYS, this, 1) == 1);
 
-		x_showNext7DaysRadioButton.addChangeListener(new ChangeListener() {
+		o_showNext7DaysRadioButton = new JRadioButton("7 Days", x_tableModel.onlyNext7Days());
+		o_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyNext7Days());
+
+		o_showNext7DaysRadioButton.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				x_tableModel.setOnlyNext7Days(x_showNext7DaysRadioButton.isSelected());
+				boolean selected = o_showNext7DaysRadioButton.isSelected();
+				x_tableModel.setOnlyNext7Days(selected);
+				updateSetting(Settings.s_SEVENDAYS, selected ? 1 : 0);
 			}
 		});
 
 		ButtonGroup x_group = new ButtonGroup();
-		x_group.add(x_showNext7DaysRadioButton);
-		x_group.add(x_showAllRadioButton);
+		x_group.add(o_showNext7DaysRadioButton);
+		x_group.add(o_showAllRadioButton);
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
-		x_buttonPanel.add(x_showNext7DaysRadioButton);
-		x_buttonPanel.add(x_showAllRadioButton);
+		x_buttonPanel.add(o_showNext7DaysRadioButton);
+		x_buttonPanel.add(o_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
@@ -124,7 +129,7 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 		if(o_action != null) {
 			Thread x_thread = o_action.getParentThread();
 
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + o_action.getText() + "' from '" + x_thread.getText() + "' ?", "Delete " + o_action.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + o_action.getText() + "' from '" + x_thread.getText() + "' ?", "Remove " + o_action.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_thread.removeThreadItem(o_action);
 			}
 		}
@@ -181,7 +186,7 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
     }
 
 	@Override
-	public void componentChanged(ComponentChangeEvent p_event) {
+	public void componentChanged(ComponentChangeEvent p_cce) {
 		tableRowClicked(-1, -1, null);
 	}
 
@@ -193,5 +198,12 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 	@Override
 	public void googleSynced() {
 		tableRowClicked(-1, -1, null);
+	}
+
+	@Override
+	public void settingChanged(String p_name, Object p_value) {
+		((ThreadActionTableModel)o_table.getModel()).setOnlyNext7Days(p_value.equals(1));
+		o_showNext7DaysRadioButton.setSelected(p_value.equals(1));
+		o_showAllRadioButton.setSelected(p_value.equals(0));
 	}
 }

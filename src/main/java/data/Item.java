@@ -28,10 +28,6 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 		}
 	}
 
-    public Thread getParentThread() {
-        return (Thread) getParentComponent();
-    }
-
 	public int getReminderCount() {
 		return getComponentCount();
 	}
@@ -73,7 +69,7 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 		return false;
 	}
 
-	public String getType() {
-		return o_dueDate != null ? "Action" : "Update";
+	public ComponentType getType() {
+		return o_dueDate != null ? ComponentType.Action : ComponentType.Update;
 	}
 }

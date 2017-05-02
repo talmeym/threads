@@ -61,8 +61,8 @@ public class NotificationUpdater {
 			for(final Component x_component: x_dueComponents) {
 				x_component.addComponentChangeListener(new ComponentChangeListener() {
 					@Override
-					public void componentChanged(ComponentChangeEvent p_event) {
-						if (p_event.getSource() == x_component && p_event.getType() == ComponentChangeEvent.s_CHANGE) {
+					public void componentChanged(ComponentChangeEvent p_cce) {
+						if (p_cce.getSource() == x_component && p_cce.getType() == ComponentChangeEvent.s_CHANGE) {
 							o_alertedComponents.remove(x_component);
 						}
 					}

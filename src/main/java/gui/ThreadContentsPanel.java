@@ -142,7 +142,7 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 
 	private void remove(ThreadItem p_threadItem) {
         if(p_threadItem != null) {
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_threadItem.getText() + "' from '" + p_threadItem.getParentThread().getText() + "' ?", "Delete " + p_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_threadItem.getText() + "' from '" + p_threadItem.getParentThread().getText() + "' ?", "Remove " + p_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
                 o_thread.removeThreadItem(p_threadItem);
             }
         }
@@ -226,7 +226,7 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
     }
 
 	@Override
-	public void componentChanged(ComponentChangeEvent p_event) {
+	public void componentChanged(ComponentChangeEvent p_cce) {
 		tableRowClicked(-1, -1, null);
 	}
 }

@@ -73,7 +73,7 @@ public class NavigationAndComponentPanel extends JPanel implements SettingChange
 	}
 
 	@Override
-	public void settingChanged(String name, Object value) {
+	public void settingChanged(String p_name, Object p_value) {
 		// do nothing
 	}
 }

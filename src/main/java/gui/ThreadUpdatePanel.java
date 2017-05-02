@@ -79,7 +79,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
 
 	private void remove(Item p_update) {
 		if(p_update != null) {
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_update.getText() + "' from '" + p_update.getParentThread().getText() + "' ?", "Delete " + p_update.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_update.getText() + "' from '" + p_update.getParentThread().getText() + "' ?", "Remove " + p_update.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				p_update.getParentThread().removeThreadItem(p_update);
 			}
 		}
@@ -134,7 +134,7 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
     }
 
 	@Override
-	public void componentChanged(ComponentChangeEvent p_event) {
+	public void componentChanged(ComponentChangeEvent p_cce) {
 		tableRowClicked(-1, -1, null);
 	}
 }
