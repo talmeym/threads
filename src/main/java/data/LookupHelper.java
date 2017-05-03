@@ -87,7 +87,7 @@ public class LookupHelper {
         for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
             ThreadItem x_groupItem = p_thread.getThreadItem(i);
 
-            if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
+            if(x_groupItem instanceof Thread) {
 				x_result.addAll(getAllComponents((Thread) x_groupItem, p_referenceDate, p_includeActions, p_includeUpdates, p_includeReminders));
 			}
         }
@@ -306,7 +306,7 @@ public class LookupHelper {
 	public static List<Reminder> getReminders(Item p_item, Date p_date) {
 		List<Reminder> x_reminders = new ArrayList<Reminder>();
 
-		if(p_item.isActive() && p_item.getDueDate() != null) {
+		if(p_item.getDueDate() != null) {
 			for(int i = 0; i < p_item.getReminderCount(); i++) {
 				Reminder x_reminder = p_item.getReminder(i);
 

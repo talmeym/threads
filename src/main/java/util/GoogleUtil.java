@@ -3,8 +3,7 @@ package util;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.*;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -12,307 +11,256 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.*;
 import com.google.api.services.calendar.model.Calendar;
+import com.google.api.services.calendar.model.*;
 import data.*;
 import data.Thread;
 import gui.ProgressCallBack;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.security.GeneralSecurityException;
 import java.text.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class GoogleUtil {
 
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	private static final String FROM_GOOGLE = "From Google";
+	private static final String s_FROM_GOOGLE = "From Google";
 
-	private static final int COMP_UPDATED = 0;
-	private static final int EVENT_UPDATED = 1;
-	private static final int COMP_CREATED = 2;
-	private static final int EVENT_DELETED = 3;
+	private static final int s_COMP_UPDATED = 0;
+	private static final int s_EVENT_UPDATED = 1;
+	private static final int s_COMP_CREATED = 2;
+	private static final int s_EVENT_DELETED = 3;
 
-	private static final List<UUID> linkedComponents = new ArrayList<UUID>();
+	private static final List<UUID> s_linkedComponents = new ArrayList<UUID>();
 	private static Thread s_topLevelThread = null;
 
-	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-	private static FileDataStoreFactory dataStoreFactory;
-	private static HttpTransport httpTransport;
-	private static com.google.api.services.calendar.Calendar client;
+	private static final JsonFactory s_JSON_FACTORY = JacksonFactory.getDefaultInstance();
+	private static FileDataStoreFactory s_dataStoreFactory;
+	private static HttpTransport s_httpTransport;
+	private static com.google.api.services.calendar.Calendar s_client;
 
 	private static Credential authorize() throws IOException {
-		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(GoogleUtil.class.getResourceAsStream("/client_secrets.json")));
+		GoogleClientSecrets x_clientSecrets = GoogleClientSecrets.load(s_JSON_FACTORY, new InputStreamReader(GoogleUtil.class.getResourceAsStream("/client_secrets.json")));
 
-		if (clientSecrets.getDetails().getClientId().startsWith("Enter") || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
+		if (x_clientSecrets.getDetails().getClientId().startsWith("Enter") || x_clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
 			System.out.println("Enter Client ID and Secret from https://code.google.com/apis/console/?api=calendar into calendar-cmdline-sample/src/main/resources/client_secrets.json");
 			System.exit(1);
 		}
 
-		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(dataStoreFactory).build();
-		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+		GoogleAuthorizationCodeFlow x_flow = new GoogleAuthorizationCodeFlow.Builder(s_httpTransport, s_JSON_FACTORY, x_clientSecrets, Collections.singleton(CalendarScopes.CALENDAR)).setDataStoreFactory(s_dataStoreFactory).build();
+		return new AuthorizationCodeInstalledApp(x_flow, new LocalServerReceiver()).authorize("user");
 	}
 
 	static synchronized void initialise(Thread p_topLevelThread) throws GeneralSecurityException, IOException {
 		s_topLevelThread = p_topLevelThread;
 
-		if(client == null) {
-			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-			dataStoreFactory = new FileDataStoreFactory(new java.io.File("credstore"));
-			Credential credential = authorize();
-			client = new com.google.api.services.calendar.Calendar.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName("Threads").build();
+		if(s_client == null) {
+			s_httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+			s_dataStoreFactory = new FileDataStoreFactory(new File("credstore"));
+			s_client = new com.google.api.services.calendar.Calendar.Builder(s_httpTransport, s_JSON_FACTORY, authorize()).setApplicationName("Threads").build();
 		}
 	}
 
 	static void syncWithGoogle() {
-		List<UUID> syncedComponents = new ArrayList<UUID>();
-		int[] stats = new int[4]; // comp updated 0, event updated 1, comp created 2, event deleted 3
+		List<UUID> x_syncedComponents = new ArrayList<UUID>();
+		int[] x_stats = new int[4]; // comp updated 0, event updated 1, comp created 2, event deleted 3
 
 		try {
-			String calendarId = findCalendar();
-			List<Event> events = getEvents(calendarId);
+			String x_calendarId = findCalendar();
+			List<Event> x_events = getEvents(x_calendarId);
 
-			if(events != null) {
-				for(Event event: events) {
-					String summary = event.getSummary();
-					String description = event.getDescription();
+			if(x_events != null) {
+				for(Event x_event: x_events) {
+					String x_summary = x_event.getSummary();
+					String x_description = x_event.getDescription();
 
-					DateTime date = event.getStart().getDate();
-					DateTime dateTime = event.getStart().getDateTime();
-					Date start = new Date(date != null ? date.getValue() : dateTime.getValue());
+					DateTime x_date = x_event.getStart().getDate();
+					DateTime x_dateTime = x_event.getStart().getDateTime();
+					Date x_start = new Date(x_date != null ? x_date.getValue() : x_dateTime.getValue());
 
-					if(date != null && date.isDateOnly()) {
-						start = DateUtil.makeStartOfDay(start);
+					if(x_date != null && x_date.isDateOnly()) {
+						x_start = DateUtil.makeStartOfDay(x_start);
 					}
 
-					if(description != null && !description.trim().isEmpty()) {
-						UUID id = UUID.fromString(description);
-						Component component = s_topLevelThread.findComponent(id);
+					if(x_description != null && !x_description.trim().isEmpty()) {
+						Component x_component = s_topLevelThread.findComponent(UUID.fromString(x_description));
 
-						if(component != null) {
-							syncedComponents.add(component.getId());
+						if(x_component != null) {
+							x_syncedComponents.add(x_component.getId());
 
-							Date componentModified = component.getModifiedDate();
-							Date eventModified = new Date(event.getUpdated().getValue());
+							Date x_componentModified = x_component.getModifiedDate();
+							Date x_eventModified = new Date(x_event.getUpdated().getValue());
 
-							if(eventModified.after(componentModified)) {
-								if(component instanceof Item) {
-									Item item = (Item) component;
+							if(x_eventModified.after(x_componentModified)) {
+								if(x_component instanceof Item) {
+									Item x_item = (Item) x_component;
 
-									if(!(summary.equals(item.getText()) && start.equals(item.getDueDate()))) {
-										item.setText(summary);
-										item.setDueDate(start);
-										stats[COMP_UPDATED] += 1;
+									if(!(x_summary.equals(x_item.getText()) && x_start.equals(x_item.getDueDate()))) {
+										x_item.setText(x_summary);
+										x_item.setDueDate(x_start);
+										x_stats[s_COMP_UPDATED] += 1;
 									}
 								}
-								if(component instanceof Reminder) {
-									Reminder reminder = (Reminder) component;
+								if(x_component instanceof Reminder) {
+									Reminder x_reminder = (Reminder) x_component;
 
-									if(!(summary.equals(reminder.getText()) && start.equals(reminder.getDueDate()))) {
-										reminder.setText(summary);
-										reminder.setDueDate(start);
-										stats[COMP_UPDATED] += 1;
+									if(!(x_summary.equals(x_reminder.getText()) && x_start.equals(x_reminder.getDueDate()))) {
+										x_reminder.setText(x_summary);
+										x_reminder.setDueDate(x_start);
+										x_stats[s_COMP_UPDATED] += 1;
 									}
 								}
 							} else {
-								if(component instanceof Item) {
-									Item item = (Item) component;
+								if(x_component instanceof Item) {
+									Item x_item = (Item) x_component;
 
-									if(!(summary.equals(item.getText()) && start.equals(item.getDueDate()))) {
-										populateEvent(event, item.getId(), item.getText(), item.getDueDate());
-										client.events().update(calendarId, event.getId(), event).execute();
-										stats[EVENT_UPDATED] += 1;
+									if(!(x_summary.equals(x_item.getText()) && x_start.equals(x_item.getDueDate()))) {
+										s_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_item.getId(), x_item.getText(), x_item.getDueDate())).execute();
+										x_stats[s_EVENT_UPDATED] += 1;
 									}
 								}
-								if(component instanceof Reminder) {
-									Reminder reminder = (Reminder) component;
+								if(x_component instanceof Reminder) {
+									Reminder x_reminder = (Reminder) x_component;
 
-									if(!(summary.equals(reminder.getText()) && start.equals(reminder.getDueDate()))) {
-										populateEvent(event, reminder.getId(), reminder.getText(), reminder.getDueDate());
-										client.events().update(calendarId, event.getId(), event).execute();
-										stats[EVENT_UPDATED] += 1;
+									if(!(x_summary.equals(x_reminder.getText()) && x_start.equals(x_reminder.getDueDate()))) {
+										s_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_reminder.getId(), x_reminder.getText(), x_reminder.getDueDate())).execute();
+										x_stats[s_EVENT_UPDATED] += 1;
 									}
 								}
 							}
 						} else {
-							client.events().delete(calendarId, event.getId()).execute();
-							stats[EVENT_DELETED] += 1;
+							s_client.events().delete(x_calendarId, x_event.getId()).execute();
+							x_stats[s_EVENT_DELETED] += 1;
 						}
 					} else {
-						Item item = new Item(summary);
-						item.setDueDate(start);
-						Thread threadToAddTo = null;
-						syncedComponents.add(item.getId());
+						Item x_item = new Item(x_summary);
+						x_item.setDueDate(x_start);
+						x_syncedComponents.add(x_item.getId());
+						Thread x_threadToAddTo = null;
 
 						for(int i = 0; i< s_topLevelThread.getThreadItemCount(); i++) {
-							ThreadItem threadItem = s_topLevelThread.getThreadItem(i);
+							ThreadItem x_threadItem = s_topLevelThread.getThreadItem(i);
 
-							if(threadItem.getText().equals(FROM_GOOGLE) && threadItem instanceof Thread) {
-								threadToAddTo = (Thread) threadItem;
+							if(x_threadItem.getText().equals(s_FROM_GOOGLE) && x_threadItem instanceof Thread) {
+								x_threadToAddTo = (Thread) x_threadItem;
 								break;
 							}
 						}
 
-						if(threadToAddTo == null) {
-							threadToAddTo = new Thread(FROM_GOOGLE);
-							s_topLevelThread.addThreadItem(threadToAddTo);
+						if(x_threadToAddTo == null) {
+							x_threadToAddTo = new Thread(s_FROM_GOOGLE);
+							s_topLevelThread.addThreadItem(x_threadToAddTo);
 						}
 
-						threadToAddTo.addThreadItem(item);
+						x_threadToAddTo.addThreadItem(x_item);
 
-						event.setDescription(item.getId().toString());
-						client.events().patch(calendarId, event.getId(), event).execute();
-						stats[COMP_CREATED] += 1;
+						x_event.setDescription(x_item.getId().toString());
+							s_client.events().patch(x_calendarId, x_event.getId(), x_event).execute();
+						x_stats[s_COMP_CREATED] += 1;
 					}
 				}
 			}
 
-			synchronized (linkedComponents) {
-				linkedComponents.clear();
-				linkedComponents.addAll(syncedComponents);
+			synchronized (s_linkedComponents) {
+				s_linkedComponents.clear();
+				s_linkedComponents.addAll(x_syncedComponents);
 			}
 
-			System.out.println("Google Calendar Sync [" + new Date() + "]: " + events.size() + " events from google, " + stats[COMP_UPDATED] + " components updated, " + stats[EVENT_UPDATED] + " events updated, " + stats[COMP_CREATED] + " components created, " + stats[EVENT_DELETED] + " events deleted.");
+			System.out.println("Google Calendar Sync [" + new Date() + "]: " + x_events.size() + " events from google, " + x_stats[s_COMP_UPDATED] + " components updated, " + x_stats[s_EVENT_UPDATED] + " events updated, " + x_stats[s_COMP_CREATED] + " components created, " + x_stats[s_EVENT_DELETED] + " events deleted.");
 		} catch (Throwable t) {
 			System.out.println("Google Calendar Sync [" + new Date() + "]: Error talking to Google Calendar: " + t.getClass().getName() + ":" + t.getMessage());
 		}
 	}
 
-	public static void linkItemsToGoogle(List<Item> items, ProgressCallBack... callbacks) {
-		if(callbacks != null) {
-			int x_count = LookupHelper.countActiveSyncableComponents(items);
-
-			for(ProgressCallBack callback: callbacks) {
-				callback.started(x_count);
-			}
-		}
+	public static void linkItemsToGoogle(List<Item> p_items, ProgressCallBack... p_callbacks) {
+		callBack(p_callbacks, c -> c.started(LookupHelper.countActiveSyncableComponents(p_items)));
 
 		try {
-			String calendarId = findCalendar();
-			List<Event> events = getEvents(calendarId);
+			String x_calendarId = findCalendar();
+			List<Event> x_events = getEvents(x_calendarId);
 
-			for(Item item : items) {
-				boolean foundEvent = false;
+			for(Item x_item : p_items) {
+				Event x_event = findEvent(x_events, x_item);
 
-				if(events != null) {
-					for(Event event: events) {
-						if(item.getId().toString().equals(event.getDescription())) {
-							populateEvent(event, item.getId(), item.getText(), item.getDueDate());
-							client.events().update(calendarId, event.getId(), event).execute();
-							foundEvent = true;
-						}
-					}
+				if(x_event != null) {
+					s_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_item.getId(), x_item.getText(), x_item.getDueDate())).execute();
+				} else {
+					s_client.events().insert(x_calendarId, populateEvent(new Event(), x_item.getId(), x_item.getText(), x_item.getDueDate())).execute();
 				}
 
-				if(!foundEvent) {
-					addEvent(calendarId, item);
-				}
+				for(int i = 0; i < x_item.getReminderCount(); i++) {
+					Reminder x_reminder = x_item.getReminder(i);
 
-				for(int i = 0; i < item.getReminderCount(); i++) {
-					Reminder reminder = item.getReminder(i);
+					if(x_reminder.isActive()) {
+						x_event = findEvent(x_events, x_reminder);
 
-					if(reminder.isActive()) {
-						foundEvent = false;
-
-						if(events != null) {
-							for(Event event: events) {
-								if(reminder.getId().toString().equals(event.getDescription())) {
-									populateEvent(event, reminder.getId(), reminder.getText(), reminder.getDueDate());
-									client.events().update(calendarId, event.getId(), event).execute();
-									foundEvent = true;
-								}
-							}
-						}
-
-						if(!foundEvent) {
-							addEvent(calendarId, reminder);
+						if(x_events != null) {
+							s_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_reminder.getId(), x_reminder.getText(), x_reminder.getDueDate())).execute();
+						} else {
+							s_client.events().insert(x_calendarId, populateEvent(new Event(), x_reminder.getId(), x_reminder.getText(), x_reminder.getDueDate())).execute().getId();
 						}
 					}
 
-					if (callbacks != null) {
-						for(ProgressCallBack callback: callbacks) {
-							callback.progress(reminder.getText());
-						}
-					}
-
-					linkedComponents.add(reminder.getId());
+					callBack(p_callbacks, c -> c.progress(x_reminder.getText()));
+					s_linkedComponents.add(x_reminder.getId());
 				}
 
-				if (callbacks != null) {
-					for(ProgressCallBack callback: callbacks) {
-						callback.progress(item.getText());
-					}
-				}
-
-				linkedComponents.add(item.getId());
+				callBack(p_callbacks, c -> c.progress(x_item.getText()));
+				s_linkedComponents.add(x_item.getId());
 			}
 
-			if(callbacks != null) {
-				for(ProgressCallBack callback: callbacks) {
-					callback.success();
-				}
-			}
-
+			callBack(p_callbacks, ProgressCallBack::success);
 			GoogleSyncer.getInstance().updateGoogleListeners();
 		} catch (Throwable t) {
-			if(callbacks != null) {
-				for(ProgressCallBack callback: callbacks) {
-					callback.error(t.getMessage());
-				}
-			}
+			callBack(p_callbacks, c -> c.error(t.getMessage()));
 		}
 	}
 
-	public static void linkRemindersToGoogle(List<Reminder> reminders, ProgressCallBack... callbacks) {
-		if(callbacks != null) {
-			for(ProgressCallBack callback: callbacks) {
-				callback.started(reminders.size());
-			}
-		}
+	public static void linkRemindersToGoogle(List<Reminder> p_reminders, ProgressCallBack... p_callbacks) {
+		callBack(p_callbacks, c -> c.started(p_reminders.size()));
 
 		try {
 			String calendarId = findCalendar();
-			List<Event> events = getEvents(calendarId);
+			List<Event> x_events = getEvents(calendarId);
 
-			for(Reminder reminder : reminders) {
-				boolean foundEvent = false;
+			for(Reminder x_reminder : p_reminders) {
+				Event x_event = findEvent(x_events, x_reminder);
 
-				if(events != null) {
-					for(Event event: events) {
-						if(reminder.getId().toString().equals(event.getDescription())) {
-							populateEvent(event, reminder.getId(), reminder.getText(), reminder.getDueDate());
-							client.events().update(calendarId, event.getId(), event).execute();
-							foundEvent = true;
-						}
-					}
+				if(x_event != null) {
+					s_client.events().update(calendarId, x_event.getId(), populateEvent(x_event, x_reminder.getId(), x_reminder.getText(), x_reminder.getDueDate())).execute();
+				} else {
+					s_client.events().insert(calendarId, populateEvent(new Event(), x_reminder.getId(), x_reminder.getText(), x_reminder.getDueDate())).execute().getId();
 				}
 
-				if(!foundEvent) {
-					addEvent(calendarId, reminder);
-				}
-
-				if (callbacks != null) {
-					for(ProgressCallBack callback: callbacks) {
-						callback.progress(reminder.getText());
-					}
-				}
-
-				linkedComponents.add(reminder.getId());
+				callBack(p_callbacks, c -> c.progress(x_reminder.getText()));
+				s_linkedComponents.add(x_reminder.getId());
 			}
 
-			if(callbacks != null) {
-				for(ProgressCallBack callback: callbacks) {
-					callback.success();
-				}
-			}
-
+			callBack(p_callbacks, ProgressCallBack::success);
 			GoogleSyncer.getInstance().updateGoogleListeners();
 		} catch (Throwable t) {
-			if(callbacks != null) {
-				for(ProgressCallBack callback: callbacks) {
-					callback.error(t.getMessage());
+			callBack(p_callbacks, c -> c.error(t.getMessage()));
+		}
+	}
+
+	private static Event findEvent(List<Event> x_events, Component x_item) {
+		if(x_events != null) {
+			for(Event x_event: x_events) {
+				if(x_item.getId().toString().equals(x_event.getDescription())) {
+					return x_event;
 				}
+			}
+		}
+
+		return null;
+	}
+
+	private static void callBack(ProgressCallBack[] p_callbacks, Consumer<ProgressCallBack> function) {
+		if(p_callbacks != null) {
+			for(ProgressCallBack callback: p_callbacks) {
+				function.accept(callback);
 			}
 		}
 	}
@@ -322,7 +270,7 @@ public class GoogleUtil {
 			throw new IllegalStateException("Google not successfully synced");
 		}
 
-		CalendarList feed = client.calendarList().list().execute();
+		CalendarList feed = s_client.calendarList().list().execute();
 
 		if (feed.getItems() != null) {
 			for (CalendarListEntry entry : feed.getItems()) {
@@ -338,16 +286,8 @@ public class GoogleUtil {
 		Calendar entry = new Calendar();
 		entry.setSummary("Threads - " + s_topLevelThread.getText());
 		entry.setDescription(s_topLevelThread.getId().toString());
-		Calendar calendar = client.calendars().insert(entry).execute();
+		Calendar calendar = s_client.calendars().insert(entry).execute();
 		return calendar.getId();
-	}
-
-	private static String addEvent(String calendarId, Item item) throws IOException {
-		return client.events().insert(calendarId, populateEvent(new Event(), item.getId(), item.getText(), item.getDueDate())).execute().getId();
-	}
-
-	private static String addEvent(String calendarId, Reminder reminder) throws IOException {
-		return client.events().insert(calendarId, populateEvent(new Event(), reminder.getId(), reminder.getText(), reminder.getDueDate())).execute().getId();
 	}
 
 	private static Event populateEvent(Event event, UUID id, String text, Date dueDate) {
@@ -367,7 +307,7 @@ public class GoogleUtil {
 		popupReminder.setMethod("popup");
 
 		Event.Reminders reminders = new Event.Reminders();
-		reminders.setOverrides(Arrays.asList(popupReminder));
+		reminders.setOverrides(Collections.singletonList(popupReminder));
 		reminders.setUseDefault(false);
 		event.setReminders(reminders);
 
@@ -375,12 +315,12 @@ public class GoogleUtil {
 	}
 
 	private static List<Event> getEvents(String calendarId) throws IOException {
-		Events response = client.events().list("primary").setCalendarId(calendarId).execute();
+		Events response = s_client.events().list("primary").setCalendarId(calendarId).execute();
 		List<Event> events = response.getItems();
 		String nextPageToken = response.getNextPageToken();
 
 		while(nextPageToken != null) {
-			response = client.events().list("primary").setCalendarId(calendarId).setPageToken(nextPageToken).execute();
+			response = s_client.events().list("primary").setCalendarId(calendarId).setPageToken(nextPageToken).execute();
 			events.addAll(response.getItems());
 			nextPageToken = response.getNextPageToken();
 		}
@@ -389,8 +329,8 @@ public class GoogleUtil {
 	}
 
 	public static boolean isLinked(Component component) {
-		synchronized (linkedComponents) {
-			return linkedComponents.contains(component.getId());
+		synchronized (s_linkedComponents) {
+			return s_linkedComponents.contains(component.getId());
 		}
 	}
 }
