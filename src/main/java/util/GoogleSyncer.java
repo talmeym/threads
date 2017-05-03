@@ -10,12 +10,12 @@ public class GoogleSyncer extends java.lang.Thread {
     private static GoogleSyncer s_INSTANCE = null;
     private static final int s_frequency = 120000;
 
-	public static void initialise(Thread p_topLevelThread) {
+	public static void initialise(Thread p_topLevelThread, boolean p_enabled) {
 		if(s_INSTANCE != null) {
 			throw new IllegalStateException("Cannot initialise google syncer twice");
 		}
 
-		s_INSTANCE = new GoogleSyncer(p_topLevelThread);
+		s_INSTANCE = new GoogleSyncer(p_topLevelThread, p_enabled);
 	}
 
 	public static GoogleSyncer getInstance() {
@@ -31,15 +31,17 @@ public class GoogleSyncer extends java.lang.Thread {
     private boolean o_continueRunning = true;
     private long o_nextSync = System.currentTimeMillis();
 
-    private GoogleSyncer(Thread p_topThread) {
-		try {
-			GoogleUtil.initialise(p_topThread);
-		} catch (GeneralSecurityException | IOException e) {
-			throw new RuntimeException("Error initialising google util", e);
-		}
+    private GoogleSyncer(Thread p_topThread, boolean p_enabled) {
+		if(p_enabled) {
+			try {
+				GoogleUtil.initialise(p_topThread);
+			} catch (GeneralSecurityException | IOException e) {
+				throw new RuntimeException("Error initialising google util", e);
+			}
 
-		setDaemon(true);
-		start();
+			setDaemon(true);
+			start();
+		}
     }
 
 	public void addGoogleSyncListener(GoogleSyncListener p_listener) {

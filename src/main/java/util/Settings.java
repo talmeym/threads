@@ -18,6 +18,7 @@ public class Settings {
 	public static final String s_CALENDARREM = "calendarrem";
 	public static final String s_ONLYDUE = "onlydue";
 	public static final String s_SEVENDAYS = "sevendays";
+	public static final String s_GOOGLE_ENABLED = "google";
 
 	private static Map<String, List<SettingChangeListener>> interestedParties = new HashMap<>();
 	private static Properties settings = new Properties();
@@ -65,14 +66,17 @@ public class Settings {
 		}
 	}
 
-	public static void load(File file) {
+	public static boolean load(File file) {
 		if(file.exists()) {
 			try {
 				settings.load(new FileInputStream(file));
+				return "true".equals(settings.get(Settings.s_GOOGLE_ENABLED));
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
+
+		return false;
 	}
 
 	public static void save(File file) {

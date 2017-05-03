@@ -18,8 +18,9 @@ public class Threads {
 		TimedSaver.initialise(x_topThread, x_dataFile);
 		NotificationUpdater.initialise(x_topThread);
 		SystemTrayUtil.initialise(x_topThread);
-		GoogleSyncer.initialise(x_topThread);
-		Settings.load(x_settingsFile);
+
+		boolean googleEnabled = Settings.load(x_settingsFile);
+		GoogleSyncer.initialise(x_topThread, googleEnabled);
 
 		WindowManager.initialise(x_topThread, new WindowAdapter(){
 			@Override

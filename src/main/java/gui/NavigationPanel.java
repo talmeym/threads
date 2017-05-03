@@ -3,14 +3,11 @@ package gui;
 import data.Component;
 import data.Thread;
 import data.*;
-import util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.text.*;
-import java.util.*;
 import java.util.List;
 
 public class NavigationPanel extends JPanel implements TreeSelectionListener {
@@ -28,7 +25,7 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener {
 		x_navigationPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		add(x_navigationPanel, BorderLayout.CENTER);
-		add(new StatusPanel(), BorderLayout.SOUTH);
+		add(new ThreadsStatusPanel(), BorderLayout.SOUTH);
 	}
 
 	public void selectComponent(Component p_component) {

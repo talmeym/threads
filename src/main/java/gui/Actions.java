@@ -2,7 +2,7 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.ImageUtil;
+import util.*;
 
 import javax.swing.*;
 import java.util.*;
@@ -18,14 +18,12 @@ public class Actions {
 		}
 
 		if(x_thread != null) {
-			if(x_thread != null) {
-				String x_name = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Thread name:", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
+			String x_name = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Thread name:", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
 
-				if(x_name != null) {
-					Thread x_newThread = new Thread(x_name);
-					x_thread.addThreadItem(x_newThread);
-					WindowManager.getInstance().openComponent(x_newThread);
-				}
+			if(x_name != null) {
+				Thread x_newThread = new Thread(x_name);
+				x_thread.addThreadItem(x_newThread);
+				WindowManager.getInstance().openComponent(x_newThread);
 			}
 		}
 	}
@@ -97,6 +95,10 @@ public class Actions {
 	}
 
 	public static void linkToGoogle(final Item p_item, final JPanel p_enclosingPanel) {
+		if(checkGoogle(p_enclosingPanel)) {
+			return;
+		}
+
 		if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Link '" + p_item.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 			GoogleLinkTask x_task = new GoogleLinkTask(Collections.singletonList(p_item), new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
 				@Override
@@ -114,6 +116,10 @@ public class Actions {
 	}
 
 	public static void linkToGoogle(Reminder p_reminder, JPanel p_enclosingPanel) {
+		if(checkGoogle(p_enclosingPanel)) {
+			return;
+		}
+
 		if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Link '" + p_reminder.getText() + "' to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 			GoogleLinkTask x_task = new GoogleLinkTask(p_reminder, new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
 				@Override
@@ -131,6 +137,10 @@ public class Actions {
 	}
 
 	public static void linkToGoogle(Thread x_thread, JPanel p_enclosingPanel, boolean p_activeOnly) {
+		if(checkGoogle(p_enclosingPanel)) {
+			return;
+		}
+
 		final List<Item> x_actions = p_activeOnly ? LookupHelper.getAllActiveActions(x_thread) : LookupHelper.getAllActions(x_thread);
 
 		if (x_actions.size() > 0) {
@@ -149,5 +159,14 @@ public class Actions {
 				x_task.execute();
 			}
 		}
+	}
+
+	private static boolean checkGoogle(JPanel p_enclosingPanel) {
+		if(!Settings.registerForSetting(Settings.s_GOOGLE_ENABLED, (p_name, p_value) -> { }, "false").equals("true")) {
+			JOptionPane.showMessageDialog(p_enclosingPanel, "Google is disabled", "No Google", JOptionPane.INFORMATION_MESSAGE);
+			return true;
+		}
+
+		return false;
 	}
 }
