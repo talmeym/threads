@@ -33,7 +33,7 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 		System.arraycopy(x_values, 1, x_listValues, 1, x_values.length - 1);
 		x_listValues[0] = x_today ? "Today" : new SimpleDateFormat(x_calendar.get(Calendar.DAY_OF_MONTH) == 1  || (row == 0 && column == 0) ? "d MMM" : "d").format(x_date);
 
-		final JList x_list = new JList(x_listValues);
+		final JList<Object> x_list = new JList<>(x_listValues);
 		x_list.setCellRenderer(new MyListCellRenderer());
 		x_list.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         x_list.setBackground(column > 4 ? ColourConstants.s_weekendColour : Color.white);
@@ -52,7 +52,7 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 		this.o_month = p_month;
 	}
 
-	public static class MyListCellRenderer extends JLabel implements ListCellRenderer {
+	public static class MyListCellRenderer extends JLabel implements ListCellRenderer<Object> {
 		@Override
 		public Component getListCellRendererComponent(JList jList, Object p_value, int p_index, boolean p_isSelected, boolean p_cellHasFocus) {
 			setIcon(null);

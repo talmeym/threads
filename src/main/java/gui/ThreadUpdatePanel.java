@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.Component;
 import java.awt.event.*;
-import java.util.List;
 
 import static gui.Actions.addUpdate;
 import static util.GuiUtil.setUpButtonLabel;
@@ -40,27 +39,15 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
 
 		o_dismissLabel.setEnabled(false);
 		o_dismissLabel.setToolTipText("Set Update Active/Inactive");
-		o_dismissLabel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dismiss(getSelectedObject());
-			}
-		});
+		o_dismissLabel.addActionListener(e -> dismiss(getSelectedObject()));
 
 		o_removeLabel.setEnabled(false);
 		o_removeLabel.setToolTipText("Remove Update");
-		o_removeLabel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				remove(getSelectedObject());
-			}
-		});
+		o_removeLabel.addActionListener(e -> remove(getSelectedObject()));
 
 		o_moveLabel.setEnabled(false);
 		o_moveLabel.setToolTipText("Move Update");
-		o_moveLabel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				move(getSelectedObject());
-			}
-		});
+		o_moveLabel.addActionListener(e -> Actions.move(getSelectedObject(), o_thread, o_parentPanel));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
@@ -81,28 +68,6 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
 		if(p_update != null) {
 			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_update.getText() + "' from '" + p_update.getParentThread().getText() + "' ?", "Remove " + p_update.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				p_update.getParentThread().removeThreadItem(p_update);
-			}
-		}
-	}
-
-	private void move(Item p_update) {
-		if(p_update != null) {
-			Thread x_thread = null;
-
-			Thread x_topThread = (Thread) o_thread.getHierarchy().get(0);
-			List<Thread> x_threads = LookupHelper.getAllActiveThreads(x_topThread);
-			x_threads.add(0, x_topThread);
-			x_threads.remove(p_update.getParentThread());
-
-			if(x_threads.size() > 0) {
-				x_thread = (Thread) JOptionPane.showInputDialog(o_parentPanel, "Choose a Thread to move it to:", "Move '" + p_update + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-			} else {
-				JOptionPane.showMessageDialog(o_parentPanel, "This is no other Thread to move this Update to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
-			}
-
-			if(x_thread != null) {
-				p_update.getParentThread().removeThreadItem(p_update);
-				x_thread.addThreadItem(p_update);
 			}
 		}
 	}

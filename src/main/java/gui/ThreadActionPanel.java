@@ -5,15 +5,10 @@ import data.Thread;
 import util.*;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 import static gui.Actions.addAction;
 import static util.GuiUtil.setUpButtonLabel;
@@ -44,61 +39,39 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 		x_addLabel.setToolTipText("Add Action");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				addAction(getSelectedObject(), o_thread, p_parentPanel);
+				addAction(getSelectedObject(), o_thread, DateSuggestionPanel.getDateSuggestion(), p_parentPanel, true);
 			}
 		});
 
 		o_dismissLabel.setEnabled(false);
 		o_dismissLabel.setToolTipText("Set Action Active/Inactive");
-		o_dismissLabel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dismiss(getSelectedObject());
-			}
-		});
+		o_dismissLabel.addActionListener(e -> dismiss(getSelectedObject()));
 
 		o_removeLabel.setEnabled(false);
 		o_removeLabel.setToolTipText("Remove Action");
-		o_removeLabel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				remove(getSelectedObject());
-			}
-		});
+		o_removeLabel.addActionListener(e -> remove(getSelectedObject()));
 
 		o_moveLabel.setEnabled(false);
 		o_moveLabel.setToolTipText("Move Action");
-		o_moveLabel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				move(getSelectedObject());
-			}
-		});
+		o_moveLabel.addActionListener(e -> Actions.move(getSelectedObject(), o_thread, o_parentPanel));
 
 		o_linkLabel.setEnabled(false);
 		o_linkLabel.setToolTipText("Link Action to Google Calendar");
-		o_linkLabel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (o_linkLabel.isEnabled()) {
-					Actions.linkToGoogle(getSelectedObject(), p_parentPanel);
-				}
+		o_linkLabel.addActionListener(e -> {
+			if (o_linkLabel.isEnabled()) {
+				Actions.linkToGoogle(getSelectedObject(), p_parentPanel);
 			}
 		});
 
 		ThreadActionTableModel x_tableModel = (ThreadActionTableModel) o_table.getModel();
-		x_tableModel.setOnlyNext7Days(registerForSetting(s_SEVENDAYS, this, 1) == 1);
+		x_tableModel.setOnlyNext7Days(registerForSetting(s_SEVENDAYS, this, true));
 
 		o_showNext7DaysRadioButton = new JRadioButton("7 Days", x_tableModel.onlyNext7Days());
 		o_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyNext7Days());
 
-		o_showNext7DaysRadioButton.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				boolean selected = o_showNext7DaysRadioButton.isSelected();
-				x_tableModel.setOnlyNext7Days(selected);
-				updateSetting(Settings.s_SEVENDAYS, selected ? 1 : 0);
-			}
+		o_showNext7DaysRadioButton.addChangeListener(e -> {
+			x_tableModel.setOnlyNext7Days(o_showNext7DaysRadioButton.isSelected());
+			updateSetting(Settings.s_SEVENDAYS, o_showNext7DaysRadioButton.isSelected());
 		});
 
 		ButtonGroup x_group = new ButtonGroup();
@@ -131,28 +104,6 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 
 			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + o_action.getText() + "' from '" + x_thread.getText() + "' ?", "Remove " + o_action.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_thread.removeThreadItem(o_action);
-			}
-		}
-	}
-
-	private void move(Item o_action) {
-		if(o_action != null) {
-			Thread x_thread = null;
-
-			Thread x_topThread = (Thread) o_thread.getHierarchy().get(0);
-			List<Thread> x_threads = LookupHelper.getAllActiveThreads(x_topThread);
-			x_threads.add(0, x_topThread);
-			x_threads.remove(o_action.getParentThread());
-
-			if(x_threads.size() > 0) {
-				x_thread = (Thread) JOptionPane.showInputDialog(o_parentPanel, "Choose a Thread to move it to:", "Move '" + o_action + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-			} else {
-				JOptionPane.showMessageDialog(o_parentPanel, "This is no other Thread to move this Action to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
-			}
-
-			if(x_thread != null) {
-				o_action.getParentThread().removeThreadItem(o_action);
-				x_thread.addThreadItem(o_action);
 			}
 		}
 	}
@@ -202,8 +153,9 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 
 	@Override
 	public void settingChanged(String p_name, Object p_value) {
-		((ThreadActionTableModel)o_table.getModel()).setOnlyNext7Days(p_value.equals(1));
-		o_showNext7DaysRadioButton.setSelected(p_value.equals(1));
-		o_showAllRadioButton.setSelected(p_value.equals(0));
+		boolean x_value = (boolean) p_value;
+		((ThreadActionTableModel)o_table.getModel()).setOnlyNext7Days(x_value);
+		o_showNext7DaysRadioButton.setSelected(x_value);
+		o_showAllRadioButton.setSelected(!x_value);
 	}
 }

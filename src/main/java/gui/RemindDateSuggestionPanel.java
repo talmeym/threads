@@ -45,12 +45,12 @@ public class RemindDateSuggestionPanel extends JPanel {
 	private final JLabel o_setLabel = new JLabel(ImageUtil.getReturnIcon());
 	private final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
 
-	private final JComboBox o_minBox = new JComboBox(s_minItems);
-    private final JComboBox o_hourBox = new JComboBox(s_hourItems);
-    private final JComboBox o_dayBox = new JComboBox(s_dayItems);
-    private final JComboBox o_weekBox = new JComboBox(s_weekItems);
+	private final JComboBox<DateItem> o_minBox = new JComboBox<>(s_minItems);
+    private final JComboBox<DateItem> o_hourBox = new JComboBox<>(s_hourItems);
+    private final JComboBox<DateItem> o_dayBox = new JComboBox<>(s_dayItems);
+    private final JComboBox<DateItem> o_weekBox = new JComboBox<>(s_weekItems);
 
-	public RemindDateSuggestionPanel(Reminder p_reminder, final JPanel p_parentPanel) {
+	public RemindDateSuggestionPanel(Reminder p_reminder) {
         super(new BorderLayout());
 		o_reminder = p_reminder;
 
@@ -89,12 +89,7 @@ public class RemindDateSuggestionPanel extends JPanel {
 		o_dueDateField.setToolTipText("Press enter to set");
 		o_dueDateField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
 
-		o_dueDateField.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				setDueDate();
-			}
-		});
+		o_dueDateField.addActionListener(actionEvent -> setDueDate());
 
 		o_dueDateField.addFocusListener(new FocusListener() {
 			@Override
@@ -141,11 +136,7 @@ public class RemindDateSuggestionPanel extends JPanel {
 		});
 
 		JButton o_setButton = new JButton("Set");
-		o_setButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				suggestAndSet();
-			}
-		});
+		o_setButton.addActionListener(e -> suggestAndSet());
 
 		JTextField x_actionDueDateField = new JTextField(getDueDateText(((Item) p_reminder.getParentComponent()).getDueDate()));
 		x_actionDueDateField.setHorizontalAlignment(JTextField.CENTER);

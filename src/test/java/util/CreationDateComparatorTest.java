@@ -1,8 +1,7 @@
 package util;
 
 import data.Item;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;

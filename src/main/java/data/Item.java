@@ -11,8 +11,8 @@ import static util.DateUtil.TODAY;
 public class Item extends ThreadItem<Reminder> implements HasDueDate {
     private Date o_dueDate;
     
-    public Item(String text) {
-        this(UUID.randomUUID(), new Date(), new Date(), true, text, null, null, null);
+    public Item(String text, Date p_dueDate) {
+        this(UUID.randomUUID(), new Date(), new Date(), true, text, p_dueDate, null, null);
     }
     
     public Item(UUID id, Date p_creationDate, Date p_modifledDate, boolean p_active, String p_text, Date p_dueDate, List<Reminder> p_reminders, File p_docFolder) {
@@ -36,8 +36,14 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 		return getComponent(p_index);
 	}
 
-	public void addReminder(Reminder p_reminder) {
-		addComponent(p_reminder);
+	public List<Reminder> getReminders() {
+		return new ArrayList<>(getComponents());
+	}
+
+	public void addReminder(Reminder... p_reminder) {
+		for(Reminder x_reminder: p_reminder) {
+			addComponent(x_reminder);
+		}
 	}
 
 	public void removeReminder(Reminder p_reminder) {
@@ -69,6 +75,7 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 		return false;
 	}
 
+	@Override
 	public ComponentType getType() {
 		return o_dueDate != null ? ComponentType.Action : ComponentType.Update;
 	}

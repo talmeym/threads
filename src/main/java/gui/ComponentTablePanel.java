@@ -13,7 +13,7 @@ import java.util.List;
 abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends JPanel implements TimeUpdateListener, GoogleSyncListener, TableSelectionListener<TYPE> {
 	protected final ComponentTableModel<COMPONENT, TYPE> o_tableModel;
 	protected final JTable o_table;
-	private final List<TableSelectionListener> o_listeners = new ArrayList<TableSelectionListener>();
+	private final List<TableSelectionListener<TYPE>> o_listeners = new ArrayList<>();
 
 	protected ComponentTablePanel(ComponentTableModel<COMPONENT, TYPE> p_tableModel, TableCellRenderer p_cellRenderer) {
         super(new BorderLayout());
@@ -31,13 +31,13 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 			@Override
             public void mouseClicked(MouseEvent e) {
 				if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
-					for(TableSelectionListener x_listener: o_listeners){
+					for(TableSelectionListener<TYPE> x_listener: o_listeners){
 						x_listener.tableRowClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject());
 					}
 				}
 
                 if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-					for(TableSelectionListener x_listener: o_listeners){
+					for(TableSelectionListener<TYPE> x_listener: o_listeners){
 						x_listener.tableRowDoubleClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject());
 					}
                 }
@@ -55,7 +55,7 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 
     abstract void showContextMenu(int p_row, int p_col, Point p_point, java.awt.Component p_origin, TYPE p_selectedObject);
 
-	public void addTableSelectionListener(TableSelectionListener p_listener) {
+	public void addTableSelectionListener(TableSelectionListener<TYPE> p_listener) {
 		o_listeners.add(p_listener);
 	}
 

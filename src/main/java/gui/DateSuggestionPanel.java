@@ -12,7 +12,7 @@ import java.util.*;
 
 import static util.GuiUtil.setUpButtonLabel;
 
-class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
+public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
 	private static final String s_defaultTextString = "dd/mm/yy [hh:mm]";
@@ -122,18 +122,8 @@ class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 		});
 
 		JButton o_SetButton = new JButton("Set");
-		o_SetButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				suggestAndSet();
-			}
-		});
-
-		o_dueDateField.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				setDueDate();
-			}
-		});
+		o_SetButton.addActionListener(e -> suggestAndSet());
+		o_dueDateField.addActionListener(actionEvent -> setDueDate());
 
 		setUpDropDowns();
 

@@ -135,8 +135,7 @@ public class GoogleUtil {
 							x_stats[s_EVENT_DELETED] += 1;
 						}
 					} else {
-						Item x_item = new Item(x_summary);
-						x_item.setDueDate(x_start);
+						Item x_item = new Item(x_summary, x_start);
 						x_syncedComponents.add(x_item.getId());
 						Thread x_threadToAddTo = null;
 

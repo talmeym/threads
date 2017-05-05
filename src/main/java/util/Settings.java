@@ -46,12 +46,27 @@ public class Settings {
 
 		interestedParties.get(name).add(listener);
 
-		if(!settings.containsKey(name) && defaultValue != null) {
+		if(!settings.containsKey(name)) {
 			settings.put(name, defaultValue);
 		}
 
 		Object value = settings.get(name);
 		return (String) value;
+	}
+
+	public static Boolean registerForSetting(String name, SettingChangeListener listener, boolean defaultValue) {
+		if(!interestedParties.containsKey(name)) {
+			interestedParties.put(name, new ArrayList<>());
+		}
+
+		interestedParties.get(name).add(listener);
+
+		if(!settings.containsKey(name)) {
+			settings.put(name, String.valueOf(defaultValue));
+		}
+
+		Object value = settings.get(name);
+		return Boolean.parseBoolean((String) value);
 	}
 
 	public static void updateSetting(String name, Object value) {

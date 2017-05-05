@@ -162,7 +162,7 @@ public class DateUtil {
 		return p_includePast ? Math.abs(x_diff) < x_sevenDays : x_diff > 0 && x_diff < x_sevenDays;
 	}
 
-	public static boolean isbefore7DaysFromNow(Date p_dueDate) {
+	public static boolean isBefore7DaysFromNow(Date p_dueDate) {
 		Date x_date = new Date();
 		Date x_now = isAllDay(p_dueDate) || DateUtil.timeIsBefore(p_dueDate, x_date) ? makeStartOfDay(x_date) : x_date;
 		long x_diff = p_dueDate.getTime() - x_now.getTime();

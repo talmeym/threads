@@ -42,8 +42,7 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener {
 	@Override
 	public void valueChanged(TreeSelectionEvent p_treeSelectionEvent) {
 		if(p_treeSelectionEvent.getNewLeadSelectionPath() != null && !p_treeSelectionEvent.getNewLeadSelectionPath().equals(p_treeSelectionEvent.getOldLeadSelectionPath())) {
-			TreePath x_path = p_treeSelectionEvent.getPath();
-			ThreadItem x_threadItem = (ThreadItem) x_path.getLastPathComponent();
+			ThreadItem x_threadItem = (ThreadItem) p_treeSelectionEvent.getPath().getLastPathComponent();
 			WindowManager.getInstance().openComponent(x_threadItem);
 		}
 	}

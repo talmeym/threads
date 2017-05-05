@@ -28,11 +28,13 @@ public class Actions {
 		}
 	}
 
-	public static void addAction(Item p_action, Thread p_startingThread, JPanel p_enclosingPanel) {
+	public static void addAction(ThreadItem p_threadItem, Thread p_startingThread, Date p_date, JPanel p_enclosingPanel, boolean p_openAfter) {
 		Thread x_thread;
 
-		if(p_action != null) {
-			x_thread = p_action.getParentThread();
+		if(p_threadItem instanceof Thread) {
+			x_thread = (Thread) p_threadItem;
+		} else if(p_threadItem instanceof Item) {
+			x_thread = p_threadItem.getParentThread();
 		} else {
 			x_thread = chooseThread(p_startingThread, p_enclosingPanel, "Add an Action ?");
 		}
@@ -41,19 +43,23 @@ public class Actions {
 			String x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Action text:", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Action");
 
 			if(x_text != null) {
-				Item x_item = new Item(x_text);
-				x_item.setDueDate(DateSuggestionPanel.getDateSuggestion());
+				Item x_item = new Item(x_text, p_date);
 				x_thread.addThreadItem(x_item);
-				WindowManager.getInstance().openComponent(x_item);
+
+				if(p_openAfter) {
+					WindowManager.getInstance().openComponent(x_item);
+				}
 			}
 		}
 	}
 
-	public static void addUpdate(Item p_update, Thread p_startingThread, JPanel p_enclosingPanel) {
+	public static void addUpdate(ThreadItem p_threadItem, Thread p_startingThread, JPanel p_enclosingPanel) {
 		Thread x_thread;
 
-		if(p_update != null) {
-			x_thread = p_update.getParentThread();
+		if(p_threadItem instanceof Thread) {
+			x_thread = (Thread) p_threadItem;
+		} else if(p_threadItem instanceof Item) {
+			x_thread = p_threadItem.getParentThread();
 		} else {
 			x_thread = chooseThread(p_startingThread, p_enclosingPanel, "Add an Update ?");
 		}
@@ -62,8 +68,8 @@ public class Actions {
 			String x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Update text:", "Add new Update to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Update");
 
 			if(x_text != null) {
-				Item x_item = new Item(x_text);
-				x_thread.addItem(x_item);
+				Item x_item = new Item(x_text, null);
+				x_thread.addThreadItem(x_item);
 
 				if(LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(p_enclosingPanel, MessagingConstants.s_supersedeUpdatesDesc, MessagingConstants.s_supersedeUpdatesTitle, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 					for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
@@ -83,15 +89,14 @@ public class Actions {
 	}
 
 	private static Thread chooseThread(Thread p_startingThread, JPanel p_enclosingPanel, String x_title) {
-		Thread x_thread;List<Thread> x_threads = LookupHelper.getAllActiveThreads(p_startingThread);
+		List<Thread> x_threads = LookupHelper.getAllActiveThreads(p_startingThread);
 		x_threads.add(0, p_startingThread);
 
 		if(x_threads.size() > 1) {
-			x_thread = (Thread) JOptionPane.showInputDialog(p_enclosingPanel, "Choose a Thread to add it to:", x_title, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+			return (Thread) JOptionPane.showInputDialog(p_enclosingPanel, "Choose a Thread to add it to:", x_title, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 		} else {
-			x_thread = p_startingThread;
+			return p_startingThread;
 		}
-		return x_thread;
 	}
 
 	public static void linkToGoogle(final Item p_item, final JPanel p_enclosingPanel) {
@@ -162,11 +167,40 @@ public class Actions {
 	}
 
 	private static boolean checkGoogle(JPanel p_enclosingPanel) {
-		if(!Settings.registerForSetting(Settings.s_GOOGLE_ENABLED, (p_name, p_value) -> { }, "false").equals("true")) {
+		if(!Settings.registerForSetting(Settings.s_GOOGLE_ENABLED, (p_name, p_value) -> { }, false)) {
 			JOptionPane.showMessageDialog(p_enclosingPanel, "Google is disabled", "No Google", JOptionPane.INFORMATION_MESSAGE);
 			return true;
 		}
 
 		return false;
 	}
+
+	public static void move(ThreadItem p_threadItem, Thread o_startingThread, JPanel o_enclosingPanel) {
+		if(p_threadItem != null) {
+			Thread x_thread = null;
+
+			Thread x_topThread = (Thread) o_startingThread.getHierarchy().get(0);
+			List<Thread> x_threads = LookupHelper.getAllActiveThreads(x_topThread);
+
+			x_threads.add(0, x_topThread);
+			x_threads.remove(p_threadItem.getParentThread());
+
+			if(p_threadItem instanceof Thread) {
+				x_threads.remove(p_threadItem);
+				x_threads.removeAll(LookupHelper.getAllActiveThreads((Thread) p_threadItem));
+			}
+
+			if(x_threads.size() > 0) {
+				x_thread = (Thread) JOptionPane.showInputDialog(o_enclosingPanel, "Choose a Thread to move it to:", "Move '" + p_threadItem + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+			} else {
+				JOptionPane.showMessageDialog(o_enclosingPanel, "This is no other Thread to move this " + p_threadItem.getType() + " to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
+			}
+
+			if(x_thread != null) {
+				p_threadItem.getParentThread().removeThreadItem(p_threadItem);
+				x_thread.addThreadItem(p_threadItem);
+			}
+		}
+	}
+
 }

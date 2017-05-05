@@ -33,45 +33,30 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 
 		o_removeLabel.setEnabled(false);
 		o_removeLabel.setToolTipText("Remove Reminder");
-		o_removeLabel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				remove(getSelectedObject());
-			}
-		});
+		o_removeLabel.addActionListener(e -> remove(getSelectedObject()));
 
 		o_dismissLabel.setEnabled(false);
 		o_dismissLabel.setToolTipText("Set Reminder Active/Inactive");
-		o_dismissLabel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dismiss(getSelectedObject());
-			}
-		});
+		o_dismissLabel.addActionListener(e -> dismiss(getSelectedObject()));
 
 		o_linkLabel.setToolTipText("Link Reminder to Google Calendar");
 		o_linkLabel.setEnabled(false);
-		o_linkLabel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (o_linkLabel.isEnabled()) {
-					linkToGoogle(getSelectedObject(), o_parentPanel);
-				}
+		o_linkLabel.addActionListener(e -> {
+			if (o_linkLabel.isEnabled()) {
+				linkToGoogle(getSelectedObject(), o_parentPanel);
 			}
 		});
 
 		ThreadReminderTableModel x_tableModel = (ThreadReminderTableModel) o_table.getModel();
-		x_tableModel.setOnlyDueReminders(registerForSetting(s_ONLYDUE, this, 1) == 1);
+		x_tableModel.setOnlyDueReminders(registerForSetting(s_ONLYDUE, this, true));
 
 		o_showDueRadioButton = new JRadioButton("Due", x_tableModel.onlyDueReminders());
 		o_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyDueReminders());
 
-		o_showDueRadioButton.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				boolean selected = o_showDueRadioButton.isSelected();
-				x_tableModel.setOnlyDueReminders(selected);
-				updateSetting(Settings.s_ONLYDUE, selected ? 1 : 0);
-			}
+		o_showDueRadioButton.addChangeListener(e -> {
+			boolean selected = o_showDueRadioButton.isSelected();
+			x_tableModel.setOnlyDueReminders(selected);
+			updateSetting(Settings.s_ONLYDUE, selected ? 1 : 0);
 		});
 
 		ButtonGroup x_group = new ButtonGroup();
@@ -100,11 +85,13 @@ public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> i
 	}
 
 	private void remove(Reminder p_reminder) {
-		if(p_reminder != null) {
-			Item x_item = p_reminder.getParentItem();
+		if(o_removeLabel.isEnabled()) {
+			if (p_reminder != null) {
+				Item x_item = p_reminder.getParentItem();
 
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Remove " + p_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				x_item.removeReminder(p_reminder);
+				if (JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Remove " + p_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+					x_item.removeReminder(p_reminder);
+				}
 			}
 		}
 	}

@@ -5,7 +5,6 @@ import data.Thread;
 import util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -55,20 +54,10 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
 				JPopupMenu x_popupMenu = new JPopupMenu();
 
 				JMenuItem x_linkActive = new JMenuItem("Link Active");
-				x_linkActive.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent actionEvent) {
-						linkToGoogle(o_thread, p_parentPanel, true);
-					}
-				});
+				x_linkActive.addActionListener(actionEvent -> linkToGoogle(o_thread, p_parentPanel, true));
 
 				JMenuItem x_linkAll = new JMenuItem("Link All");
-				x_linkAll.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent actionEvent) {
-						linkToGoogle(o_thread, p_parentPanel, false);
-					}
-				});
+				x_linkAll.addActionListener(actionEvent -> linkToGoogle(o_thread, p_parentPanel, false));
 
 				x_popupMenu.add(x_linkActive);
 				x_popupMenu.add(x_linkAll);
@@ -83,12 +72,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
         add(o_tabs, BorderLayout.CENTER);
 
 		o_tabs.setSelectedIndex(registerForSetting(Settings.s_TAB_INDEX, this, 0));
-		o_tabs.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent changeEvent) {
-				updateSetting(Settings.s_TAB_INDEX, "" + o_tabs.getSelectedIndex());
-			}
-		});
+		o_tabs.addChangeListener(changeEvent -> updateSetting(Settings.s_TAB_INDEX, "" + o_tabs.getSelectedIndex()));
 
         o_thread.addComponentChangeListener(this);
         TimeUpdater.getInstance().addTimeUpdateListener(this);
@@ -108,7 +92,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
     }
 
 	private void setActionTabBackground() {
-        if(LookupHelper.getAllDueActions(o_thread).size() > 0) {
+        if(LookupHelper.getAllActiveDueActions(o_thread).size() > 0) {
             o_tabs.setTitleAt(3, "Actions *");
             o_tabs.setBackgroundAt(3, Color.red);
         } else {

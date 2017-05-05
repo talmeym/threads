@@ -32,7 +32,7 @@ public class ReminderPanel extends JPanel implements GoogleSyncListener {
 		o_compInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         JPanel x_remindDatePanel = new JPanel(new BorderLayout());
-		x_remindDatePanel.add(new RemindDateSuggestionPanel(p_reminder, this), BorderLayout.CENTER);
+		x_remindDatePanel.add(new RemindDateSuggestionPanel(p_reminder), BorderLayout.CENTER);
 		x_remindDatePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
         JPanel x_panel = new JPanel(new BorderLayout());

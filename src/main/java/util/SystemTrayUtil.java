@@ -6,8 +6,6 @@ import data.Thread;
 import gui.*;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
 
 import static gui.Actions.addAction;
 import static gui.Actions.addUpdate;
@@ -26,23 +24,17 @@ public class SystemTrayUtil {
 			MenuItem x_addActionItem = new MenuItem("Add Action");
 			o_popUpMenu.add(x_addActionItem);
 
-			x_addActionItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					WindowManager.makeThreadsVisible();
-					addAction(null, o_topLevelThread, null);
-				}
+			x_addActionItem.addActionListener(e -> {
+				WindowManager.makeThreadsVisible();
+				addAction(null, o_topLevelThread, DateSuggestionPanel.getDateSuggestion(), null, true);
 			});
 
 			MenuItem x_addUpdateItem = new MenuItem("Add Update");
 			o_popUpMenu.add(x_addUpdateItem);
 
-			x_addUpdateItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					WindowManager.makeThreadsVisible();
-					addUpdate(null, o_topLevelThread, null);
-				}
+			x_addUpdateItem.addActionListener(e -> {
+				WindowManager.makeThreadsVisible();
+				addUpdate(null, o_topLevelThread, null);
 			});
 
 			o_trayIcon = new TrayIcon(ImageUtil.getThreadsImage(), "Threads", o_popUpMenu);
@@ -50,39 +42,33 @@ public class SystemTrayUtil {
 			SystemTray systemTray = SystemTray.getSystemTray();
 			systemTray.add(o_trayIcon);
 
-			NotificationUpdater.getInstance().addNotificationListener(new NotificationListener() {
-				@Override
-				public void componentsDue(List<Component> p_dueComponents) {
+			NotificationUpdater.getInstance().addNotificationListener(p_dueComponents -> {
 
-					if (p_dueComponents.size() == 1) {
-						Component component = p_dueComponents.get(0);
-						displayNotification(component instanceof Item ? "Action Overdue" : "Reminder", component.getText());
-					} else if (p_dueComponents.size() > 1) {
-						displayNotification("Threads", "You have " + p_dueComponents.size() + " new notifications.");
-					}
+				if (p_dueComponents.size() == 1) {
+					Component component = p_dueComponents.get(0);
+					displayNotification(component instanceof Item ? "Action Overdue" : "Reminder", component.getText());
+				} else if (p_dueComponents.size() > 1) {
+					displayNotification("Threads", "You have " + p_dueComponents.size() + " new notifications.");
+				}
 
-					for (final Component component : p_dueComponents) {
-						String menuItemText = (component instanceof Item ? "Action Overdue" : "Reminder") + ": " + component.getText();
-						MenuItem menuItem = new MenuItem(menuItemText);
+				for (final Component component : p_dueComponents) {
+					String menuItemText = (component instanceof Item ? "Action Overdue" : "Reminder") + ": " + component.getText();
+					MenuItem menuItem = new MenuItem(menuItemText);
 
-						menuItem.addActionListener(new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent actionEvent) {
-								WindowManager.makeThreadsVisible();
-								if(component.getParentComponent() != null) {
-									WindowManager.getInstance().openComponent(component);
-								} else {
-									displayNotification("Threads", "The Item you've selected no longer exists");
-								}
-							}
-						});
-
-						if(o_popUpMenu.getItemCount() == 2) {
-							o_popUpMenu.addSeparator();
+					menuItem.addActionListener(actionEvent -> {
+						WindowManager.makeThreadsVisible();
+						if(component.getParentComponent() != null) {
+							WindowManager.getInstance().openComponent(component);
+						} else {
+							displayNotification("Threads", "The Item you've selected no longer exists");
 						}
+					});
 
-						o_popUpMenu.add(menuItem);
+					if(o_popUpMenu.getItemCount() == 2) {
+						o_popUpMenu.addSeparator();
 					}
+
+					o_popUpMenu.add(menuItem);
 				}
 			});
 		} catch (AWTException e) {

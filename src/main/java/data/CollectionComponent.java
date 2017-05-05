@@ -27,7 +27,12 @@ public abstract class CollectionComponent <CONTENTS extends Component> extends C
     protected CONTENTS getComponent(int p_index) {
 		return o_components.get(p_index);
     }
-    
+
+    public List<CONTENTS> getComponents() {
+    	// defensive copy
+    	return new ArrayList<>(o_components);
+	}
+
     protected void addComponent(CONTENTS p_component) {
         p_component.setParentComponent(this);
         p_component.addComponentChangeListener(this);

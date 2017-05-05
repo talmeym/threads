@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static gui.Actions.addAction;
 import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem;
 import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.buildToolTipTextForItem;
 import static util.GuiUtil.setUpButtonLabel;
@@ -82,53 +83,41 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 		o_currentMonthLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		ThreadCalendarTableModel x_tableModel = (ThreadCalendarTableModel) o_table.getModel();
-		x_tableModel.setIncludeActions(registerForSetting(s_CALENDARACT, this, 1) == 1);
-		x_tableModel.setIncludeUpdates(registerForSetting(s_CALENDARUP, this, 0) == 1);
-		x_tableModel.setIncludeReminders(registerForSetting(s_CALENDARREM, this, 0) == 1);
+		x_tableModel.setIncludeActions(registerForSetting(s_CALENDARACT, this, true));
+		x_tableModel.setIncludeUpdates(registerForSetting(s_CALENDARUP, this, false));
+		x_tableModel.setIncludeReminders(registerForSetting(s_CALENDARREM, this, false));
 
 		o_includeActionsCheckBox.setSelected(x_tableModel.includeActions());
 		o_includeUpdatesCheckBox.setSelected(x_tableModel.includeUpdates());
 		o_includeRemindersCheckBox.setSelected(x_tableModel.includeReminders());
-		o_allCheckBox.setSelected(o_includeActionsCheckBox.isSelected() && o_includeUpdatesCheckBox.isSelected() && o_includeRemindersCheckBox.isSelected());
+		setAllCheckbox();
 
-		o_allCheckBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				boolean selected = o_allCheckBox.isSelected();
-				o_includeActionsCheckBox.setSelected(selected);
-				o_includeUpdatesCheckBox.setSelected(selected);
-				o_includeRemindersCheckBox.setSelected(selected);
-				x_tableModel.setIncludeActions(selected);
-				x_tableModel.setIncludeUpdates(selected);
-				x_tableModel.setIncludeReminders(selected);
-			}
+		o_allCheckBox.addActionListener(e -> {
+			boolean selected = o_allCheckBox.isSelected();
+			o_includeActionsCheckBox.setSelected(selected);
+			o_includeUpdatesCheckBox.setSelected(selected);
+			o_includeRemindersCheckBox.setSelected(selected);
+			x_tableModel.setIncludeActions(selected);
+			x_tableModel.setIncludeUpdates(selected);
+			x_tableModel.setIncludeReminders(selected);
 		});
 
-		o_includeActionsCheckBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				o_allCheckBox.setSelected(o_includeActionsCheckBox.isSelected() && o_includeUpdatesCheckBox.isSelected() && o_includeRemindersCheckBox.isSelected());
-				x_tableModel.setIncludeActions(o_includeActionsCheckBox.isSelected());
-				updateSetting(s_CALENDARACT, o_includeActionsCheckBox.isSelected() ? 1 : 0);
-			}
+		o_includeActionsCheckBox.addActionListener(e -> {
+			setAllCheckbox();
+			x_tableModel.setIncludeActions(o_includeActionsCheckBox.isSelected());
+			updateSetting(s_CALENDARACT, o_includeActionsCheckBox.isSelected());
 		});
 
-		o_includeUpdatesCheckBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				o_allCheckBox.setSelected(o_includeActionsCheckBox.isSelected() && o_includeUpdatesCheckBox.isSelected() && o_includeRemindersCheckBox.isSelected());
-				x_tableModel.setIncludeUpdates(o_includeUpdatesCheckBox.isSelected());
-				updateSetting(s_CALENDARUP, o_includeUpdatesCheckBox.isSelected() ? 1 : 0);
-			}
+		o_includeUpdatesCheckBox.addActionListener(e -> {
+			setAllCheckbox();
+			x_tableModel.setIncludeUpdates(o_includeUpdatesCheckBox.isSelected());
+			updateSetting(s_CALENDARUP, o_includeUpdatesCheckBox.isSelected());
 		});
 
-		o_includeRemindersCheckBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				o_allCheckBox.setSelected(o_includeActionsCheckBox.isSelected() && o_includeUpdatesCheckBox.isSelected() && o_includeRemindersCheckBox.isSelected());
-				x_tableModel.setIncludeReminders(o_includeRemindersCheckBox.isSelected());
-				updateSetting(s_CALENDARREM, o_includeRemindersCheckBox.isSelected() ? 1 : 0);
-			}
+		o_includeRemindersCheckBox.addActionListener(e -> {
+			setAllCheckbox();
+			x_tableModel.setIncludeReminders(o_includeRemindersCheckBox.isSelected());
+			updateSetting(s_CALENDARREM, o_includeRemindersCheckBox.isSelected());
 		});
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -143,6 +132,10 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 
 		add(o_currentMonthLabel, BorderLayout.NORTH);
 		add(x_buttonPanel, BorderLayout.SOUTH);
+	}
+
+	private void setAllCheckbox() {
+		o_allCheckBox.setSelected(o_includeActionsCheckBox.isSelected() && o_includeUpdatesCheckBox.isSelected() && o_includeRemindersCheckBox.isSelected());
 	}
 
 	private void changeMonth(boolean up) {
@@ -174,32 +167,15 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 
 	@Override
 	void showContextMenu(int p_row, int p_col, Point p_point, java.awt.Component p_origin, Date p_selectedObject) {
-
+		// do nothing
 	}
 
 	@Override
 	public void tableRowClicked(int row, int col, final Date p_date) {
 		if(p_date != null) {
 			ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
-			JPopupMenu x_menu = new JPopupMenu();
 			final List<Component> x_components = LookupHelper.getAllComponents(o_thread, p_date, x_model.includeActions(), x_model.includeUpdates(), x_model.includeReminders());
-
-			for(final Component x_component: x_components) {
-				String x_text = buildTextForItem(x_component);
-				Icon x_icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : ImageUtil.getGoogleVerySmallBlankIcon();
-				JMenuItem x_menuItem = new JMenuItem(x_text, x_icon);
-				x_menuItem.setForeground(x_component.isActive() ? Color.black : Color.gray);
-				x_menuItem.setFont(x_component.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
-				x_menuItem.setToolTipText(buildToolTipTextForItem(x_component));
-				x_menu.add(x_menuItem);
-
-				x_menuItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent actionEvent) {
-						WindowManager.getInstance().openComponent(x_component);
-					}
-				});
-			}
+			JPopupMenu x_menu = buildPopupMenu(x_components);
 
 			if(x_components.size() > 0) {
 				x_menu.add(new JSeparator(JSeparator.HORIZONTAL));
@@ -207,55 +183,34 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 
 			JMenuItem x_newMenuItem = new JMenuItem("Add Action", ImageUtil.getPlusVerySmallIcon());
 			x_newMenuItem.setForeground(Color.gray);
+			x_newMenuItem.addActionListener(actionEvent -> addAction(null, o_thread, p_date, o_parentPanel, false));
 			x_menu.add(x_newMenuItem);
-
-			x_newMenuItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					List<Thread> x_threads = LookupHelper.getAllActiveThreads(o_thread);
-					x_threads.add(0, o_thread);
-					Thread x_thread;
-
-					if(x_threads.size() > 1) {
-						x_thread = (Thread) JOptionPane.showInputDialog(o_parentPanel, "Choose a Thread to add it to:", "Add new Action ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-					} else {
-						x_thread = o_thread;
-					}
-
-					if(x_thread != null) {
-						String x_text = (String) JOptionPane.showInputDialog(o_parentPanel, "Enter new Action text:", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, null);
-
-						if(x_text != null) {
-							Item x_item = new Item(x_text);
-							x_item.setDueDate(p_date);
-							x_thread.addItem(x_item);
-						}
-					}
-				}
-			});
 
 			if(x_components.size() > 0) {
 				JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", ImageUtil.getLinkVerySmallIcon());
 				x_linkMenuItem.setForeground(Color.gray);
 				x_menu.add(x_linkMenuItem);
 
-				x_linkMenuItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent actionEvent) {
-						if (JOptionPane.showConfirmDialog(o_parentPanel, "Link " + x_components.size() + " Action" + (x_components.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-							GoogleLinkTask x_task = new GoogleLinkTask(getItems(x_components), new GoogleProgressWindow(o_parentPanel), new ProgressAdapter(){
-								@Override
-								public void success() {
-									JOptionPane.showMessageDialog(o_parentPanel, x_components.size() + " Action" + (x_components.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-								}
+				// TODO use Actions.linkToGoogle once you can pass google util a collection of components
+				x_linkMenuItem.addActionListener(actionEvent -> {
+					if(!Settings.registerForSetting(Settings.s_GOOGLE_ENABLED, (p_name, p_value) -> { }, "false").equals("true")) {
+						JOptionPane.showMessageDialog(o_parentPanel, "Google is disabled", "No Google", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
 
-								@Override
-								public void error(String errorDesc) {
-									JOptionPane.showMessageDialog(o_parentPanel, errorDesc, "Error linking to Google Calendar ...", JOptionPane.ERROR_MESSAGE);
-								}
-							});
-							x_task.execute();
-						}
+					if (JOptionPane.showConfirmDialog(o_parentPanel, "Link " + x_components.size() + " Action" + (x_components.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+						GoogleLinkTask x_task = new GoogleLinkTask(getItems(x_components), new GoogleProgressWindow(o_parentPanel), new ProgressAdapter(){
+							@Override
+							public void success() {
+								JOptionPane.showMessageDialog(o_parentPanel, x_components.size() + " Action" + (x_components.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
+							}
+
+							@Override
+							public void error(String errorDesc) {
+								JOptionPane.showMessageDialog(o_parentPanel, errorDesc, "Error linking to Google Calendar ...", JOptionPane.ERROR_MESSAGE);
+							}
+						});
+						x_task.execute();
 					}
 				});
 
@@ -263,29 +218,42 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 				x_makeInactiveItem.setForeground(Color.gray);
 				x_menu.add(x_makeInactiveItem);
 
-				x_makeInactiveItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent actionEvent) {
-						if (JOptionPane.showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-							for (Component x_component : x_components) {
-								x_component.setActive(false);
-							}
-						}
+				x_makeInactiveItem.addActionListener(actionEvent -> {
+					if (JOptionPane.showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+						x_components.forEach(c -> c.setActive(false));
 					}
 				});
 			}
 
 			int x_xPosition = ((o_table.getWidth() / 7) * col) - 12;
-
 			x_menu.show(o_table, x_xPosition, (o_table.getHeight() / 5) * row + 16);
 		}
 	}
 
-	private List<Item> getItems(List<Component> p_components) {
-		List<Component> collect = p_components.stream().filter(component -> component instanceof Item).collect(Collectors.toList());
-		return collect.stream().map(component -> (Item) component).collect(Collectors.toList());
+	private JPopupMenu buildPopupMenu(List<Component> x_components) {
+		JPopupMenu x_menu = new JPopupMenu();
+		for(final Component x_component: x_components) {
+			String x_text = buildTextForItem(x_component);
+			Icon x_icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : ImageUtil.getGoogleVerySmallBlankIcon();
+			JMenuItem x_menuItem = new JMenuItem(x_text, x_icon);
+			x_menuItem.setForeground(x_component.isActive() ? Color.black : Color.gray);
+			x_menuItem.setFont(x_component.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
+			x_menuItem.setToolTipText(buildToolTipTextForItem(x_component));
+			x_menu.add(x_menuItem);
+
+			x_menuItem.addActionListener(actionEvent -> WindowManager.getInstance().openComponent(x_component));
+		}
+		return x_menu;
 	}
 
+	private List<Item> getItems(List<Component> p_components) {
+		return p_components.stream()
+				.filter(component -> component instanceof Item)
+				.map(component -> (Item) component)
+				.collect(Collectors.toList());
+	}
+
+	@SuppressWarnings("unchecked")
 	private Font makeStrikeThrough(Font x_font) {
 		Map attributes = x_font.getAttributes();
 		attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
@@ -294,25 +262,28 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 
 	@Override
 	public void settingChanged(String p_name, Object p_value) {
+		if(p_name.equals(Settings.s_DATE)) {
+			setTime((String) p_value);
+			return;
+		}
+
+		boolean x_value = (boolean) p_value;
+
 		if(p_name.equals(s_CALENDARACT)) {
-			((ThreadCalendarTableModel)o_table.getModel()).setIncludeActions(p_value.equals(1));
-			o_includeActionsCheckBox.setSelected(p_value.equals(1));
+			((ThreadCalendarTableModel)o_table.getModel()).setIncludeActions(x_value);
+			o_includeActionsCheckBox.setSelected(x_value);
 		}
 
 		if(p_name.equals(s_CALENDARUP)) {
-			((ThreadCalendarTableModel)o_table.getModel()).setIncludeUpdates(p_value.equals(1));
-			o_includeUpdatesCheckBox.setSelected(p_value.equals(1));
+			((ThreadCalendarTableModel)o_table.getModel()).setIncludeUpdates(x_value);
+			o_includeUpdatesCheckBox.setSelected(x_value);
 		}
 
 		if(p_name.equals(s_CALENDARREM)) {
-			((ThreadCalendarTableModel)o_table.getModel()).setIncludeReminders(p_value.equals(1));
-			o_includeRemindersCheckBox.setSelected(p_value.equals(1));
+			((ThreadCalendarTableModel)o_table.getModel()).setIncludeReminders(x_value);
+			o_includeRemindersCheckBox.setSelected(x_value);
 		}
 
-		o_allCheckBox.setSelected(o_includeActionsCheckBox.isSelected() && o_includeUpdatesCheckBox.isSelected() && o_includeRemindersCheckBox.isSelected());
-
-		if(p_name.equals(Settings.s_DATE)) {
-			setTime((String) p_value);
-		}
+		setAllCheckbox();
 	}
 }

@@ -78,7 +78,7 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 		o_addReminderLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				addSomething();
+				addReminder();
 			}
 		});
 
@@ -113,13 +113,12 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 		}
 	}
 
-	private void addSomething() {
+	private void addReminder() {
 		if (o_item.getDueDate() != null) {
 			String x_text = (String) JOptionPane.showInputDialog(o_parentPanel, "Enter new Reminder text:", "Add new Reminder to '" + o_item + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Reminder");
 
 			if(x_text != null) {
-				Reminder x_reminder = new Reminder(o_item);
-				x_reminder.setText(x_text);
+				Reminder x_reminder = new Reminder(x_text, o_item);
 				o_item.addReminder(x_reminder);
 				showReminder(x_reminder);
 			}

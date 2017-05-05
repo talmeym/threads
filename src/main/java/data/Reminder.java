@@ -12,8 +12,8 @@ public class Reminder extends Component implements HasDueDate
 {
     private Date o_dueDate;
     
-    public Reminder(Item p_item) {
-        this(UUID.randomUUID(), new Date(), new Date(), true, "New Reminder", p_item.getDueDate(), null);
+    public Reminder(String p_text, Item p_item) {
+        this(UUID.randomUUID(), new Date(), new Date(), true, p_text, p_item.getDueDate(), null);
     }
     
     public Reminder(UUID id, Date p_creationDate, Date p_modifiedDate, boolean p_active, String p_text, Date p_dueDate, File p_docFolder) {

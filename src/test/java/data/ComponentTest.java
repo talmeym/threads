@@ -28,7 +28,7 @@ public class ComponentTest {
 
 	private static class MyComponent extends CollectionComponent<MyComponent> {
 		MyComponent(String p_text) {
-			super(UUID.randomUUID(), new Date(), new Date(), true, p_text, null, new TextComparator(), null);
+			super(UUID.randomUUID(), new Date(), new Date(), true, p_text, null, new TextComparator<>(), null);
 		}
 
 		@Override

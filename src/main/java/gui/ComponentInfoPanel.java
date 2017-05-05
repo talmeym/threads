@@ -136,12 +136,7 @@ public class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-        o_textField.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				setText();
-			}
-		});
+        o_textField.addActionListener(actionEvent -> setText());
 
 		o_activeLabel.setToolTipText("Make Active/Inactive");
 		o_activeLabel.addMouseListener(new MouseAdapter() {
@@ -247,31 +242,18 @@ public class ComponentInfoPanel extends JPanel {
 				JPopupMenu x_popupMenu = new JPopupMenu();
 
 				JMenuItem x_setItem = new JMenuItem("Set");
-				x_setItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent actionEvent) {
-						FolderManager.setDocFolder(o_component, p_parentPanel);
-					}
-				});
+				x_setItem.addActionListener(actionEvent -> FolderManager.setDocFolder(o_component, p_parentPanel));
 
 				JMenuItem x_openItem = new JMenuItem("Open");
 				x_openItem.setEnabled(o_component.getDocFolder() != null);
-				x_openItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent actionEvent) {
-						FolderManager.openDocFolder(o_component);
-					}
-				});
+				x_openItem.addActionListener(actionEvent -> FolderManager.openDocFolder(o_component));
 
 				JMenuItem x_clearItem = new JMenuItem("Clear");
 				x_clearItem.setEnabled(o_component.getDocFolder() != null);
-				x_clearItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent actionEvent) {
-						if(o_component.getDocFolder() != null) {
-							if (JOptionPane.showConfirmDialog(p_parentPanel, "Unset document folder '" + o_component.getDocFolder().getAbsolutePath() + "' ?", "Clear document folder for '" + o_component.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-								o_component.setDocFolder(null);
-							}
+				x_clearItem.addActionListener(actionEvent -> {
+					if(o_component.getDocFolder() != null) {
+						if (JOptionPane.showConfirmDialog(p_parentPanel, "Unset document folder '" + o_component.getDocFolder().getAbsolutePath() + "' ?", "Clear document folder for '" + o_component.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+							o_component.setDocFolder(null);
 						}
 					}
 				});

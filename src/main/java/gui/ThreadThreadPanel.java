@@ -43,35 +43,19 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 
 		o_dismissLabel.setEnabled(false);
 		o_dismissLabel.setToolTipText("Set Thread Active/Inactive");
-		o_dismissLabel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dismiss(getSelectedObject());
-			}
-		});
+		o_dismissLabel.addActionListener(e -> dismiss(getSelectedObject()));
 
 		o_removeLabel.setEnabled(false);
 		o_removeLabel.setToolTipText("Remove Thread");
-		o_removeLabel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				remove(getSelectedObject());
-			}
-		});
+		o_removeLabel.addActionListener(e -> remove(getSelectedObject()));
 
 		o_moveLabel.setEnabled(false);
 		o_moveLabel.setToolTipText("Move Thread");
-		o_moveLabel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				move(getSelectedObject());
-			}
-		});
+		o_moveLabel.addActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
 
 		o_linkLabel.setEnabled(false);
 		o_linkLabel.setToolTipText("Link Thread to Google Calendar");
-		o_linkLabel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				linkToGoogle(getSelectedObject(), p_parentPanel, true);
-			}
-		});
+		o_linkLabel.addActionListener(e -> linkToGoogle(getSelectedObject(), p_parentPanel, true));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
@@ -94,30 +78,6 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> implements C
 
 			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + x_thread.getText() + "' from '" + x_thread.getParentThread().getText() + "' ?", "Remove " + x_thread.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_parent.removeThreadItem(x_thread);
-			}
-		}
-	}
-
-	private void move(Thread p_thread) {
-		if(p_thread != null) {
-			Thread x_topThread = (Thread) o_thread.getHierarchy().get(0);
-			List<Thread> x_threads = LookupHelper.getAllActiveThreads(x_topThread);
-			Thread x_thread = null;
-
-			x_threads.add(0, x_topThread);
-			x_threads.remove(p_thread.getParentThread());
-			x_threads.remove(p_thread);
-			x_threads.removeAll(LookupHelper.getAllActiveThreads(p_thread));
-
-			if(x_threads.size() > 0) {
-				x_thread = (Thread) JOptionPane.showInputDialog(o_parentPanel, "Choose a Thread to move it to:", "Move '" + p_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-			} else {
-				JOptionPane.showMessageDialog(o_parentPanel, "This is no other Thread to move this Thread to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
-			}
-
-			if(x_thread != null) {
-				p_thread.getParentThread().removeThreadItem(p_thread);
-				x_thread.addThreadItem(p_thread);
 			}
 		}
 	}

@@ -26,27 +26,26 @@ public class Thread extends ThreadItem<ThreadItem> {
     public int getThreadItemCount() {
         return getComponentCount();
     }
-    
+
     public ThreadItem getThreadItem(int p_index) {
         return getComponent(p_index);
     }
+
+    public List<ThreadItem> getThreadItems() {
+    	return getComponents();
+	}
     
-    public void addThreadItem(ThreadItem p_threadItem) {
-        addComponent(p_threadItem);
+    public void addThreadItem(ThreadItem... p_threadItems) {
+    	for(ThreadItem x_threadItem: p_threadItems) {
+        	addComponent(x_threadItem);
+		}
     }
     
     public void removeThreadItem(ThreadItem p_threadItem) {
         removeComponent(p_threadItem);
     }
 
-	public void addItem(Item p_item) {
-		addComponent(p_item);
-	}
-
-	public void removeItem(Item p_item) {
-		removeComponent(p_item);
-	}
-
+	@Override
 	public ComponentType getType() {
 		return ComponentType.Thread;
 	}
