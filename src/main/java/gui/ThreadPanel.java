@@ -11,13 +11,18 @@ import java.awt.event.*;
 import static gui.Actions.linkToGoogle;
 import static util.Settings.*;
 
-public class ThreadPanel extends JPanel implements TimeUpdateListener, ComponentChangeListener, SettingChangeListener {
+public class ThreadPanel extends JPanel implements TimeUpdateListener, SettingChangeListener {
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs;
 
 	public ThreadPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new BorderLayout());
         o_thread = p_thread;
+
+		o_thread.addComponentChangeListener(e -> {
+			setActionTabBackground();
+			setReminderTabBackground();
+		});
 
 		o_tabs = new JTabbedPane();
         o_tabs.addTab("Contents", ImageUtil.getFolderSmallIcon(), new ThreadContentsPanel(p_thread, p_parentPanel));
@@ -74,18 +79,11 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, Component
 		o_tabs.setSelectedIndex(registerForSetting(Settings.s_TAB_INDEX, this, 0));
 		o_tabs.addChangeListener(changeEvent -> updateSetting(Settings.s_TAB_INDEX, "" + o_tabs.getSelectedIndex()));
 
-        o_thread.addComponentChangeListener(this);
         TimeUpdater.getInstance().addTimeUpdateListener(this);
         setActionTabBackground();
 		setReminderTabBackground();
     }
 
-	@Override
-	public void componentChanged(ComponentChangeEvent p_cce) {
-        setActionTabBackground();
-        setReminderTabBackground();
-    }
-    
     public void timeUpdate() {
 		setActionTabBackground();
         setReminderTabBackground();

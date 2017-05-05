@@ -147,20 +147,11 @@ public class LookupHelper {
     }
 
 	public static List<Item> getActiveUpdates(Thread p_thread) {
-		List<Item> x_updateItems = new ArrayList<>();
-		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
-			ThreadItem x_groupItem = p_thread.getThreadItem(i);
-
-			if(x_groupItem instanceof Item) {
-				Item x_item = (Item) x_groupItem;
-
-				if(x_item.isActive() && x_item.getDueDate() == null) {
-					x_updateItems.add(x_item);
-				}
-			}
-		}
-
-		return x_updateItems;
+		return p_thread.getThreadItems().stream()
+				.filter(t -> t instanceof Item)
+				.map(t -> (Item) t)
+				.filter(i -> i.isActive() && i.getDueDate() == null)
+				.collect(Collectors.toList());
 	}
 
 	public static List<Item> getActiveActions(Thread p_thread, boolean p_onlyNext7DaysOrBefore) {
@@ -227,17 +218,12 @@ public class LookupHelper {
 				.collect(Collectors.toList());
 	}
 
-	public static List<Reminder> getRemindersForDay(Thread p_thread, Date p_date) {
+	static List<Reminder> getRemindersForDay(Thread p_thread, Date p_date) {
 		List<Reminder> x_reminders = new ArrayList<>();
-
-		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
-			ThreadItem x_groupItem = p_thread.getThreadItem(i);
-
-			if(x_groupItem instanceof Item && x_groupItem.isActive()) {
-				x_reminders.addAll(getRemindersForDay((Item) x_groupItem, p_date));
-			}
-		}
-
+		p_thread.getThreadItems().stream()
+				.filter(t -> t.isActive() && t instanceof Item)
+				.map(t -> (Item) t)
+				.forEach(i -> x_reminders.addAll(getRemindersForDay(i, p_date)));
 		return x_reminders;
 	}
 
@@ -251,7 +237,7 @@ public class LookupHelper {
 		int x_count = p_items.size();
 
 		for(Item x_item: p_items) {
-			x_count += x_item.getReminderCount();
+			x_count += x_item.getReminders().size();
 		}
 
 		return x_count;

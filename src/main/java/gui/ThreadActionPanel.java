@@ -7,28 +7,23 @@ import util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
+import static data.ComponentType.Action;
 import static gui.Actions.addAction;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
-public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements ComponentChangeListener, SettingChangeListener {
+public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements SettingChangeListener {
     private final Thread o_thread;
-	private final JPanel o_parentPanel;
-	private final JMenuItem o_dismissLabel = new JMenuItem("Set Inactive", ImageUtil.getTickIcon());
-	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
-	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
-	private final JMenuItem o_linkLabel = new JMenuItem("Link",ImageUtil.getLinkIcon());
+	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, true, Action);
 	private final JRadioButton o_showNext7DaysRadioButton;
 	private final JRadioButton o_showAllRadioButton;
 
 	ThreadActionPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadActionTableModel(p_thread), new ThreadActionCellRenderer(p_thread));
         o_thread = p_thread;
-		o_parentPanel = p_parentPanel;
-		o_thread.addComponentChangeListener(this);
+		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
 
         fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
         fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
@@ -43,25 +38,11 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 			}
 		});
 
-		o_dismissLabel.setEnabled(false);
-		o_dismissLabel.setToolTipText("Set Action Active/Inactive");
-		o_dismissLabel.addActionListener(e -> dismiss(getSelectedObject()));
-
-		o_removeLabel.setEnabled(false);
-		o_removeLabel.setToolTipText("Remove Action");
-		o_removeLabel.addActionListener(e -> remove(getSelectedObject()));
-
-		o_moveLabel.setEnabled(false);
-		o_moveLabel.setToolTipText("Move Action");
-		o_moveLabel.addActionListener(e -> Actions.move(getSelectedObject(), o_thread, o_parentPanel));
-
-		o_linkLabel.setEnabled(false);
-		o_linkLabel.setToolTipText("Link Action to Google Calendar");
-		o_linkLabel.addActionListener(e -> {
-			if (o_linkLabel.isEnabled()) {
-				Actions.linkToGoogle(getSelectedObject(), p_parentPanel);
-			}
-		});
+		o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
+		o_popupMenu.setLinkActionListener(e -> Actions.linkToGoogle(getSelectedObject(), p_parentPanel));
 
 		ThreadActionTableModel x_tableModel = (ThreadActionTableModel) o_table.getModel();
 		x_tableModel.setOnlyNext7Days(registerForSetting(s_SEVENDAYS, this, true));
@@ -90,42 +71,17 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
-	private void dismiss(Item o_action) {
-		if(o_action != null) {
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Set '" + o_action.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				o_action.setActive(false);
-			}
-		}
-	}
-
-	private void remove(Item o_action) {
-		if(o_action != null) {
-			Thread x_thread = o_action.getParentThread();
-
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + o_action.getText() + "' from '" + x_thread.getText() + "' ?", "Remove " + o_action.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				x_thread.removeThreadItem(o_action);
-			}
-		}
-	}
-
 	@Override
-	void showContextMenu(int p_row, int p_col, Point p_point, Component p_origin, Item p_selectedObject) {
-		if(p_selectedObject != null) {
-			JPopupMenu x_menu = new JPopupMenu();
-			x_menu.add(o_removeLabel);
-			x_menu.add(o_dismissLabel);
-			x_menu.add(o_moveLabel);
-			x_menu.add(o_linkLabel);
-			x_menu.show(p_origin, p_point.x, p_point.y);
+	void showContextMenu(Component p_origin, int p_row, int p_col, Point p_point, Item p_item) {
+		if(p_item != null) {
+			o_popupMenu.show(p_point, p_origin);
 		}
 	}
 
 	@Override
 	public void tableRowClicked(int p_row, int p_col, Item p_item) {
-		o_removeLabel.setEnabled(p_item != null);
-		o_dismissLabel.setEnabled(p_item != null);
-		o_moveLabel.setEnabled(p_item != null);
-		o_linkLabel.setEnabled(p_item != null);
+		boolean x_enabled = p_item != null;
+		o_popupMenu.setStatus(x_enabled, x_enabled, x_enabled, x_enabled, p_item);
 	}
 
 	@Override
@@ -135,21 +91,6 @@ public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> impleme
 			default: WindowManager.getInstance().openComponent(p_item);
         }
     }
-
-	@Override
-	public void componentChanged(ComponentChangeEvent p_cce) {
-		tableRowClicked(-1, -1, null);
-	}
-
-	@Override
-	public void timeUpdate() {
-		tableRowClicked(-1, -1, null);
-	}
-
-	@Override
-	public void googleSynced() {
-		tableRowClicked(-1, -1, null);
-	}
 
 	@Override
 	public void settingChanged(String p_name, Object p_value) {

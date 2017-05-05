@@ -166,7 +166,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 	}
 
 	@Override
-	void showContextMenu(int p_row, int p_col, Point p_point, java.awt.Component p_origin, Date p_selectedObject) {
+	void showContextMenu(java.awt.Component p_origin, int p_row, int p_col, Point p_point, Date p_selectedObject) {
 		// do nothing
 	}
 

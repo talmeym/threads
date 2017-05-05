@@ -82,7 +82,7 @@ public class LookupHelperTest {
 	}
 
 	@Test
-	public void testGetRemindersForDay() {
+	public void testGetRemindersForDay_item() {
 		Item item = buildItem(true, new Date());
 
 		item.addReminder(buildReminders(false, item, new Date(), 3));
@@ -90,6 +90,37 @@ public class LookupHelperTest {
 
 		assertEquals(3, LookupHelper.getRemindersForDay(item, new Date()).size());
 		assertEquals(2, LookupHelper.getRemindersForDay(item, get10DaysFromNow()).size());
+	}
+
+	@Test
+	public void testGetActiveUpdates() {
+		Thread p_thread = new Thread("Test Thread");
+		p_thread.addThreadItem((ThreadItem[]) buildItems(true, null, 3));               // active updates
+		p_thread.addThreadItem((ThreadItem[]) buildItems(false, null, 3));               // inactive updates
+		p_thread.addThreadItem((ThreadItem[]) buildItems(true, new Date(), 3));         // active actions
+		p_thread.addThreadItem((ThreadItem[]) buildItems(false, new Date(), 3));        // inactive actions
+
+		assertEquals(3, LookupHelper.getActiveUpdates(p_thread).size());
+	}
+
+	@Test
+	public void testGetRemindersForDay_thread() {
+		Thread p_thread = new Thread("Test Thread");
+
+		Item x_item = buildItemWithReminders(true, true, new Date(), 5);
+		Item x_item2 = buildItemWithReminders(false, true, new Date(), 5);
+		Item x_item3 = buildItemWithReminders(true, true, new Date(), 5);
+		Item x_item4 = buildItemWithReminders(true, true, get10DaysFromNow(), 5);
+		p_thread.addThreadItem(x_item, x_item2, x_item3, x_item4);
+
+		assertEquals(10, LookupHelper.getRemindersForDay(p_thread, new Date()).size());
+	}
+
+	private Item buildItemWithReminders(boolean p_active, boolean p_reminderActive, Date p_reminderDate, int p_reminderCount) {
+		Item x_item = new Item("Test Item", new Date());
+		x_item.setActive(p_active);
+		x_item.addReminder(buildReminders(p_reminderActive, x_item, p_reminderDate, p_reminderCount));
+		return x_item;
 	}
 
 	private Reminder[] buildReminders(boolean p_active, Item item, Date p_dueDate, int p_numberReminders) {

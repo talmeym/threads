@@ -12,7 +12,7 @@ import java.util.Calendar;
 import static gui.Actions.linkToGoogle;
 import static util.Settings.updateSetting;
 
-class ItemPanel extends ComponentTablePanel<Item, Reminder> implements ComponentChangeListener {
+class ItemPanel extends ComponentTablePanel<Item, Reminder> {
     private final Item o_item;
 	private final JLabel o_calendarLabel = new JLabel(ImageUtil.getCalendarIcon());
 	private final JLabel o_linkItemLabel = new JLabel(ImageUtil.getLinkIcon());
@@ -20,7 +20,12 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
 	ItemPanel(Item p_item, final JPanel p_parentPanel) {
         super(new ItemReminderTableModel(p_item),  new ComponentCellRenderer(p_item));
         o_item = p_item;
-		o_item.addComponentChangeListener(this);
+
+		o_item.addComponentChangeListener(e -> {
+			if(e.getSource() == o_item) {
+			o_calendarLabel.setEnabled(o_item.getDueDate() != null);
+			o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
+		}});
 
         fixColumnWidth(1, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
@@ -63,15 +68,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> implements Component
     }
 
 	@Override
-	public void componentChanged(ComponentChangeEvent p_cce) {
-		if(p_cce.getSource() == o_item) {
-			o_calendarLabel.setEnabled(o_item.getDueDate() != null);
-			o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
-		}
-	}
-
-	@Override
-	void showContextMenu(int p_row, int p_col, Point p_point, Component p_origin, Reminder p_selectedObject) {
+	void showContextMenu(Component p_origin, int p_row, int p_col, Point p_point, Reminder p_selectedObject) {
 		// nothing to do here
 	}
 

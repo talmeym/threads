@@ -27,11 +27,10 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 		Date x_date = (Date) x_values[0];
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.setTime(x_date);
-		boolean x_today = DateUtil.isToday(x_date);
 
 		Object[] x_listValues = new Object[x_values.length];
 		System.arraycopy(x_values, 1, x_listValues, 1, x_values.length - 1);
-		x_listValues[0] = x_today ? "Today" : new SimpleDateFormat(x_calendar.get(Calendar.DAY_OF_MONTH) == 1  || (row == 0 && column == 0) ? "d MMM" : "d").format(x_date);
+		x_listValues[0] = DateUtil.isToday(x_date) ? "Today" : new SimpleDateFormat(x_calendar.get(Calendar.DAY_OF_MONTH) == 1  || (row == 0 && column == 0) ? "d MMM" : "d").format(x_date);
 
 		final JList<Object> x_list = new JList<>(x_listValues);
 		x_list.setCellRenderer(new MyListCellRenderer());

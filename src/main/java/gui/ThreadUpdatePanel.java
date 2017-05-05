@@ -9,21 +9,20 @@ import java.awt.*;
 import java.awt.Component;
 import java.awt.event.*;
 
+import static data.ComponentType.Update;
 import static gui.Actions.addUpdate;
 import static util.GuiUtil.setUpButtonLabel;
 
-public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> implements ComponentChangeListener {
+public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
     private final Thread o_thread;
 	private JPanel o_parentPanel;
-	private final JMenuItem o_dismissLabel = new JMenuItem("Set Inactive", ImageUtil.getTickIcon());
-	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
-	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
+	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, false, Update);
 
 	public ThreadUpdatePanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadUpdateTableModel(p_thread), new ComponentCellRenderer(null));
         o_thread = p_thread;
 		o_parentPanel = p_parentPanel;
-		o_thread.addComponentChangeListener(this);
+		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
 
         fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
         fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
@@ -37,57 +36,31 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
 			}
 		});
 
-		o_dismissLabel.setEnabled(false);
-		o_dismissLabel.setToolTipText("Set Update Active/Inactive");
-		o_dismissLabel.addActionListener(e -> dismiss(getSelectedObject()));
-
-		o_removeLabel.setEnabled(false);
-		o_removeLabel.setToolTipText("Remove Update");
-		o_removeLabel.addActionListener(e -> remove(getSelectedObject()));
-
-		o_moveLabel.setEnabled(false);
-		o_moveLabel.setToolTipText("Move Update");
-		o_moveLabel.addActionListener(e -> Actions.move(getSelectedObject(), o_thread, o_parentPanel));
+		o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, o_parentPanel));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
-	}
 
-	private void dismiss(Item p_update) {
-		if(p_update != null) {
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Set '" + p_update.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				p_update.setActive(false);
-			}
-		}
-	}
-
-	private void remove(Item p_update) {
-		if(p_update != null) {
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_update.getText() + "' from '" + p_update.getParentThread().getText() + "' ?", "Remove " + p_update.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				p_update.getParentThread().removeThreadItem(p_update);
-			}
-		}
+		TimeUpdater.getInstance().addTimeUpdateListener(this);
 	}
 
 	@Override
-	void showContextMenu(int p_row, int p_col, Point p_point, Component p_origin, Item p_selectedObject) {
-		if(p_selectedObject != null) {
-			JPopupMenu x_menu = new JPopupMenu();
-			x_menu.add(o_removeLabel);
-			x_menu.add(o_dismissLabel);
-			x_menu.add(o_moveLabel);
-			x_menu.show(p_origin, p_point.x, p_point.y);
+	void showContextMenu(Component p_origin, int p_row, int p_col, Point p_point, Item p_item) {
+		if(p_item != null) {
+			o_popupMenu.show(p_point, p_origin);
 		}
 	}
 
 	@Override
 	public void tableRowClicked(int row, int col, Item p_item) {
-		o_removeLabel.setEnabled(p_item != null);
-		o_dismissLabel.setEnabled(p_item != null);
-		o_moveLabel.setEnabled(p_item != null);
+		boolean x_enabled = p_item != null;
+		o_popupMenu.setStatus(x_enabled, x_enabled, x_enabled, false, p_item);
 	}
 
 	@Override
@@ -97,9 +70,4 @@ public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> impleme
 			default: WindowManager.getInstance().openComponent(p_item);
         }
     }
-
-	@Override
-	public void componentChanged(ComponentChangeEvent p_cce) {
-		tableRowClicked(-1, -1, null);
-	}
 }

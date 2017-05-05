@@ -44,7 +44,7 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 
                 if(e.getButton() == MouseEvent.BUTTON3) {
 					o_table.getSelectionModel().setSelectionInterval(o_table.rowAtPoint(e.getPoint()), o_table.rowAtPoint(e.getPoint()));
-					showContextMenu(o_table.rowAtPoint(e.getPoint()), o_table.columnAtPoint(e.getPoint()), e.getPoint(), o_table, getSelectedObject());
+					showContextMenu(o_table, o_table.rowAtPoint(e.getPoint()), o_table.columnAtPoint(e.getPoint()), e.getPoint(), getSelectedObject());
 				}
             }
         });
@@ -53,7 +53,7 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
         add(new JScrollPane(o_table), BorderLayout.CENTER);
     }
 
-    abstract void showContextMenu(int p_row, int p_col, Point p_point, java.awt.Component p_origin, TYPE p_selectedObject);
+    abstract void showContextMenu(java.awt.Component p_origin, int p_row, int p_col, Point p_point, TYPE p_selectedObject);
 
 	public void addTableSelectionListener(TableSelectionListener<TYPE> p_listener) {
 		o_listeners.add(p_listener);

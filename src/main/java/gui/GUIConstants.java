@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.*;
-
 class GUIConstants
 {
     public static final int s_creationDateColumnWidth = 110;

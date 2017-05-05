@@ -203,4 +203,39 @@ public class Actions {
 		}
 	}
 
+	public static void activate(Component p_component, JPanel p_parentPanel) {
+		if(p_component != null) {
+			if(JOptionPane.showConfirmDialog(p_parentPanel, "Set '" + p_component.getText() + "' Active ?", "Set Active ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				p_component.setActive(true);
+			}
+		}
+	}
+
+	public static void deactivate(Component p_component, JPanel p_parentPanel) {
+		if(p_component != null) {
+			if(JOptionPane.showConfirmDialog(p_parentPanel, "Set '" + p_component.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				p_component.setActive(false);
+			}
+		}
+	}
+
+	public static void remove(ThreadItem p_threadItem, JPanel p_parentPanel) {
+		if(p_threadItem != null) {
+			Thread x_thread = p_threadItem.getParentThread();
+
+			if(JOptionPane.showConfirmDialog(p_parentPanel, "Remove '" + p_threadItem.getText() + "' from '" + x_thread.getText() + "' ?", "Remove " + p_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				x_thread.removeThreadItem(p_threadItem);
+			}
+		}
+	}
+
+	public static void remove(Reminder p_reminder, JPanel p_parentPanel) {
+		if (p_reminder != null) {
+			Item x_item = p_reminder.getParentItem();
+
+			if (JOptionPane.showConfirmDialog(p_parentPanel, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Remove " + p_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				x_item.removeReminder(p_reminder);
+			}
+		}
+	}
 }

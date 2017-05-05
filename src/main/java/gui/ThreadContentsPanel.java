@@ -12,20 +12,17 @@ import java.awt.event.*;
 import static gui.Actions.*;
 import static util.GuiUtil.setUpButtonLabel;
 
-public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem> implements ComponentChangeListener
+public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 {
     private final Thread o_thread;
 	private JPanel o_parentPanel;
-	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
-	private final JMenuItem o_dismissLabel = new JMenuItem("Set Inactive", ImageUtil.getTickIcon());
-	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
-	private final JMenuItem o_linkLabel = new JMenuItem("Link", ImageUtil.getLinkIcon());
+	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, true, null);
 
 	public ThreadContentsPanel(final Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadContentsTableModel(p_thread), new ComponentCellRenderer(p_thread));
         o_thread = p_thread;
 		o_parentPanel = p_parentPanel;
-		o_thread.addComponentChangeListener(this);
+		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
 
         fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(1, GUIConstants.s_typeColumnWidth);
@@ -41,20 +38,11 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 			}
 		});
 
-		o_removeLabel.setEnabled(false);
-		o_removeLabel.setToolTipText("Remove Item");
-		o_removeLabel.addActionListener(e -> remove(getSelectedObject()));
-
-		o_dismissLabel.setToolTipText("Set Item Active/Inactive");
-        o_dismissLabel.addActionListener(e -> dismiss(getSelectedObject()));
-
-		o_moveLabel.setToolTipText("Move Item");
-		o_moveLabel.setEnabled(false);
-		o_moveLabel.addActionListener(e -> Actions.move(getSelectedObject(), o_thread, o_parentPanel));
-
-		o_linkLabel.setToolTipText("Link Item to Google Calendar");
-		o_linkLabel.setEnabled(false);
-		o_linkLabel.addActionListener(e -> link(getSelectedObject()));
+        o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
+        o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
+		o_popupMenu.setLinkActionListener(e -> link(getSelectedObject()));
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         x_buttonPanel.add(setUpButtonLabel(x_addItemLabel));
@@ -62,6 +50,7 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 
         add(x_buttonPanel, BorderLayout.SOUTH);
 
+		TimeUpdater.getInstance().addTimeUpdateListener(this);
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
@@ -76,55 +65,29 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 		}
 	}
 
-	private void dismiss(ThreadItem p_threadItem) {
-		if(p_threadItem != null) {
-			boolean x_active = !p_threadItem.isActive();
-
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Set '" + p_threadItem.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-				p_threadItem.setActive(x_active);
-			}
-		}
-	}
-
-	private void remove(ThreadItem p_threadItem) {
-        if(p_threadItem != null) {
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Remove '" + p_threadItem.getText() + "' from '" + p_threadItem.getParentThread().getText() + "' ?", "Remove " + p_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
-                o_thread.removeThreadItem(p_threadItem);
-            }
-        }
-    }
-
 	private void link(ThreadItem p_threadItem) {
-		if (o_linkLabel.isEnabled()) {
-			if(p_threadItem instanceof Item) {
-				linkToGoogle((Item) p_threadItem, o_parentPanel);
-			}
+		if(p_threadItem instanceof Item) {
+			linkToGoogle((Item) p_threadItem, o_parentPanel);
+		}
 
-			if(p_threadItem instanceof Thread) {
-				final Thread x_thread = (Thread) p_threadItem;
-				linkToGoogle(x_thread, o_parentPanel, false);
-			}
+		if(p_threadItem instanceof Thread) {
+			final Thread x_thread = (Thread) p_threadItem;
+			linkToGoogle(x_thread, o_parentPanel, false);
 		}
 	}
 
 	@Override
-	void showContextMenu(int p_row, int p_col, Point p_point, Component p_origin, ThreadItem p_selectedObject) {
-		if(p_selectedObject != null) {
-			o_dismissLabel.setText(p_selectedObject.isActive() ? "Set Inactive" : "Set Active");
-			JPopupMenu x_menu = new JPopupMenu();
-			x_menu.add(o_removeLabel);
-			x_menu.add(o_dismissLabel);
-			x_menu.add(o_moveLabel);
-			x_menu.add(o_linkLabel);
-			x_menu.show(p_origin, p_point.x, p_point.y);
+	void showContextMenu(Component p_origin, int p_row, int p_col, Point p_point, ThreadItem p_threadItem) {
+		if(p_threadItem != null) {
+			o_popupMenu.show(p_point, p_origin);
 		}
 	}
 
 	@Override
 	public void tableRowClicked(int p_row, int p_col, ThreadItem p_threadItem) {
-		o_removeLabel.setEnabled(p_threadItem != null);
-		o_moveLabel.setEnabled(p_threadItem != null);
-		o_linkLabel.setEnabled(p_threadItem != null && (p_threadItem instanceof Thread || (p_threadItem instanceof Item && ((Item)p_threadItem).getDueDate() != null)));
+		boolean x_enabled = p_threadItem != null;
+		boolean x_linkEnabled = x_enabled && (p_threadItem instanceof Thread || (p_threadItem instanceof Item && ((Item) p_threadItem).getDueDate() != null));
+		o_popupMenu.setStatus(x_enabled, x_enabled, x_enabled, x_linkEnabled, p_threadItem);
 	}
 
 	public void tableRowDoubleClicked(int p_row, int p_col, ThreadItem p_threadItem) {
@@ -132,9 +95,4 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 			WindowManager.getInstance().openComponent(p_threadItem);
 		}
     }
-
-	@Override
-	public void componentChanged(ComponentChangeEvent p_cce) {
-		tableRowClicked(-1, -1, null);
-	}
 }
