@@ -219,7 +219,7 @@ public class LookupHelper {
 			x_hasDueDates.add(p_item);
 		}
 
-		x_hasDueDates.addAll(p_onlyActive ? getActiveReminders(p_item, p_onlyActive) : p_item.getReminders());
+		x_hasDueDates.addAll(p_onlyActive ? getActiveReminders(p_item, false) : p_item.getReminders());
 
 		return x_hasDueDates;
 	}
@@ -238,15 +238,5 @@ public class LookupHelper {
 		return p_item.getReminders().stream()
 				.filter(r -> DateUtil.isSameDay(r.getDueDate(), p_date))
 				.collect(Collectors.toList());
-	}
-
-	public static int countActiveSyncableComponents(List<Item> p_items) {
-		int x_count = p_items.size();
-
-		for(Item x_item: p_items) {
-			x_count += x_item.getReminders().size();
-		}
-
-		return x_count;
 	}
 }

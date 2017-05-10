@@ -30,7 +30,7 @@ public class Actions {
 		}
 	}
 
-	public static void addAction(ThreadItem p_threadItem, Thread p_startingThread, Date p_date, JPanel p_enclosingPanel, boolean p_openAfter) {
+	public static Item addAction(ThreadItem p_threadItem, Thread p_startingThread, Date p_date, JPanel p_enclosingPanel, boolean p_openAfter) {
 		Thread x_thread;
 
 		if(p_threadItem instanceof Thread) {
@@ -51,8 +51,12 @@ public class Actions {
 				if(p_openAfter) {
 					WindowManager.getInstance().openComponent(x_item);
 				}
+
+				return x_item;
 			}
 		}
+
+		return null;
 	}
 
 	public static void addUpdate(ThreadItem p_threadItem, Thread p_startingThread, JPanel p_enclosingPanel) {
@@ -145,6 +149,7 @@ public class Actions {
 					JOptionPane.showMessageDialog(p_enclosingPanel, errorDesc, "Error linking to Google Calendar ...", JOptionPane.ERROR_MESSAGE);
 				}
 			});
+
 			x_task.execute();
 		}
 	}

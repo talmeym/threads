@@ -1,7 +1,6 @@
-package gui;
+package util;
 
 import data.*;
-import util.GoogleUtil;
 
 import javax.swing.*;
 import java.util.*;

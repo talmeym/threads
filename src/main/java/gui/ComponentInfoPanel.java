@@ -46,50 +46,41 @@ public class ComponentInfoPanel extends JPanel {
 			}
 		};
 
-		o_component.addComponentChangeListener(new ComponentChangeListener() {
-			@Override
-			public void componentChanged(ComponentChangeEvent p_cce) {
-				if(p_cce.getSource() == o_component) {
-					o_textField.getDocument().removeDocumentListener(x_listener);
-					o_textField.setText(o_component.getText());
-					o_textField.getDocument().addDocumentListener(x_listener);
-					o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
-					o_activeLabel.setEnabled(o_component.isActive());
-				}
+		o_component.addComponentChangeListener(p_cce -> {
+			if(p_cce.getSource() == o_component) {
+				o_textField.getDocument().removeDocumentListener(x_listener);
+				o_textField.setText(o_component.getText());
+				o_textField.getDocument().addDocumentListener(x_listener);
+				o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
+				o_activeLabel.setEnabled(o_component.isActive());
 			}
 		});
 
-		o_component.addComponentMoveListener(new ComponentMoveListener() {
-			@Override
-			public void componentMoved(ComponentMoveEvent p_event) {
-				o_breadcrumbsPanel.removeAll();
+		o_component.addComponentMoveListener(p_event -> {
+			o_breadcrumbsPanel.removeAll();
 
-				Component x_parent = o_component.getParentComponent();
-				List<JLabel> x_parentLabels = new ArrayList<JLabel>();
+			Component x_parent = o_component.getParentComponent();
+			List<JLabel> x_parentLabels = new ArrayList<>();
 
-				while(x_parent != null) {
-					final JLabel x_label = getParentLabel(x_parent);
-					x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
-					final Component x_parentFinal = x_parent;
+			while(x_parent != null) {
+				final JLabel x_label = getParentLabel(x_parent);
+				x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
+				final Component x_parentFinal = x_parent;
 
-					x_parentFinal.addComponentChangeListener(new ComponentChangeListener() {
-						@Override
-						public void componentChanged(ComponentChangeEvent p_cce) {
-							if (p_cce.getSource() == x_parentFinal) {
-								x_label.setText(x_parentFinal.getText());
-							}
-						}
-					});
+				x_parentFinal.addComponentChangeListener(p_cce -> {
+					if (p_cce.getSource() == x_parentFinal) {
+						x_label.setText(x_parentFinal.getText());
+					}
+				});
 
-					x_parent = x_parent.getParentComponent();
-				}
-
-				for(JLabel x_label: x_parentLabels) {
-					o_breadcrumbsPanel.add(x_label);
-				}
-
-				repaint();
+				x_parent = x_parent.getParentComponent();
 			}
+
+			for(JLabel x_label: x_parentLabels) {
+				o_breadcrumbsPanel.add(x_label);
+			}
+
+			repaint();
 		});
 
 		o_textField.setText(p_component.getText());

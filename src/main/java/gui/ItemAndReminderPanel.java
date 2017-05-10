@@ -6,7 +6,6 @@ import util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
 import java.util.*;
 
 import static util.GuiUtil.setUpButtonLabel;

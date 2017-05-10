@@ -12,6 +12,7 @@ import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.List;
 
+import static data.LookupHelper.getAllComponents;
 import static gui.Actions.*;
 import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.*;
 import static util.GuiUtil.setUpButtonLabel;
@@ -172,45 +173,14 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 	public void tableRowClicked(int row, int col, final Date p_date) {
 		if(p_date != null) {
 			ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
-			final List<Component> x_components = LookupHelper.getAllComponents(o_thread, p_date, x_model.includeActions(), x_model.includeUpdates(), x_model.includeReminders());
-			JPopupMenu x_menu = buildPopupMenu(x_components);
-
-			if(x_components.size() > 0) {
-				x_menu.add(new JSeparator(JSeparator.HORIZONTAL));
-			}
-
-			JMenuItem x_newMenuItem = new JMenuItem("Add Action", ImageUtil.getPlusVerySmallIcon());
-			x_newMenuItem.setForeground(Color.gray);
-			x_newMenuItem.addActionListener(actionEvent -> addAction(null, o_thread, p_date, o_parentPanel, false));
-			x_menu.add(x_newMenuItem);
-
-			if(x_components.size() > 0) {
-				JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", ImageUtil.getLinkVerySmallIcon());
-				x_linkMenuItem.setForeground(Color.gray);
-				x_menu.add(x_linkMenuItem);
-
-				x_linkMenuItem.addActionListener(actionEvent -> {
-					linkToGoogle(LookupHelper.getHasDueDates(x_components), o_parentPanel);
-				});
-
-				JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", ImageUtil.getTickVerySmallIcon());
-				x_makeInactiveItem.setForeground(Color.gray);
-				x_menu.add(x_makeInactiveItem);
-
-				x_makeInactiveItem.addActionListener(actionEvent -> {
-					if (JOptionPane.showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-						x_components.forEach(c -> c.setActive(false));
-					}
-				});
-			}
-
-			int x_xPosition = ((o_table.getWidth() / 7) * col) - 12;
-			x_menu.show(o_table, x_xPosition, (o_table.getHeight() / 5) * row + 16);
+			final List<Component> x_components = getAllComponents(o_thread, p_date, x_model.includeActions(), x_model.includeUpdates(), x_model.includeReminders());
+			buildPopupMenu(x_components, p_date).show(o_table, ((o_table.getWidth() / 7) * col) - 12, (o_table.getHeight() / 5) * row + 16);
 		}
 	}
 
-	private JPopupMenu buildPopupMenu(List<Component> x_components) {
+	private JPopupMenu buildPopupMenu(List<Component> x_components, Date p_date) {
 		JPopupMenu x_menu = new JPopupMenu();
+
 		for(final Component x_component: x_components) {
 			String x_text = buildTextForItem(x_component);
 			Icon x_icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : ImageUtil.getGoogleVerySmallBlankIcon();
@@ -219,9 +189,43 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 			x_menuItem.setFont(x_component.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
 			x_menuItem.setToolTipText(buildToolTipTextForItem(x_component));
 			x_menu.add(x_menuItem);
-
 			x_menuItem.addActionListener(actionEvent -> WindowManager.getInstance().openComponent(x_component));
 		}
+
+		if(x_components.size() > 0) {
+			x_menu.add(new JSeparator(JSeparator.HORIZONTAL));
+		}
+
+		JMenuItem x_newMenuItem = new JMenuItem("Add Action", ImageUtil.getPlusVerySmallIcon());
+		x_newMenuItem.setForeground(Color.gray);
+		x_newMenuItem.addActionListener(actionEvent -> {
+			Item x_item = addAction(null, o_thread, p_date, o_parentPanel, false);
+
+			if(x_item != null && p_date.before(DateUtil.getFirstThing(0))) {
+				if (JOptionPane.showConfirmDialog(o_parentPanel, "Your action is in the past. Set it Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+					x_item.setActive(false);
+				}
+			}
+		});
+		x_menu.add(x_newMenuItem);
+
+		if(x_components.size() > 0) {
+			JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", ImageUtil.getLinkVerySmallIcon());
+			x_linkMenuItem.setForeground(Color.gray);
+			x_menu.add(x_linkMenuItem);
+			x_linkMenuItem.addActionListener(actionEvent -> linkToGoogle(LookupHelper.getHasDueDates(x_components), o_parentPanel));
+
+			JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", ImageUtil.getTickVerySmallIcon());
+			x_makeInactiveItem.setForeground(Color.gray);
+			x_menu.add(x_makeInactiveItem);
+
+			x_makeInactiveItem.addActionListener(actionEvent -> {
+				if (JOptionPane.showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+					x_components.forEach(c -> c.setActive(false));
+				}
+			});
+		}
+
 		return x_menu;
 	}
 

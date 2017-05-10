@@ -10,13 +10,12 @@ import java.awt.Component;
 import java.text.*;
 import java.util.*;
 
-public class ThreadCalendarCellRenderer implements TableCellRenderer {
-	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mmaa");
+class ThreadCalendarCellRenderer implements TableCellRenderer {
 
 	private int o_year;
 	private int o_month;
 
-	public ThreadCalendarCellRenderer() {
+	ThreadCalendarCellRenderer() {
 		o_year = Calendar.getInstance().get(Calendar.YEAR);
 		o_month = Calendar.getInstance().get(Calendar.MONTH);
 	}
@@ -42,16 +41,15 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 		}
 
 		setColourForTime(x_date, x_list);
-
 		return x_list;
 	}
 
-	public void setTime(int p_year, int p_month) {
+	void setTime(int p_year, int p_month) {
 		this.o_year = p_year;
 		this.o_month = p_month;
 	}
 
-	public static class MyListCellRenderer extends JLabel implements ListCellRenderer<Object> {
+	static class MyListCellRenderer extends JLabel implements ListCellRenderer<Object> {
 		@Override
 		public Component getListCellRendererComponent(JList jList, Object p_value, int p_index, boolean p_isSelected, boolean p_cellHasFocus) {
 			setIcon(null);
@@ -80,44 +78,44 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 			return ImageUtil.getReminderIcon();
 		}
 
-		public static String buildTextForItem(data.Component x_component) {
+		static String buildTextForItem(data.Component x_component) {
 			StringBuilder x_builder = new StringBuilder();
 			Date x_dueDate = x_component instanceof HasDueDate && ((HasDueDate)x_component).getDueDate() != null ? ((HasDueDate)x_component).getDueDate() : x_component.getModifiedDate();
 
 			if(!DateUtil.isAllDay(x_dueDate)) {
-				x_builder.append(s_12HrTimeFormat.format(x_dueDate).toLowerCase()).append(". ");
+				x_builder.append(new SimpleDateFormat("h:mmaa").format(x_dueDate).toLowerCase()).append(". ");
 			}
 
 			return x_builder.append(x_component.getText()).toString().replaceAll(":00", "");
 		}
 
-		public static String buildToolTipTextForItem(data.Component x_component) {
+		static String buildToolTipTextForItem(data.Component x_component) {
 			return (x_component instanceof Reminder ? x_component.getParentComponent().getParentComponent().getText() + " : " : "") + x_component.getParentComponent().getText() + " : " + x_component.getText();
 		}
 
 	}
 
-	private static void setColourForTime(Date p_dueDate, JList x_list) {
-		boolean x_due = false;
+	private static void setColourForTime(Date p_dueDate, JList p_list) {
+		if(anyDueItems(p_list)) {
+			p_list.setBackground(ColourConstants.s_goneByColour);
+		} else if(DateUtil.isToday(p_dueDate)) {
+			p_list.setBackground(ColourConstants.s_todayColour);
+		} else if(DateUtil.isTomorrow(p_dueDate)) {
+			p_list.setBackground(ColourConstants.s_tomorrowColour);
+		} else if(DateUtil.isWithin7Days(p_dueDate, false)) {
+			p_list.setBackground(ColourConstants.s_thisWeekColour);
+		}
+	}
 
-		for(int i = 0; i < x_list.getModel().getSize(); i++) {
-			Object x_obj = x_list.getModel().getElementAt(i);
+	private static boolean anyDueItems(JList p_list) {
+		for(int i = 0; i < p_list.getModel().getSize(); i++) {
+			Object x_obj = p_list.getModel().getElementAt(i);
 
 			if(x_obj instanceof HasDueDate && ((HasDueDate)x_obj).isDue()) {
-				x_due = true;
-				break;
+				return true;
 			}
 		}
-
-		if(x_due) {
-			x_list.setBackground(ColourConstants.s_goneByColour);
-		} else if(DateUtil.isToday(p_dueDate)) {
-			x_list.setBackground(ColourConstants.s_todayColour);
-		} else if(DateUtil.isTomorrow(p_dueDate)) {
-			x_list.setBackground(ColourConstants.s_tomorrowColour);
-		} else if(DateUtil.isWithin7Days(p_dueDate, false)) {
-			x_list.setBackground(ColourConstants.s_thisWeekColour);
-		}
+		return false;
 	}
 
 }

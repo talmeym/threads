@@ -1,4 +1,4 @@
-package gui;
+package util;
 
 public class ProgressAdapter implements ProgressCallBack {
 	@Override public void started(int max) { }

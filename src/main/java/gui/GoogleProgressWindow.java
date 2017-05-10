@@ -1,5 +1,7 @@
 package gui;
 
+import util.ProgressCallBack;
+
 import javax.swing.*;
 import java.awt.*;
 

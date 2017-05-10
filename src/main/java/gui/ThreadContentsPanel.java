@@ -86,7 +86,7 @@ public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 	@Override
 	public void tableRowClicked(int p_row, int p_col, ThreadItem p_threadItem) {
 		boolean x_enabled = p_threadItem != null;
-		boolean x_linkEnabled = x_enabled && (p_threadItem instanceof Thread || (p_threadItem instanceof Item && ((Item) p_threadItem).getDueDate() != null));
+		boolean x_linkEnabled = x_enabled && !(p_threadItem instanceof Item && ((Item)p_threadItem).getDueDate() == null);
 		o_popupMenu.setStatus(x_enabled, x_enabled, x_enabled, x_linkEnabled, p_threadItem);
 	}
 

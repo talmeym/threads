@@ -63,29 +63,30 @@ public class ContextualPopupMenu {
 		o_moveLabel.setEnabled(p_component != null && p_moveEnabled);
 		o_linkLabel.setEnabled(p_component != null && p_linkEnabled);
 
+		o_removeLabel.removeActionListener(o_removeListener);
+
 		if(p_removeEnabled) {
 			o_removeLabel.addActionListener(o_removeListener);
-		} else {
-			o_removeLabel.removeActionListener(o_removeListener);
 		}
+
+		o_moveLabel.removeActionListener(o_moveListener);
 
 		if(p_moveEnabled) {
 			o_moveLabel.addActionListener(o_moveListener);
-		} else {
-			o_moveLabel.removeActionListener(o_moveListener);
 		}
 
+		o_linkLabel.removeActionListener(o_linkListener);
+
 		if(p_linkEnabled) {
-			o_linkLabel.addActionListener(o_linkListener);
-		} else {
-			o_linkLabel.removeActionListener(o_linkListener);
+				o_linkLabel.addActionListener(o_linkListener);
 		}
+
+		o_activeLabel.removeActionListener(o_activateListener);
+		o_activeLabel.removeActionListener(o_deactivateListener);
 
 		if(p_component != null) {
 			boolean x_active = p_component.isActive();
 			o_activeLabel.setText(x_active ? "Set Inactive" : "Set Active");
-			o_activeLabel.removeActionListener(o_activateListener);
-			o_activeLabel.removeActionListener(o_deactivateListener);
 			o_activeLabel.addActionListener(x_active ? o_deactivateListener : o_activateListener);
 		}
 	}

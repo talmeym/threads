@@ -2,7 +2,6 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -11,6 +10,10 @@ import java.awt.Component;
 import java.text.*;
 import java.util.*;
 import java.util.List;
+
+import static java.lang.String.valueOf;
+import static util.DateUtil.getColourForTime;
+import static util.ImageUtil.getGoogleSmallIcon;
 
 public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
 	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
@@ -29,13 +32,13 @@ public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
 
 		if(p_value instanceof Boolean) {
 			if((Boolean) p_value) {
-				setIcon(ImageUtil.getGoogleSmallIcon());
+				setIcon(getGoogleSmallIcon());
 				setHorizontalAlignment(JTextField.CENTER);
 			}
 		} else if(p_value instanceof Date) {
 			setText(s_dateFormat.format((Date)p_value));
 		} else {
-			setText(String.valueOf(p_value));
+			setText(valueOf(p_value));
 		}
 	}
 
@@ -49,7 +52,7 @@ public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
 		List<Item> x_actions = LookupHelper.getAllActiveActions(o_thread, true);
 
 		if(p_row < x_actions.size()) {
-			x_component.setBackground(DateUtil.getColourForTime(x_actions.get(p_row).getDueDate()));
+			x_component.setBackground(getColourForTime(x_actions.get(p_row).getDueDate()));
 		}
 
 		if(p_isSelected) {
