@@ -38,38 +38,6 @@ public class LookupHelper {
         return x_result;
     }
 
-    public static List<Item> getAllActions(Thread p_thread) {
-        List<Item> x_result = new ArrayList<>();
-		x_result.addAll(getActions(p_thread));
-
-        for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
-            ThreadItem x_groupItem = p_thread.getThreadItem(i);
-
-            if(x_groupItem instanceof Thread) {
-				x_result.addAll(getAllActions((Thread) x_groupItem));
-			}
-        }
-
-        Collections.sort(x_result, new AllDayAwareDueDateComparator());
-        return x_result;
-    }
-
-    public static List<Item> getAllActiveActions(Thread p_thread) {
-        List<Item> x_result = new ArrayList<>();
-		x_result.addAll(getActiveActions(p_thread, false));
-
-        for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
-            ThreadItem x_groupItem = p_thread.getThreadItem(i);
-
-            if(x_groupItem.isActive() && x_groupItem instanceof Thread) {
-				x_result.addAll(getAllActiveActions((Thread) x_groupItem));
-			}
-        }
-
-        Collections.sort(x_result, new AllDayAwareDueDateComparator());
-        return x_result;
-    }
-
     public static List<Component> getAllComponents(Thread p_thread, Date p_referenceDate, boolean p_includeActions, boolean p_includeUpdates, boolean p_includeReminders) {
         List<Component> x_result = new ArrayList<>();
 
@@ -218,11 +186,50 @@ public class LookupHelper {
 				.collect(Collectors.toList());
 	}
 
+	public static List<HasDueDate> getHasDueDates(List<Component> p_components) {
+		List<HasDueDate> x_hasDueDates = new ArrayList<>();
+		p_components.stream()
+				.filter(t -> t instanceof HasDueDate)
+				.map(t -> (HasDueDate) t)
+				.filter(i -> i.getDueDate() != null)
+				.forEach(h -> {
+					x_hasDueDates.add(h);
+
+					if(h instanceof Item && h.isActive()) {
+						x_hasDueDates.addAll(((Item)h).getReminders());
+					}
+				});
+		return x_hasDueDates;
+	}
+
+	public static List<HasDueDate> getHasDueDates(Thread p_thread, boolean p_onlyActive) {
+		List<HasDueDate> x_hasDueDates = new ArrayList<>();
+		p_thread.getThreadItems().stream()
+				.filter(t -> (!p_onlyActive || t.isActive()) && t instanceof Item)
+				.map(t -> (Item) t)
+				.filter(i -> i.getDueDate() != null)
+				.forEach(i -> x_hasDueDates.addAll(getHasDueDates(i, p_onlyActive)));
+		return x_hasDueDates;
+	}
+
+	public static List<HasDueDate> getHasDueDates(Item p_item, boolean p_onlyActive) {
+		List<HasDueDate> x_hasDueDates = new ArrayList<>();
+
+		if(!p_onlyActive || p_item.isActive()) {
+			x_hasDueDates.add(p_item);
+		}
+
+		x_hasDueDates.addAll(p_onlyActive ? getActiveReminders(p_item, p_onlyActive) : p_item.getReminders());
+
+		return x_hasDueDates;
+	}
+
 	static List<Reminder> getRemindersForDay(Thread p_thread, Date p_date) {
 		List<Reminder> x_reminders = new ArrayList<>();
 		p_thread.getThreadItems().stream()
-				.filter(t -> t.isActive() && t instanceof Item)
+				.filter(t -> t instanceof Item)
 				.map(t -> (Item) t)
+				.filter(i -> i.isActive() && i.getDueDate() != null)
 				.forEach(i -> x_reminders.addAll(getRemindersForDay(i, p_date)));
 		return x_reminders;
 	}

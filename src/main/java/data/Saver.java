@@ -47,8 +47,8 @@ public class Saver {
 		if(p_item.getDueDate() != null) {
 			addContent(x_itemElem, XmlConstants.s_DUE, addDateTime(p_item.getDueDate()));
 
-			for(int i = 0; i < p_item.getReminderCount(); i++) {
-				x_itemElem.addContent(addReminder(p_item.getReminder(i)));
+			for(Reminder x_reminder: p_item.getReminders()) {
+				x_itemElem.addContent(addReminder(x_reminder));
 			}
 		}
 

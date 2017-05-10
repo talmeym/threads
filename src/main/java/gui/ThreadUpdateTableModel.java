@@ -13,17 +13,6 @@ class ThreadUpdateTableModel extends ComponentTableModel<Thread, Item> {
     }
 
 	@Override
-	public int getRowCount() {
-        Thread x_thread = getComponent();
-        
-        if(x_thread == null) {
-            return 0;
-        }
-
-        return LookupHelper.getAllActiveUpdates(x_thread).size();
-    }
-
-	@Override
     public Class getColumnClass(int col) {
         switch(col) {
 			case 0: return Date.class;
@@ -43,8 +32,8 @@ class ThreadUpdateTableModel extends ComponentTableModel<Thread, Item> {
         }
     }
 
-	@Override
-	Item getDataItem(int p_row, int p_col) {
-		return LookupHelper.getAllActiveUpdates(getComponent()).get(p_row);
+    @Override
+	List<Item> getDataItems() {
+		return LookupHelper.getAllActiveUpdates(getComponent());
 	}
 }

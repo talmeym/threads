@@ -4,6 +4,7 @@ import data.*;
 import util.*;
 
 import javax.swing.table.DefaultTableModel;
+import java.util.List;
 
 abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> extends DefaultTableModel implements TimeUpdateListener, GoogleSyncListener, ComponentChangeListener {
     private final COMPONENT o_component;
@@ -31,6 +32,15 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
         return false;
     }
 
+    @Override
+    public int getRowCount() {
+		if(getComponent() == null) {
+			return 0;
+		}
+
+		return getDataItems().size();
+	}
+
 	@Override
     public void componentChanged(ComponentChangeEvent p_cce) {
 		fireTableDataChanged();
@@ -50,5 +60,9 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 		fireTableDataChanged();
 	}
 
-	abstract DATA_TYPE getDataItem(int p_row, int p_col);
+	abstract List<DATA_TYPE> getDataItems();
+
+	DATA_TYPE getDataItem(int p_row, int p_col) {
+		return getDataItems().get(p_row);
+	}
 }

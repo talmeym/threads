@@ -13,8 +13,8 @@ public class ComponentChangeEvent {
     private final int o_type;
 	private final int o_index;
 
-	public ComponentChangeEvent(Component p_component, int p_type, int p_index) {
-        o_component = p_component;
+	public ComponentChangeEvent(Component p_source, int p_type, int p_index) {
+        o_component = p_source;
         o_type = p_type;
 		this.o_index = p_index;
 	}

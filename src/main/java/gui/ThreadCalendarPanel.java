@@ -1,7 +1,7 @@
 package gui;
 
-import data.*;
 import data.Component;
+import data.*;
 import data.Thread;
 import util.*;
 
@@ -11,11 +11,9 @@ import java.awt.event.*;
 import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static gui.Actions.addAction;
-import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.buildTextForItem;
-import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.buildToolTipTextForItem;
+import static gui.Actions.*;
+import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.*;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
@@ -191,27 +189,8 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 				x_linkMenuItem.setForeground(Color.gray);
 				x_menu.add(x_linkMenuItem);
 
-				// TODO use Actions.linkToGoogle once you can pass google util a collection of components
 				x_linkMenuItem.addActionListener(actionEvent -> {
-					if(!Settings.registerForSetting(Settings.s_GOOGLE_ENABLED, (p_name, p_value) -> { }, "false").equals("true")) {
-						JOptionPane.showMessageDialog(o_parentPanel, "Google is disabled", "No Google", JOptionPane.INFORMATION_MESSAGE);
-						return;
-					}
-
-					if (JOptionPane.showConfirmDialog(o_parentPanel, "Link " + x_components.size() + " Action" + (x_components.size() > 1 ? "s" : "") + " to Google Calendar ?", "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-						GoogleLinkTask x_task = new GoogleLinkTask(getItems(x_components), new GoogleProgressWindow(o_parentPanel), new ProgressAdapter(){
-							@Override
-							public void success() {
-								JOptionPane.showMessageDialog(o_parentPanel, x_components.size() + " Action" + (x_components.size() > 1 ? "s were" : " was") + " linked to Google Calendar", "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-							}
-
-							@Override
-							public void error(String errorDesc) {
-								JOptionPane.showMessageDialog(o_parentPanel, errorDesc, "Error linking to Google Calendar ...", JOptionPane.ERROR_MESSAGE);
-							}
-						});
-						x_task.execute();
-					}
+					linkToGoogle(LookupHelper.getHasDueDates(x_components), o_parentPanel);
 				});
 
 				JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", ImageUtil.getTickVerySmallIcon());
@@ -244,13 +223,6 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 			x_menuItem.addActionListener(actionEvent -> WindowManager.getInstance().openComponent(x_component));
 		}
 		return x_menu;
-	}
-
-	private List<Item> getItems(List<Component> p_components) {
-		return p_components.stream()
-				.filter(component -> component instanceof Item)
-				.map(component -> (Item) component)
-				.collect(Collectors.toList());
 	}
 
 	@SuppressWarnings("unchecked")

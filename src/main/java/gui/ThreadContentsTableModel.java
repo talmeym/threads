@@ -5,7 +5,9 @@ import data.*;
 import util.*;
 
 import javax.swing.*;
-import java.util.Date;
+import java.util.*;
+
+import static data.LookupHelper.*;
 
 class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
     ThreadContentsTableModel(Thread p_thread) {
@@ -14,16 +16,7 @@ class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
 
-    public int getRowCount() {
-        Thread x_thread = getComponent();
-        
-        if(x_thread == null) {
-            return 0;
-        }
-        
-        return x_thread.getThreadItemCount();
-    }
-
+    @Override
     public Class getColumnClass(int col) {
         switch(col) {
 			case 0: return Date.class;
@@ -32,20 +25,20 @@ class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
         }         
     }
 
+    @Override
     public Object getValueAt(int row, int col) {
 		ThreadItem x_threadItem = getDataItem(row, col);
         
         switch(col) {
 			case 0: return x_threadItem.getCreationDate();
-			case 1:
-				return ImageUtil.getIconForType(x_threadItem.getType());
+			case 1: return ImageUtil.getIconForType(x_threadItem.getType());
 			case 2: return x_threadItem.getText();
 			case 3:
 				if(x_threadItem instanceof Thread) {
-					int x_threads = LookupHelper.getAllActiveThreads((Thread) x_threadItem).size();
-					int x_updates = LookupHelper.getAllActiveUpdates((Thread) x_threadItem).size();
-					int x_actions = LookupHelper.getAllActiveActions((Thread) x_threadItem, false).size();
-					return "Ths: " + x_threads + " Ups: " + x_updates + " Acs:" + x_actions;
+					int x_th = getAllActiveThreads((Thread) x_threadItem).size();
+					int x_up = getAllActiveUpdates((Thread) x_threadItem).size();
+					int x_ac = getAllActiveActions((Thread) x_threadItem, false).size();
+					return "Ths: " + x_th + " Ups: " + x_up + " Acs:" + x_ac;
 				}
 
 				if(x_threadItem instanceof Item) {
@@ -62,13 +55,13 @@ class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
 					return "Updated " + DateUtil.getDateStatus(x_item.getCreationDate());
 				}
 
-				return "";
+				return ""; // never get here
 			default: return GoogleUtil.isLinked(x_threadItem);
         }
     }
 
-	@Override
-	ThreadItem getDataItem(int p_row, int p_col) {
-		return getComponent().getThreadItem(p_row);
+    @Override
+	List<ThreadItem> getDataItems() {
+    	return getComponent().getThreadItems();
 	}
 }

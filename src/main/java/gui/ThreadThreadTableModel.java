@@ -3,20 +3,11 @@ package gui;
 import data.Thread;
 import data.*;
 
+import java.util.List;
+
 class ThreadThreadTableModel extends ComponentTableModel<Thread, Thread> {
 		ThreadThreadTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Parent", "Thread", "Threads", "Updates", "Actions"});
-    }
-
-	@Override
-    public int getRowCount() {
-        Thread x_thread = getComponent();
-        
-        if(x_thread == null) {
-            return 0;
-        }
-        
-        return LookupHelper.getAllActiveThreads(x_thread).size();
     }
 
 	@Override
@@ -37,8 +28,8 @@ class ThreadThreadTableModel extends ComponentTableModel<Thread, Thread> {
         }
     }
 
-	@Override
-	Thread getDataItem(int p_row, int p_col) {
-		return LookupHelper.getAllActiveThreads(getComponent()).get(p_row);
+    @Override
+	List<Thread> getDataItems() {
+    	return LookupHelper.getAllActiveThreads(getComponent());
 	}
 }

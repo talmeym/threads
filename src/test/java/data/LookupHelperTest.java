@@ -116,6 +116,43 @@ public class LookupHelperTest {
 		assertEquals(10, LookupHelper.getRemindersForDay(p_thread, new Date()).size());
 	}
 
+	@Test
+	public void testGetHasDueDates_item() {
+		Item p_item = buildItemWithReminders(true, true, new Date(), 5);
+		p_item.addReminder(buildReminders(false, p_item, new Date(), 5));
+		assertEquals(6, LookupHelper.getHasDueDates(p_item, true).size());
+		assertEquals(11, LookupHelper.getHasDueDates(p_item, false).size());
+	}
+
+	@Test
+	public void testGetHasDueDates_thread() {
+		Thread p_thread = new Thread("Test Thread");
+
+		Item x_item1 = buildItemWithReminders(false, false, new Date(), 5);
+		Item x_item2 = buildItemWithReminders(false, true, new Date(), 5);
+		Item x_item3 = buildItemWithReminders(true, false, new Date(), 5);
+		Item x_item4 = buildItemWithReminders(true, true, new Date(), 5);
+		p_thread.addThreadItem(x_item1, x_item2, x_item3, x_item4);
+
+		assertEquals(7, LookupHelper.getHasDueDates(p_thread, true).size());
+		assertEquals(24, LookupHelper.getHasDueDates(p_thread, false).size());
+	}
+
+	@Test
+	public void testGetHasDueDates_components() {
+		Reminder x_reminder = buildReminders(true, new Item("Test Item", new Date()), new Date(), 1)[0];
+		Item x_item1 = buildItem(true, null);
+		Item x_item2 = buildItem(true, null);
+		Item x_item3 = buildItemWithReminders(true, true, new Date(), 5);
+		Item x_item4 = buildItemWithReminders(false, true, new Date(), 5);
+		Thread x_thread = new Thread("Test Thread");
+		Item x_item5 = buildItemWithReminders(true, true, new Date(), 5);
+		x_thread.addThreadItem(x_item5);
+		List<Component> x_comps = Arrays.asList(x_reminder, x_item1, x_item2, x_item3, x_item4, x_thread);
+
+		assertEquals(8, LookupHelper.getHasDueDates(x_comps).size());
+	}
+
 	private Item buildItemWithReminders(boolean p_active, boolean p_reminderActive, Date p_reminderDate, int p_reminderCount) {
 		Item x_item = new Item("Test Item", new Date());
 		x_item.setActive(p_active);

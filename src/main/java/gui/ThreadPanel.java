@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import static data.LookupHelper.getHasDueDates;
 import static gui.Actions.linkToGoogle;
 import static util.Settings.*;
 
@@ -59,10 +60,10 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, SettingCh
 				JPopupMenu x_popupMenu = new JPopupMenu();
 
 				JMenuItem x_linkActive = new JMenuItem("Link Active");
-				x_linkActive.addActionListener(actionEvent -> linkToGoogle(o_thread, p_parentPanel, true));
+				x_linkActive.addActionListener(actionEvent -> linkToGoogle(getHasDueDates(o_thread, true), p_parentPanel));
 
 				JMenuItem x_linkAll = new JMenuItem("Link All");
-				x_linkAll.addActionListener(actionEvent -> linkToGoogle(o_thread, p_parentPanel, false));
+				x_linkAll.addActionListener(actionEvent -> linkToGoogle(getHasDueDates(o_thread, false), p_parentPanel));
 
 				x_popupMenu.add(x_linkActive);
 				x_popupMenu.add(x_linkAll);

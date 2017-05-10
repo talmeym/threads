@@ -82,7 +82,6 @@ public class ThreadCalendarCellRenderer implements TableCellRenderer {
 
 		public static String buildTextForItem(data.Component x_component) {
 			StringBuilder x_builder = new StringBuilder();
-
 			Date x_dueDate = x_component instanceof HasDueDate && ((HasDueDate)x_component).getDueDate() != null ? ((HasDueDate)x_component).getDueDate() : x_component.getModifiedDate();
 
 			if(!DateUtil.isAllDay(x_dueDate)) {

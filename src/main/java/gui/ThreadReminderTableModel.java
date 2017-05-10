@@ -4,6 +4,8 @@ import data.*;
 import data.Thread;
 import util.*;
 
+import java.util.List;
+
 import static data.LookupHelper.getAllActiveReminders;
 
 class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
@@ -14,17 +16,6 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
 	}
-
-	@Override
-	public int getRowCount() {
-        Thread x_thread = getComponent();
-        
-        if(x_thread == null) {
-            return 0;
-        }
-        
-        return getAllActiveReminders(x_thread, o_onlyDueReminders).size();
-    }
 
 	@Override
     public Class getColumnClass(int col) {
@@ -44,9 +35,9 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
         }
     }
 
-	@Override
-	Reminder getDataItem(int p_row, int p_col) {
-		return getAllActiveReminders(getComponent(), o_onlyDueReminders).get(p_row);
+    @Override
+	List<Reminder> getDataItems() {
+    	return getAllActiveReminders(getComponent(), o_onlyDueReminders);
 	}
 
 	public boolean onlyDueReminders() {

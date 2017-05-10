@@ -173,41 +173,24 @@ public class GoogleUtil {
 		}
 	}
 
-	public static void linkItemsToGoogle(List<Item> p_items, ProgressCallBack... p_callbacks) {
-		callBack(p_callbacks, c -> c.started(LookupHelper.countActiveSyncableComponents(p_items)));
+	public static void linkHasDueDatesToGoogle(List<HasDueDate> p_hasDueDates, ProgressCallBack... p_callbacks) {
+		callBack(p_callbacks, c -> c.started(p_hasDueDates.size()));
 
 		try {
 			String x_calendarId = findCalendar();
 			List<Event> x_events = getEvents(x_calendarId);
 
-			for(Item x_item : p_items) {
-				Event x_event = findEvent(x_events, x_item);
+			for(HasDueDate x_hasDueDate : p_hasDueDates) {
+				Event x_event = findEvent(x_events, x_hasDueDate);
 
 				if(x_event != null) {
-					s_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_item.getId(), x_item.getText(), x_item.getDueDate())).execute();
+					s_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getDueDate())).execute();
 				} else {
-					s_client.events().insert(x_calendarId, populateEvent(new Event(), x_item.getId(), x_item.getText(), x_item.getDueDate())).execute();
+					s_client.events().insert(x_calendarId, populateEvent(new Event(), x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getDueDate())).execute();
 				}
 
-				for(int i = 0; i < x_item.getReminderCount(); i++) {
-					Reminder x_reminder = x_item.getReminder(i);
-
-					if(x_reminder.isActive()) {
-						x_event = findEvent(x_events, x_reminder);
-
-						if(x_events != null) {
-							s_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_reminder.getId(), x_reminder.getText(), x_reminder.getDueDate())).execute();
-						} else {
-							s_client.events().insert(x_calendarId, populateEvent(new Event(), x_reminder.getId(), x_reminder.getText(), x_reminder.getDueDate())).execute().getId();
-						}
-					}
-
-					callBack(p_callbacks, c -> c.progress(x_reminder.getText()));
-					s_linkedComponents.add(x_reminder.getId());
-				}
-
-				callBack(p_callbacks, c -> c.progress(x_item.getText()));
-				s_linkedComponents.add(x_item.getId());
+				callBack(p_callbacks, c -> c.progress(x_hasDueDate.getText()));
+				s_linkedComponents.add(x_hasDueDate.getId());
 			}
 
 			callBack(p_callbacks, ProgressCallBack::success);
@@ -217,34 +200,7 @@ public class GoogleUtil {
 		}
 	}
 
-	public static void linkRemindersToGoogle(List<Reminder> p_reminders, ProgressCallBack... p_callbacks) {
-		callBack(p_callbacks, c -> c.started(p_reminders.size()));
-
-		try {
-			String calendarId = findCalendar();
-			List<Event> x_events = getEvents(calendarId);
-
-			for(Reminder x_reminder : p_reminders) {
-				Event x_event = findEvent(x_events, x_reminder);
-
-				if(x_event != null) {
-					s_client.events().update(calendarId, x_event.getId(), populateEvent(x_event, x_reminder.getId(), x_reminder.getText(), x_reminder.getDueDate())).execute();
-				} else {
-					s_client.events().insert(calendarId, populateEvent(new Event(), x_reminder.getId(), x_reminder.getText(), x_reminder.getDueDate())).execute().getId();
-				}
-
-				callBack(p_callbacks, c -> c.progress(x_reminder.getText()));
-				s_linkedComponents.add(x_reminder.getId());
-			}
-
-			callBack(p_callbacks, ProgressCallBack::success);
-			GoogleSyncer.getInstance().updateGoogleListeners();
-		} catch (Throwable t) {
-			callBack(p_callbacks, c -> c.error(t.getMessage()));
-		}
-	}
-
-	private static Event findEvent(List<Event> x_events, Component x_item) {
+	private static Event findEvent(List<Event> x_events, HasDueDate x_item) {
 		if(x_events != null) {
 			for(Event x_event: x_events) {
 				if(x_item.getId().toString().equals(x_event.getDescription())) {

@@ -44,27 +44,6 @@ public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> 
 		return x_value;
 	}
 
-	private Date getDate(int p_dayOfMonth) {
-		Calendar x_calendar = Calendar.getInstance();
-		x_calendar.set(Calendar.YEAR, o_year);
-		x_calendar.set(Calendar.MONTH, o_month);
-		x_calendar.set(Calendar.DAY_OF_MONTH, 1);
-		x_calendar.set(Calendar.HOUR_OF_DAY, 0);
-		x_calendar.set(Calendar.MINUTE, 0);
-		x_calendar.set(Calendar.MILLISECOND, 0);
-		x_calendar.add(Calendar.DAY_OF_MONTH, p_dayOfMonth);
-		return x_calendar.getTime();
-	}
-
-	private int getOffset() {
-		Calendar x_calendar = Calendar.getInstance();
-		x_calendar.set(Calendar.YEAR, o_year);
-		x_calendar.set(Calendar.MONTH, o_month);
-		x_calendar.set(Calendar.DAY_OF_MONTH, 0);
-		int x_firstDayOfWeek = x_calendar.get(Calendar.DAY_OF_WEEK);
-		return (x_firstDayOfWeek - 1) * -1;
-	}
-
 	public int getYear() {
 		return o_year;
 	}
@@ -80,8 +59,30 @@ public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> 
 	}
 
 	@Override
+	List<Date> getDataItems() {
+		return null; // do nothing
+	}
+
+	private int getOffset() {
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(Calendar.YEAR, o_year);
+		x_calendar.set(Calendar.MONTH, o_month);
+		x_calendar.set(Calendar.DAY_OF_MONTH, 0);
+		int x_firstDayOfWeek = x_calendar.get(Calendar.DAY_OF_WEEK);
+		return (x_firstDayOfWeek - 1) * -1;
+	}
+
+	@Override
 	Date getDataItem(int p_row, int p_col) {
-		return getDate(p_col + (p_row * 7) + getOffset());
+		Calendar x_calendar = Calendar.getInstance();
+		x_calendar.set(Calendar.YEAR, o_year);
+		x_calendar.set(Calendar.MONTH, o_month);
+		x_calendar.set(Calendar.DAY_OF_MONTH, 1);
+		x_calendar.set(Calendar.HOUR_OF_DAY, 0);
+		x_calendar.set(Calendar.MINUTE, 0);
+		x_calendar.set(Calendar.MILLISECOND, 0);
+		x_calendar.add(Calendar.DAY_OF_MONTH, p_col + (p_row * 7) + getOffset());
+		return x_calendar.getTime();
 	}
 
 	public boolean includeActions() {

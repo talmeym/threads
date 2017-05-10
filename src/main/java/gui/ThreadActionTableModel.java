@@ -14,17 +14,8 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
     }
-    
-    public int getRowCount() {
-        Thread x_thread = getComponent();
-        
-        if(x_thread == null) {
-            return 0;
-        }
-        
-        return LookupHelper.getAllActiveActions(x_thread, o_onlyNext7Days).size();
-    }
 
+    @Override
     public Class getColumnClass(int col) {
         switch(col) {
 			case 0: return Date.class;
@@ -32,6 +23,7 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
         }        
     }
 
+    @Override
     public Object getValueAt(int row, int col) {
         Item x_action = getDataItem(row, col);
         
@@ -44,9 +36,9 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
         }
     }
 
-	@Override
-	Item getDataItem(int p_row, int p_col) {
-		return LookupHelper.getAllActiveActions(getComponent(), o_onlyNext7Days).get(p_row);
+    @Override
+	List<Item> getDataItems() {
+		return LookupHelper.getAllActiveActions(getComponent(), o_onlyNext7Days);
 	}
 
 	public boolean onlyNext7Days() {

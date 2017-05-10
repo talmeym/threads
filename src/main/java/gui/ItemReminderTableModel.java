@@ -3,21 +3,12 @@ package gui;
 import data.*;
 import util.*;
 
+import java.util.List;
+
 public class ItemReminderTableModel extends ComponentTableModel<Item, Reminder> {
     public ItemReminderTableModel(Item p_item) {
         super(p_item, new String[] {"Text", "Due Date", "Due", ""});
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
-    }
-
-	@Override
-    public int getRowCount() {
-        Item x_item = getComponent();
-        
-        if(x_item == null || x_item.getDueDate() == null) {
-            return 0;
-        }
-        
-        return x_item.getReminderCount();
     }
 
 	@Override
@@ -38,7 +29,7 @@ public class ItemReminderTableModel extends ComponentTableModel<Item, Reminder> 
     }
 
 	@Override
-	Reminder getDataItem(int p_row, int p_col) {
-		return getComponent().getReminder(p_row);
+	List<Reminder> getDataItems() {
+		return getComponent().getReminders();
 	}
 }

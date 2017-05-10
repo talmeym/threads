@@ -74,6 +74,21 @@ public class AllDayAwareDueDateComparatorTest {
 
 		return new HasDueDate() {
 			@Override
+			public UUID getId() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public boolean isActive() {
+				return true;
+			}
+
+			@Override
+			public String getText() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
 			public Date getDueDate() {
 				return calendar.getTime();
 			}

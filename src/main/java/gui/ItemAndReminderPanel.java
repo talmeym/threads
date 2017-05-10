@@ -10,8 +10,7 @@ import java.beans.*;
 import java.util.*;
 
 import static util.GuiUtil.setUpButtonLabel;
-import static util.Settings.registerForSetting;
-import static util.Settings.updateSetting;
+import static util.Settings.*;
 
 public class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Reminder>, TimeUpdateListener, GoogleSyncListener, SettingChangeListener {
 	private static final String s_none = "none";
@@ -38,16 +37,13 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 		o_item = p_item;
 		o_parentPanel = p_parentPanel;
 
-		o_item.addComponentChangeListener(new ComponentChangeListener() {
-			@Override
-			public void componentChanged(ComponentChangeEvent p_cce) {
-				if (p_cce.getSource() == o_item) {
-					if (p_cce.getType() == ComponentChangeEvent.s_REMOVED) {
-						o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
-					}
-
-					o_addReminderLabel.setEnabled(o_item.getDueDate() != null);
+		o_item.addComponentChangeListener(p_cce -> {
+			if (p_cce.getSource() == o_item) {
+				if (p_cce.getType() == ComponentChangeEvent.s_REMOVED) {
+					o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
 				}
+
+				o_addReminderLabel.setEnabled(o_item.getDueDate() != null);
 			}
 		});
 
@@ -94,12 +90,9 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 		o_splitPane.setTopComponent(x_itemPanel);
 		o_splitPane.setBottomComponent(x_bottomPanel);
 
-		o_splitPane.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-				if(propertyChangeEvent.getPropertyName().equals("dividerLocation")) {
-					updateSetting(Settings.s_DIVLOC, "" + propertyChangeEvent.getNewValue());
-				}
+		o_splitPane.addPropertyChangeListener(propertyChangeEvent -> {
+			if(propertyChangeEvent.getPropertyName().equals("dividerLocation")) {
+				updateSetting(Settings.s_DIVLOC, "" + propertyChangeEvent.getNewValue());
 			}
 		});
 
