@@ -162,7 +162,7 @@ public class LookupHelper {
 				.collect(Collectors.toList());
 	}
 
-	public static List<Reminder> getActiveReminders(Thread p_thread, boolean p_onlyIfDue) {
+	private static List<Reminder> getActiveReminders(Thread p_thread, boolean p_onlyIfDue) {
 		List<Reminder> x_reminders = new ArrayList<>();
 
 		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {

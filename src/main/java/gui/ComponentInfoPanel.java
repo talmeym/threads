@@ -14,7 +14,7 @@ import java.util.List;
 
 import static util.GuiUtil.setUpButtonLabel;
 
-public class ComponentInfoPanel extends JPanel {
+class ComponentInfoPanel extends JPanel {
     private final Component o_component;
 
 	private final JLabel o_activeLabel = new JLabel(ImageUtil.getTickIcon());
@@ -23,7 +23,7 @@ public class ComponentInfoPanel extends JPanel {
 	private final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
 	private final JPanel o_breadcrumbsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-	public ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, boolean p_showParents, JLabel... p_extraLabels) {
+	ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, boolean p_showParents, JLabel... p_extraLabels) {
         super(new BorderLayout());
         o_component = p_component;
 
@@ -76,10 +76,7 @@ public class ComponentInfoPanel extends JPanel {
 				x_parent = x_parent.getParentComponent();
 			}
 
-			for(JLabel x_label: x_parentLabels) {
-				o_breadcrumbsPanel.add(x_label);
-			}
-
+			x_parentLabels.forEach(o_breadcrumbsPanel::add);
 			repaint();
 		});
 
@@ -265,19 +262,16 @@ public class ComponentInfoPanel extends JPanel {
 			x_parentButtonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
 			Component x_parent = o_component.getParentComponent();
-			List<JLabel> x_parentLabels = new ArrayList<JLabel>();
+			List<JLabel> x_parentLabels = new ArrayList<>();
 
 			while(x_parent != null) {
 				final JLabel x_label = getParentLabel(x_parent);
 				x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
 				final Component x_parentFinal = x_parent;
 
-				x_parent.addComponentChangeListener(new ComponentChangeListener() {
-					@Override
-					public void componentChanged(ComponentChangeEvent p_cce) {
-						if(p_cce.getSource() == x_parentFinal) {
-							x_label.setText(x_parentFinal.getText());
-						}
+				x_parent.addComponentChangeListener(p_cce -> {
+					if(p_cce.getSource() == x_parentFinal) {
+						x_label.setText(x_parentFinal.getText());
 					}
 				});
 
@@ -296,10 +290,7 @@ public class ComponentInfoPanel extends JPanel {
 			}
 
 			if(x_parentLabels.size() > 0) {
-				for(JLabel x_label: x_parentLabels) {
-					o_breadcrumbsPanel.add(x_label);
-				}
-
+				x_parentLabels.forEach(o_breadcrumbsPanel::add);
 				x_parentButtonsPanel.add(o_breadcrumbsPanel);
 			}
 		}

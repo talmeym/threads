@@ -14,7 +14,7 @@ import static gui.Actions.addAction;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
-public class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements SettingChangeListener {
+class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements SettingChangeListener {
     private final Thread o_thread;
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, true, Action);
 	private final JRadioButton o_showNext7DaysRadioButton;

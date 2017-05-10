@@ -12,7 +12,7 @@ import java.util.*;
 
 import static util.GuiUtil.setUpButtonLabel;
 
-public class RemindDateSuggestionPanel extends JPanel {
+class RemindDateSuggestionPanel extends JPanel {
     private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
 	private static final String s_defaultTextString = "dd/mm/yy [hh:mm]";
@@ -50,7 +50,7 @@ public class RemindDateSuggestionPanel extends JPanel {
     private final JComboBox<DateItem> o_dayBox = new JComboBox<>(s_dayItems);
     private final JComboBox<DateItem> o_weekBox = new JComboBox<>(s_weekItems);
 
-	public RemindDateSuggestionPanel(Reminder p_reminder) {
+	RemindDateSuggestionPanel(Reminder p_reminder) {
         super(new BorderLayout());
 		o_reminder = p_reminder;
 
@@ -74,13 +74,10 @@ public class RemindDateSuggestionPanel extends JPanel {
 			}
 		};
 
-		o_reminder.addComponentChangeListener(new ComponentChangeListener() {
-			@Override
-			public void componentChanged(ComponentChangeEvent p_cce) {
-				o_dueDateField.getDocument().removeDocumentListener(x_listener);
-				o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
-				o_dueDateField.getDocument().addDocumentListener(x_listener);
-			}
+		o_reminder.addComponentChangeListener(p_cce -> {
+			o_dueDateField.getDocument().removeDocumentListener(x_listener);
+			o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
+			o_dueDateField.getDocument().addDocumentListener(x_listener);
 		});
 
 		o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
@@ -225,10 +222,10 @@ public class RemindDateSuggestionPanel extends JPanel {
 	}
 
 	private static class DateItem {
-        public final String o_display;
-        public final int o_value;
+        final String o_display;
+        final int o_value;
         
-        public DateItem(String p_display, int p_value) {
+        DateItem(String p_display, int p_value) {
             o_display = p_display;
             o_value = p_value;
         }

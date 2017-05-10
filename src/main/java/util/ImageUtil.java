@@ -18,7 +18,7 @@ public class ImageUtil {
 		Application.getApplication().setDockIconImage(image);
 	}
 
-	public static Image getThreadsImage() {
+	static Image getThreadsImage() {
 		return loadImage("/threads.gif");
 	}
 

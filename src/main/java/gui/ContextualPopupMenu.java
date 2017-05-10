@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class ContextualPopupMenu {
+class ContextualPopupMenu {
 	private final JMenuItem o_activeLabel = new JMenuItem("Set Inactive", ImageUtil.getTickIcon());
 	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
 	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
@@ -21,7 +21,7 @@ public class ContextualPopupMenu {
 	private ActionListener o_moveListener;
 	private ActionListener o_linkListener;
 
-	public ContextualPopupMenu(boolean p_moveEnabled, boolean p_linkEnabled, ComponentType p_componentType) {
+	ContextualPopupMenu(boolean p_moveEnabled, boolean p_linkEnabled, ComponentType p_componentType) {
 		o_moveEnabled = p_moveEnabled;
 		o_linkEnabled = p_linkEnabled;
 
@@ -37,27 +37,27 @@ public class ContextualPopupMenu {
 		o_linkLabel.setToolTipText("Link " + x_componentString + "to Google Calendar");
 	}
 
-	public void setActivateActionListener(ActionListener p_listener) {
+	void setActivateActionListener(ActionListener p_listener) {
 		o_activateListener = p_listener;
 	}
 
-	public void setDeactivateActionListener(ActionListener p_listener) {
+	void setDeactivateActionListener(ActionListener p_listener) {
 		o_deactivateListener = p_listener;
 	}
 
-	public void setRemoveActionListener(ActionListener p_listener) {
+	void setRemoveActionListener(ActionListener p_listener) {
 		o_removeListener = p_listener;
 	}
 
-	public void setMoveActionListener(ActionListener p_listener) {
+	void setMoveActionListener(ActionListener p_listener) {
 		o_moveListener = p_listener;
 	}
 
-	public void setLinkActionListener(ActionListener p_listener) {
+	void setLinkActionListener(ActionListener p_listener) {
 		o_linkListener = p_listener;
 	}
 
-	public void setStatus(boolean p_activeEnabled, boolean p_removeEnabled, boolean p_moveEnabled, boolean p_linkEnabled, data.Component p_component) {
+	void setStatus(boolean p_activeEnabled, boolean p_removeEnabled, boolean p_moveEnabled, boolean p_linkEnabled, data.Component p_component) {
 		o_activeLabel.setEnabled(p_component != null && p_activeEnabled);
 		o_removeLabel.setEnabled(p_component != null && p_removeEnabled);
 		o_moveLabel.setEnabled(p_component != null && p_moveEnabled);

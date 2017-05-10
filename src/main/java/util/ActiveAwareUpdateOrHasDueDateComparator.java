@@ -15,7 +15,7 @@ public class ActiveAwareUpdateOrHasDueDateComparator implements Comparator<Compo
 		return getDate(obj1).compareTo(getDate(obj2));
     }
 
-    public Date getDate(Component x_component) {
+    private Date getDate(Component x_component) {
     	if(x_component instanceof HasDueDate && ((HasDueDate)x_component).getDueDate() != null) {
 			return ((HasDueDate) x_component).getDueDate();
 		}

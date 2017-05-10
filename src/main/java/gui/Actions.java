@@ -10,7 +10,7 @@ import java.util.*;
 import static data.LookupHelper.getHasDueDates;
 
 public class Actions {
-	public static void addThread(ThreadItem p_threadItem, Thread p_startingThread, JPanel p_enclosingPanel) {
+	static void addThread(ThreadItem p_threadItem, Thread p_startingThread, JPanel p_enclosingPanel) {
 		Thread x_thread;
 
 		if(p_threadItem != null && p_threadItem instanceof Thread) {
@@ -105,7 +105,7 @@ public class Actions {
 		}
 	}
 
-	public static void linkToGoogle(Thread x_thread, JPanel p_enclosingPanel, boolean p_activeOnly) {
+	static void linkToGoogle(Thread x_thread, JPanel p_enclosingPanel, boolean p_activeOnly) {
 		if(checkGoogle(p_enclosingPanel)) {
 			return;
 		}
@@ -113,7 +113,7 @@ public class Actions {
 		linkToGoogle(getHasDueDates(x_thread, p_activeOnly), p_enclosingPanel);
 	}
 
-	public static void linkToGoogle(final Item p_item, final JPanel p_enclosingPanel) {
+	static void linkToGoogle(final Item p_item, final JPanel p_enclosingPanel) {
 		if(checkGoogle(p_enclosingPanel)) {
 			return;
 		}
@@ -121,7 +121,7 @@ public class Actions {
 		linkToGoogle(getHasDueDates(p_item, false), p_enclosingPanel);
 	}
 
-	public static void linkToGoogle(Reminder p_reminder, JPanel p_enclosingPanel) {
+	static void linkToGoogle(Reminder p_reminder, JPanel p_enclosingPanel) {
 		if(checkGoogle(p_enclosingPanel)) {
 			return;
 		}
@@ -129,7 +129,7 @@ public class Actions {
 		linkToGoogle(Collections.singletonList(p_reminder), p_enclosingPanel);
 	}
 
-	public static void linkToGoogle(final List<HasDueDate> p_hasDueDates, final JPanel p_enclosingPanel) {
+	static void linkToGoogle(final List<HasDueDate> p_hasDueDates, final JPanel p_enclosingPanel) {
 		if(checkGoogle(p_enclosingPanel) || p_hasDueDates.size() == 0) {
 			return;
 		}
@@ -163,7 +163,7 @@ public class Actions {
 		return false;
 	}
 
-	public static void move(ThreadItem p_threadItem, Thread o_startingThread, JPanel o_enclosingPanel) {
+	static void move(ThreadItem p_threadItem, Thread o_startingThread, JPanel o_enclosingPanel) {
 		if(p_threadItem != null) {
 			Thread x_thread = null;
 
@@ -191,7 +191,7 @@ public class Actions {
 		}
 	}
 
-	public static void activate(Component p_component, JPanel p_parentPanel) {
+	static void activate(Component p_component, JPanel p_parentPanel) {
 		if(p_component != null) {
 			if(JOptionPane.showConfirmDialog(p_parentPanel, "Set '" + p_component.getText() + "' Active ?", "Set Active ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				p_component.setActive(true);
@@ -199,7 +199,7 @@ public class Actions {
 		}
 	}
 
-	public static void deactivate(Component p_component, JPanel p_parentPanel) {
+	static void deactivate(Component p_component, JPanel p_parentPanel) {
 		if(p_component != null) {
 			if(JOptionPane.showConfirmDialog(p_parentPanel, "Set '" + p_component.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				p_component.setActive(false);
@@ -217,7 +217,7 @@ public class Actions {
 		}
 	}
 
-	public static void remove(Reminder p_reminder, JPanel p_parentPanel) {
+	static void remove(Reminder p_reminder, JPanel p_parentPanel) {
 		if (p_reminder != null) {
 			Item x_item = p_reminder.getParentItem();
 

@@ -41,11 +41,11 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
 		return LookupHelper.getAllActiveActions(getComponent(), o_onlyNext7Days);
 	}
 
-	public boolean onlyNext7Days() {
+	boolean onlyNext7Days() {
 		return o_onlyNext7Days;
 	}
 
-	public void setOnlyNext7Days(boolean p_onlyNext7Days) {
+	void setOnlyNext7Days(boolean p_onlyNext7Days) {
 		o_onlyNext7Days = p_onlyNext7Days;
 		fireTableDataChanged();
 	}

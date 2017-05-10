@@ -7,8 +7,8 @@ import static data.ComponentChangeEvent.s_ACTIVE;
 import static data.ComponentChangeEvent.s_TEXT;
 
 public abstract class Component implements ComponentMoveListener {
-	private List<ComponentChangeListener> o_changeListeners = new ArrayList<ComponentChangeListener>();
-	private List<ComponentMoveListener> o_moveListeners = new ArrayList<ComponentMoveListener>();
+	private List<ComponentChangeListener> o_changeListeners = new ArrayList<>();
+	private List<ComponentMoveListener> o_moveListeners = new ArrayList<>();
 
 	private final UUID o_id;
 	private final Date o_creationDate;
@@ -39,7 +39,7 @@ public abstract class Component implements ComponentMoveListener {
 		return o_modifiedDate;
 	}
 
-	protected void modified() {
+	void modified() {
 		o_modifiedDate = new Date();
 	}
 
@@ -96,7 +96,7 @@ public abstract class Component implements ComponentMoveListener {
 		o_changeListeners.add(p_listener);
 	}
 
-	public void removeComponentChangeListener(ComponentChangeListener p_listener) {
+	void removeComponentChangeListener(ComponentChangeListener p_listener) {
 		o_changeListeners.remove(p_listener);
 	}
 
@@ -104,26 +104,26 @@ public abstract class Component implements ComponentMoveListener {
 		o_moveListeners.add(p_listener);
 	}
 
-	public void removeComponentMoveListener(ComponentMoveListener p_listener) {
+	private void removeComponentMoveListener(ComponentMoveListener p_listener) {
 		o_moveListeners.remove(p_listener);
 	}
 
-	protected void changed(int p_field) {
+	void changed(int p_field) {
 		modified();
 		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_CHANGE, p_field));
 	}
 
-	protected void changed(ComponentChangeEvent p_event) {
+	void changed(ComponentChangeEvent p_event) {
 		for(ComponentChangeListener x_listener: o_changeListeners) {
 			x_listener.componentChanged(p_event);
 		}
 	}
 
-	protected void moved() {
+	private void moved() {
 		moved(new ComponentMoveEvent(this));
 	}
 
-	protected void moved(ComponentMoveEvent p_event) {
+	private void moved(ComponentMoveEvent p_event) {
 		for(ComponentMoveListener x_listener: o_moveListeners) {
 			x_listener.componentMoved(p_event);
 		}

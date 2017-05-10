@@ -11,11 +11,11 @@ import java.util.*;
 import java.util.List;
 
 abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends JPanel implements TimeUpdateListener, GoogleSyncListener, TableSelectionListener<TYPE> {
-	protected final ComponentTableModel<COMPONENT, TYPE> o_tableModel;
-	protected final JTable o_table;
+	private final ComponentTableModel<COMPONENT, TYPE> o_tableModel;
+	final JTable o_table;
 	private final List<TableSelectionListener<TYPE>> o_listeners = new ArrayList<>();
 
-	protected ComponentTablePanel(ComponentTableModel<COMPONENT, TYPE> p_tableModel, TableCellRenderer p_cellRenderer) {
+	ComponentTablePanel(ComponentTableModel<COMPONENT, TYPE> p_tableModel, TableCellRenderer p_cellRenderer) {
         super(new BorderLayout());
 		o_tableModel = p_tableModel;
 		o_listeners.add(this);
@@ -55,18 +55,18 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 
     abstract void showContextMenu(java.awt.Component p_origin, int p_row, int p_col, Point p_point, TYPE p_selectedObject);
 
-	public void addTableSelectionListener(TableSelectionListener<TYPE> p_listener) {
+	void addTableSelectionListener(TableSelectionListener<TYPE> p_listener) {
 		o_listeners.add(p_listener);
 	}
 
-    protected void fixColumnWidth(int p_column, int p_width) {
+    void fixColumnWidth(int p_column, int p_width) {
         TableColumnModel x_model = o_table.getColumnModel();        
         x_model.getColumn(p_column).setPreferredWidth(p_width);
         x_model.getColumn(p_column).setMinWidth(p_width);
         x_model.getColumn(p_column).setMaxWidth(p_width);
     }
     
-    protected TYPE getSelectedObject() {
+    TYPE getSelectedObject() {
 		int x_row = o_table.getSelectedRow();
 		return x_row != -1 ? o_tableModel.getDataItem(x_row, o_table.getSelectedColumn()) : null;
     }

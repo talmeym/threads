@@ -13,14 +13,14 @@ import java.util.*;
 import static util.Settings.registerForSetting;
 import static util.Settings.updateSetting;
 
-public class NavigationAndComponentPanel extends JPanel implements SettingChangeListener {
+class NavigationAndComponentPanel extends JPanel implements SettingChangeListener {
 	private final CardLayout o_cardLayout = new CardLayout();
 	private final JPanel o_cardPanel = new JPanel(o_cardLayout);
 
-	private final Map<UUID, JPanel> o_componentPanels = new HashMap<UUID, JPanel>();
+	private final Map<UUID, JPanel> o_componentPanels = new HashMap<>();
 	private final NavigationPanel o_navigationPanel;
 
-	public NavigationAndComponentPanel(Thread p_topLevelThread) {
+	NavigationAndComponentPanel(Thread p_topLevelThread) {
 		super(new BorderLayout());
 
 		o_navigationPanel = new NavigationPanel(p_topLevelThread);
@@ -30,19 +30,16 @@ public class NavigationAndComponentPanel extends JPanel implements SettingChange
 		x_splitPane.setRightComponent(o_cardPanel);
 		x_splitPane.setDividerLocation(registerForSetting(Settings.s_NAVDIVLOC, this, 250));
 
-		x_splitPane.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-				if(propertyChangeEvent.getPropertyName().equals("dividerLocation")) {
-					updateSetting(Settings.s_NAVDIVLOC, "" + propertyChangeEvent.getNewValue());
-				}
+		x_splitPane.addPropertyChangeListener(propertyChangeEvent -> {
+			if(propertyChangeEvent.getPropertyName().equals("dividerLocation")) {
+				updateSetting(Settings.s_NAVDIVLOC, "" + propertyChangeEvent.getNewValue());
 			}
 		});
 
 		add(x_splitPane, BorderLayout.CENTER);
 	}
 
-	public void showComponent(Component p_component) {
+	void showComponent(Component p_component) {
 		if(!o_componentPanels.containsKey(p_component.getId())) {
 			JPanel x_panel = makeComponentPanel(p_component);
 			o_cardPanel.add(x_panel, p_component.getId().toString());
@@ -54,7 +51,7 @@ public class NavigationAndComponentPanel extends JPanel implements SettingChange
 		o_navigationPanel.selectComponent(p_component);
 	}
 
-	public JPanel makeComponentPanel(Component p_component) {
+	private JPanel makeComponentPanel(Component p_component) {
 		JPanel x_panel = null;
 
 		if(p_component instanceof data.Thread) {

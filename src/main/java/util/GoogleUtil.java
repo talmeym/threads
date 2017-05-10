@@ -32,7 +32,7 @@ public class GoogleUtil {
 	private static final int s_COMP_CREATED = 2;
 	private static final int s_EVENT_DELETED = 3;
 
-	private static final List<UUID> s_linkedComponents = new ArrayList<UUID>();
+	private static final List<UUID> s_linkedComponents = new ArrayList<>();
 	private static Thread s_topLevelThread = null;
 
 	private static final JsonFactory s_JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -63,7 +63,7 @@ public class GoogleUtil {
 	}
 
 	static void syncWithGoogle() {
-		List<UUID> x_syncedComponents = new ArrayList<UUID>();
+		List<UUID> x_syncedComponents = new ArrayList<>();
 		int[] x_stats = new int[4]; // comp updated 0, event updated 1, comp created 2, event deleted 3
 
 		try {
@@ -172,7 +172,7 @@ public class GoogleUtil {
 		}
 	}
 
-	public static void linkHasDueDatesToGoogle(List<HasDueDate> p_hasDueDates, ProgressCallBack... p_callbacks) {
+	static void linkHasDueDatesToGoogle(List<HasDueDate> p_hasDueDates, ProgressCallBack... p_callbacks) {
 		callBack(p_callbacks, c -> c.started(p_hasDueDates.size()));
 
 		try {

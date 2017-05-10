@@ -40,11 +40,11 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
     	return getAllActiveReminders(getComponent(), o_onlyDueReminders);
 	}
 
-	public boolean onlyDueReminders() {
+	boolean onlyDueReminders() {
 		return o_onlyDueReminders;
 	}
 
-	public void setOnlyDueReminders(boolean p_onlyDueReminders) {
+	void setOnlyDueReminders(boolean p_onlyDueReminders) {
 		o_onlyDueReminders = p_onlyDueReminders;
 		fireTableDataChanged();
 	}

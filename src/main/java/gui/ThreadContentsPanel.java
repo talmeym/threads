@@ -12,13 +12,13 @@ import java.awt.event.*;
 import static gui.Actions.*;
 import static util.GuiUtil.setUpButtonLabel;
 
-public class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
+class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 {
     private final Thread o_thread;
 	private JPanel o_parentPanel;
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, true, null);
 
-	public ThreadContentsPanel(final Thread p_thread, JPanel p_parentPanel) {
+	ThreadContentsPanel(final Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadContentsTableModel(p_thread), new ComponentCellRenderer(p_thread));
         o_thread = p_thread;
 		o_parentPanel = p_parentPanel;

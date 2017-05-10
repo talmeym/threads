@@ -7,8 +7,8 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.*;
 
-public class FolderManager {
-    public static void openDocFolder(Component p_component) {
+class FolderManager {
+    static void openDocFolder(Component p_component) {
         if(p_component.getDocFolder() != null) {
 			try {
 				if (Desktop.isDesktopSupported()) {
@@ -20,7 +20,7 @@ public class FolderManager {
         }
     }
     
-    public static void setDocFolder(Component p_component, JPanel p_panretPanel) {
+    static void setDocFolder(Component p_component, JPanel p_panretPanel) {
         JFileChooser x_chooser = p_component.getDocFolder() != null ? new JFileChooser(p_component.getDocFolder()) : new JFileChooser();
 		x_chooser.setDialogTitle("Set Document Folder");
 

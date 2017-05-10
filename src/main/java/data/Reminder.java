@@ -43,12 +43,7 @@ public class Reminder extends Component implements HasDueDate
 
 	@Override
 	public boolean isDue() {
-		if(isActive()) {
-			return DateUtil.isAllDay(o_dueDate) ? o_dueDate.before(DateUtil.getFirstThing(TODAY)) : o_dueDate.before(new Date());
-		}
-
-		return false;
-
+		return isActive() && (DateUtil.isAllDay(o_dueDate) ? o_dueDate.before(DateUtil.getFirstThing(TODAY)) : o_dueDate.before(new Date()));
 	}
 
 	@Override

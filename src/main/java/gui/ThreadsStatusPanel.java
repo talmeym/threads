@@ -9,7 +9,7 @@ import java.util.Date;
 
 import static java.lang.Thread.sleep;
 
-public class ThreadsStatusPanel extends JPanel implements Runnable, TimeUpdateListener, GoogleSyncListener, TimedSaveListener, SettingChangeListener {
+class ThreadsStatusPanel extends JPanel implements Runnable, TimeUpdateListener, GoogleSyncListener, TimedSaveListener, SettingChangeListener {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm");
 
 	private final JProgressBar o_updateProgress = new JProgressBar(JProgressBar.HORIZONTAL);
@@ -22,7 +22,7 @@ public class ThreadsStatusPanel extends JPanel implements Runnable, TimeUpdateLi
 	private long o_lastSave = System.currentTimeMillis();
 	private boolean o_showGoogle;
 
-	public ThreadsStatusPanel() {
+	ThreadsStatusPanel() {
 		super(new GridLayout(0, 1, 5, 5));
 		this.o_showGoogle = Settings.registerForSetting(Settings.s_GOOGLE_ENABLED, this, "false").equals("true");
 

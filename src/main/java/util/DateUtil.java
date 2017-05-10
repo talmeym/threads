@@ -1,8 +1,5 @@
 package util;
 
-import gui.ColourConstants;
-
-import java.awt.*;
 import java.text.*;
 import java.util.*;
 
@@ -10,14 +7,14 @@ import static java.util.Calendar.*;
 
 public class DateUtil {
 	public static final int TODAY = 0;
-	public static final int YESTERDAY = -1;
-	public static final int TOMORROW = 1;
+	private static final int YESTERDAY = -1;
+	private static final int TOMORROW = 1;
 
 	private static final SimpleDateFormat s_timeFormat = new SimpleDateFormat("HH:mm");
 	
-	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy");
-	public static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mmaa");
-	public static final DateFormat s_dayFormat = new SimpleDateFormat("EEEE h:mmaa");
+	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy");
+	private static final DateFormat s_12HrTimeFormat = new SimpleDateFormat("h:mmaa");
+	private static final DateFormat s_dayFormat = new SimpleDateFormat("EEEE h:mmaa");
 
 	public static String getDateStatus(Date p_date) {
         return getDateStatus(p_date, new Date(), "ago");
@@ -146,7 +143,7 @@ public class DateUtil {
 	    return isSameDay(p_date, getFirstThing(TODAY));
 	}
 
-	public static boolean isYesterday(Date p_date) {
+	private static boolean isYesterday(Date p_date) {
 	    return isSameDay(p_date, getFirstThing(YESTERDAY));
 	}
 
@@ -198,7 +195,7 @@ public class DateUtil {
 		return x_weeks > 0;
 	}
 
-	public static Date getLastThing(int p_offset) {
+	private static Date getLastThing(int p_offset) {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.set(HOUR_OF_DAY, 23);
 		x_calendar.set(MINUTE, 59);
@@ -236,22 +233,5 @@ public class DateUtil {
 		}
 
 		return x_value.replace(":00", "").replace(" 12am", "");
-	}
-
-
-	public static Color getColourForTime(Date p_dueDate) {
-		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
-
-		if(isAllDay(p_dueDate) ? p_dueDate.before(getFirstThing(TODAY)) : p_dueDate.before(x_now)) {
-			return ColourConstants.s_goneByColour;
-		} else if(isToday(p_dueDate)) {
-			return ColourConstants.s_todayColour;
-		} else if(isTomorrow(p_dueDate)) {
-			return ColourConstants.s_tomorrowColour;
-		} else if(isWithin7Days(p_dueDate, true)) {
-			return ColourConstants.s_thisWeekColour;
-		}
-
-		return Color.WHITE;
 	}
 }

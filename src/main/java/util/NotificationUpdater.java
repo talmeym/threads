@@ -26,27 +26,22 @@ public class NotificationUpdater {
 		return s_INSTANCE;
 	}
 
-	private final List<NotificationListener> o_notificationListeners = new ArrayList<NotificationListener>();
-	private final List<Component> o_alertedComponents = new ArrayList<Component>();
+	private final List<NotificationListener> o_notificationListeners = new ArrayList<>();
+	private final List<Component> o_alertedComponents = new ArrayList<>();
 	private final Thread o_topLevelThread;
 
 	private NotificationUpdater(Thread p_topLevelThread) {
 		o_topLevelThread = p_topLevelThread;
-		TimeUpdater.getInstance().addTimeUpdateListener(new TimeUpdateListener() {
-			@Override
-			public void timeUpdate() {
-				processAlerts();
-			}
-		});
+		TimeUpdater.getInstance().addTimeUpdateListener(this::processAlerts);
 	}
 
-	public synchronized void addNotificationListener(NotificationListener p_listener) {
+	synchronized void addNotificationListener(NotificationListener p_listener) {
 		o_notificationListeners.add(p_listener);
 		processAlerts();
 	}
 
 	private void processAlerts() {
-		List<Component> x_dueComponents = new ArrayList<Component>();
+		List<Component> x_dueComponents = new ArrayList<>();
 		x_dueComponents.addAll(LookupHelper.getAllActiveReminders(o_topLevelThread, true));
 		x_dueComponents.addAll(LookupHelper.getAllActiveDueActions(o_topLevelThread));
 		x_dueComponents.removeAll(o_alertedComponents);
@@ -59,12 +54,9 @@ public class NotificationUpdater {
 			o_alertedComponents.addAll(x_dueComponents);
 
 			for(final Component x_component: x_dueComponents) {
-				x_component.addComponentChangeListener(new ComponentChangeListener() {
-					@Override
-					public void componentChanged(ComponentChangeEvent p_cce) {
-						if (p_cce.getSource() == x_component && p_cce.getType() == ComponentChangeEvent.s_CHANGE) {
-							o_alertedComponents.remove(x_component);
-						}
+				x_component.addComponentChangeListener(p_cce -> {
+					if (p_cce.getSource() == x_component && p_cce.getType() == ComponentChangeEvent.s_CHANGE) {
+						o_alertedComponents.remove(x_component);
 					}
 				});
 			}

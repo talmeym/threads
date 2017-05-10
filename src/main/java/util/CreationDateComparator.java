@@ -4,7 +4,7 @@ import data.*;
 
 import java.util.Comparator;
 
-public class CreationDateComparator implements Comparator<Item> {
+class CreationDateComparator implements Comparator<Item> {
     public int compare(Item item1, Item item2) {
 		return item2.getCreationDate().compareTo(item1.getCreationDate());
     }

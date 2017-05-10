@@ -18,7 +18,7 @@ public class DueDateComparatorEasyMockTest extends EasyMockSupport {
 	@Mock
 	HasDueDate o_mock2;
 
-	DueDateComparator<Reminder> o_toTest = new DueDateComparator<Reminder>();
+	private DueDateComparator<Reminder> o_toTest = new DueDateComparator<Reminder>();
 
 	@Test
 	public void testNegative() {

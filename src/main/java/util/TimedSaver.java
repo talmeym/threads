@@ -32,7 +32,7 @@ public class TimedSaver extends java.lang.Thread {
 
 	private final Thread o_topThread;
     private final File o_originalFile;
-	private final List<TimedSaveListener> o_saveListeners = new ArrayList<TimedSaveListener>();
+	private final List<TimedSaveListener> o_saveListeners = new ArrayList<>();
     private boolean o_continueRunning = true;
 	private long o_nextSync = System.currentTimeMillis() + s_frequency;
 

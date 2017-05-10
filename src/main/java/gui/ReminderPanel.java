@@ -7,13 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ReminderPanel extends JPanel implements GoogleSyncListener {
+class ReminderPanel extends JPanel implements GoogleSyncListener {
 	private Reminder o_reminder;
 	private JPanel o_parentPanel;
 
 	private final JLabel o_linkLabel = new JLabel(ImageUtil.getLinkIcon());
 
-	public ReminderPanel(final Reminder p_reminder, JPanel p_parentPanel) {
+	ReminderPanel(final Reminder p_reminder, JPanel p_parentPanel) {
         super(new BorderLayout());
 		o_reminder = p_reminder;
 		o_parentPanel = p_parentPanel;

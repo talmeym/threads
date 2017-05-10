@@ -12,7 +12,7 @@ import java.text.*;
 import java.util.Date;
 
 class ComponentCellRenderer extends DefaultTableCellRenderer {
-	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
+	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
 
 	private final Component o_component;
     

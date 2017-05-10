@@ -11,11 +11,11 @@ public class Thread extends ThreadItem<ThreadItem> {
     }
     
     public Thread(UUID id, Date p_creationDate, Date p_modifiedDate, boolean p_active, String p_text, List<ThreadItem> p_items, File p_docFolder) {
-        super(id, p_creationDate, p_modifiedDate, p_active, p_text, p_items, new TypeAwareTextComparator<ThreadItem>(), p_docFolder);
+        super(id, p_creationDate, p_modifiedDate, p_active, p_text, p_items, new TypeAwareTextComparator<>(), p_docFolder);
     }
 
 	public Thread(Thread p_thread, boolean p_addCopyText) {
-		this(UUID.randomUUID(), new Date(), new Date(), p_thread.isActive(), (p_addCopyText ? "Copy of " : "") + p_thread.getText(), new ArrayList<ThreadItem>(), p_thread.getDocFolder());
+		this(UUID.randomUUID(), new Date(), new Date(), p_thread.isActive(), (p_addCopyText ? "Copy of " : "") + p_thread.getText(), new ArrayList<>(), p_thread.getDocFolder());
 
 		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
 			ThreadItem x_threadItem = p_thread.getThreadItem(i);

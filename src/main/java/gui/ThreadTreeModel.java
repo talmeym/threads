@@ -7,11 +7,11 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.util.*;
 
-public class ThreadTreeModel implements TreeModel, ComponentChangeListener {
+class ThreadTreeModel implements TreeModel, ComponentChangeListener {
     private final Thread o_thread;
-    private final List<TreeModelListener> o_listeners = new ArrayList<TreeModelListener>();
+    private final List<TreeModelListener> o_listeners = new ArrayList<>();
     
-    public ThreadTreeModel(Thread p_thread) {
+    ThreadTreeModel(Thread p_thread) {
         o_thread = p_thread;
         o_thread.addComponentChangeListener(this);
     }

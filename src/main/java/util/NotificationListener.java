@@ -4,6 +4,6 @@ import data.Component;
 
 import java.util.List;
 
-public interface NotificationListener {
-	public void componentsDue(List<Component> p_dueComponents);
+interface NotificationListener {
+	void componentsDue(List<Component> p_dueComponents);
 }

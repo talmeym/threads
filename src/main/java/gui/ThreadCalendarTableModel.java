@@ -6,7 +6,7 @@ import util.TimeUpdater;
 
 import java.util.*;
 
-public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
+class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
 	private int o_year;
 	private int o_month;
 
@@ -44,15 +44,15 @@ public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> 
 		return x_value;
 	}
 
-	public int getYear() {
+	int getYear() {
 		return o_year;
 	}
 
-	public int getMonth() {
+	int getMonth() {
 		return o_month;
 	}
 
-	public void setTime(int p_year, int p_month) {
+	void setTime(int p_year, int p_month) {
 		this.o_year = p_year;
 		this.o_month = p_month;
 		fireTableDataChanged();
@@ -85,29 +85,29 @@ public class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> 
 		return x_calendar.getTime();
 	}
 
-	public boolean includeActions() {
+	boolean includeActions() {
 		return o_includeActions;
 	}
 
-	public void setIncludeActions(boolean p_includeActions) {
+	void setIncludeActions(boolean p_includeActions) {
 		o_includeActions = p_includeActions;
 		fireTableDataChanged();
 	}
 
-	public boolean includeUpdates() {
+	boolean includeUpdates() {
 		return o_includeUpdates;
 	}
 
-	public void setIncludeUpdates(boolean p_includeUpdates) {
+	void setIncludeUpdates(boolean p_includeUpdates) {
 		o_includeUpdates = p_includeUpdates;
 		fireTableDataChanged();
 	}
 
-	public boolean includeReminders() {
+	boolean includeReminders() {
 		return o_includeReminders;
 	}
 
-	public void setIncludeReminders(boolean p_includeReminders) {
+	void setIncludeReminders(boolean p_includeReminders) {
 		o_includeReminders = p_includeReminders;
 		fireTableDataChanged();
 	}

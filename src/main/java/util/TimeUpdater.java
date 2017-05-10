@@ -25,7 +25,7 @@ public class TimeUpdater extends Thread {
 	}
 
 	private final Object lockObj = new Object();
-	private final List<TimeUpdateListener> o_updateListeners = new ArrayList<TimeUpdateListener>();
+	private final List<TimeUpdateListener> o_updateListeners = new ArrayList<>();
 	private boolean o_continueRunning = true;
 	private long o_nextSync = System.currentTimeMillis() + s_frequency;
 

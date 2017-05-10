@@ -12,11 +12,11 @@ import static data.LookupHelper.getHasDueDates;
 import static gui.Actions.linkToGoogle;
 import static util.Settings.*;
 
-public class ThreadPanel extends JPanel implements TimeUpdateListener, SettingChangeListener {
+class ThreadPanel extends JPanel implements TimeUpdateListener, SettingChangeListener {
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs;
 
-	public ThreadPanel(Thread p_thread, JPanel p_parentPanel) {
+	ThreadPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new BorderLayout());
         o_thread = p_thread;
 
@@ -110,7 +110,7 @@ public class ThreadPanel extends JPanel implements TimeUpdateListener, SettingCh
         }
     }
 
-	public static void setTabIndex(int p_tabIndex) {
+	static void setTabIndex(int p_tabIndex) {
 		updateSetting(Settings.s_TAB_INDEX, "" + p_tabIndex);
 	}
 

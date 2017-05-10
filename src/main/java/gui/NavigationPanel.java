@@ -10,10 +10,10 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.List;
 
-public class NavigationPanel extends JPanel implements TreeSelectionListener {
+class NavigationPanel extends JPanel implements TreeSelectionListener {
 	private final JTree o_navigationTree;
 
-	public NavigationPanel(Thread p_topLevelThread) {
+	NavigationPanel(Thread p_topLevelThread) {
 		super(new BorderLayout());
 
 		o_navigationTree = new JTree(new ThreadTreeModel(p_topLevelThread));
@@ -28,7 +28,7 @@ public class NavigationPanel extends JPanel implements TreeSelectionListener {
 		add(new ThreadsStatusPanel(), BorderLayout.SOUTH);
 	}
 
-	public void selectComponent(Component p_component) {
+	void selectComponent(Component p_component) {
 		if(p_component instanceof Reminder) {
 			p_component = p_component.getParentComponent();
 		}

@@ -27,7 +27,7 @@ public class GoogleSyncer extends java.lang.Thread {
 	}
 
 	private final Object o_lockObj = new Object();
-	private final List<GoogleSyncListener> o_googleListeners = new ArrayList<GoogleSyncListener>();
+	private final List<GoogleSyncListener> o_googleListeners = new ArrayList<>();
     private boolean o_continueRunning = true;
     private long o_nextSync = System.currentTimeMillis();
 

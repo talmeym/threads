@@ -7,12 +7,12 @@ import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
-public class ThreadTreeCellRenderer extends DefaultTreeCellRenderer {
+class ThreadTreeCellRenderer extends DefaultTreeCellRenderer {
 
 	private final Icon o_actionIcon = ImageUtil.getActionIcon();
 	private final Icon o_updateIcon = ImageUtil.getUpdateIcon();
 
-	public ThreadTreeCellRenderer() {
+	ThreadTreeCellRenderer() {
 		setClosedIcon(ImageUtil.getThreadIcon());
 		setOpenIcon(ImageUtil.getThreadIcon());
 

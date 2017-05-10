@@ -18,7 +18,7 @@ import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.*;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
-public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements SettingChangeListener {
+class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements SettingChangeListener {
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
 	private final Thread o_thread;
@@ -30,7 +30,7 @@ public class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> imple
 	private final JCheckBox o_allCheckBox = new JCheckBox("All");
 
 
-	public ThreadCalendarPanel(Thread p_thread, JPanel p_parentPanel) {
+	ThreadCalendarPanel(Thread p_thread, JPanel p_parentPanel) {
 		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
 		o_thread = p_thread;
 		o_parentPanel = p_parentPanel;

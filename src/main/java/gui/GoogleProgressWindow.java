@@ -5,11 +5,11 @@ import util.ProgressCallBack;
 import javax.swing.*;
 import java.awt.*;
 
-public class GoogleProgressWindow extends JDialog implements ProgressCallBack {
+class GoogleProgressWindow extends JDialog implements ProgressCallBack {
 	private final JProgressBar o_progressBar = new JProgressBar();
 	private int finished = 0;
 
-	public GoogleProgressWindow(JPanel p_parentPanel) {
+	GoogleProgressWindow(JPanel p_parentPanel) {
 		setTitle("Linking to Google Calendar ...");
 		o_progressBar.setStringPainted(true);
 		o_progressBar.setString("Connecting ...");

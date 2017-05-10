@@ -21,7 +21,7 @@ public class CreationDateComparatorTest {
 	@Mock
 	private Item mockItem1, mockItem2;
 
-	CreationDateComparator toTest = new CreationDateComparator();
+	private CreationDateComparator toTest = new CreationDateComparator();
 
 	@Test
 	public void testFirstDateAfter() {

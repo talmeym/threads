@@ -11,7 +11,7 @@ import java.util.*;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
-public class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Reminder>, TimeUpdateListener, GoogleSyncListener, SettingChangeListener {
+class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Reminder>, TimeUpdateListener, GoogleSyncListener, SettingChangeListener {
 	private static final String s_none = "none";
 	private static final String s_noneSelected = "none selected";
 
@@ -20,18 +20,18 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 	private final JLabel o_addReminderLabel = new JLabel(ImageUtil.getPlusIcon());
 	private final CardLayout o_cardLayout = new CardLayout();
 	private final JPanel o_cardPanel = new JPanel(o_cardLayout);
-	private final Map<UUID, JPanel> o_reminderPanels = new HashMap<UUID, JPanel>();
+	private final Map<UUID, JPanel> o_reminderPanels = new HashMap<>();
 	private final JSplitPane o_splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
-	public ItemAndReminderPanel(Item p_item, JPanel p_parentPanel) {
+	ItemAndReminderPanel(Item p_item, JPanel p_parentPanel) {
 		this(p_item, null, p_parentPanel);
 	}
 
-	public ItemAndReminderPanel(Reminder p_reminder, JPanel p_parentPanel) {
+	ItemAndReminderPanel(Reminder p_reminder, JPanel p_parentPanel) {
 		this(p_reminder.getParentItem(), p_reminder, p_parentPanel);
 	}
 
-	public ItemAndReminderPanel(Item p_item, Reminder p_reminder, JPanel p_parentPanel) {
+	private ItemAndReminderPanel(Item p_item, Reminder p_reminder, JPanel p_parentPanel) {
 		super(new BorderLayout());
 		o_item = p_item;
 		o_parentPanel = p_parentPanel;
@@ -126,7 +126,7 @@ public class ItemAndReminderPanel extends JPanel implements TableSelectionListen
 		}
 	}
 
-	public void showReminder(Reminder x_reminder) {
+	private void showReminder(Reminder x_reminder) {
 		if(!o_reminderPanels.containsKey(x_reminder.getId())) {
 			ReminderPanel x_reminderPanel = new ReminderPanel(x_reminder, o_parentPanel);
 			x_reminderPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createLoweredBevelBorder()));

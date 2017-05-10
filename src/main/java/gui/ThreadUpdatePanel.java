@@ -13,12 +13,12 @@ import static data.ComponentType.Update;
 import static gui.Actions.addUpdate;
 import static util.GuiUtil.setUpButtonLabel;
 
-public class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
+class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
     private final Thread o_thread;
 	private JPanel o_parentPanel;
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, false, Update);
 
-	public ThreadUpdatePanel(Thread p_thread, JPanel p_parentPanel) {
+	ThreadUpdatePanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadUpdateTableModel(p_thread), new ComponentCellRenderer(null));
         o_thread = p_thread;
 		o_parentPanel = p_parentPanel;

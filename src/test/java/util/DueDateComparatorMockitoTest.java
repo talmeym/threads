@@ -20,7 +20,7 @@ public class DueDateComparatorMockitoTest {
 	@Mock
 	HasDueDate o_mock2;
 
-	private DueDateComparator<Reminder> o_toTest = new DueDateComparator<Reminder>();
+	private DueDateComparator<Reminder> o_toTest = new DueDateComparator<>();
 
 	@Test
 	public void testSecondDatesAfterEqualsNegativeResult() {

@@ -16,7 +16,7 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
     }
     
     public Item(UUID id, Date p_creationDate, Date p_modifledDate, boolean p_active, String p_text, Date p_dueDate, List<Reminder> p_reminders, File p_docFolder) {
-        super(id, p_creationDate, p_modifledDate, p_active, p_text, p_reminders, new DueDateComparator<Reminder>(), p_docFolder);
+        super(id, p_creationDate, p_modifledDate, p_active, p_text, p_reminders, new DueDateComparator<>(), p_docFolder);
 		o_dueDate = p_dueDate;
     }
 
@@ -68,11 +68,8 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 
 	@Override
 	public boolean isDue() {
-		if(isActive() && o_dueDate != null) {
-			return DateUtil.isAllDay(o_dueDate) ? o_dueDate.before(DateUtil.getFirstThing(TODAY)) : o_dueDate.before(new Date());
-		}
+		return isActive() && o_dueDate != null && (DateUtil.isAllDay(o_dueDate) ? o_dueDate.before(DateUtil.getFirstThing(TODAY)) : o_dueDate.before(new Date()));
 
-		return false;
 	}
 
 	@Override

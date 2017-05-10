@@ -21,7 +21,7 @@ public class Saver {
         }
     }
 
-	static Element addThread(Thread p_thread) {
+	private static Element addThread(Thread p_thread) {
         Element x_threadElem = new Element(XmlConstants.s_THREAD);
         addComponentData(x_threadElem, p_thread);
     

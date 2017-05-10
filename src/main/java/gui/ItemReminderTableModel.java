@@ -5,8 +5,8 @@ import util.*;
 
 import java.util.List;
 
-public class ItemReminderTableModel extends ComponentTableModel<Item, Reminder> {
-    public ItemReminderTableModel(Item p_item) {
+class ItemReminderTableModel extends ComponentTableModel<Item, Reminder> {
+    ItemReminderTableModel(Item p_item) {
         super(p_item, new String[] {"Text", "Due Date", "Due", ""});
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
     }

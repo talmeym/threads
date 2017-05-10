@@ -12,11 +12,11 @@ import java.util.*;
 import java.util.List;
 
 import static java.lang.String.valueOf;
-import static util.DateUtil.getColourForTime;
+import static util.DateUtil.*;
 import static util.ImageUtil.getGoogleSmallIcon;
 
-public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
-	public static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
+class ThreadActionCellRenderer extends DefaultTableCellRenderer {
+	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
 
     private final Thread o_thread;
 
@@ -61,4 +61,20 @@ public class ThreadActionCellRenderer extends DefaultTableCellRenderer {
 
         return x_component;
     }
+
+	private static Color getColourForTime(Date p_dueDate) {
+		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
+
+		if(isAllDay(p_dueDate) ? p_dueDate.before(getFirstThing(TODAY)) : p_dueDate.before(x_now)) {
+			return ColourConstants.s_goneByColour;
+		} else if(isToday(p_dueDate)) {
+			return ColourConstants.s_todayColour;
+		} else if(isTomorrow(p_dueDate)) {
+			return ColourConstants.s_tomorrowColour;
+		} else if(isWithin7Days(p_dueDate, true)) {
+			return ColourConstants.s_thisWeekColour;
+		}
+
+		return Color.WHITE;
+	}
 }

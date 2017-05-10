@@ -12,7 +12,7 @@ import static data.ComponentType.Reminder;
 import static gui.Actions.linkToGoogle;
 import static util.Settings.*;
 
-public class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implements SettingChangeListener {
+class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implements SettingChangeListener {
 	private final JRadioButton o_showDueRadioButton;
 	private final JRadioButton o_showAllRadioButton;
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(false, true, Reminder);

@@ -1,6 +1,6 @@
 package gui;
 
-public interface TableSelectionListener<TYPE extends Object> {
-	public void tableRowClicked(int p_row, int p_col, TYPE o_obj);
-	public void tableRowDoubleClicked(int p_row, int p_col, TYPE o_obj);
+interface TableSelectionListener<TYPE> {
+	void tableRowClicked(int p_row, int p_col, TYPE o_obj);
+	void tableRowDoubleClicked(int p_row, int p_col, TYPE o_obj);
 }
