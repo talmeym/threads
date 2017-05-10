@@ -21,16 +21,16 @@ public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
     private static DateItem[] s_weekItems = new DateItem[]{new DateItem("This", 0), new DateItem("Next", 7), new DateItem("A week", 14), new DateItem("2 Weeks", 21), new DateItem("3 Weeks", 28), new DateItem("4 Weeks", 35)};
     private static DateItem[] s_dayItems = new DateItem[]{new DateItem("Mon", 2), new DateItem("Tues", 3), new DateItem("Wed", 4), new DateItem("Thur", 5), new DateItem("Fri", 6), new DateItem("Sat", 7), new DateItem("Sun", 1)};
 
-    private JComboBox o_timeBox = new JComboBox(s_timeItems);
-    private JComboBox o_weekBox = new JComboBox(s_weekItems);
-    private JComboBox o_dayBox = new JComboBox(s_dayItems);
+    private JComboBox<DateItem> o_timeBox = new JComboBox<>(s_timeItems);
+    private JComboBox<DateItem> o_weekBox = new JComboBox<>(s_weekItems);
+    private JComboBox<DateItem> o_dayBox = new JComboBox<>(s_dayItems);
 
 	private final Item o_item;
 
-	private JPanel o_parentPanel;
+	private final JPanel o_parentPanel;
     private final JTextField o_dueDateField = new JTextField();
-	final JLabel o_setLabel = new JLabel(ImageUtil.getReturnIcon());
-	final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
+	private final JLabel o_setLabel = new JLabel(ImageUtil.getReturnIcon());
+	private final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
 
     DateSuggestionPanel(Item p_item, final JPanel p_parentPanel) {
         super(new BorderLayout());
@@ -58,15 +58,12 @@ public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 			}
 		};
 
-		o_item.addComponentChangeListener(new ComponentChangeListener() {
-			@Override
-			public void componentChanged(ComponentChangeEvent p_cce) {
-				if(p_cce.getSource() == o_item) {
-					o_dueDateField.getDocument().removeDocumentListener(x_listener);
-					o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
-					o_dueDateField.getDocument().addDocumentListener(x_listener);
-					o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
-				}
+		o_item.addComponentChangeListener(p_cce -> {
+			if(p_cce.getSource() == o_item) {
+				o_dueDateField.getDocument().removeDocumentListener(x_listener);
+				o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
+				o_dueDateField.getDocument().addDocumentListener(x_listener);
+				o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
 			}
 		});
 
@@ -272,10 +269,10 @@ public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 	}
 
 	private static class DateItem {
-        public final String o_display;
-        public final int o_value;
+        final String o_display;
+        final int o_value;
         
-        public DateItem(String p_display, int p_value) {
+        DateItem(String p_display, int p_value) {
             o_display = p_display;
             o_value = p_value;
         }

@@ -40,7 +40,7 @@ public class Loader {
         boolean x_active = loadActiveFlag(p_element);
         String x_text = loadText(p_element); 
         List x_threads = p_element.getChildren();
-        List<ThreadItem> x_itemList = new ArrayList<ThreadItem>();
+        List<ThreadItem> x_itemList = new ArrayList<>();
 
 		for (Object x_thread : x_threads) {
 			Element x_element = (Element) x_thread;
@@ -64,7 +64,7 @@ public class Loader {
         String x_text = loadText(p_element);
 		String x_dueDateStr = p_element.getChildText(XmlConstants.s_DUE);
 		Date x_dueDate = null;
-		List<Reminder> x_reminderList = new ArrayList<Reminder>();
+		List<Reminder> x_reminderList = new ArrayList<>();
 
 		if(x_dueDateStr != null) {
 			x_dueDate = loadDateTime(x_dueDateStr);
@@ -98,15 +98,7 @@ public class Loader {
     }
     
     private static Date loadModifiedDate(Element p_element) {
-		String x_modifiedValue = p_element.getAttributeValue(XmlConstants.s_MODIFIED);
-
-		// TODO remove soon
-
-		if(x_modifiedValue == null) {
-			return loadCreatedDate(p_element);
-		}
-
-		return loadDateTime(x_modifiedValue);
+		return loadDateTime(p_element.getAttributeValue(XmlConstants.s_MODIFIED));
     }
 
     private static boolean loadActiveFlag(Element p_element) {
