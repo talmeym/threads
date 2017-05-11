@@ -10,10 +10,13 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
     private final COMPONENT o_component;
     private final String[] o_columnNames;
 
+	private List<DATA_TYPE> o_dataItems;
+
 	ComponentTableModel(COMPONENT p_component, String[] p_columnNames) {
         o_component = p_component;
         o_columnNames = p_columnNames;
 		o_component.addComponentChangeListener(this);
+		o_dataItems = getDataItems();
     }
     
     protected final COMPONENT getComponent() {
@@ -38,12 +41,12 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 			return 0;
 		}
 
-		return getDataItems().size();
+		return o_dataItems.size();
 	}
 
 	@Override
     public void componentChanged(ComponentChangeEvent p_cce) {
-		fireTableDataChanged();
+		reloadData();
     }
 
 	@Override
@@ -63,6 +66,11 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 	abstract List<DATA_TYPE> getDataItems();
 
 	DATA_TYPE getDataItem(int p_row, int p_col) {
-		return getDataItems().get(p_row);
+		return o_dataItems.get(p_row);
+	}
+
+	final void reloadData() {
+		o_dataItems = getDataItems();
+		fireTableDataChanged();
 	}
 }

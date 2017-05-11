@@ -46,6 +46,6 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
 
 	void setOnlyDueReminders(boolean p_onlyDueReminders) {
 		o_onlyDueReminders = p_onlyDueReminders;
-		fireTableDataChanged();
+		reloadData();
 	}
 }

@@ -47,6 +47,6 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
 
 	void setOnlyNext7Days(boolean p_onlyNext7Days) {
 		o_onlyNext7Days = p_onlyNext7Days;
-		fireTableDataChanged();
+		reloadData();
 	}
 }

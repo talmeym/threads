@@ -94,9 +94,9 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 
 	@Override
 	public void settingChanged(String p_name, Object p_value) {
-		boolean x_value = (boolean) p_value;
-		((ThreadActionTableModel)o_table.getModel()).setOnlyNext7Days(x_value);
-		o_showNext7DaysRadioButton.setSelected(x_value);
-		o_showAllRadioButton.setSelected(!x_value);
+		boolean x_sevenDays = (Boolean) p_value;
+		((ThreadActionTableModel)o_table.getModel()).setOnlyNext7Days(x_sevenDays);
+		o_showNext7DaysRadioButton.setSelected(x_sevenDays);
+		o_showAllRadioButton.setSelected(!x_sevenDays);
 	}
 }

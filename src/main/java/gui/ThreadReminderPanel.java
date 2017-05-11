@@ -40,7 +40,7 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 		o_showDueRadioButton.addChangeListener(e -> {
 			boolean selected = o_showDueRadioButton.isSelected();
 			x_tableModel.setOnlyDueReminders(selected);
-			updateSetting(Settings.s_ONLYDUE, selected ? 1 : 0);
+			updateSetting(Settings.s_ONLYDUE, selected);
 		});
 
 		ButtonGroup x_group = new ButtonGroup();
@@ -81,8 +81,9 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 
 	@Override
 	public void settingChanged(String p_name, Object p_value) {
-		((ThreadReminderTableModel)o_table.getModel()).setOnlyDueReminders(p_value.equals(1));
-		o_showDueRadioButton.setSelected(p_value.equals(1));
-		o_showAllRadioButton.setSelected(p_value.equals(0));
+		boolean x_onlyDue = (Boolean) p_value;
+		((ThreadReminderTableModel)o_table.getModel()).setOnlyDueReminders(x_onlyDue);
+		o_showDueRadioButton.setSelected(x_onlyDue);
+		o_showAllRadioButton.setSelected(!x_onlyDue);
 	}
 }
