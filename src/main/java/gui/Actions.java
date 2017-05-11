@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.util.*;
 
 import static data.LookupHelper.getHasDueDates;
+import static util.DateUtil.deriveDate;
 
 public class Actions {
 	static void addThread(ThreadItem p_threadItem, Thread p_startingThread, JPanel p_enclosingPanel) {
@@ -20,7 +21,7 @@ public class Actions {
 		}
 
 		if (x_thread != null) {
-			String x_name = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Thread name:", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
+			String x_name = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Thread:", "Add new Thread to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Thread");
 
 			if (x_name != null) {
 				Thread x_newThread = new Thread(x_name);
@@ -42,10 +43,11 @@ public class Actions {
 		}
 
 		if (x_thread != null) {
-			String x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Action text:", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Action");
+			String x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Action:", "Add new Action to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Action");
 
 			if (x_text != null) {
-				Item x_item = new Item(x_text, p_date);
+				Date x_derivedDate = deriveDate(x_text, p_date);
+				Item x_item = new Item(x_derivedDate != null ? x_text.substring(x_text.indexOf(" ") + 1) : x_text, x_derivedDate != null ? x_derivedDate : p_date);
 				x_thread.addThreadItem(x_item);
 
 				if (p_openAfter) {
@@ -71,7 +73,7 @@ public class Actions {
 		}
 
 		if (x_thread != null) {
-			String x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Update text:", "Add new Update to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Update");
+			String x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Update:", "Add new Update to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Update");
 
 			if (x_text != null) {
 				Item x_item = new Item(x_text, null);

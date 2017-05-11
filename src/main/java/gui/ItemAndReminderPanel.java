@@ -68,7 +68,6 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 		o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
 
 		o_addReminderLabel.setEnabled(o_item.getDueDate() != null);
-
 		o_addReminderLabel.setToolTipText("Add Reminder");
 		o_addReminderLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -107,10 +106,11 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 
 	private void addReminder() {
 		if (o_item.getDueDate() != null) {
-			String x_text = (String) JOptionPane.showInputDialog(o_parentPanel, "Enter new Reminder text:", "Add new Reminder to '" + o_item + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Reminder");
+			String x_text = (String) JOptionPane.showInputDialog(o_parentPanel, "Enter new Reminder:", "Add new Reminder to '" + o_item + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Reminder");
 
 			if(x_text != null) {
-				Reminder x_reminder = new Reminder(x_text, o_item);
+				Date x_derivedDate = DateUtil.deriveDate(x_text, o_item.getDueDate());
+				Reminder x_reminder = new Reminder(x_derivedDate != null ? x_text.substring(x_text.indexOf(" ") + 1) : x_text, x_derivedDate != null ? x_derivedDate : o_item.getDueDate());
 				o_item.addReminder(x_reminder);
 				showReminder(x_reminder);
 			}

@@ -164,7 +164,7 @@ public class LookupHelperTest {
 		Reminder[] x_reminders = new Reminder[p_numberReminders];
 
 		for(int i = 0; i < p_numberReminders; i++) {
-			x_reminders[i] = new Reminder("Test Reminder", item);
+			x_reminders[i] = new Reminder("Test Reminder", item.getDueDate());
 			x_reminders[i].setActive(p_active);
 			x_reminders[i].setDueDate(p_dueDate);
 		}

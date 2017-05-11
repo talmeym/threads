@@ -234,4 +234,44 @@ public class DateUtil {
 
 		return x_value.replace(":00", "").replace(" 12am", "");
 	}
+
+	public static Date deriveDate(String p_text, Date p_date) {
+		if(p_text.contains(" ")) {
+			String x_firstPart = p_text.substring(0, p_text.indexOf(" "));
+
+			if(x_firstPart.endsWith(",")) {
+				x_firstPart = x_firstPart.substring(0, x_firstPart.length() - 1);
+			}
+
+			Calendar x_calendar = Calendar.getInstance();
+			x_calendar.setTime(p_date);
+			Calendar x_derivedCal = Calendar.getInstance();
+			x_derivedCal.setTime(parseTime(x_firstPart));
+			x_calendar.set(Calendar.HOUR_OF_DAY, x_derivedCal.get(Calendar.HOUR_OF_DAY));
+			x_calendar.set(Calendar.MINUTE, x_derivedCal.get(Calendar.MINUTE));
+			return x_calendar.getTime();
+		}
+
+		return null;
+	}
+
+	private static Date parseTime(String x_firstPart) {
+		Date x_date = null;
+
+		try {
+			x_date = new SimpleDateFormat("hh:mmaa").parse(x_firstPart.toUpperCase());
+		} catch (ParseException e) {
+			try {
+				x_date = new SimpleDateFormat("HH:mm").parse(x_firstPart);
+			} catch (ParseException f) {
+				try {
+					x_date = new SimpleDateFormat("hhaa").parse(x_firstPart.toUpperCase());
+				} catch (ParseException g) {
+					// do nothing
+				}
+			}
+		}
+
+		return x_date;
+	}
 }
