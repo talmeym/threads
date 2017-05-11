@@ -47,19 +47,14 @@ public class NotificationUpdater {
 		x_dueComponents.removeAll(o_alertedComponents);
 
 		if(x_dueComponents.size() > 0) {
-			for(NotificationListener x_listener: o_notificationListeners) {
-				x_listener.componentsDue(x_dueComponents);
-			}
-
+			o_notificationListeners.forEach(x_listener -> x_listener.componentsDue(x_dueComponents));
 			o_alertedComponents.addAll(x_dueComponents);
 
-			for(final Component x_component: x_dueComponents) {
-				x_component.addComponentChangeListener(p_cce -> {
-					if (p_cce.getSource() == x_component && p_cce.getType() == ComponentChangeEvent.s_CHANGE) {
-						o_alertedComponents.remove(x_component);
-					}
-				});
-			}
+			x_dueComponents.forEach(x_component -> x_component.addComponentChangeListener(p_cce -> {
+				if (p_cce.getSource() == x_component && p_cce.getType() == ComponentChangeEvent.s_CHANGE) {
+					o_alertedComponents.remove(x_component);
+				}
+			}));
 		}
 	}
 }

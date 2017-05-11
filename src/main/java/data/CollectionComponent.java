@@ -14,9 +14,7 @@ abstract class CollectionComponent <CONTENTS extends Component> extends Componen
         o_comparator = p_comparator;
         
         if(p_components != null) {
-            for(CONTENTS x_component: p_components) {
-                addComponent(x_component);
-            }
+			p_components.forEach(this::addComponent);
         }
     }
     

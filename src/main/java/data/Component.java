@@ -114,9 +114,7 @@ public abstract class Component implements ComponentMoveListener {
 	}
 
 	void changed(ComponentChangeEvent p_event) {
-		for(ComponentChangeListener x_listener: o_changeListeners) {
-			x_listener.componentChanged(p_event);
-		}
+		o_changeListeners.forEach(x_listener -> x_listener.componentChanged(p_event));
 	}
 
 	private void moved() {
@@ -124,9 +122,7 @@ public abstract class Component implements ComponentMoveListener {
 	}
 
 	private void moved(ComponentMoveEvent p_event) {
-		for(ComponentMoveListener x_listener: o_moveListeners) {
-			x_listener.componentMoved(p_event);
-		}
+		o_moveListeners.forEach(x_listener -> x_listener.componentMoved(p_event));
 	}
 
 	public List<Component> getHierarchy() {

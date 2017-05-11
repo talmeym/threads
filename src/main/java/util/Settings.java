@@ -24,61 +24,44 @@ public class Settings {
 	private static Properties settings = new Properties();
 
 	public static int registerForSetting(String name, SettingChangeListener listener, int defaultValue) {
-		if(!interestedParties.containsKey(name)) {
-			interestedParties.put(name, new ArrayList<>());
-		}
-
-		interestedParties.get(name).add(listener);
-
 		if(!settings.containsKey(name)) {
 			settings.put(name, String.valueOf(defaultValue));
-			return defaultValue;
 		}
 
-		Object value = settings.get(name);
-		return Integer.parseInt((String) value);
+		getInterestedParties(name).add(listener);
+		return Integer.parseInt((String)settings.get(name));
 	}
 
 	public static String registerForSetting(String name, SettingChangeListener listener, String defaultValue) {
-		if(!interestedParties.containsKey(name)) {
-			interestedParties.put(name, new ArrayList<>());
-		}
-
-		interestedParties.get(name).add(listener);
-
 		if(!settings.containsKey(name)) {
 			settings.put(name, defaultValue);
 		}
 
-		Object value = settings.get(name);
-		return (String) value;
+		getInterestedParties(name).add(listener);
+		return (String) settings.get(name);
 	}
 
 	public static Boolean registerForSetting(String name, SettingChangeListener listener, boolean defaultValue) {
-		if(!interestedParties.containsKey(name)) {
-			interestedParties.put(name, new ArrayList<>());
-		}
-
-		interestedParties.get(name).add(listener);
-
 		if(!settings.containsKey(name)) {
 			settings.put(name, String.valueOf(defaultValue));
 		}
 
-		Object value = settings.get(name);
-		return Boolean.parseBoolean((String) value);
+		getInterestedParties(name).add(listener);
+		return Boolean.parseBoolean((String)settings.get(name));
 	}
+
 
 	public static void updateSetting(String name, Object value) {
 		settings.put(name, String.valueOf(value));
+		getInterestedParties(name).forEach(listener -> listener.settingChanged(name, value));
+	}
 
-		List<SettingChangeListener> listeners = interestedParties.get(name);
-
-		if(interestedParties != null) {
-			for(SettingChangeListener listener: listeners) {
-				listener.settingChanged(name, value);
-			}
+	private static List<SettingChangeListener> getInterestedParties(String name) {
+		if(!interestedParties.containsKey(name)) {
+			interestedParties.put(name, new ArrayList<>());
 		}
+
+		return interestedParties.get(name);
 	}
 
 	public static boolean load(File file) {

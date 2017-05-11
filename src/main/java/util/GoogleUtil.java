@@ -210,10 +210,8 @@ public class GoogleUtil {
 	}
 
 	private static void callBack(ProgressCallBack[] p_callbacks, Consumer<ProgressCallBack> function) {
-		if(p_callbacks != null) {
-			for(ProgressCallBack callback: p_callbacks) {
-				function.accept(callback);
-			}
+		for(ProgressCallBack callback: p_callbacks) {
+			function.accept(callback);
 		}
 	}
 

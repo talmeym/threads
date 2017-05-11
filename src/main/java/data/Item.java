@@ -22,10 +22,7 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 
 	public Item(Item p_item, boolean p_addCopyText) {
 		this(UUID.randomUUID(), new Date(), new Date(), p_item.isActive(), (p_addCopyText ? "Copy of " : "") + p_item.getText(), p_item.getDueDate(), new ArrayList<>(), p_item.getDocFolder());
-
-		for(Reminder x_reminder: p_item.getReminders()) {
-			addReminder(new Reminder(x_reminder, false));
-		}
+		p_item.getReminders().forEach(x_reminder -> addReminder(new Reminder(x_reminder, false)));
 	}
 
 	public int getReminderCount() {
