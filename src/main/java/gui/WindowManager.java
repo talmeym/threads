@@ -77,13 +77,12 @@ public class WindowManager implements SettingChangeListener {
 
 		o_window.setSize(o_windowSize);
 		o_window.setLocation(o_windowLocation);
-		o_window.setTitle(x_firstComponent.getType() + " : " + x_firstComponent.getText());
+		o_window.setTitle("Threads");
 		o_window.setVisible(true);
 	}
 
 	public void openComponent(Component p_component) {
 		o_navigationAndComponentPanel.showComponent(p_component);
-		o_window.setTitle(p_component.getType() + " : " + p_component.getText());
 		updateSetting(Settings.s_UUID, p_component.getId().toString());
 	}
 

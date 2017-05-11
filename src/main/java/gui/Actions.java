@@ -11,7 +11,7 @@ import static data.LookupHelper.getHasDueDates;
 import static util.DateUtil.deriveDate;
 
 public class Actions {
-	static void addThread(ThreadItem p_threadItem, Thread p_startingThread, JPanel p_enclosingPanel) {
+	static Thread addThread(ThreadItem p_threadItem, Thread p_startingThread, JPanel p_enclosingPanel) {
 		Thread x_thread;
 
 		if (p_threadItem != null && p_threadItem instanceof Thread) {
@@ -27,8 +27,11 @@ public class Actions {
 				Thread x_newThread = new Thread(x_name);
 				x_thread.addThreadItem(x_newThread);
 				WindowManager.getInstance().openComponent(x_newThread);
+				return x_thread;
 			}
 		}
+
+		return null;
 	}
 
 	public static Item addAction(ThreadItem p_threadItem, Thread p_startingThread, Date p_date, JPanel p_enclosingPanel, boolean p_openAfter) {
@@ -47,21 +50,21 @@ public class Actions {
 
 			if (x_text != null) {
 				Date x_derivedDate = deriveDate(x_text, p_date);
-				Item x_item = new Item(x_derivedDate != null ? x_text.substring(x_text.indexOf(" ") + 1) : x_text, x_derivedDate != null ? x_derivedDate : p_date);
-				x_thread.addThreadItem(x_item);
+				Item x_action = new Item(x_derivedDate != null ? x_text.substring(x_text.indexOf(" ") + 1) : x_text, x_derivedDate != null ? x_derivedDate : p_date);
+				x_thread.addThreadItem(x_action);
 
 				if (p_openAfter) {
-					WindowManager.getInstance().openComponent(x_item);
+					WindowManager.getInstance().openComponent(x_action);
 				}
 
-				return x_item;
+				return x_action;
 			}
 		}
 
 		return null;
 	}
 
-	public static void addUpdate(ThreadItem p_threadItem, Thread p_startingThread, JPanel p_enclosingPanel) {
+	public static Item addUpdate(ThreadItem p_threadItem, Thread p_startingThread, JPanel p_enclosingPanel) {
 		Thread x_thread;
 
 		if (p_threadItem instanceof Thread) {
@@ -76,18 +79,42 @@ public class Actions {
 			String x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Update:", "Add new Update to '" + x_thread + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Update");
 
 			if (x_text != null) {
-				Item x_item = new Item(x_text, null);
-				x_thread.addThreadItem(x_item);
+				Item x_update = new Item(x_text, null);
+				x_thread.addThreadItem(x_update);
 
 				if (LookupHelper.getActiveUpdates(x_thread).size() == 2 && JOptionPane.showConfirmDialog(p_enclosingPanel, "Set previous updates inactive ?", "Supersede Previous Updates ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 					x_thread.getThreadItems().stream()
 							.filter(ti -> ti instanceof Item)
 							.map(ti -> (Item) ti)
-							.filter(i -> i != x_item && i.getDueDate() == null && i.isActive())
+							.filter(i -> i != x_update && i.getDueDate() == null && i.isActive())
 							.forEach(i -> i.setActive(false));
 				}
+
+				return x_update;
 			}
 		}
+
+		return null;
+	}
+
+	static Reminder addReminder(Item p_item, JPanel p_enclosingPanel, boolean p_openAfter) {
+		if (p_item.getDueDate() != null) {
+			String x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Reminder:", "Add new Reminder to '" + p_item + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Reminder");
+
+			if(x_text != null) {
+				Date x_derivedDate = deriveDate(x_text, p_item.getDueDate());
+				Reminder x_reminder = new Reminder(x_derivedDate != null ? x_text.substring(x_text.indexOf(" ") + 1) : x_text, x_derivedDate != null ? x_derivedDate : p_item.getDueDate());
+				p_item.addReminder(x_reminder);
+
+				if(p_openAfter) {
+					WindowManager.getInstance().openComponent(x_reminder);
+				}
+
+				return x_reminder;
+			}
+		}
+
+		return null;
 	}
 
 	private static Thread chooseThread(Thread p_startingThread, JPanel p_enclosingPanel, String x_title) {

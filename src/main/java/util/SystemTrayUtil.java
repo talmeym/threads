@@ -3,18 +3,20 @@ package util;
 import data.Component;
 import data.*;
 import data.Thread;
-import gui.*;
+import gui.WindowManager;
 
 import java.awt.*;
+import java.util.*;
 
-import static gui.Actions.addAction;
-import static gui.Actions.addUpdate;
+import static gui.Actions.*;
 import static gui.DateSuggestionPanel.getDateSuggestion;
 
 public class SystemTrayUtil {
 	private static PopupMenu o_popUpMenu;
 	private static TrayIcon o_trayIcon;
 	private static Thread o_topLevelThread;
+
+	private static Map<Component, MenuItem> o_menuItems = new HashMap<>();
 
 	public static void initialise(Thread p_topLevelThread) {
 		o_topLevelThread = p_topLevelThread;
@@ -45,33 +47,44 @@ public class SystemTrayUtil {
 
 			NotificationUpdater.getInstance().addNotificationListener(p_dueComponents -> {
 				if (p_dueComponents.size() == 1) {
-					displayNotification(p_dueComponents.get(0) instanceof Item ? "Action Overdue" : "Reminder", p_dueComponents.get(0).getText());
+					Component x_component = p_dueComponents.get(0);
+					displayNotification(x_component instanceof Item ? "Action Overdue" : "Reminder", x_component.getText());
 				} else if (p_dueComponents.size() > 1) {
 					displayNotification("Threads", "You have " + p_dueComponents.size() + " new notifications.");
 				}
 
 				for (final Component x_component : p_dueComponents) {
-					MenuItem x_menuItem = new MenuItem((x_component instanceof Item ? "Action Overdue" : "Reminder") + ": " + x_component.getText());
+					if(!o_menuItems.containsKey(x_component)) {
+						MenuItem x_menuItem = new MenuItem((getMenuItemText(x_component)));
+						o_menuItems.put(x_component, x_menuItem);
 
-					x_menuItem.addActionListener(actionEvent -> {
-						WindowManager.makeThreadsVisible();
-						if(x_component.getParentComponent() != null) {
-							WindowManager.getInstance().openComponent(x_component);
-						} else {
-							displayNotification("Threads", "The Item you've selected no longer exists");
+						x_menuItem.addActionListener(actionEvent -> {
+							WindowManager.makeThreadsVisible();
+
+							if(x_component.getParentComponent() != null) {
+								WindowManager.getInstance().openComponent(x_component);
+							} else {
+								displayNotification("Threads", "The Item you've selected no longer exists");
+							}
+						});
+
+						x_component.addComponentChangeListener(cce -> o_menuItems.get(x_component).setLabel(getMenuItemText(x_component)));
+
+						if(o_popUpMenu.getItemCount() == 2) {
+							o_popUpMenu.addSeparator();
 						}
-					});
 
-					if(o_popUpMenu.getItemCount() == 2) {
-						o_popUpMenu.addSeparator();
+						o_popUpMenu.add(x_menuItem);
 					}
-
-					o_popUpMenu.add(x_menuItem);
 				}
 			});
 		} catch (AWTException e) {
 			// do nothing for now TODO ??
 		}
+	}
+
+	private static String getMenuItemText(Component x_component) {
+		return (x_component instanceof Item ? "Action Overdue" : "Reminder") + ": " + x_component.getText();
 	}
 
 	private static void displayNotification(String caption, String text) {

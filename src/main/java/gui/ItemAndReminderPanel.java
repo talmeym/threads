@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+import static gui.Actions.addReminder;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
@@ -16,6 +17,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 	private static final String s_noneSelected = "none selected";
 
 	private final Item o_item;
+	private final ItemPanel o_itemPanel;
 	private final JPanel o_parentPanel;
 	private final JLabel o_addReminderLabel = new JLabel(ImageUtil.getPlusIcon());
 	private final CardLayout o_cardLayout = new CardLayout();
@@ -24,14 +26,6 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 	private final JSplitPane o_splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
 	ItemAndReminderPanel(Item p_item, JPanel p_parentPanel) {
-		this(p_item, null, p_parentPanel);
-	}
-
-	ItemAndReminderPanel(Reminder p_reminder, JPanel p_parentPanel) {
-		this(p_reminder.getParentItem(), p_reminder, p_parentPanel);
-	}
-
-	private ItemAndReminderPanel(Item p_item, Reminder p_reminder, JPanel p_parentPanel) {
 		super(new BorderLayout());
 		o_item = p_item;
 		o_parentPanel = p_parentPanel;
@@ -46,8 +40,8 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 			}
 		});
 
-		ItemPanel x_itemPanel = new ItemPanel(p_item, o_parentPanel);
-		x_itemPanel.addTableSelectionListener(this);
+		o_itemPanel = new ItemPanel(p_item, o_parentPanel);
+		o_itemPanel.addTableSelectionListener(this);
 
 		JLabel x_noneLabelLabel = new JLabel("No Reminders");
 		x_noneLabelLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -72,7 +66,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 		o_addReminderLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				addReminder();
+				addReminder(o_item, p_parentPanel, true);
 			}
 		});
 
@@ -85,7 +79,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 
 		o_splitPane.setDividerLocation(registerForSetting(Settings.s_DIVLOC, this, 350));
 
-		o_splitPane.setTopComponent(x_itemPanel);
+		o_splitPane.setTopComponent(o_itemPanel);
 		o_splitPane.setBottomComponent(x_bottomPanel);
 
 		o_splitPane.addPropertyChangeListener(propertyChangeEvent -> {
@@ -98,23 +92,6 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
 		GoogleSyncer.getInstance().addGoogleSyncListener(this);
-
-		if(p_reminder != null) {
-			showReminder(p_reminder);
-		}
-	}
-
-	private void addReminder() {
-		if (o_item.getDueDate() != null) {
-			String x_text = (String) JOptionPane.showInputDialog(o_parentPanel, "Enter new Reminder:", "Add new Reminder to '" + o_item + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), null, "New Reminder");
-
-			if(x_text != null) {
-				Date x_derivedDate = DateUtil.deriveDate(x_text, o_item.getDueDate());
-				Reminder x_reminder = new Reminder(x_derivedDate != null ? x_text.substring(x_text.indexOf(" ") + 1) : x_text, x_derivedDate != null ? x_derivedDate : o_item.getDueDate());
-				o_item.addReminder(x_reminder);
-				showReminder(x_reminder);
-			}
-		}
 	}
 
 	@Override
@@ -126,7 +103,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 		}
 	}
 
-	private void showReminder(Reminder x_reminder) {
+	void showReminder(Reminder x_reminder) {
 		if(!o_reminderPanels.containsKey(x_reminder.getId())) {
 			ReminderPanel x_reminderPanel = new ReminderPanel(x_reminder, o_parentPanel);
 			x_reminderPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createLoweredBevelBorder()));
@@ -134,6 +111,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 			o_reminderPanels.put(x_reminder.getId(), x_reminderPanel);
 		}
 
+		o_itemPanel.selectReminder(x_reminder);
 		o_cardLayout.show(o_cardPanel, x_reminder.getId().toString());
 	}
 

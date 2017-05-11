@@ -80,4 +80,9 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 			o_linkItemLabel.setIcon(ImageUtil.getLinkIcon());
 		}
 	}
+
+	void selectReminder(Reminder p_reminder) {
+		int x_index = ((ItemReminderTableModel)o_table.getModel()).indexOf(p_reminder);
+		o_table.getSelectionModel().setSelectionInterval(x_index, x_index);
+	}
 }

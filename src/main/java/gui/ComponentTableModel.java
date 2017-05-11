@@ -73,4 +73,8 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 		o_dataItems = getDataItems();
 		fireTableDataChanged();
 	}
+
+	int indexOf(DATA_TYPE p_dataItem) {
+		return o_dataItems.indexOf(p_dataItem);
+	}
 }

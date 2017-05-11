@@ -243,13 +243,17 @@ public class DateUtil {
 				x_firstPart = x_firstPart.substring(0, x_firstPart.length() - 1);
 			}
 
-			Calendar x_calendar = Calendar.getInstance();
-			x_calendar.setTime(p_date);
-			Calendar x_derivedCal = Calendar.getInstance();
-			x_derivedCal.setTime(parseTime(x_firstPart));
-			x_calendar.set(Calendar.HOUR_OF_DAY, x_derivedCal.get(Calendar.HOUR_OF_DAY));
-			x_calendar.set(Calendar.MINUTE, x_derivedCal.get(Calendar.MINUTE));
-			return x_calendar.getTime();
+			Date x_derivedTime = parseTime(x_firstPart);
+
+			if(x_derivedTime != null) {
+				Calendar x_calendar = Calendar.getInstance();
+				x_calendar.setTime(p_date);
+				Calendar x_derivedCal = Calendar.getInstance();
+				x_derivedCal.setTime(x_derivedTime);
+				x_calendar.set(Calendar.HOUR_OF_DAY, x_derivedCal.get(Calendar.HOUR_OF_DAY));
+				x_calendar.set(Calendar.MINUTE, x_derivedCal.get(Calendar.MINUTE));
+				return x_calendar.getTime();
+			}
 		}
 
 		return null;

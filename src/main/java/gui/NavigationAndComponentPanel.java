@@ -46,8 +46,12 @@ class NavigationAndComponentPanel extends JPanel implements SettingChangeListene
 			o_componentPanels.put(p_component.getId(), x_panel);
 		}
 
-		o_cardLayout.show(o_cardPanel, p_component.getId().toString());
+		// TODO better way to select reminder in ItemReminderPanel panel, other than this hack?
+		if(p_component instanceof Reminder) {
+			((ItemAndReminderPanel)o_componentPanels.get(p_component.getId())).showReminder((Reminder)p_component);
+		}
 
+		o_cardLayout.show(o_cardPanel, p_component.getId().toString());
 		o_navigationPanel.selectComponent(p_component);
 	}
 
@@ -63,7 +67,7 @@ class NavigationAndComponentPanel extends JPanel implements SettingChangeListene
 		}
 
 		if(p_component instanceof Reminder) {
-			x_panel = new ItemAndReminderPanel((Reminder) p_component, this);
+			x_panel = new ItemAndReminderPanel(((Reminder)p_component).getParentItem(), this);
 		}
 
 		return x_panel;
