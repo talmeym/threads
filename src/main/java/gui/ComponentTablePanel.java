@@ -53,7 +53,9 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
         add(new JScrollPane(o_table), BorderLayout.CENTER);
     }
 
-    abstract void showContextMenu(java.awt.Component p_origin, int p_row, int p_col, Point p_point, TYPE p_selectedObject);
+    void showContextMenu(java.awt.Component p_origin, int p_row, int p_col, Point p_point, TYPE p_selectedObject) {
+    	// do nothing by default
+	}
 
 	void addTableSelectionListener(TableSelectionListener<TYPE> p_listener) {
 		o_listeners.add(p_listener);

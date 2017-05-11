@@ -15,6 +15,7 @@ import java.util.List;
 import static data.LookupHelper.getAllComponents;
 import static gui.Actions.*;
 import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.*;
+import static java.lang.Integer.parseInt;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
@@ -148,25 +149,17 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 	}
 
 	private void setTime(String x_date) {
-		int x_year = Integer.parseInt(x_date.substring(x_date.indexOf("_") + 1));
-		int x_month = Integer.parseInt(x_date.substring(0, x_date.indexOf("_")));
-		setTime(x_year, x_month);
+		setTime(parseInt(x_date.substring(x_date.indexOf("_") + 1)), parseInt(x_date.substring(0, x_date.indexOf("_"))));
 	}
 
 	private void setTime(int p_year, int p_month) {
-		ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
-		x_model.setTime(p_year, p_month);
+		((ThreadCalendarTableModel) o_table.getModel()).setTime(p_year, p_month);
 		((ThreadCalendarCellRenderer)o_table.getCellRenderer(0, 0)).setTime(p_year, p_month);
 		o_currentMonthLabel.setText(getMonthLabel(p_year, p_month));
 	}
 
 	private String getMonthLabel(int p_year, int x_month) {
 		return s_monthNames[x_month] + " " + p_year;
-	}
-
-	@Override
-	void showContextMenu(java.awt.Component p_origin, int p_row, int p_col, Point p_point, Date p_selectedObject) {
-		// do nothing
 	}
 
 	@Override
@@ -182,9 +175,8 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		JPopupMenu x_menu = new JPopupMenu();
 
 		for(final Component x_component: x_components) {
-			String x_text = buildTextForItem(x_component);
 			Icon x_icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : ImageUtil.getGoogleVerySmallBlankIcon();
-			JMenuItem x_menuItem = new JMenuItem(x_text, x_icon);
+			JMenuItem x_menuItem = new JMenuItem(buildTextForItem(x_component), x_icon);
 			x_menuItem.setForeground(x_component.isActive() ? Color.black : Color.gray);
 			x_menuItem.setFont(x_component.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
 			x_menuItem.setToolTipText(buildToolTipTextForItem(x_component));
@@ -207,6 +199,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 				}
 			}
 		});
+
 		x_menu.add(x_newMenuItem);
 
 		if(x_components.size() > 0) {

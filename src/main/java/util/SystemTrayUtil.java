@@ -9,6 +9,7 @@ import java.awt.*;
 
 import static gui.Actions.addAction;
 import static gui.Actions.addUpdate;
+import static gui.DateSuggestionPanel.getDateSuggestion;
 
 public class SystemTrayUtil {
 	private static PopupMenu o_popUpMenu;
@@ -26,7 +27,7 @@ public class SystemTrayUtil {
 
 			x_addActionItem.addActionListener(e -> {
 				WindowManager.makeThreadsVisible();
-				addAction(null, o_topLevelThread, DateSuggestionPanel.getDateSuggestion(), null, true);
+				addAction(null, o_topLevelThread, getDateSuggestion(), null, true);
 			});
 
 			MenuItem x_addUpdateItem = new MenuItem("Add Update");
@@ -43,22 +44,19 @@ public class SystemTrayUtil {
 			systemTray.add(o_trayIcon);
 
 			NotificationUpdater.getInstance().addNotificationListener(p_dueComponents -> {
-
 				if (p_dueComponents.size() == 1) {
-					Component component = p_dueComponents.get(0);
-					displayNotification(component instanceof Item ? "Action Overdue" : "Reminder", component.getText());
+					displayNotification(p_dueComponents.get(0) instanceof Item ? "Action Overdue" : "Reminder", p_dueComponents.get(0).getText());
 				} else if (p_dueComponents.size() > 1) {
 					displayNotification("Threads", "You have " + p_dueComponents.size() + " new notifications.");
 				}
 
-				for (final Component component : p_dueComponents) {
-					String menuItemText = (component instanceof Item ? "Action Overdue" : "Reminder") + ": " + component.getText();
-					MenuItem menuItem = new MenuItem(menuItemText);
+				for (final Component x_component : p_dueComponents) {
+					MenuItem x_menuItem = new MenuItem((x_component instanceof Item ? "Action Overdue" : "Reminder") + ": " + x_component.getText());
 
-					menuItem.addActionListener(actionEvent -> {
+					x_menuItem.addActionListener(actionEvent -> {
 						WindowManager.makeThreadsVisible();
-						if(component.getParentComponent() != null) {
-							WindowManager.getInstance().openComponent(component);
+						if(x_component.getParentComponent() != null) {
+							WindowManager.getInstance().openComponent(x_component);
 						} else {
 							displayNotification("Threads", "The Item you've selected no longer exists");
 						}
@@ -68,7 +66,7 @@ public class SystemTrayUtil {
 						o_popUpMenu.addSeparator();
 					}
 
-					o_popUpMenu.add(menuItem);
+					o_popUpMenu.add(x_menuItem);
 				}
 			});
 		} catch (AWTException e) {

@@ -1,7 +1,6 @@
 package data;
 
 import org.junit.Test;
-import util.TextComparator;
 
 import java.util.*;
 
@@ -28,7 +27,7 @@ public class ComponentTest {
 
 	private static class MyComponent extends CollectionComponent<MyComponent> {
 		MyComponent(String p_text) {
-			super(UUID.randomUUID(), new Date(), new Date(), true, p_text, null, new TextComparator<>(), null);
+			super(UUID.randomUUID(), new Date(), new Date(), true, p_text, null, (o1, o2) -> o1.getText().compareTo(o2.getText()), null);
 		}
 
 		@Override

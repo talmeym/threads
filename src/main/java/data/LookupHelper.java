@@ -18,7 +18,7 @@ public class LookupHelper {
 			}
         }
 
-        Collections.sort(x_result, new ModifiedDateComparator());
+        Collections.sort(x_result, (obj1, obj2) -> obj2.getModifiedDate().compareTo(obj1.getModifiedDate()));
         return x_result;
     }
 
@@ -78,7 +78,7 @@ public class LookupHelper {
             }
         }
         
-        Collections.sort(x_result, new TextComparator<>());
+        Collections.sort(x_result, (o1, o2) -> o1.getText().compareTo(o2.getText()));
         return x_result;
     }
     
@@ -110,7 +110,7 @@ public class LookupHelper {
 			}
         }
 
-        Collections.sort(x_result, new DueDateComparator<>());
+        Collections.sort(x_result, (obj1, obj2) -> obj1.getDueDate().compareTo(obj2.getDueDate()));
         return x_result;
     }
 
