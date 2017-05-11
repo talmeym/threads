@@ -31,15 +31,11 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 			@Override
             public void mouseClicked(MouseEvent e) {
 				if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
-					for(TableSelectionListener<TYPE> x_listener: o_listeners){
-						x_listener.tableRowClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject());
-					}
+					o_listeners.forEach(l -> l.tableRowClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject()));
 				}
 
                 if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-					for(TableSelectionListener<TYPE> x_listener: o_listeners){
-						x_listener.tableRowDoubleClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject());
-					}
+					o_listeners.forEach(l -> tableRowDoubleClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject()));
                 }
 
                 if(e.getButton() == MouseEvent.BUTTON3) {

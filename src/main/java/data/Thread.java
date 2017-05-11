@@ -16,11 +16,7 @@ public class Thread extends ThreadItem<ThreadItem> {
 
 	public Thread(Thread p_thread, boolean p_addCopyText) {
 		this(UUID.randomUUID(), new Date(), new Date(), p_thread.isActive(), (p_addCopyText ? "Copy of " : "") + p_thread.getText(), new ArrayList<>(), p_thread.getDocFolder());
-
-		for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
-			ThreadItem x_threadItem = p_thread.getThreadItem(i);
-			addThreadItem(x_threadItem instanceof Item ? new Item((Item) x_threadItem, false) : new Thread((Thread) x_threadItem, false));
-		}
+		p_thread.getThreadItems().forEach(ti -> addThreadItem(ti instanceof Item ? new Item((Item) ti, false) : new Thread((Thread) ti, false)));
 	}
 
     public int getThreadItemCount() {

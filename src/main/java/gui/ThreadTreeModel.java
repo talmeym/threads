@@ -22,7 +22,7 @@ class ThreadTreeModel implements TreeModel, ComponentChangeListener {
 
     public int getChildCount(Object parent) {
         if(parent instanceof Thread) {
-            return ((Thread)parent).getThreadItemCount();
+            return ((Thread)parent).getThreadItems().size();
         }
         
         if(parent instanceof Item) {
@@ -49,20 +49,18 @@ class ThreadTreeModel implements TreeModel, ComponentChangeListener {
             return ((Thread)parent).getThreadItem(index);
         }
         
-        return -1;
+        return null;
     }
 
     public int getIndexOfChild(Object parent, Object child) {
         if(parent instanceof Thread) {
-            Thread x_thread = (Thread) parent;
-            
-            for(int i = 0; i < x_thread.getThreadItemCount(); i++) {
-                if(x_thread.getThreadItem(i) == child) {
-                    return i;
-                }
-            }
+			List<ThreadItem> threadItems = ((Thread)parent).getThreadItems();
+
+			if(threadItems.contains(child)) {
+				return threadItems.indexOf(child);
+			}
         }
-        
+
         return -1;
     }
 
@@ -80,12 +78,12 @@ class ThreadTreeModel implements TreeModel, ComponentChangeListener {
 		List<Component> x_hierarchy = x_component.getHierarchy();
 		TreePath treePath = new TreePath(x_hierarchy.toArray(new Component[x_hierarchy.size()]));
 
-		for(TreeModelListener x_listener: o_listeners) {
+		o_listeners.forEach(x_listener -> {
 			switch(p_cce.getType()) {
 				case ComponentChangeEvent.s_ADDED: x_listener.treeNodesInserted(new TreeModelEvent(this, treePath, new int[]{p_cce.getIndex()}, null)); break;
 				case ComponentChangeEvent.s_REMOVED: x_listener.treeNodesRemoved(new TreeModelEvent(this, treePath, new int[]{p_cce.getIndex()}, null)); break;
 				default: x_listener.treeNodesChanged(new TreeModelEvent(this, treePath));
 			}
-		}
+		});
 	}
 }

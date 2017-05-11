@@ -239,7 +239,7 @@ public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 				Date x_currentDate = o_item.getDueDate();
 				o_item.setDueDate(x_dueDate);
 
-				if(o_item.getReminderCount() > 0 && JOptionPane.showConfirmDialog(o_parentPanel, MessagingConstants.s_moveRemindersDesc, MessagingConstants.s_moveReminderTitle, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				if(o_item.getReminderCount() > 0 && JOptionPane.showConfirmDialog(o_parentPanel, "This action has reminders.\nDo you want to keep their relative positions ?", "Keep Reminders Relative ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 					for(Reminder x_reminder: o_item.getReminders()) {
 						x_reminder.setDueDate(new Date(x_dueDate.getTime() + (x_reminder.getDueDate().getTime() - x_currentDate.getTime())));
 					}

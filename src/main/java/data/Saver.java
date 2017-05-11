@@ -25,9 +25,7 @@ public class Saver {
         Element x_threadElem = new Element(XmlConstants.s_THREAD);
         addComponentData(x_threadElem, p_thread);
     
-        for(int i = 0; i < p_thread.getThreadItemCount(); i++) {
-            ThreadItem x_groupItem = p_thread.getThreadItem(i);
-            
+        for(ThreadItem x_groupItem: p_thread.getThreadItems()) {
             if(x_groupItem instanceof Thread) {
                 x_threadElem.addContent(addThread((Thread) x_groupItem));
             }

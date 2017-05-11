@@ -138,9 +138,7 @@ public class GoogleUtil {
 						x_syncedComponents.add(x_item.getId());
 						Thread x_threadToAddTo = null;
 
-						for(int i = 0; i< s_topLevelThread.getThreadItemCount(); i++) {
-							ThreadItem x_threadItem = s_topLevelThread.getThreadItem(i);
-
+						for(ThreadItem x_threadItem: s_topLevelThread.getThreadItems()) {
 							if(x_threadItem.getText().equals(s_FROM_GOOGLE) && x_threadItem instanceof Thread) {
 								x_threadToAddTo = (Thread) x_threadItem;
 								break;
