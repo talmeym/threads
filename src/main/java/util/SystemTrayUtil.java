@@ -8,6 +8,7 @@ import gui.WindowManager;
 import java.awt.*;
 import java.util.*;
 
+import static data.ComponentChangeEvent.s_DELETED;
 import static gui.Actions.*;
 import static gui.DateSuggestionPanel.getDateSuggestion;
 
@@ -60,15 +61,17 @@ public class SystemTrayUtil {
 
 						x_menuItem.addActionListener(actionEvent -> {
 							WindowManager.makeThreadsVisible();
-
-							if(x_component.getParentComponent() != null) {
-								WindowManager.getInstance().openComponent(x_component);
-							} else {
-								displayNotification("Threads", "The Item you've selected no longer exists");
-							}
+							WindowManager.getInstance().openComponent(x_component);
 						});
 
-						x_component.addComponentChangeListener(cce -> o_menuItems.get(x_component).setLabel(getMenuItemText(x_component)));
+						x_component.addComponentChangeListener(e -> {
+							if(e.getSource() == x_component) {
+								switch (e.getType()) {
+									case s_DELETED: o_popUpMenu.remove(o_menuItems.get(x_component)); break;
+									default: o_menuItems.get(x_component).setLabel(getMenuItemText(x_component));
+								}
+							}
+						});
 
 						if(o_popUpMenu.getItemCount() == 2) {
 							o_popUpMenu.addSeparator();

@@ -12,6 +12,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
+import static data.ComponentChangeEvent.s_CHANGED;
 import static util.GuiUtil.setUpButtonLabel;
 
 class ComponentInfoPanel extends JPanel {
@@ -46,8 +47,8 @@ class ComponentInfoPanel extends JPanel {
 			}
 		};
 
-		o_component.addComponentChangeListener(p_cce -> {
-			if(p_cce.getSource() == o_component) {
+		o_component.addComponentChangeListener(e -> {
+			if(e.getSource() == o_component && e.getType() == s_CHANGED) {
 				o_textField.getDocument().removeDocumentListener(x_listener);
 				o_textField.setText(o_component.getText());
 				o_textField.getDocument().addDocumentListener(x_listener);
@@ -56,7 +57,7 @@ class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-		o_component.addComponentMoveListener(p_event -> {
+		o_component.addComponentMoveListener(e -> {
 			o_breadcrumbsPanel.removeAll();
 
 			Component x_parent = o_component.getParentComponent();
@@ -67,8 +68,8 @@ class ComponentInfoPanel extends JPanel {
 				x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
 				final Component x_parentFinal = x_parent;
 
-				x_parentFinal.addComponentChangeListener(p_cce -> {
-					if (p_cce.getSource() == x_parentFinal) {
+				x_parentFinal.addComponentChangeListener(f -> {
+					if (f.getSource() == x_parentFinal && f.getType() == s_CHANGED) {
 						x_label.setText(x_parentFinal.getText());
 					}
 				});
@@ -77,6 +78,7 @@ class ComponentInfoPanel extends JPanel {
 			}
 
 			x_parentLabels.forEach(o_breadcrumbsPanel::add);
+			o_breadcrumbsPanel.repaint();
 			repaint();
 		});
 
@@ -269,8 +271,8 @@ class ComponentInfoPanel extends JPanel {
 				x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
 				final Component x_parentFinal = x_parent;
 
-				x_parent.addComponentChangeListener(p_cce -> {
-					if(p_cce.getSource() == x_parentFinal) {
+				x_parent.addComponentChangeListener(e -> {
+					if(e.getSource() == x_parentFinal && e.getType() == s_CHANGED) {
 						x_label.setText(x_parentFinal.getText());
 					}
 				});

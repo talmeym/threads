@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+import static data.ComponentChangeEvent.s_CONTENT_REMOVED;
 import static gui.Actions.addReminder;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
@@ -30,9 +31,9 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 		o_item = p_item;
 		o_parentPanel = p_parentPanel;
 
-		o_item.addComponentChangeListener(p_cce -> {
-			if (p_cce.getSource() == o_item) {
-				if (p_cce.getType() == ComponentChangeEvent.s_REMOVED) {
+		o_item.addComponentChangeListener(e -> {
+			if (e.getSource() == o_item) {
+				if (e.getType() == s_CONTENT_REMOVED) {
 					o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
 				}
 

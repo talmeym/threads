@@ -3,6 +3,7 @@ package data;
 import java.io.File;
 import java.util.*;
 
+import static data.ComponentChangeEvent.*;
 import static java.util.Collections.sort;
 
 abstract class CollectionComponent <CONTENTS extends Component> extends Component implements ComponentChangeListener {
@@ -37,7 +38,7 @@ abstract class CollectionComponent <CONTENTS extends Component> extends Componen
         o_components.add(p_component);
         sort(o_components, o_comparator);
 		int index = o_components.indexOf(p_component);
-		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_ADDED, index));
+		changed(new ComponentChangeEvent(this, s_CONTENT_ADDED, index));
     }
 
     void removeComponent(CONTENTS p_component) {
@@ -45,7 +46,7 @@ abstract class CollectionComponent <CONTENTS extends Component> extends Componen
         p_component.removeComponentChangeListener(this);
 		int index = o_components.indexOf(p_component);
         o_components.remove(p_component);
-		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_REMOVED, index));
+		changed(new ComponentChangeEvent(this, s_CONTENT_REMOVED, index));
     }
 
     void removeAllComponents() {
@@ -57,7 +58,7 @@ abstract class CollectionComponent <CONTENTS extends Component> extends Componen
 			x_component.unsetParentComponent();
 			x_component.removeComponentChangeListener(this);
 			iterator.remove();
-			changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_REMOVED, index++));
+			changed(new ComponentChangeEvent(this, s_CONTENT_REMOVED, index++));
 		}
     }
 
@@ -82,14 +83,14 @@ abstract class CollectionComponent <CONTENTS extends Component> extends Componen
 		changed(p_cce);
 		Component x_source = p_cce.getSource();
 
-		if(o_components.contains(x_source) && p_cce.getType() == ComponentChangeEvent.s_CHANGE) {
+		if(o_components.contains(x_source) && p_cce.getType() == s_CHANGED) {
 			int p_beforeIndex = o_components.indexOf(x_source);
 			sort(o_components, o_comparator);
 			int p_afterIndex = o_components.indexOf(x_source);
 
 			if(p_afterIndex != p_beforeIndex) {
-				changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_REMOVED, p_beforeIndex));
-				changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_ADDED, p_afterIndex));
+				changed(new ComponentChangeEvent(this, s_CONTENT_REMOVED, p_beforeIndex));
+				changed(new ComponentChangeEvent(this, s_CONTENT_ADDED, p_afterIndex));
 			}
 		}
 	}

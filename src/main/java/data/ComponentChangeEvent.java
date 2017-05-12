@@ -1,13 +1,14 @@
 package data;
 
 public class ComponentChangeEvent {
-    public static final int s_CHANGE = 0;
-    public static final int s_ADDED = 1;
-    public static final int s_REMOVED = 2;
+    public static final int s_CHANGED = 0;
+    public static final int s_CONTENT_ADDED = 1;
+    public static final int s_CONTENT_REMOVED = 2;
+    public static final int s_DELETED = 3;
 
-    static final int s_TEXT = 0;
-    static final int s_ACTIVE = 1;
-    static final int s_DUE_DATE = 2;
+    public static final int s_TEXT = 0;
+    public static final int s_ACTIVE = 1;
+    public static final int s_DUE_DATE = 2;
 
     private final Component o_component;
     private final int o_type;

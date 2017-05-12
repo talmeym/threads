@@ -9,6 +9,7 @@ import java.awt.Component;
 import java.awt.event.*;
 import java.util.Calendar;
 
+import static data.ComponentChangeEvent.s_CHANGED;
 import static gui.Actions.linkToGoogle;
 import static util.Settings.updateSetting;
 
@@ -22,10 +23,11 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
         o_item = p_item;
 
 		o_item.addComponentChangeListener(e -> {
-			if(e.getSource() == o_item) {
-			o_calendarLabel.setEnabled(o_item.getDueDate() != null);
-			o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
-		}});
+			if(e.getSource() == o_item && e.getType() == s_CHANGED) {
+				o_calendarLabel.setEnabled(o_item.getDueDate() != null);
+				o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
+			}
+		});
 
         fixColumnWidth(1, GUIConstants.s_creationDateColumnWidth);
         fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);

@@ -3,8 +3,7 @@ package data;
 import java.io.File;
 import java.util.*;
 
-import static data.ComponentChangeEvent.s_ACTIVE;
-import static data.ComponentChangeEvent.s_TEXT;
+import static data.ComponentChangeEvent.*;
 
 public abstract class Component implements ComponentMoveListener {
 	private List<ComponentChangeListener> o_changeListeners = new ArrayList<>();
@@ -68,6 +67,7 @@ public abstract class Component implements ComponentMoveListener {
 	void unsetParentComponent() {
 		o_parentComponent.removeComponentMoveListener(this);
 		o_parentComponent = null;
+		changed(new ComponentChangeEvent(this, s_DELETED, -1));
 	}
 
     void setParentComponent(Component p_parentComponent) {
@@ -110,7 +110,7 @@ public abstract class Component implements ComponentMoveListener {
 
 	void changed(int p_field) {
 		modified();
-		changed(new ComponentChangeEvent(this, ComponentChangeEvent.s_CHANGE, p_field));
+		changed(new ComponentChangeEvent(this, s_CHANGED, p_field));
 	}
 
 	void changed(ComponentChangeEvent p_event) {
