@@ -40,16 +40,18 @@ class RemindDateSuggestionPanel extends JPanel {
         }
     }
 
+	private final JComboBox<DateItem> o_minBox = new JComboBox<>(s_minItems);
+    private final JComboBox<DateItem> o_hourBox = new JComboBox<>(s_hourItems);
+    private final JComboBox<DateItem> o_dayBox = new JComboBox<>(s_dayItems);
+    private final JComboBox<DateItem> o_weekBox = new JComboBox<>(s_weekItems);
+
+	private final JComboBox<String> o_pushBackBox = new JComboBox<>(new String[] {"An Hour", "A Day", "A Week", "A Month", "A Year"});
+
 	private final Reminder o_reminder;
 
 	private final JTextField o_dueDateField = new JTextField();
 	private final JLabel o_setLabel = new JLabel(ImageUtil.getReturnIcon());
 	private final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
-
-	private final JComboBox<DateItem> o_minBox = new JComboBox<>(s_minItems);
-    private final JComboBox<DateItem> o_hourBox = new JComboBox<>(s_hourItems);
-    private final JComboBox<DateItem> o_dayBox = new JComboBox<>(s_dayItems);
-    private final JComboBox<DateItem> o_weekBox = new JComboBox<>(s_weekItems);
 
 	RemindDateSuggestionPanel(Reminder p_reminder) {
         super(new BorderLayout());
@@ -135,9 +137,6 @@ class RemindDateSuggestionPanel extends JPanel {
 			}
 		});
 
-		JButton o_setButton = new JButton("Set");
-		o_setButton.addActionListener(e -> suggestAndSet());
-
 		JTextField x_actionDueDateField = new JTextField(getDueDateText(((Item) p_reminder.getParentComponent()).getDueDate()));
 		x_actionDueDateField.setHorizontalAlignment(JTextField.CENTER);
 		x_actionDueDateField.setEnabled(false);
@@ -172,17 +171,32 @@ class RemindDateSuggestionPanel extends JPanel {
 		x_beforePanel.add(new JLabel("before"), BorderLayout.CENTER);
 		x_beforePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
+		JButton x_suggestButton = new JButton("Set");
+		x_suggestButton.addActionListener(e -> suggestAndSet());
+
 		JPanel x_setPanel = new JPanel(new BorderLayout());
 		x_setPanel.add(x_beforePanel, BorderLayout.WEST);
-		x_setPanel.add(o_setButton, BorderLayout.CENTER);
+		x_setPanel.add(x_suggestButton, BorderLayout.CENTER);
+
+		JButton x_pushBackButton = new JButton("Set");
+		x_pushBackButton.addActionListener(e -> pushBackAndSet());
+
+		JPanel x_pushbackPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		x_pushbackPanel.add(o_pushBackBox);
+		x_pushbackPanel.add(x_pushBackButton);
+		x_pushbackPanel.setBorder(BorderFactory.createTitledBorder("Push Back"));
 
 		JPanel x_quickSetPanel = new JPanel(new BorderLayout());
 		x_quickSetPanel.add(x_dropdownPanel, BorderLayout.CENTER);
 		x_quickSetPanel.add(x_setPanel, BorderLayout.EAST);
 		x_quickSetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5), BorderFactory.createTitledBorder("Quick Set")));
 
+		JPanel x_panelsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		x_panelsPanel.add(x_pushbackPanel);
+		x_panelsPanel.add(x_quickSetPanel);
+
 		add(x_panel, BorderLayout.CENTER);
-		add(x_quickSetPanel, BorderLayout.EAST);
+		add(x_panelsPanel, BorderLayout.EAST);
     }
 
 	private void suggestAndSet() {
@@ -197,27 +211,65 @@ class RemindDateSuggestionPanel extends JPanel {
 		setDueDate();
     }
 
-	private void setDueDate() {
-		if(o_dueDateField.getText() != null && o_dueDateField.getText().length() > 0) {
-			Date x_dueDate = null;
+	private void pushBackAndSet() {
+		revertDueDateField();
+		String x_text = o_dueDateField.getText();
 
-			try {
-				x_dueDate = s_dateTimeFormat.parse(o_dueDateField.getText());
-			} catch (ParseException e) {
-				try {
-					x_dueDate = s_dateFormat.parse(o_dueDateField.getText());
-				} catch (ParseException pe) { /* do nothing */ }
+		if(!StringUtils.isEmpty(x_text)) {
+			Date x_date = parseDate(x_text);
+
+			if(x_date != null) {
+				Calendar x_calendar = Calendar.getInstance();
+				x_calendar.setTime(x_date);
+				x_calendar.set(Calendar.SECOND, 0);
+				x_calendar.set(Calendar.MILLISECOND, 0);
+
+				switch(o_pushBackBox.getSelectedIndex()) {
+					case 0: x_calendar.add(Calendar.HOUR_OF_DAY, 1); break;
+					case 1: x_calendar.add(Calendar.DATE, 1); break;
+					case 2: x_calendar.add(Calendar.DATE, 7); break;
+					case 3: x_calendar.add(Calendar.MONTH, 1); break;
+					default: x_calendar.add(Calendar.YEAR, 1); break;
+				}
+
+				o_dueDateField.setText(getDueDateText(x_calendar.getTime()));
+				o_dueDateField.setForeground(o_reminder.isActive() ? Color.black : Color.gray);
+				setDueDate();
 			}
+		}
+	}
+
+	private void setDueDate() {
+		String x_text = o_dueDateField.getText();
+
+		if(x_text != null && x_text.length() > 0) {
+			Date x_dueDate = parseDate(x_text);
 
 			if(x_dueDate != null && !x_dueDate.equals(o_reminder.getDueDate())) {
 				o_reminder.setDueDate(x_dueDate);
 			}
 		}
 
+		revertDueDateField();
+	}
+
+	private void revertDueDateField() {
 		o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
 		o_setLabel.setEnabled(false);
 		o_revertLabel.setEnabled(false);
 		o_dueDateField.setBackground(Color.white);
+	}
+
+	private Date parseDate(String x_text) {
+		try {
+			return s_dateTimeFormat.parse(x_text);
+		} catch (ParseException e) {
+			try {
+				return s_dateFormat.parse(x_text);
+			} catch (ParseException pe) {
+				return null;
+			}
+		}
 	}
 
 	private String getDueDateText(Date x_dueDate) {

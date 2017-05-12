@@ -18,13 +18,15 @@ public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
 	private static final String s_defaultTextString = "dd/mm/yy [hh:mm]";
 
-	private static DateItem[] s_timeItems = new DateItem[]{new DateItem("Anytime", 0), new DateItem("9 AM", 9), new DateItem("Midday", 12), new DateItem("C.O.B.", 18)};
-    private static DateItem[] s_weekItems = new DateItem[]{new DateItem("This", 0), new DateItem("Next", 7), new DateItem("A week", 14), new DateItem("2 Weeks", 21), new DateItem("3 Weeks", 28), new DateItem("4 Weeks", 35)};
-    private static DateItem[] s_dayItems = new DateItem[]{new DateItem("Mon", 2), new DateItem("Tues", 3), new DateItem("Wed", 4), new DateItem("Thur", 5), new DateItem("Fri", 6), new DateItem("Sat", 7), new DateItem("Sun", 1)};
+	private static final DateItem[] s_timeItems = new DateItem[]{new DateItem("Anytime", 0), new DateItem("9 AM", 9), new DateItem("Midday", 12), new DateItem("C.O.B.", 18)};
+    private static final DateItem[] s_weekItems = new DateItem[]{new DateItem("This", 0), new DateItem("Next", 7), new DateItem("A week", 14), new DateItem("2 Weeks", 21), new DateItem("3 Weeks", 28), new DateItem("4 Weeks", 35)};
+    private static final DateItem[] s_dayItems = new DateItem[]{new DateItem("Mon", 2), new DateItem("Tues", 3), new DateItem("Wed", 4), new DateItem("Thur", 5), new DateItem("Fri", 6), new DateItem("Sat", 7), new DateItem("Sun", 1)};
 
-    private JComboBox<DateItem> o_timeBox = new JComboBox<>(s_timeItems);
-    private JComboBox<DateItem> o_weekBox = new JComboBox<>(s_weekItems);
-    private JComboBox<DateItem> o_dayBox = new JComboBox<>(s_dayItems);
+    private final JComboBox<DateItem> o_timeBox = new JComboBox<>(s_timeItems);
+    private final JComboBox<DateItem> o_weekBox = new JComboBox<>(s_weekItems);
+    private final JComboBox<DateItem> o_dayBox = new JComboBox<>(s_dayItems);
+
+	private final JComboBox<String> o_pushBackBox = new JComboBox<>(new String[] {"An Hour", "A Day", "A Week", "A Month", "A Year"});
 
 	private final Item o_item;
 
@@ -119,10 +121,6 @@ public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 			}
 		});
 
-		JButton o_SetButton = new JButton("Set");
-		o_SetButton.addActionListener(e -> suggestAndSet());
-		o_dueDateField.addActionListener(actionEvent -> setDueDate());
-
 		setUpDropDowns();
 
 		JPanel x_fieldPanel = new JPanel();
@@ -144,15 +142,32 @@ public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 		x_panel.add(x_buttonPanel, BorderLayout.EAST);
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
+		o_dueDateField.addActionListener(actionEvent -> setDueDate());
+
+		JButton x_pushBackButton = new JButton("Set");
+		x_pushBackButton.addActionListener(e -> pushBackAndSet());
+
+		JPanel x_pushbackPanel = new JPanel(new GridLayout(1, 0, 5, 5));
+		x_pushbackPanel.add(o_pushBackBox);
+		x_pushbackPanel.add(x_pushBackButton);
+		x_pushbackPanel.setBorder(BorderFactory.createTitledBorder("Push Back"));
+
+		JButton x_suggestButton = new JButton("Set");
+		x_suggestButton.addActionListener(e -> suggestAndSet());
+
 		JPanel x_quickSetPanel = new JPanel(new GridLayout(1, 0, 5, 5));
 		x_quickSetPanel.add(o_timeBox);
 		x_quickSetPanel.add(o_weekBox);
 		x_quickSetPanel.add(o_dayBox);
-		x_quickSetPanel.add(o_SetButton);
+		x_quickSetPanel.add(x_suggestButton);
 		x_quickSetPanel.setBorder(BorderFactory.createTitledBorder("Quick Set"));
 
+		JPanel x_panelsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		x_panelsPanel.add(x_pushbackPanel);
+		x_panelsPanel.add(x_quickSetPanel);
+
 		add(x_panel, BorderLayout.CENTER);
-		add(x_quickSetPanel, BorderLayout.EAST);
+		add(x_panelsPanel, BorderLayout.EAST);
 
 		TimeUpdater.getInstance().addTimeUpdateListener(this);
 	}
@@ -222,19 +237,39 @@ public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 		setDueDate();
     }
 
+    private void pushBackAndSet() {
+    	revertDueDateField();
+		String x_text = o_dueDateField.getText();
+
+		if(!StringUtils.isEmpty(x_text)) {
+			Date x_date = parseDate(x_text);
+
+			if(x_date != null) {
+				Calendar x_calendar = Calendar.getInstance();
+				x_calendar.setTime(x_date);
+				x_calendar.set(Calendar.SECOND, 0);
+				x_calendar.set(Calendar.MILLISECOND, 0);
+
+				switch(o_pushBackBox.getSelectedIndex()) {
+					case 0: x_calendar.add(Calendar.HOUR_OF_DAY, 1); break;
+					case 1: x_calendar.add(Calendar.DATE, 1); break;
+					case 2: x_calendar.add(Calendar.DATE, 7); break;
+					case 3: x_calendar.add(Calendar.MONTH, 1); break;
+					default: x_calendar.add(Calendar.YEAR, 1); break;
+				}
+
+				o_dueDateField.setText(getDueDateText(x_calendar.getTime()));
+				o_dueDateField.setForeground(o_item.isActive() ? Color.black : Color.gray);
+				setDueDate();
+			}
+		}
+	}
+
 	private void setDueDate() {
 		String x_text = o_dueDateField.getText();
 
 		if(!StringUtils.isEmpty(x_text)) {
-			Date x_dueDate = null;
-
-			try {
-				x_dueDate = s_dateTimeFormat.parse(x_text);
-			} catch (ParseException e) {
-				try {
-					x_dueDate = s_dateFormat.parse(x_text);
-				} catch (ParseException pe) { /* do nothing */ }
-			}
+			Date x_dueDate = parseDate(x_text);
 
 			if(x_dueDate != null && !x_dueDate.equals(o_item.getDueDate())) {
 				Date x_currentDate = o_item.getDueDate();
@@ -253,11 +288,27 @@ public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 			}
 		}
 
+		revertDueDateField();
+	}
+
+	private void revertDueDateField() {
 		o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
 		o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
 		o_setLabel.setEnabled(false);
 		o_revertLabel.setEnabled(false);
 		o_dueDateField.setBackground(Color.white);
+	}
+
+	private Date parseDate(String p_text) {
+		try {
+			return s_dateTimeFormat.parse(p_text);
+		} catch (ParseException e) {
+			try {
+				return s_dateFormat.parse(p_text);
+			} catch (ParseException pe) {
+				return null;
+			}
+		}
 	}
 
 	private String getDueDateText(Date x_dueDate) {
