@@ -13,7 +13,7 @@ import java.util.*;
 import static data.ComponentChangeEvent.s_CHANGED;
 import static util.GuiUtil.setUpButtonLabel;
 
-public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
+public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
 	private static final String s_defaultTextString = "dd/mm/yy [hh:mm]";
@@ -169,7 +169,7 @@ public class DateSuggestionPanel extends JPanel implements TimeUpdateListener {
 		add(x_panel, BorderLayout.CENTER);
 		add(x_panelsPanel, BorderLayout.EAST);
 
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
 	}
 
 	private void setUpDropDowns() {

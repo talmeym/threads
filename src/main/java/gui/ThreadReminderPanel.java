@@ -18,7 +18,7 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(false, true, Reminder);
 
 	ThreadReminderPanel(Thread p_thread, JPanel p_parentPanel) {
-        super(new ThreadReminderTableModel(p_thread), new ComponentCellRenderer(null));
+        super(new ThreadReminderTableModel(p_thread), new ThreadReminderCellRenderer(p_thread));
 		p_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
 
 		fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
@@ -54,8 +54,8 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
         
         add(x_buttonPanel, BorderLayout.SOUTH);
 
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
-		GoogleSyncer.getInstance().addGoogleSyncListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
+		GoogleSyncer.getInstance().addActivityListener(this);
     }
 
 	@Override

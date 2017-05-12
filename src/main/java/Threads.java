@@ -14,7 +14,7 @@ public class Threads {
 		File x_settingsFile = new File(x_dataFile.getParentFile(), "threads.properties");
 		Thread x_topThread = x_dataFile.exists() ? Loader.loadDocumentThread(x_dataFile) : new Thread("Threads");
 
-		TimeUpdater.initialise();
+		TimedUpdater.initialise();
 		TimedSaver.initialise(x_topThread, x_dataFile);
 		NotificationUpdater.initialise(x_topThread);
 		SystemTrayUtil.initialise(x_topThread);
@@ -27,7 +27,7 @@ public class Threads {
 			public void windowClosing(WindowEvent e) {
 				TimedSaver.getInstance().stopRunning();
 				GoogleSyncer.getInstance().stopRunning();
-				TimeUpdater.getInstance().stopRunning();
+				TimedUpdater.getInstance().stopRunning();
 				Saver.saveDocument(x_topThread, x_dataFile);
 				Settings.save(x_settingsFile);
 				System.exit(0);

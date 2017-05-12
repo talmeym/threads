@@ -35,7 +35,7 @@ public class NotificationUpdater {
 
 	private NotificationUpdater(Thread p_topLevelThread) {
 		o_topLevelThread = p_topLevelThread;
-		TimeUpdater.getInstance().addTimeUpdateListener(this::processAlerts);
+		TimedUpdater.getInstance().addActivityListener(this::processAlerts);
 	}
 
 	synchronized void addNotificationListener(NotificationListener p_listener) {

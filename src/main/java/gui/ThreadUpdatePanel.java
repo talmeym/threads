@@ -47,7 +47,7 @@ class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
 
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
 	}
 
 	@Override

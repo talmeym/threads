@@ -2,7 +2,7 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.TimeUpdater;
+import util.TimedUpdater;
 
 import java.util.*;
 
@@ -21,7 +21,7 @@ class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
 		o_year = x_calendar.get(Calendar.YEAR);
 		o_month = x_calendar.get(Calendar.MONTH);
 
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
 	}
 
 	@Override

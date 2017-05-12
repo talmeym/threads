@@ -191,7 +191,7 @@ public class GoogleUtil {
 			}
 
 			callBack(p_callbacks, ProgressCallBack::success);
-			GoogleSyncer.getInstance().updateGoogleListeners();
+			GoogleSyncer.getInstance().finished();
 		} catch (Throwable t) {
 			callBack(p_callbacks, c -> c.error(t.getMessage()));
 		}

@@ -9,7 +9,7 @@ import java.util.*;
 class ThreadUpdateTableModel extends ComponentTableModel<Thread, Item> {
 	ThreadUpdateTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Thread", "Update", "Update Date", "Updated"});
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
     }
 
 	@Override

@@ -10,7 +10,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends JPanel implements TimeUpdateListener, GoogleSyncListener, TableSelectionListener<TYPE> {
+abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends JPanel implements TimedUpdateListener, GoogleSyncListener, TableSelectionListener<TYPE> {
 	private final ComponentTableModel<COMPONENT, TYPE> o_tableModel;
 	final JTable o_table;
 	private final List<TableSelectionListener<TYPE>> o_listeners = new ArrayList<>();

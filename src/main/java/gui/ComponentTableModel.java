@@ -6,7 +6,7 @@ import util.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> extends DefaultTableModel implements TimeUpdateListener, GoogleSyncListener, ComponentChangeListener {
+abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> extends DefaultTableModel implements TimedUpdateListener, GoogleSyncListener, ComponentChangeListener {
     private final COMPONENT o_component;
     private final String[] o_columnNames;
 

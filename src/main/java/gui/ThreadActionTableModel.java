@@ -11,8 +11,8 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
 
 	ThreadActionTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Thread", "Action", "Due Date", "Due", ""});
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
-		GoogleSyncer.getInstance().addGoogleSyncListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
+		GoogleSyncer.getInstance().addActivityListener(this);
     }
 
     @Override

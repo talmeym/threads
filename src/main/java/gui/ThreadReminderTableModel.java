@@ -13,8 +13,8 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
 
 	ThreadReminderTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Action", "Reminder", "Due Date", "Due", ""});
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
-		GoogleSyncer.getInstance().addGoogleSyncListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
+		GoogleSyncer.getInstance().addActivityListener(this);
 	}
 
 	@Override

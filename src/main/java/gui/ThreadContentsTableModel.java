@@ -12,8 +12,8 @@ import static data.LookupHelper.*;
 class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
     ThreadContentsTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Creation Date", "Type", "Name", "Info", ""});
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
-		GoogleSyncer.getInstance().addGoogleSyncListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
+		GoogleSyncer.getInstance().addActivityListener(this);
     }
 
     @Override

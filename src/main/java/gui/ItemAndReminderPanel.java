@@ -13,7 +13,7 @@ import static gui.Actions.addReminder;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
-class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Reminder>, TimeUpdateListener, GoogleSyncListener, SettingChangeListener {
+class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Reminder>, TimedUpdateListener, GoogleSyncListener, SettingChangeListener {
 	private static final String s_none = "none";
 	private static final String s_noneSelected = "none selected";
 
@@ -91,8 +91,8 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 
 		add(o_splitPane, BorderLayout.CENTER);
 
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
-		GoogleSyncer.getInstance().addGoogleSyncListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
+		GoogleSyncer.getInstance().addActivityListener(this);
 	}
 
 	@Override

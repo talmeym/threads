@@ -11,7 +11,7 @@ import java.util.Date;
 import static java.lang.Thread.sleep;
 import static util.GuiUtil.setUpButtonLabel;
 
-class StatusPanel extends JPanel implements Runnable, TimeUpdateListener, GoogleSyncListener, TimedSaveListener, SettingChangeListener {
+class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, GoogleSyncListener, TimedSaveListener, SettingChangeListener {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm");
 
 	private final JProgressBar o_updateProgress = new JProgressBar(JProgressBar.HORIZONTAL);
@@ -35,7 +35,7 @@ class StatusPanel extends JPanel implements Runnable, TimeUpdateListener, Google
 		x_updateLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				TimeUpdater.getInstance().doAction();
+				TimedUpdater.getInstance().doAction();
 			}
 		});
 
@@ -101,9 +101,9 @@ class StatusPanel extends JPanel implements Runnable, TimeUpdateListener, Google
 		o_statusLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		add(o_statusLabel);
 
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
-		GoogleSyncer.getInstance().addGoogleSyncListener(this);
-		TimedSaver.getInstance().addTimedSaveListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
+		GoogleSyncer.getInstance().addActivityListener(this);
+		TimedSaver.getInstance().addActivityListener(this);
 
 		new java.lang.Thread(this).start();
 	}
@@ -146,7 +146,7 @@ class StatusPanel extends JPanel implements Runnable, TimeUpdateListener, Google
             try {
                 sleep(1000);
 
-                int x_updateMax = (int) (TimeUpdater.getInstance().nextSync() - o_lastUpdate);
+                int x_updateMax = (int) (TimedUpdater.getInstance().nextSync() - o_lastUpdate);
                 int x_updateNow = (int) (System.currentTimeMillis() - o_lastUpdate);
                 o_updateProgress.setMaximum(x_updateMax);
                 o_updateProgress.setValue(x_updateMax - x_updateNow);

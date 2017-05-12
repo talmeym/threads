@@ -4,11 +4,9 @@ import data.Thread;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.*;
 
-public class GoogleSyncer extends java.lang.Thread {
+public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
     private static GoogleSyncer s_INSTANCE = null;
-    private static final int s_frequency = 120000;
 
 	public static void initialise(Thread p_topLevelThread, boolean p_enabled) {
 		if(s_INSTANCE != null) {
@@ -26,12 +24,9 @@ public class GoogleSyncer extends java.lang.Thread {
 		return s_INSTANCE;
 	}
 
-	private final Object o_lockObj = new Object();
-	private final List<GoogleSyncListener> o_googleListeners = new ArrayList<>();
-    private boolean o_continueRunning = true;
-    private long o_nextSync = System.currentTimeMillis();
-
     private GoogleSyncer(Thread p_topThread, boolean p_enabled) {
+    	super(120000);
+
 		if(p_enabled) {
 			try {
 				GoogleUtil.initialise(p_topThread);
@@ -44,71 +39,17 @@ public class GoogleSyncer extends java.lang.Thread {
 		}
     }
 
-	public void addGoogleSyncListener(GoogleSyncListener p_listener) {
-        synchronized (o_googleListeners) {
-            o_googleListeners.add(p_listener);
-        }
+	void action() {
+			GoogleUtil.syncWithGoogle();
+		}
 
+	@Override
+	void informOfStart(GoogleSyncListener p_listener) {
+		p_listener.googleSyncStarted();
+	}
+
+	@Override
+	void informOfFinish(GoogleSyncListener p_listener) {
 		p_listener.googleSynced();
 	}
-
-	public long nextSync() {
-        synchronized(o_lockObj) {
-            return o_nextSync;
-        }
-    }
-
-	public void run() {
-		while(continueRunning()) {
-			try {
-				sleep(1000);
-
-                if (o_nextSync < System.currentTimeMillis()) {
-					doAction();
-
-					synchronized(o_lockObj) {
-                        while(o_nextSync < System.currentTimeMillis()) {
-                            o_nextSync += s_frequency;
-                        }
-                    }
-                }
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-        }
-    }
-
-	public void doAction() {
-		synchronized (o_googleListeners) {
-			googleSyncing();
-			GoogleUtil.syncWithGoogle();
-			googleSynced();
-		}
-	}
-
-	private void googleSyncing() {
-		for(GoogleSyncListener x_listener: o_googleListeners) {
-			x_listener.googleSyncStarted();
-		}
-	}
-
-	private void googleSynced() {
-        for (GoogleSyncListener x_listener : o_googleListeners) {
-            x_listener.googleSynced();
-        }
-	}
-
-	void updateGoogleListeners() {
-        synchronized (o_googleListeners) {
-            googleSynced();
-        }
-    }
-
-    public synchronized void stopRunning() {
-        o_continueRunning = false;
-    }
-    
-    private synchronized boolean continueRunning() {
-        return o_continueRunning;
-    }
 }

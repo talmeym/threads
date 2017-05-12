@@ -67,8 +67,8 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 
 		add(x_buttonPanel, BorderLayout.SOUTH);
 
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
-		GoogleSyncer.getInstance().addGoogleSyncListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
+		GoogleSyncer.getInstance().addActivityListener(this);
     }
 
 	@Override

@@ -41,7 +41,7 @@ class ReminderPanel extends JPanel implements GoogleSyncListener {
 
 		add(x_panel, BorderLayout.NORTH);
 
-		GoogleSyncer.getInstance().addGoogleSyncListener(this);
+		GoogleSyncer.getInstance().addActivityListener(this);
     }
 
 	@Override

@@ -50,8 +50,8 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 
         add(x_buttonPanel, BorderLayout.SOUTH);
 
-		TimeUpdater.getInstance().addTimeUpdateListener(this);
-		GoogleSyncer.getInstance().addGoogleSyncListener(this);
+		TimedUpdater.getInstance().addActivityListener(this);
+		GoogleSyncer.getInstance().addActivityListener(this);
     }
 
 	public void add(ThreadItem p_threadItem) {
