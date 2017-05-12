@@ -4,12 +4,14 @@ import util.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.text.*;
 import java.util.Date;
 
 import static java.lang.Thread.sleep;
+import static util.GuiUtil.setUpButtonLabel;
 
-class ThreadsStatusPanel extends JPanel implements Runnable, TimeUpdateListener, GoogleSyncListener, TimedSaveListener, SettingChangeListener {
+class StatusPanel extends JPanel implements Runnable, TimeUpdateListener, GoogleSyncListener, TimedSaveListener, SettingChangeListener {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm");
 
 	private final JProgressBar o_updateProgress = new JProgressBar(JProgressBar.HORIZONTAL);
@@ -20,18 +22,26 @@ class ThreadsStatusPanel extends JPanel implements Runnable, TimeUpdateListener,
 	private long o_lastUpdate = System.currentTimeMillis();
 	private long o_lastGoogle = System.currentTimeMillis();
 	private long o_lastSave = System.currentTimeMillis();
+
 	private boolean o_showGoogle;
 
-	ThreadsStatusPanel() {
+	StatusPanel() {
 		super(new GridLayout(0, 1, 5, 5));
 		this.o_showGoogle = Settings.registerForSetting(Settings.s_GOOGLE_ENABLED, this, "false").equals("true");
 
 		o_updateProgress.setMinimum(0);
 
         JLabel x_updateLabel = new JLabel(ImageUtil.getTimeUpdateIcon());
+		x_updateLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				TimeUpdater.getInstance().doAction();
+			}
+		});
+
         x_updateLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 		JPanel x_updatePanel = new JPanel(new BorderLayout());
-        x_updatePanel.add(x_updateLabel, BorderLayout.WEST);
+        x_updatePanel.add(setUpButtonLabel(x_updateLabel), BorderLayout.WEST);
 		x_updatePanel.add(o_updateProgress, BorderLayout.CENTER);
 		x_updatePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		add(x_updatePanel);
@@ -41,9 +51,23 @@ class ThreadsStatusPanel extends JPanel implements Runnable, TimeUpdateListener,
 			o_googleProgress.setMinimum(0);
 
 			JLabel x_googleLabel = new JLabel(ImageUtil.getGoogleVerySmallIcon());
+			x_googleLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					new SwingWorker<Void, Void>() {
+
+						@Override
+						protected Void doInBackground() throws Exception {
+							GoogleSyncer.getInstance().doAction();
+							return null;
+						}
+					}.execute();
+				}
+			});
+
 			x_googleLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 			JPanel x_googlePanel = new JPanel(new BorderLayout());
-			x_googlePanel.add(x_googleLabel, BorderLayout.WEST);
+			x_googlePanel.add(setUpButtonLabel(x_googleLabel), BorderLayout.WEST);
 			x_googlePanel.add(o_googleProgress, BorderLayout.CENTER);
 			x_googlePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 			add(x_googlePanel);
@@ -52,9 +76,22 @@ class ThreadsStatusPanel extends JPanel implements Runnable, TimeUpdateListener,
 		o_saveProgress.setMinimum(0);
 
 		JLabel x_saveLabel = new JLabel(ImageUtil.getSaveIcon());
+		x_saveLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new SwingWorker<Void, Void>() {
+					@Override
+					protected Void doInBackground() throws Exception {
+						TimedSaver.getInstance().doAction();
+						return null;
+					}
+				}.execute();
+			}
+		});
+
         x_saveLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		JPanel x_savePanel = new JPanel(new BorderLayout());
-        x_savePanel.add(x_saveLabel, BorderLayout.WEST);
+        x_savePanel.add(setUpButtonLabel(x_saveLabel), BorderLayout.WEST);
 		x_savePanel.add(o_saveProgress, BorderLayout.CENTER);
 		x_savePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		add(x_savePanel);

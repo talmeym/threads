@@ -52,13 +52,7 @@ public class TimeUpdater extends Thread {
                 sleep(1000);
 
 				if (o_nextSync < System.currentTimeMillis()) {
-					synchronized(o_updateListeners) {
-						for (TimeUpdateListener o_updateListener : o_updateListeners) {
-							o_updateListener.timeUpdate();
-						}
-
-						System.out.println("Time Update: " + new Date());
-					}
+					doAction();
 
 					synchronized(lockObj) {
 						while(o_nextSync < System.currentTimeMillis()) {
@@ -72,6 +66,16 @@ public class TimeUpdater extends Thread {
             }
         }
     }
+
+	public void doAction() {
+		synchronized(o_updateListeners) {
+			for (TimeUpdateListener o_updateListener : o_updateListeners) {
+				o_updateListener.timeUpdate();
+			}
+
+			System.out.println("Time Update: " + new Date());
+		}
+	}
 
 	public synchronized void stopRunning() {
 		o_continueRunning = false;

@@ -30,6 +30,7 @@ public class TimedSaver extends java.lang.Thread {
 		return s_INSTANCE;
     }
 
+	private final Object o_lockObj = new Object();
 	private final Thread o_topThread;
     private final File o_originalFile;
 	private final List<TimedSaveListener> o_saveListeners = new ArrayList<>();
@@ -51,7 +52,7 @@ public class TimedSaver extends java.lang.Thread {
 	}
 
     public long nextSync() {
-        synchronized(o_topThread) {
+        synchronized(o_lockObj) {
             return o_nextSync;
         }
     }
@@ -61,27 +62,37 @@ public class TimedSaver extends java.lang.Thread {
             try {
                 sleep(1000);
 
-                if(o_nextSync < System.currentTimeMillis()) {
-                	synchronized(o_saveListeners) {
-						saving();
-						saveDocument(o_topThread, o_originalFile);
-						saveDocument(o_topThread, getBackupFile());
-						sleep(1000);
-						saved();
-                        System.out.println("Timed Save: " + new Date());
-					}
+                if (o_nextSync < System.currentTimeMillis()) {
+					doAction();
 
-					synchronized(o_topThread) {
+					synchronized(o_lockObj) {
 						while(o_nextSync < System.currentTimeMillis()) {
 							o_nextSync += s_frequency;
 						}
                     }
 				}
             } catch (InterruptedException e) {
-                // do nothing
-            }            
+				e.printStackTrace();
+            }
         }
     }
+
+	public void doAction() {
+		synchronized(o_saveListeners) {
+			saving();
+			saveDocument(o_topThread, o_originalFile);
+			saveDocument(o_topThread, getBackupFile());
+
+			try {
+				sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			saved();
+			System.out.println("Timed Save: " + new Date());
+		}
+	}
 
 	private File getBackupFile() {
 		String x_fileName = o_originalFile.getName();

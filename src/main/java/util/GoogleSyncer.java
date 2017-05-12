@@ -64,13 +64,9 @@ public class GoogleSyncer extends java.lang.Thread {
 				sleep(1000);
 
                 if (o_nextSync < System.currentTimeMillis()) {
-                    synchronized (o_googleListeners) {
-                        googleSyncing();
-                        GoogleUtil.syncWithGoogle();
-                        googleSynced();
-                    }
+					doAction();
 
-                    synchronized(o_lockObj) {
+					synchronized(o_lockObj) {
                         while(o_nextSync < System.currentTimeMillis()) {
                             o_nextSync += s_frequency;
                         }
@@ -81,6 +77,14 @@ public class GoogleSyncer extends java.lang.Thread {
 			}
         }
     }
+
+	public void doAction() {
+		synchronized (o_googleListeners) {
+			googleSyncing();
+			GoogleUtil.syncWithGoogle();
+			googleSynced();
+		}
+	}
 
 	private void googleSyncing() {
 		for(GoogleSyncListener x_listener: o_googleListeners) {

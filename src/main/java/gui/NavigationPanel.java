@@ -25,7 +25,7 @@ class NavigationPanel extends JPanel implements TreeSelectionListener {
 		x_navigationPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		add(x_navigationPanel, BorderLayout.CENTER);
-		add(new ThreadsStatusPanel(), BorderLayout.SOUTH);
+		add(new StatusPanel(), BorderLayout.SOUTH);
 	}
 
 	void selectComponent(Component p_component) {
