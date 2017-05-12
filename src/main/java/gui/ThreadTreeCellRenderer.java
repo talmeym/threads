@@ -1,20 +1,21 @@
 package gui;
 
 import data.Item;
-import util.*;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
+import static util.ImageUtil.*;
+
 class ThreadTreeCellRenderer extends DefaultTreeCellRenderer {
 
-	private final Icon o_actionIcon = ImageUtil.getActionIcon();
-	private final Icon o_updateIcon = ImageUtil.getUpdateIcon();
+	private final Icon o_actionIcon = getActionIcon();
+	private final Icon o_updateIcon = getUpdateIcon();
 
 	ThreadTreeCellRenderer() {
-		setClosedIcon(ImageUtil.getThreadIcon());
-		setOpenIcon(ImageUtil.getThreadIcon());
+		setClosedIcon(getThreadIcon());
+		setOpenIcon(getThreadIcon());
 
 		setBackgroundNonSelectionColor(Color.white);
 		setBackgroundSelectionColor(ColourConstants.s_selectedColour);

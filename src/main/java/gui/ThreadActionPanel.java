@@ -44,8 +44,10 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
 		o_popupMenu.setLinkActionListener(e -> Actions.linkToGoogle(getSelectedObject(), p_parentPanel));
 
+		boolean x_sevenDays = registerForSetting(s_SEVENDAYS, this, true);
 		ThreadActionTableModel x_tableModel = (ThreadActionTableModel) o_table.getModel();
-		x_tableModel.setOnlyNext7Days(registerForSetting(s_SEVENDAYS, this, true));
+		x_tableModel.setOnlyNext7Days(x_sevenDays);
+		((ThreadActionCellRenderer)o_table.getCellRenderer(0, 0)).setOnlyNext7Days(x_sevenDays);
 
 		o_showNext7DaysRadioButton = new JRadioButton("7 Days", x_tableModel.onlyNext7Days());
 		o_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyNext7Days());
@@ -96,6 +98,7 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 	public void settingChanged(String p_name, Object p_value) {
 		boolean x_sevenDays = (Boolean) p_value;
 		((ThreadActionTableModel)o_table.getModel()).setOnlyNext7Days(x_sevenDays);
+		((ThreadActionCellRenderer)o_table.getCellRenderer(0, 0)).setOnlyNext7Days(x_sevenDays);
 		o_showNext7DaysRadioButton.setSelected(x_sevenDays);
 		o_showAllRadioButton.setSelected(!x_sevenDays);
 	}
