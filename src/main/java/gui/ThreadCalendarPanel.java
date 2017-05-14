@@ -178,6 +178,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			Icon x_icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : ImageUtil.getGoogleVerySmallBlankIcon();
 			JMenuItem x_menuItem = new JMenuItem(buildTextForItem(x_component), x_icon);
 			x_menuItem.setForeground(x_component.isActive() ? Color.black : Color.gray);
+			x_menuItem.setBackground(x_component.isActive() && x_component instanceof HasDueDate ? ((HasDueDate)x_component).isDue() ? ColourConstants.s_goneByColour : Color.white : Color.white);
 			x_menuItem.setFont(x_component.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
 			x_menuItem.setToolTipText(buildToolTipTextForItem(x_component));
 			x_menu.add(x_menuItem);
@@ -193,7 +194,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		x_newMenuItem.addActionListener(actionEvent -> {
 			Item x_item = addAction(null, o_thread, p_date, o_parentPanel, false);
 
-			if(x_item != null && p_date.before(DateUtil.getFirstThing(0))) {
+			if(x_item != null && p_date.before(new Date())) {
 				if (JOptionPane.showConfirmDialog(o_parentPanel, "Your action is in the past. Set it Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 					x_item.setActive(false);
 				}

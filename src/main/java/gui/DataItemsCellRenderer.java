@@ -67,7 +67,7 @@ abstract class DataItemsCellRenderer<INPUT_COMP extends data.Component, OUTPUT_C
 		// do nothing by default
 	}
 
-	static Color getColourForTime(Date p_dueDate) {
+	public static Color getColourForTime(Date p_dueDate) {
 		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
 
 		if(isAllDay(p_dueDate) ? p_dueDate.before(getFirstThing(TODAY)) : p_dueDate.before(x_now)) {
