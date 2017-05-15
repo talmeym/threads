@@ -27,5 +27,6 @@ class ThreadActionCellRenderer extends DataItemsCellRenderer<Thread, Item> {
 
 	void setOnlyNext7Days(boolean p_onlyNext7Days) {
 		this.o_onlyNext7Days = p_onlyNext7Days;
+		reloadData();
 	}
 }

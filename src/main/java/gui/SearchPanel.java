@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
+import static javax.swing.BorderFactory.createEmptyBorder;
+
 class SearchPanel extends JPanel {
 	private static final String s_defaultTextString = " Search ...";
 
@@ -40,6 +42,7 @@ class SearchPanel extends JPanel {
 
 		o_searchField.addActionListener(e -> search());
 		add(o_searchField, BorderLayout.CENTER);
+		setBorder(createEmptyBorder(0, 0, 5, 0));
 	}
 
 	private void search() {

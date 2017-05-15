@@ -9,9 +9,11 @@ import static util.DateUtil.*;
 
 abstract class DataItemsCellRenderer<INPUT_COMP extends data.Component, OUTPUT_COMP extends data.Component> extends BaseCellRenderer {
 	private List<OUTPUT_COMP> o_list;
+	private INPUT_COMP o_component;
 
 	DataItemsCellRenderer(INPUT_COMP p_component) {
 		o_list = getDataItems(p_component);
+		o_component = p_component;
 		p_component.addComponentChangeListener(e -> o_list = getDataItems(p_component));
 	}
 
@@ -47,5 +49,9 @@ abstract class DataItemsCellRenderer<INPUT_COMP extends data.Component, OUTPUT_C
 		}
 
 		return Color.WHITE;
+	}
+
+	public void reloadData() {
+		o_list = getDataItems(o_component);
 	}
 }

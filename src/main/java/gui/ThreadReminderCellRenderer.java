@@ -29,5 +29,6 @@ class ThreadReminderCellRenderer extends DataItemsCellRenderer<Thread, Reminder>
 
 	void setOnlyDueReminders(boolean p_onlyDueReminders) {
 		o_onlyDueReminders = p_onlyDueReminders;
+		reloadData();
 	}
 }
