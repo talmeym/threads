@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class Settings {
-	public static final String s_TAB_INDEX = "tabindex";
+	public static final String s_TABINDEX = "tabindex";
 	public static final String s_DATE = "date";
 	public static final String s_DIVLOC = "divloc";
 	public static final String s_NAVDIVLOC = "navdivloc";
@@ -18,7 +18,7 @@ public class Settings {
 	public static final String s_CALENDARREM = "calendarrem";
 	public static final String s_ONLYDUE = "onlydue";
 	public static final String s_SEVENDAYS = "sevendays";
-	public static final String s_GOOGLE_ENABLED = "google";
+	public static final String s_GOOGLE = "google";
 
 	private static Map<String, List<SettingChangeListener>> interestedParties = new HashMap<>();
 	private static Properties settings = new Properties();
@@ -64,17 +64,14 @@ public class Settings {
 		return interestedParties.get(name);
 	}
 
-	public static boolean load(File file) {
+	public static void load(File file) {
 		if(file.exists()) {
 			try {
 				settings.load(new FileInputStream(file));
-				return "true".equals(settings.get(Settings.s_GOOGLE_ENABLED));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
-
-		return false;
 	}
 
 	public static void save(File file) {

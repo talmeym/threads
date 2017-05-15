@@ -41,7 +41,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 				if (o_calendarLabel.isEnabled()) {
 					Calendar x_calendar = Calendar.getInstance();
 					x_calendar.setTime(o_item.getDueDate());
-					updateSetting(Settings.s_TAB_INDEX, 5);
+					updateSetting(Settings.s_TABINDEX, 5);
 					updateSetting(Settings.s_DATE, x_calendar.get(Calendar.MONTH) + "_" + x_calendar.get(Calendar.YEAR));
 					WindowManager.getInstance().openComponent(o_item.getParentThread());
 				}

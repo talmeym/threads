@@ -27,7 +27,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 
 	StatusPanel() {
 		super(new GridLayout(0, 1, 5, 5));
-		this.o_showGoogle = Settings.registerForSetting(Settings.s_GOOGLE_ENABLED, this, "false").equals("true");
+		this.o_showGoogle = Settings.registerForSetting(Settings.s_GOOGLE, this, "false").equals("true");
 
 		o_updateProgress.setMinimum(0);
 

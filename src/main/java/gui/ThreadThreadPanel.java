@@ -11,6 +11,7 @@ import java.awt.event.*;
 import static data.ComponentType.Thread;
 import static gui.Actions.*;
 import static util.GuiUtil.setUpButtonLabel;
+import static util.Settings.s_SEVENDAYS;
 
 class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
     private final Thread o_thread;
@@ -68,6 +69,10 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
 				WindowManager.getInstance().openComponent(p_thread);
 
 				if(p_col > 1) {
+					if(p_col == 4) {
+						Settings.updateSetting(s_SEVENDAYS, false);
+					}
+
 					ThreadPanel.setTabIndex(p_col - 1);
 				}
 		}

@@ -77,8 +77,8 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 		add(componentInfoPanel, BorderLayout.NORTH);
         add(o_tabs, BorderLayout.CENTER);
 
-		o_tabs.setSelectedIndex(registerForSetting(Settings.s_TAB_INDEX, this, 0));
-		o_tabs.addChangeListener(changeEvent -> updateSetting(Settings.s_TAB_INDEX, "" + o_tabs.getSelectedIndex()));
+		o_tabs.setSelectedIndex(registerForSetting(Settings.s_TABINDEX, this, 0));
+		o_tabs.addChangeListener(changeEvent -> updateSetting(Settings.s_TABINDEX, "" + o_tabs.getSelectedIndex()));
 
         TimedUpdater.getInstance().addActivityListener(this);
         setActionTabBackground();
@@ -111,7 +111,7 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
     }
 
 	static void setTabIndex(int p_tabIndex) {
-		updateSetting(Settings.s_TAB_INDEX, "" + p_tabIndex);
+		updateSetting(Settings.s_TABINDEX, "" + p_tabIndex);
 	}
 
 	@Override

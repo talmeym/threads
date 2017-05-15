@@ -71,7 +71,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		int x_splitDivider = registerForSetting(Settings.s_NAVDIVLOC, this, 250);
 
 		setSize(new Dimension(800, 400));
-		setLocation(new Point(x_x + x_splitDivider + 5, x_y + x_height - 420));
+		setLocation(new Point(x_x + x_splitDivider + 5, x_y + x_height - 470));
 		setVisible(true);
 	}
 
@@ -126,7 +126,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 					int x_th = getAllActiveThreads((Thread) x_component).size();
 					int x_up = getAllActiveUpdates((Thread) x_component).size();
 					int x_ac = getAllActiveActions((Thread) x_component, false).size();
-					return "Ths: " + x_th + " Ups: " + x_up + " Acs:" + x_ac;
+					return x_th + " ths, " + x_up + " ups, " + x_ac + " acs";
 				}
 
 				if(x_component instanceof Item) {

@@ -178,7 +178,7 @@ public class Actions {
 	}
 
 	private static boolean checkGoogle(JPanel p_enclosingPanel) {
-		if(!Settings.registerForSetting(Settings.s_GOOGLE_ENABLED, (p_name, p_value) -> { }, false)) {
+		if(!Settings.registerForSetting(Settings.s_GOOGLE, (p_name, p_value) -> { }, false)) {
 			JOptionPane.showMessageDialog(p_enclosingPanel, "Google is disabled", "No Google", JOptionPane.INFORMATION_MESSAGE);
 			return true;
 		}
