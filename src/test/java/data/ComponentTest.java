@@ -36,7 +36,7 @@ public class ComponentTest {
 		}
 
 		@Override
-		public Component findComponent(UUID p_id) {
+		public List<Component> search(Search p_search) {
 			return null;
 		}
 	}

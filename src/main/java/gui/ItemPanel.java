@@ -19,7 +19,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 	private final JLabel o_linkItemLabel = new JLabel(ImageUtil.getLinkIcon());
 
 	ItemPanel(Item p_item, final JPanel p_parentPanel) {
-        super(new ItemReminderTableModel(p_item),  new ComponentContentsCellRenderer(p_item));
+        super(new ItemReminderTableModel(p_item),  new ContentsCellRenderer(p_item));
         o_item = p_item;
 
 		o_item.addComponentChangeListener(e -> {

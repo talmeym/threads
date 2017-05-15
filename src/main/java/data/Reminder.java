@@ -52,11 +52,8 @@ public class Reminder extends Component implements HasDueDate
 	}
 
 	@Override
-	public Component findComponent(UUID p_id) {
-		if(getId().equals(p_id)) {
-			return this;
-		}
-
-		return null;
+	public List<Component> search(Search p_search) {
+		p_search.check(this);
+		return p_search.getResults();
 	}
 }

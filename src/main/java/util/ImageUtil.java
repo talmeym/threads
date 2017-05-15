@@ -170,6 +170,9 @@ public class ImageUtil {
 		if(p_type == Action) {
 			return getActionIcon();
 		}
+		if(p_type == Reminder) {
+			return getReminderIcon();
+		}
 
 		throw new IllegalArgumentException("Wrong type: " + p_type);
 	}

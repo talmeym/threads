@@ -84,7 +84,9 @@ public class GoogleUtil {
 					}
 
 					if(x_description != null && !x_description.trim().isEmpty()) {
-						Component x_component = s_topLevelThread.findComponent(UUID.fromString(x_description));
+						Search x_search = new Search.Builder().withId(UUID.fromString(x_description)).build();
+						List<Component> x_results = s_topLevelThread.search(x_search);
+						Component x_component = x_results.size() > 0 ? x_results.get(0) : null;
 
 						if(x_component != null) {
 							x_syncedComponents.add(x_component.getId());

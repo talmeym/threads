@@ -62,20 +62,14 @@ abstract class CollectionComponent <CONTENTS extends Component> extends Componen
 		}
     }
 
-	public Component findComponent(UUID p_id) {
-		if(getId().equals(p_id)) {
-			return this;
-		}
+	public List<Component> search(Search p_search) {
+		p_search.check(this);
 
 		for(int i = 0; i < getComponentCount(); i++) {
-			Component p_component = getComponent(i).findComponent(p_id);
-
-			if(p_component != null) {
-				return p_component;
-			}
+			getComponent(i).search(p_search);
 		}
 
-		return null;
+		return p_search.getResults();
 	}
 
 	@Override

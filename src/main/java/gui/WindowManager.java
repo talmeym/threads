@@ -1,5 +1,6 @@
 package gui;
 
+import data.*;
 import data.Component;
 import data.Thread;
 import util.*;
@@ -72,7 +73,7 @@ public class WindowManager implements SettingChangeListener {
 			}
 		});
 
-		Component x_firstComponent = o_uuid != null ? p_topLevelThread.findComponent(o_uuid) : p_topLevelThread;
+		Component x_firstComponent = o_uuid != null ? p_topLevelThread.search(new Search.Builder().withId(o_uuid).build()).get(0) : p_topLevelThread;
 		o_navigationAndComponentPanel.showComponent(x_firstComponent);
 
 		o_window.setSize(o_windowSize);

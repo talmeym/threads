@@ -19,7 +19,7 @@ class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, false, Update);
 
 	ThreadUpdatePanel(Thread p_thread, JPanel p_parentPanel) {
-        super(new ThreadUpdateTableModel(p_thread), new ThreadUpdateCellRenderer(p_thread));
+        super(new ThreadUpdateTableModel(p_thread), new BaseCellRenderer());
         o_thread = p_thread;
 		o_parentPanel = p_parentPanel;
 		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));

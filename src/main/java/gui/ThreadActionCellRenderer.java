@@ -19,8 +19,10 @@ class ThreadActionCellRenderer extends DataItemsCellRenderer<Thread, Item> {
 	}
 
 	@Override
-	void customSetup(Item p_item, Component p_awtComponent) {
-		p_awtComponent.setBackground(getColourForTime(p_item.getDueDate()));
+	void customSetup(Item p_item, Component p_awtComponent, boolean p_isSelected) {
+		if(!p_isSelected) {
+			p_awtComponent.setBackground(getColourForTime(p_item.getDueDate()));
+		}
 	}
 
 	void setOnlyNext7Days(boolean p_onlyNext7Days) {

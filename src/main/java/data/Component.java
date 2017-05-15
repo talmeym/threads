@@ -90,7 +90,7 @@ public abstract class Component implements ComponentMoveListener {
 
 	public abstract ComponentType getType();
 
-	public abstract Component findComponent(UUID p_id);
+	public abstract List<Component> search(Search p_search);
 
 	public void addComponentChangeListener(ComponentChangeListener p_listener) {
 		o_changeListeners.add(p_listener);

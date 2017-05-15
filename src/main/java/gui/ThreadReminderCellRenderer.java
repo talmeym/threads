@@ -21,8 +21,10 @@ class ThreadReminderCellRenderer extends DataItemsCellRenderer<Thread, Reminder>
 	}
 
 	@Override
-	void customSetup(Reminder p_reminder, Component p_awtComponent) {
-		p_awtComponent.setBackground(getColourForTime(p_reminder.getDueDate()));
+	void customSetup(Reminder p_reminder, Component p_awtComponent, boolean p_isSelected) {
+		if(!p_isSelected) {
+			p_awtComponent.setBackground(getColourForTime(p_reminder.getDueDate()));
+		}
 	}
 
 	void setOnlyDueReminders(boolean p_onlyDueReminders) {

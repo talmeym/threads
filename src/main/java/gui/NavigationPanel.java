@@ -1,8 +1,8 @@
 package gui;
 
 import data.Component;
-import data.Thread;
 import data.*;
+import data.Thread;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -20,12 +20,17 @@ class NavigationPanel extends JPanel implements TreeSelectionListener {
 		o_navigationTree.setCellRenderer(new ThreadTreeCellRenderer());
 		o_navigationTree.addTreeSelectionListener(this);
 
-		JPanel x_navigationPanel = new JPanel(new BorderLayout());
-		x_navigationPanel.add(new JScrollPane(o_navigationTree), BorderLayout.CENTER);
-		x_navigationPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		JPanel x_treePanel = new JPanel(new BorderLayout());
+		x_treePanel.add(new JScrollPane(o_navigationTree), BorderLayout.CENTER);
+		x_treePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		add(x_navigationPanel, BorderLayout.CENTER);
-		add(new StatusPanel(), BorderLayout.SOUTH);
+		JPanel x_panel = new JPanel(new BorderLayout());
+		x_panel.add(new SearchPanel(p_topLevelThread), BorderLayout.CENTER);
+		x_panel.add(new StatusPanel(), BorderLayout.SOUTH);
+
+		add(x_treePanel, BorderLayout.CENTER);
+		add(x_panel, BorderLayout.SOUTH);
+		setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
 	}
 
 	void selectComponent(Component p_component) {
