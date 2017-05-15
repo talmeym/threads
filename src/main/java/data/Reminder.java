@@ -53,7 +53,6 @@ public class Reminder extends Component implements HasDueDate
 
 	@Override
 	public List<Component> search(Search p_search) {
-		p_search.check(this);
-		return p_search.getResults();
+		return p_search.check(this) ? Collections.singletonList(this) : Collections.emptyList();
 	}
 }

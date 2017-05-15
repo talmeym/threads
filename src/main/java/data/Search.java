@@ -3,25 +3,19 @@ package data;
 import java.util.*;
 
 public class Search {
-	private List<Component> o_results = new ArrayList<>();
-
 	private UUID o_id;
 	private String o_text;
 
-	void check(Component p_component) {
+	boolean check(Component p_component) {
 		if(o_id != null && !p_component.getId().equals(o_id)) {
-			return;
+			return false;
 		}
 
 		if(o_text != null && !p_component.getText().toLowerCase().contains(o_text.toLowerCase())) {
-			return;
+			return false;
 		}
 
-		o_results.add(p_component);
-	}
-
-	List<Component> getResults() {
-		return o_results;
+		return true;
 	}
 
 	public static class Builder {

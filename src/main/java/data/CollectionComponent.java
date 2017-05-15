@@ -63,13 +63,14 @@ abstract class CollectionComponent <CONTENTS extends Component> extends Componen
     }
 
 	public List<Component> search(Search p_search) {
-		p_search.check(this);
+		List<Component> x_results = new ArrayList<>();
 
-		for(int i = 0; i < getComponentCount(); i++) {
-			getComponent(i).search(p_search);
+		if(p_search.check(this)) {
+			x_results.add(this);
 		}
 
-		return p_search.getResults();
+		o_components.forEach(c -> x_results.addAll(c.search(p_search)));
+		return x_results;
 	}
 
 	@Override

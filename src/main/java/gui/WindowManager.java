@@ -5,11 +5,11 @@ import data.Component;
 import data.Thread;
 import util.*;
 
-import javax.script.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 import static util.ImageUtil.addIcon;
 import static util.Settings.registerForSetting;
@@ -60,7 +60,13 @@ public class WindowManager implements SettingChangeListener {
 		});
 
 		String x_firstUuid = registerForSetting(Settings.s_UUID, this, p_topLevelThread.getId().toString());
-		Component x_firstComponent = x_firstUuid != null ? p_topLevelThread.search(new Search.Builder().withId(UUID.fromString(x_firstUuid)).build()).get(0) : p_topLevelThread;
+		Component x_firstComponent = p_topLevelThread;
+
+		if(x_firstUuid != null) {
+			List<Component> x_searchResults = p_topLevelThread.search(new Search.Builder().withId(UUID.fromString(x_firstUuid)).build());
+			x_firstComponent = x_searchResults.size() > 0 ? x_searchResults.get(0) : x_firstComponent;
+		}
+
 		o_navigationAndComponentPanel.showComponent(x_firstComponent);
 
 		x_window.setSize(new Dimension(registerForSetting(Settings.s_WINW, this, GUIConstants.s_windowWidth), registerForSetting(Settings.s_WINH, this, GUIConstants.s_windowHeight)));

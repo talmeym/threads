@@ -13,6 +13,7 @@ import java.text.*;
 import java.util.*;
 import java.util.List;
 
+import static data.ComponentChangeEvent.s_CONTENT_REMOVED;
 import static data.LookupHelper.*;
 import static gui.GUIConstants.*;
 import static java.awt.BorderLayout.CENTER;
@@ -26,12 +27,20 @@ class SearchResults extends JFrame implements SettingChangeListener {
 	private List<Component> o_searchResults;
 	private JTable o_table;
 
-	SearchResults(String p_searchTerm, List<Component> p_searchResults) {
+	SearchResults(Thread p_topLevelThread, Search p_search, String p_searchTerm, List<Component> p_searchResults) {
 		super("Search Results - '" + p_searchTerm + "'");
 		o_searchResults = p_searchResults;
+		TableModel x_tableModel = new TableModel();
+		CellRenderer x_cellRenderer = new CellRenderer(p_topLevelThread);
 
-		o_table = new JTable(new TableModel());
-		TableCellRenderer x_cellRenderer = new BaseCellRenderer();
+		p_topLevelThread.addComponentChangeListener(e -> {
+			if(e.getType() == s_CONTENT_REMOVED) {
+				o_searchResults = p_topLevelThread.search(p_search);
+				x_tableModel.fireTableDataChanged();
+			}
+		});
+
+		o_table = new JTable(x_tableModel);
 		o_table.setDefaultRenderer(Date.class, x_cellRenderer);
 		o_table.setDefaultRenderer(ComponentType.class, x_cellRenderer);
 		o_table.setDefaultRenderer(String.class, x_cellRenderer);
@@ -133,7 +142,11 @@ class SearchResults extends JFrame implements SettingChangeListener {
 					Item x_item = (Item) x_component;
 
 					if(x_item.getDueDate() != null) {
-						return "Due " + s_dateFormat.format(x_item.getDueDate());
+						if(x_item.getDueDate().before(new Date())) {
+							return "Due " + DateUtil.getDateStatus(x_item.getDueDate());
+						}
+
+						return "Due in " + DateUtil.getDateStatus(x_item.getDueDate());
 					}
 
 					return "Updated " + DateUtil.getDateStatus(x_item.getCreationDate());
@@ -152,6 +165,23 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		@Override
 		public boolean isCellEditable(int row, int column) {
 			return false;
+		}
+	}
+
+	private class CellRenderer extends DataItemsCellRenderer<Thread, Component> {
+
+		CellRenderer(Thread p_topLevelThread) {
+			super(p_topLevelThread);
+		}
+
+		@Override
+		List<Component> getDataItems(Thread p_topLevelThread) {
+			return o_searchResults;
+		}
+
+		@Override
+		void customSetup(Component p_component, java.awt.Component p_awtComponent, boolean p_isSelected) {
+			p_awtComponent.setForeground(p_component.isActive() ? Color.black : Color.gray);
 		}
 	}
 }
