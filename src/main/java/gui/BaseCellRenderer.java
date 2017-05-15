@@ -1,5 +1,8 @@
 package gui;
 
+import data.ComponentType;
+import util.ImageUtil;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.text.*;
@@ -23,8 +26,8 @@ class BaseCellRenderer extends DefaultTableCellRenderer {
 				setIcon(getGoogleSmallIcon());
 				setHorizontalAlignment(JTextField.CENTER);
 			}
-		} else if(p_value instanceof Icon) {
-			setIcon((Icon) p_value);
+		} else if(p_value instanceof ComponentType) {
+			setIcon(ImageUtil.getIconForType((ComponentType)p_value));
 			setHorizontalAlignment(JTextField.CENTER);
 		} else if(p_value instanceof Date) {
 			setText(s_dateFormat.format((Date)p_value));

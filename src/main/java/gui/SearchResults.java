@@ -15,8 +15,10 @@ import java.util.List;
 
 import static data.LookupHelper.*;
 import static gui.GUIConstants.*;
+import static java.awt.BorderLayout.CENTER;
+import static util.Settings.*;
 
-class SearchResults extends JFrame {
+class SearchResults extends JFrame implements SettingChangeListener {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
 
 	private List<String> s_columnNames = Arrays.asList("Creation Date", "Type", "Name", "Info", "");
@@ -24,8 +26,8 @@ class SearchResults extends JFrame {
 	private List<Component> o_searchResults;
 	private JTable o_table;
 
-	SearchResults(List<Component> p_searchResults) {
-		super("Search Results");
+	SearchResults(String p_searchTerm, List<Component> p_searchResults) {
+		super("Search Results - '" + p_searchTerm + "'");
 		o_searchResults = p_searchResults;
 
 		o_table = new JTable(new TableModel());
@@ -58,13 +60,18 @@ class SearchResults extends JFrame {
 		fixColumnWidth(4, s_googleStatusColumnWidth);
 
 		JPanel x_contentPane = new JPanel(new BorderLayout());
-		x_contentPane.add(new JScrollPane(o_table), BorderLayout.CENTER);
+		x_contentPane.add(new JScrollPane(o_table), CENTER);
 		x_contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		setContentPane(x_contentPane);
 
-		setSize(new Dimension(600, 400));
-		setLocation(new Point(100, 100));
+		int x_height = registerForSetting(s_WINH, this, s_windowHeight);
+		int x_x = registerForSetting(s_WINY, this, s_windowX);
+		int x_y = registerForSetting(s_WINY, this, s_windowY);
+		int x_splitDivider = registerForSetting(Settings.s_NAVDIVLOC, this, 250);
+
+		setSize(new Dimension(800, 400));
+		setLocation(new Point(x_x + x_splitDivider + 5, x_y + x_height - 420));
 		setVisible(true);
 	}
 
@@ -73,6 +80,11 @@ class SearchResults extends JFrame {
 		x_model.getColumn(p_column).setPreferredWidth(p_width);
 		x_model.getColumn(p_column).setMinWidth(p_width);
 		x_model.getColumn(p_column).setMaxWidth(p_width);
+	}
+
+	@Override
+	public void settingChanged(String p_name, Object p_value) {
+		// do nothing
 	}
 
 	private class TableModel extends DefaultTableModel {

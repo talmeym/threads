@@ -43,12 +43,13 @@ class SearchPanel extends JPanel {
 	}
 
 	private void search() {
-		List<Component> x_results = o_topLevelThread.search(new Search.Builder().withText(o_searchField.getText()).build());
+		String x_text = o_searchField.getText();
+		List<Component> x_results = o_topLevelThread.search(new Search.Builder().withText(x_text).build());
 
 		if(x_results.size() > 0) {
-			new SearchResults(x_results);
+			new SearchResults(x_text, x_results);
 		} else {
-			JOptionPane.showMessageDialog(this, "'" + o_searchField.getText() + "' Not Found", "No Results Found", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
+			JOptionPane.showMessageDialog(this, "'" + x_text + "' Not Found", "No Results Found", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
 		}
 
 		setText("");

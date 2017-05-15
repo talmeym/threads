@@ -29,7 +29,6 @@ public class SystemTrayUtil {
 			o_popUpMenu.add(x_addActionItem);
 
 			x_addActionItem.addActionListener(e -> {
-				WindowManager.makeThreadsVisible();
 				addAction(null, o_topLevelThread, getDateSuggestion(), null, true);
 			});
 
@@ -37,7 +36,6 @@ public class SystemTrayUtil {
 			o_popUpMenu.add(x_addUpdateItem);
 
 			x_addUpdateItem.addActionListener(e -> {
-				WindowManager.makeThreadsVisible();
 				addUpdate(null, o_topLevelThread, null);
 			});
 
@@ -60,7 +58,6 @@ public class SystemTrayUtil {
 						o_menuItems.put(x_component, x_menuItem);
 
 						x_menuItem.addActionListener(actionEvent -> {
-							WindowManager.makeThreadsVisible();
 							WindowManager.getInstance().openComponent(x_component);
 						});
 
@@ -91,7 +88,6 @@ public class SystemTrayUtil {
 	}
 
 	private static void displayNotification(String caption, String text) {
-		WindowManager.makeThreadsVisible();
 		o_trayIcon.displayMessage(caption, text, TrayIcon.MessageType.INFO);
 	}
 }
