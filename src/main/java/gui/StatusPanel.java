@@ -110,7 +110,6 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 
 	@Override
 	public void timeUpdate() {
-		o_statusLabel.setText(s_dateFormat.format(new Date()));
 		o_lastUpdate = System.currentTimeMillis();
 	}
 
