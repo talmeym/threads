@@ -23,9 +23,9 @@ class SearchResults extends JFrame implements SettingChangeListener {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
 
 	private List<String> s_columnNames = Arrays.asList("Creation Date", "Type", "Name", "Info", "");
-
 	private List<Component> o_searchResults;
 	private JTable o_table;
+	private TableDataCache<String> o_cache = new TableDataCache<>();
 
 	SearchResults(Thread p_topLevelThread, Search p_search, String p_searchTerm, List<Component> p_searchResults) {
 		super("Search Results - '" + p_searchTerm + "'");
@@ -107,6 +107,10 @@ class SearchResults extends JFrame implements SettingChangeListener {
 			return s_columnNames.size();
 		}
 
+
+
+
+
 		@Override
 		public Class<?> getColumnClass(int col) {
 			switch(col) {
@@ -123,43 +127,46 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		}
 
 		@Override
-		public Object getValueAt(int p_row, int p_column) {
+		public Object getValueAt(int p_row, int p_col) {
 			data.Component x_component = o_searchResults.get(p_row);
 
-			switch(p_column) {
+			switch(p_col) {
 				case 0: return x_component.getCreationDate();
 				case 1: return x_component.getType();
 				case 2: return x_component.getText();
-				case 3:
-				if(x_component instanceof Thread) {
-					int x_th = getAllActiveThreads((Thread) x_component).size();
-					int x_up = getAllActiveUpdates((Thread) x_component).size();
-					int x_ac = getAllActiveActions((Thread) x_component, false).size();
-					return x_th + " ths, " + x_up + " ups, " + x_ac + " acs";
-				}
-
-				if(x_component instanceof Item) {
-					Item x_item = (Item) x_component;
-
-					if(x_item.getDueDate() != null) {
-						if(x_item.getDueDate().before(new Date())) {
-							return "Due " + DateUtil.getDateStatus(x_item.getDueDate());
-						}
-
-						return "Due in " + DateUtil.getDateStatus(x_item.getDueDate());
-					}
-
-					return "Updated " + DateUtil.getDateStatus(x_item.getCreationDate());
-				}
-
-				if(x_component instanceof Reminder) {
-					Reminder x_reminder = (Reminder) x_component;
-					return "Due " + s_dateFormat.format(x_reminder.getDueDate());
-				}
-
-				return ""; // never get here
+				case 3: return o_cache.fillOrGet(p_row, p_col, () -> getInfoString(x_component));
 				default: return GoogleUtil.isLinked(x_component);
 			}
+		}
+
+		String getInfoString(Component x_component) {
+			if(x_component instanceof Thread) {
+				int x_th = getAllActiveThreads((Thread) x_component).size();
+				int x_up = getAllActiveUpdates((Thread) x_component).size();
+				int x_ac = getAllActiveActions((Thread) x_component, false).size();
+				return x_th + " ths, " + x_up + " ups, " + x_ac + " acs";
+			}
+
+			if(x_component instanceof Item) {
+				Item x_item = (Item) x_component;
+
+				if(x_item.getDueDate() != null) {
+					if(x_item.getDueDate().before(new Date())) {
+						return "Due " + DateUtil.getDateStatus(x_item.getDueDate());
+					}
+
+					return "Due in " + DateUtil.getDateStatus(x_item.getDueDate());
+				}
+
+				return "Updated " + DateUtil.getDateStatus(x_item.getCreationDate());
+			}
+
+			if(x_component instanceof Reminder) {
+				Reminder x_reminder = (Reminder) x_component;
+				return "Due " + s_dateFormat.format(x_reminder.getDueDate());
+			}
+
+			return ""; // never get here
 		}
 
 		@Override

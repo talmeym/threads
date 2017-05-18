@@ -12,7 +12,6 @@ import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.List;
 
-import static data.LookupHelper.getAllComponents;
 import static gui.Actions.*;
 import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.*;
 import static java.lang.Integer.parseInt;
@@ -165,8 +164,13 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 	@Override
 	public void tableRowClicked(int row, int col, final Date p_date) {
 		if(p_date != null) {
-			ThreadCalendarTableModel x_model = (ThreadCalendarTableModel) o_table.getModel();
-			final List<Component> x_components = getAllComponents(o_thread, p_date, x_model.includeActions(), x_model.includeUpdates(), x_model.includeReminders());
+			Object[] x_data = (Object[])o_table.getModel().getValueAt(row, col);
+			List<Component> x_components = new ArrayList<>();
+
+			for(int i = 1; i < x_data.length; i++) {
+				x_components.add((Component)x_data[i]);
+			}
+
 			buildPopupMenu(x_components, p_date).show(o_table, ((o_table.getWidth() / 7) * col) - 12, (o_table.getHeight() / 5) * row + 16);
 		}
 	}
@@ -182,7 +186,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			x_menuItem.setFont(x_component.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
 			x_menuItem.setToolTipText(buildToolTipTextForItem(x_component));
 			x_menu.add(x_menuItem);
-			x_menuItem.addActionListener(actionEvent -> WindowManager.getInstance().openComponent(x_component));
+			x_menuItem.addActionListener(e -> WindowManager.getInstance().openComponent(x_component));
 		}
 
 		if(x_components.size() > 0) {

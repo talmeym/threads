@@ -6,7 +6,7 @@ import util.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> extends DefaultTableModel implements TimedUpdateListener, GoogleSyncListener, ComponentChangeListener {
+abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> extends DefaultTableModel implements GoogleSyncListener {
     private final COMPONENT o_component;
     private final String[] o_columnNames;
 
@@ -15,8 +15,10 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 	ComponentTableModel(COMPONENT p_component, String[] p_columnNames) {
         o_component = p_component;
         o_columnNames = p_columnNames;
-		o_component.addComponentChangeListener(this);
+		o_component.addComponentChangeListener(e -> reloadData());
 		o_dataItems = getDataItems();
+		TimedUpdater.getInstance().addActivityListener(this::fireTableDataChanged);
+		GoogleSyncer.getInstance().addActivityListener(this);
     }
     
     protected final COMPONENT getComponent() {
@@ -45,20 +47,11 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 	}
 
 	@Override
-    public void componentChanged(ComponentChangeEvent p_cce) {
-		reloadData();
-    }
-
-	@Override
-    public void timeUpdate() {
-        fireTableDataChanged();
-    }
-
-	@Override
 	public void googleSyncStarted() {
 		// do nothing by default
 	}
 
+	@Override
 	public void googleSynced() {
 		fireTableDataChanged();
 	}
@@ -69,7 +62,7 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 		return o_dataItems.get(p_row);
 	}
 
-	final void reloadData() {
+	void reloadData() {
 		o_dataItems = getDataItems();
 		fireTableDataChanged();
 	}

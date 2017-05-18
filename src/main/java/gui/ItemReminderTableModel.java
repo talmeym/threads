@@ -8,7 +8,6 @@ import java.util.List;
 class ItemReminderTableModel extends ComponentTableModel<Item, Reminder> {
     ItemReminderTableModel(Item p_item) {
         super(p_item, new String[] {"Text", "Due Date", "Due", ""});
-		TimedUpdater.getInstance().addActivityListener(this);
     }
 
 	@Override
