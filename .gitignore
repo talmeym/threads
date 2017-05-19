@@ -2,6 +2,6 @@
 .idea/
 target/
 threads.xml
-threads.properties
+threads.xml.properties
 threads.sh
 credstore/

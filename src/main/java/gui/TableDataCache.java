@@ -5,11 +5,6 @@ import java.util.*;
 class TableDataCache <TYPE> {
 	private Map<Integer, Map<Integer, TYPE>> o_dataCache = new HashMap<>();
 
-	public TYPE get(int p_row, int p_col) {
-		Map<Integer, TYPE> x_rowDataMap = o_dataCache.get(p_row);
-		return x_rowDataMap != null ? x_rowDataMap.get(p_col) : null;
-	}
-
 	TYPE fillOrGet(int p_row, int p_col, Producer<TYPE> p_producer) {
 		if(!hasDataFor(p_row, p_col)) {
 			put(p_row, p_col, p_producer.produce());
@@ -18,20 +13,16 @@ class TableDataCache <TYPE> {
 		return get(p_row, p_col);
 	}
 
-	void put(int p_row, int p_col, TYPE p_obj) {
-		Map<Integer, TYPE> x_rowDataMap = o_dataCache.get(p_row);
-
-		if(x_rowDataMap == null) {
-			x_rowDataMap = new HashMap<>();
-			o_dataCache.put(p_row, x_rowDataMap);
-		}
-
-		x_rowDataMap.put(p_col, p_obj);
+	private TYPE get(int p_row, int p_col) {
+		return o_dataCache.computeIfAbsent(p_row, k -> new HashMap<>()).get(p_col);
 	}
 
-	boolean hasDataFor(int p_row, int p_col) {
-		Map<Integer, TYPE> x_rowDataMap = o_dataCache.get(p_row);
-		return x_rowDataMap != null && x_rowDataMap.containsKey(p_col);
+	private void put(int p_row, int p_col, TYPE p_obj) {
+		o_dataCache.computeIfAbsent(p_row, k -> new HashMap<>()).put(p_col, p_obj);
+	}
+
+	private boolean hasDataFor(int p_row, int p_col) {
+		return o_dataCache.computeIfAbsent(p_row, k -> new HashMap<>()).containsKey(p_col);
 	}
 
 	void invalidate() {
