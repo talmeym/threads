@@ -35,11 +35,13 @@ public class Reminder extends Component implements HasDueDate
     }
 
 	@Override
-    public void setDueDate(Date p_date) {
+    public void setDueDate(Date p_dueDate) {
         Date x_oldValue = o_dueDate;
-		o_dueDate = p_date;
-        changed(DUE_DATE, x_oldValue, p_date);
-		modified();
+
+		if(!same(x_oldValue, p_dueDate)) {
+			o_dueDate = p_dueDate;
+			changed(DUE_DATE, x_oldValue, p_dueDate);
+		}
     }
 
 	@Override

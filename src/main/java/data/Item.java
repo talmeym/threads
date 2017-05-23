@@ -59,9 +59,11 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 	@Override
     public void setDueDate(Date p_dueDate) {
         Date x_oldValue = o_dueDate;
-		o_dueDate = p_dueDate;
-        changed(DUE_DATE, x_oldValue, p_dueDate);
-		modified();
+
+		if(!same(x_oldValue, p_dueDate)) {
+			o_dueDate = p_dueDate;
+			changed(DUE_DATE, x_oldValue, p_dueDate);
+		}
     }
 
 	@Override

@@ -56,14 +56,20 @@ public abstract class Component {
 
     public void setActive(boolean p_active) {
         boolean x_oldValue = o_active;
-    	o_active = p_active;
-        changed(ACTIVE, x_oldValue, p_active);
+
+		if(!same(x_oldValue, p_active)) {
+			o_active = p_active;
+			changed(ACTIVE, x_oldValue, p_active);
+		}
     }
 
     public void setText(String p_text) {
         String x_oldValue = o_text;
-    	o_text = p_text;
-        changed(TEXT, x_oldValue, p_text);
+
+		if(!same(x_oldValue, p_text)) {
+			o_text = p_text;
+			changed(TEXT, x_oldValue, p_text);
+		}
     }
 
 	void unsetParentComponent() {
@@ -118,5 +124,9 @@ public abstract class Component {
 		List<Component> x_parents = o_parentComponent.getHierarchy();
 		x_parents.add(this);
 		return x_parents;
+	}
+
+	static boolean same(Object obj1, Object obj2) {
+		return (obj1 == null) == (obj2 == null) && (obj1 == null || obj1.equals(obj2));
 	}
 }
