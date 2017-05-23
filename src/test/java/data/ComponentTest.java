@@ -57,6 +57,7 @@ public class ComponentTest {
 		comp1.removeComponent(comp2);
 
 		x_changeAsserter.assertUpdate(comp2, comp2, PARENT, null, comp1);
+		x_changeAsserter.assertUpdate(comp1, comp2, PARENT, null, comp1);
 		x_changeAsserter.assertUpdate(comp1, comp1, CONTENT, null, 0);
 		x_changeAsserter.assertUpdate(comp2, comp2, PARENT, comp1, null);
 		x_changeAsserter.assertUpdate(comp1, comp2, PARENT, comp1, null);
