@@ -164,10 +164,14 @@ public class LookupHelper {
 	public static List<HasDueDate> getHasDueDates(Thread p_thread, boolean p_onlyActive) {
 		List<HasDueDate> x_hasDueDates = new ArrayList<>();
 		p_thread.getThreadItems().stream()
-				.filter(ti -> (!p_onlyActive || ti.isActive()) && ti instanceof Item)
-				.map(ti -> (Item) ti)
-				.filter(i -> i.getDueDate() != null)
-				.forEach(i -> x_hasDueDates.addAll(getHasDueDates(i, p_onlyActive)));
+				.filter(ti -> (!p_onlyActive || ti.isActive()))
+				.forEach(ti -> {
+					if(ti instanceof Item) {
+						x_hasDueDates.addAll(getHasDueDates((Item)ti, p_onlyActive));
+					} else {
+						x_hasDueDates.addAll(getHasDueDates((Thread)ti, p_onlyActive));
+					}
+				});
 		return x_hasDueDates;
 	}
 

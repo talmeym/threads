@@ -1,19 +1,18 @@
 package gui;
 
-import data.*;
 import data.Component;
+import data.*;
 import data.Thread;
 import util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import static util.ImageUtil.addIcon;
-import static util.Settings.registerForSetting;
-import static util.Settings.updateSetting;
+import static util.Settings.*;
 
 public class WindowManager implements SettingChangeListener {
 	private static WindowManager s_INSTANCE;

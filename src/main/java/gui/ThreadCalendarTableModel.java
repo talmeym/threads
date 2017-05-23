@@ -2,7 +2,6 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.TimedUpdater;
 
 import java.util.*;
 

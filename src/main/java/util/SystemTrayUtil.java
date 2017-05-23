@@ -8,7 +8,7 @@ import gui.WindowManager;
 import java.awt.*;
 import java.util.*;
 
-import static data.ComponentChangeEvent.s_DELETED;
+import static data.ComponentChangeEvent.Field.*;
 import static gui.Actions.*;
 import static gui.DateSuggestionPanel.getDateSuggestion;
 
@@ -63,9 +63,10 @@ public class SystemTrayUtil {
 
 						x_component.addComponentChangeListener(e -> {
 							if(e.getSource() == x_component) {
-								switch (e.getType()) {
-									case s_DELETED: o_popUpMenu.remove(o_menuItems.get(x_component)); break;
-									default: o_menuItems.get(x_component).setLabel(getMenuItemText(x_component));
+								if(e.isComponentRemoved()) {
+									o_popUpMenu.remove(o_menuItems.get(x_component));
+								} else if(e.getField() == TEXT) {
+									o_menuItems.get(x_component).setLabel(getMenuItemText(x_component));
 								}
 							}
 						});

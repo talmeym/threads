@@ -13,7 +13,6 @@ import java.text.*;
 import java.util.*;
 import java.util.List;
 
-import static data.ComponentChangeEvent.s_CONTENT_REMOVED;
 import static data.LookupHelper.*;
 import static gui.GUIConstants.*;
 import static java.awt.BorderLayout.CENTER;
@@ -34,10 +33,8 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		CellRenderer x_cellRenderer = new CellRenderer(p_topLevelThread);
 
 		p_topLevelThread.addComponentChangeListener(e -> {
-			if(e.getType() == s_CONTENT_REMOVED) {
-				o_searchResults = p_topLevelThread.search(p_search);
-				x_tableModel.fireTableDataChanged();
-			}
+			o_searchResults = p_topLevelThread.search(p_search);
+			x_tableModel.fireTableDataChanged();
 		});
 
 		o_table = new JTable(x_tableModel);

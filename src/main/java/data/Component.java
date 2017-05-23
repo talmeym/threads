@@ -3,11 +3,11 @@ package data;
 import java.io.File;
 import java.util.*;
 
-import static data.ComponentChangeEvent.*;
+import static data.ComponentChangeEvent.Field;
+import static data.ComponentChangeEvent.Field.*;
 
-public abstract class Component implements ComponentMoveListener {
+public abstract class Component {
 	private List<ComponentChangeListener> o_changeListeners = new ArrayList<>();
-	private List<ComponentMoveListener> o_moveListeners = new ArrayList<>();
 
 	private final UUID o_id;
 	private final Date o_creationDate;
@@ -55,25 +55,26 @@ public abstract class Component implements ComponentMoveListener {
     }
 
     public void setActive(boolean p_active) {
-        o_active = p_active;
-        changed(s_ACTIVE);
+        boolean x_oldValue = o_active;
+    	o_active = p_active;
+        changed(ACTIVE, x_oldValue, p_active);
     }
 
     public void setText(String p_text) {
-        o_text = p_text;
-        changed(s_TEXT);
+        String x_oldValue = o_text;
+    	o_text = p_text;
+        changed(TEXT, x_oldValue, p_text);
     }
 
 	void unsetParentComponent() {
-		o_parentComponent.removeComponentMoveListener(this);
+		Component x_oldValue = o_parentComponent;
 		o_parentComponent = null;
-		changed(new ComponentChangeEvent(this, s_DELETED, -1));
+		changed(new ComponentChangeEvent(this, PARENT, x_oldValue, null));
 	}
 
     void setParentComponent(Component p_parentComponent) {
         o_parentComponent = p_parentComponent;
-		o_parentComponent.addComponentMoveListener(this);
-		moved();
+		changed(new ComponentChangeEvent(this, PARENT, null, p_parentComponent));
     }
 
 	public File getDocFolder() {
@@ -100,29 +101,13 @@ public abstract class Component implements ComponentMoveListener {
 		o_changeListeners.remove(p_listener);
 	}
 
-	public void addComponentMoveListener(ComponentMoveListener p_listener) {
-		o_moveListeners.add(p_listener);
-	}
-
-	private void removeComponentMoveListener(ComponentMoveListener p_listener) {
-		o_moveListeners.remove(p_listener);
-	}
-
-	void changed(int p_field) {
+	void changed(Field p_field, Object p_oldValue, Object p_newValue) {
 		modified();
-		changed(new ComponentChangeEvent(this, s_CHANGED, p_field));
+		changed(new ComponentChangeEvent(this, p_field, p_oldValue, p_newValue));
 	}
 
 	void changed(ComponentChangeEvent p_event) {
 		o_changeListeners.forEach(x_listener -> x_listener.componentChanged(p_event));
-	}
-
-	private void moved() {
-		moved(new ComponentMoveEvent(this));
-	}
-
-	private void moved(ComponentMoveEvent p_event) {
-		o_moveListeners.forEach(x_listener -> x_listener.componentMoved(p_event));
 	}
 
 	public List<Component> getHierarchy() {
@@ -133,10 +118,5 @@ public abstract class Component implements ComponentMoveListener {
 		List<Component> x_parents = o_parentComponent.getHierarchy();
 		x_parents.add(this);
 		return x_parents;
-	}
-
-	@Override
-	public void componentMoved(ComponentMoveEvent p_event) {
-		moved(p_event);
 	}
 }

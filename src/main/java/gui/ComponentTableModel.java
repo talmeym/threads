@@ -1,6 +1,6 @@
 package gui;
 
-import data.*;
+import data.Component;
 import util.*;
 
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +17,7 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
         o_columnNames = p_columnNames;
 		o_component.addComponentChangeListener(e -> reloadData());
 		o_dataItems = getDataItems();
-		TimedUpdater.getInstance().addActivityListener(this::fireTableDataChanged);
+		TimedUpdater.getInstance().addActivityListener(this::reloadData);
 		GoogleSyncer.getInstance().addActivityListener(this);
     }
     

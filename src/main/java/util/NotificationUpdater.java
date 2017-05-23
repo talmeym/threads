@@ -1,14 +1,11 @@
 package util;
 
 import data.*;
-import data.Component;
 import data.Thread;
 
 import java.util.*;
-import java.util.List;
 
-import static data.ComponentChangeEvent.s_CHANGED;
-import static data.ComponentChangeEvent.s_DUE_DATE;
+import static data.ComponentChangeEvent.Field.DUE_DATE;
 
 public class NotificationUpdater {
 	private static NotificationUpdater s_INSTANCE = null;
@@ -54,7 +51,7 @@ public class NotificationUpdater {
 			o_alertedComponents.addAll(x_dueComponents);
 
 			x_dueComponents.forEach(x_component -> x_component.addComponentChangeListener(e -> {
-				if (e.getSource() == x_component && e.getType() == s_CHANGED && e.getIndex() == s_DUE_DATE) {
+				if (e.getSource() == x_component && e.getField() == DUE_DATE) {
 					o_alertedComponents.remove(x_component);
 				}
 			}));

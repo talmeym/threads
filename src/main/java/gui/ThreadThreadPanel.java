@@ -5,7 +5,6 @@ import util.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Component;
 import java.awt.event.*;
 
 import static data.ComponentType.Thread;

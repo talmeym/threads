@@ -5,7 +5,7 @@ import util.DateUtil;
 import java.io.File;
 import java.util.*;
 
-import static data.ComponentChangeEvent.s_DUE_DATE;
+import static data.ComponentChangeEvent.Field.DUE_DATE;
 import static util.DateUtil.TODAY;
 
 public class Reminder extends Component implements HasDueDate
@@ -36,8 +36,9 @@ public class Reminder extends Component implements HasDueDate
 
 	@Override
     public void setDueDate(Date p_date) {
-        o_dueDate = p_date;
-        changed(s_DUE_DATE);
+        Date x_oldValue = o_dueDate;
+		o_dueDate = p_date;
+        changed(DUE_DATE, x_oldValue, p_date);
 		modified();
     }
 

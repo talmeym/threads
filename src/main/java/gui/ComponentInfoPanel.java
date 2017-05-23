@@ -1,9 +1,9 @@
 package gui;
 
-import data.*;
 import data.Component;
+import data.*;
 import data.Thread;
-import util.*;
+import util.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -12,7 +12,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-import static data.ComponentChangeEvent.s_CHANGED;
+import static data.ComponentChangeEvent.Field.*;
 import static util.GuiUtil.setUpButtonLabel;
 
 class ComponentInfoPanel extends JPanel {
@@ -48,38 +48,40 @@ class ComponentInfoPanel extends JPanel {
 		};
 
 		o_component.addComponentChangeListener(e -> {
-			if(e.getSource() == o_component && e.getType() == s_CHANGED) {
-				o_textField.getDocument().removeDocumentListener(x_listener);
-				o_textField.setText(o_component.getText());
-				o_textField.getDocument().addDocumentListener(x_listener);
-				o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
-				o_activeLabel.setEnabled(o_component.isActive());
-			}
-		});
+			if(e.getSource() == o_component) {
+				if(e.isValueChange()) {
+					o_textField.getDocument().removeDocumentListener(x_listener);
+					o_textField.setText(o_component.getText());
+					o_textField.getDocument().addDocumentListener(x_listener);
+					o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
+					o_activeLabel.setEnabled(o_component.isActive());
+				}
 
-		o_component.addComponentMoveListener(e -> {
-			o_breadcrumbsPanel.removeAll();
+				if (e.isComponentMove()) {
+					o_breadcrumbsPanel.removeAll();
 
-			Component x_parent = o_component.getParentComponent();
-			List<JLabel> x_parentLabels = new ArrayList<>();
+					Component x_parent = o_component.getParentComponent();
+					List<JLabel> x_parentLabels = new ArrayList<>();
 
-			while(x_parent != null) {
-				final JLabel x_label = getParentLabel(x_parent);
-				x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
-				final Component x_parentFinal = x_parent;
+					while(x_parent != null) {
+						final JLabel x_label = getParentLabel(x_parent);
+						x_parentLabels.addAll(0, Arrays.asList(x_label, new JLabel(">")));
+						final Component x_parentFinal = x_parent;
 
-				x_parentFinal.addComponentChangeListener(f -> {
-					if (f.getSource() == x_parentFinal && f.getType() == s_CHANGED) {
-						x_label.setText(x_parentFinal.getText());
+						x_parentFinal.addComponentChangeListener(f -> {
+							if (f.getSource() == x_parentFinal && f.getField() == TEXT) {
+								x_label.setText(x_parentFinal.getText());
+							}
+						});
+
+						x_parent = x_parent.getParentComponent();
 					}
-				});
 
-				x_parent = x_parent.getParentComponent();
+					x_parentLabels.forEach(o_breadcrumbsPanel::add);
+					o_breadcrumbsPanel.repaint();
+					repaint();
+				}
 			}
-
-			x_parentLabels.forEach(o_breadcrumbsPanel::add);
-			o_breadcrumbsPanel.repaint();
-			repaint();
 		});
 
 		o_textField.setText(p_component.getText());
@@ -272,7 +274,7 @@ class ComponentInfoPanel extends JPanel {
 				final Component x_parentFinal = x_parent;
 
 				x_parent.addComponentChangeListener(e -> {
-					if(e.getSource() == x_parentFinal && e.getType() == s_CHANGED) {
+					if(e.getSource() == x_parentFinal && e.getField() == TEXT) {
 						x_label.setText(x_parentFinal.getText());
 					}
 				});

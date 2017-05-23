@@ -3,7 +3,7 @@ package data;
 import java.io.File;
 import java.util.*;
 
-import static data.ComponentChangeEvent.*;
+import static data.ComponentChangeEvent.Field.*;
 import static java.util.Collections.sort;
 
 abstract class CollectionComponent <CONTENTS extends Component> extends Component implements ComponentChangeListener {
@@ -33,32 +33,32 @@ abstract class CollectionComponent <CONTENTS extends Component> extends Componen
 	}
 
     void addComponent(CONTENTS p_component) {
-        p_component.setParentComponent(this);
         p_component.addComponentChangeListener(this);
+        p_component.setParentComponent(this);
         o_components.add(p_component);
         sort(o_components, o_comparator);
-		int index = o_components.indexOf(p_component);
-		changed(new ComponentChangeEvent(this, s_CONTENT_ADDED, index));
+		int x_index = o_components.indexOf(p_component);
+		changed(new ComponentChangeEvent(this, CONTENT, null, x_index));
     }
 
     void removeComponent(CONTENTS p_component) {
 		p_component.unsetParentComponent();
         p_component.removeComponentChangeListener(this);
-		int index = o_components.indexOf(p_component);
+		int x_index = o_components.indexOf(p_component);
         o_components.remove(p_component);
-		changed(new ComponentChangeEvent(this, s_CONTENT_REMOVED, index));
+		changed(new ComponentChangeEvent(this, CONTENT, x_index, null));
     }
 
     void removeAllComponents() {
-		Iterator<CONTENTS> iterator = o_components.iterator();
-		int index = 0;
+		Iterator<CONTENTS> x_iterator = o_components.iterator();
+		int x_index = 0;
 
-		while(iterator.hasNext()) {
-			Component x_component = iterator.next();
+		while(x_iterator.hasNext()) {
+			Component x_component = x_iterator.next();
 			x_component.unsetParentComponent();
 			x_component.removeComponentChangeListener(this);
-			iterator.remove();
-			changed(new ComponentChangeEvent(this, s_CONTENT_REMOVED, index++));
+			x_iterator.remove();
+			changed(new ComponentChangeEvent(this, CONTENT, x_index++, null));
 		}
     }
 
@@ -78,14 +78,13 @@ abstract class CollectionComponent <CONTENTS extends Component> extends Componen
 		changed(p_cce);
 		Component x_source = p_cce.getSource();
 
-		if(o_components.contains(x_source) && p_cce.getType() == s_CHANGED) {
+		if(o_components.contains(x_source) && p_cce.isValueChange()) {
 			int p_beforeIndex = o_components.indexOf(x_source);
 			sort(o_components, o_comparator);
 			int p_afterIndex = o_components.indexOf(x_source);
 
 			if(p_afterIndex != p_beforeIndex) {
-				changed(new ComponentChangeEvent(this, s_CONTENT_REMOVED, p_beforeIndex));
-				changed(new ComponentChangeEvent(this, s_CONTENT_ADDED, p_afterIndex));
+				changed(new ComponentChangeEvent(this, CONTENT, p_beforeIndex, p_afterIndex));
 			}
 		}
 	}

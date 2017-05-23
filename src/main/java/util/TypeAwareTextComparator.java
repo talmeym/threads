@@ -5,6 +5,7 @@ import data.*;
 import java.util.*;
 
 import static data.ComponentType.*;
+import static data.ComponentType.Thread;
 
 public class TypeAwareTextComparator<TYPE extends Component> implements Comparator<TYPE> {
     public int compare(TYPE obj1, TYPE obj2) {

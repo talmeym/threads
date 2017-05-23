@@ -1,10 +1,9 @@
 package gui;
 
-import data.Thread;
 import data.*;
+import data.Thread;
 import util.*;
 
-import javax.swing.*;
 import java.util.*;
 
 import static data.LookupHelper.*;

@@ -1,7 +1,7 @@
 package gui;
 
-import data.Thread;
 import data.*;
+import data.Thread;
 
 import java.util.List;
 

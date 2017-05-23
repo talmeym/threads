@@ -18,8 +18,6 @@ public abstract class TimedActivity<LISTENER_TYPE extends ActivityListener> exte
 		synchronized (o_listeners) {
 			o_listeners.add(p_listener);
 		}
-
-		informOfFinish(p_listener);
 	}
 
 	public long nextSync() {

@@ -3,11 +3,10 @@ package util;
 import data.Thread;
 
 import java.io.File;
-import java.text.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static data.Saver.saveDocument;
-import static java.lang.Thread.sleep;
 
 public class TimedSaver extends TimedActivity<TimedSaveListener> {
     private static TimedSaver s_INSTANCE = null;

@@ -10,7 +10,7 @@ import java.awt.event.*;
 import java.text.*;
 import java.util.*;
 
-import static data.ComponentChangeEvent.s_CHANGED;
+import static data.ComponentChangeEvent.Field.DUE_DATE;
 import static util.GuiUtil.setUpButtonLabel;
 
 class RemindDateSuggestionPanel extends JPanel {
@@ -78,7 +78,7 @@ class RemindDateSuggestionPanel extends JPanel {
 		};
 
 		o_reminder.addComponentChangeListener(e -> {
-			if(e.getType() == s_CHANGED) {
+			if(e.getSource() == o_reminder && e.getField() == DUE_DATE) {
 				o_dueDateField.getDocument().removeDocumentListener(x_listener);
 				o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
 				o_dueDateField.getDocument().addDocumentListener(x_listener);

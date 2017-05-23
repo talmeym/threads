@@ -10,7 +10,6 @@ import java.awt.event.*;
 import java.text.*;
 import java.util.*;
 
-import static data.ComponentChangeEvent.s_CHANGED;
 import static util.GuiUtil.setUpButtonLabel;
 
 public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
@@ -62,7 +61,7 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 		};
 
 		o_item.addComponentChangeListener(e -> {
-			if(e.getSource() == o_item && e.getType() == s_CHANGED) {
+			if(e.getSource() == o_item && e.isValueChange()) {
 				o_dueDateField.getDocument().removeDocumentListener(x_listener);
 				o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
 				o_dueDateField.getDocument().addDocumentListener(x_listener);
