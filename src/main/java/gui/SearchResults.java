@@ -104,10 +104,6 @@ class SearchResults extends JFrame implements SettingChangeListener {
 			return s_columnNames.size();
 		}
 
-
-
-
-
 		@Override
 		public Class<?> getColumnClass(int col) {
 			switch(col) {

@@ -1,5 +1,6 @@
 package gui;
 
+import data.Thread;
 import util.*;
 
 import javax.swing.*;
@@ -25,10 +26,13 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 
 	private boolean o_showGoogle;
 
-	StatusPanel() {
-		super(new GridLayout(0, 1, 5, 5));
-		this.o_showGoogle = Settings.registerForSetting(Settings.s_GOOGLE, this, "false").equals("true");
+	private ActionLog o_actionLog;
 
+	StatusPanel(Thread p_topLevelThread) {
+		super(new GridLayout(0, 1, 5, 5));
+		o_actionLog = new ActionLog(p_topLevelThread);
+
+		o_showGoogle = Settings.registerForSetting(Settings.s_GOOGLE, this, "false").equals("true");
 		o_updateProgress.setMinimum(0);
 
         JLabel x_updateLabel = new JLabel(ImageUtil.getTimeUpdateIcon());
@@ -99,6 +103,14 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		o_statusLabel = new JLabel(s_dateFormat.format(new Date()));
 		o_statusLabel.setHorizontalAlignment(JLabel.CENTER);
 		o_statusLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+
+		o_statusLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				o_actionLog.showLog();
+			}
+		});
+
 		add(o_statusLabel);
 
 		TimedUpdater.getInstance().addActivityListener(this);

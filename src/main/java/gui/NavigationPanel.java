@@ -26,7 +26,7 @@ class NavigationPanel extends JPanel implements TreeSelectionListener {
 
 		JPanel x_panel = new JPanel(new BorderLayout());
 		x_panel.add(new SearchPanel(p_topLevelThread), BorderLayout.CENTER);
-		x_panel.add(new StatusPanel(), BorderLayout.SOUTH);
+		x_panel.add(new StatusPanel(p_topLevelThread), BorderLayout.SOUTH);
 
 		add(x_treePanel, BorderLayout.CENTER);
 		add(x_panel, BorderLayout.SOUTH);

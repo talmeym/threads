@@ -16,8 +16,6 @@ public class Threads {
 		File x_settingsFile = new File(x_dataFile.getParentFile(), x_dataFile.getName() + ".properties");
 		Thread x_topThread = x_dataFile.exists() ? Loader.loadDocumentThread(x_dataFile) : new Thread("Threads");
 
-		x_topThread.addComponentChangeListener(e -> System.out.println("Change: '" + e.getSource().getText() + "': " + e.getField() + ", " + e.getOldValue() + " -> " + e.getNewValue()));
-
 		TimedUpdater.initialise();
 		TimedSaver.initialise(x_topThread, x_dataFile);
 		NotificationUpdater.initialise(x_topThread);
