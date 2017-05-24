@@ -28,7 +28,7 @@ public class TimedUpdater extends TimedActivity<TimedUpdateListener> {
     }
     
 	void action() {
-		System.out.println("Time Update: " + new Date());
+		// do nothing
 	}
 
 	@Override

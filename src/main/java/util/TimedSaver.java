@@ -47,8 +47,6 @@ public class TimedSaver extends TimedActivity<TimedSaveListener> {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		System.out.println("Timed Save: " + new Date());
 	}
 
 	@Override
