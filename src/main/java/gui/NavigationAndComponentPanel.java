@@ -1,17 +1,15 @@
 package gui;
 
-import data.*;
 import data.Component;
+import data.*;
 import data.Thread;
 import util.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.*;
 import java.util.*;
 
-import static util.Settings.registerForSetting;
-import static util.Settings.updateSetting;
+import static util.Settings.*;
 
 class NavigationAndComponentPanel extends JPanel implements SettingChangeListener {
 	private final CardLayout o_cardLayout = new CardLayout();

@@ -1,11 +1,10 @@
 package util;
 
-import data.*;
+import data.HasDueDate;
 
 import java.util.*;
 
-import static util.DateUtil.isAllDay;
-import static util.DateUtil.isSameDay;
+import static util.DateUtil.*;
 
 public class AllDayAwareDueDateComparator implements Comparator<HasDueDate>
 {

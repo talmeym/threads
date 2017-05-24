@@ -1,9 +1,9 @@
 package util;
 
-import data.*;
+import data.HasDueDate;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.List;
 
 public class GoogleLinkTask extends SwingWorker<Void, Void> {
 	private final List<HasDueDate> o_hasDueDates;

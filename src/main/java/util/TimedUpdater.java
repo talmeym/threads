@@ -1,7 +1,5 @@
 package util;
 
-import java.util.Date;
-
 public class TimedUpdater extends TimedActivity<TimedUpdateListener> {
     private static TimedUpdater s_INSTANCE;
 

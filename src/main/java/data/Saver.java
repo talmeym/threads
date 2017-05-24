@@ -4,7 +4,7 @@ import org.jdom.*;
 import org.jdom.output.*;
 
 import java.io.*;
-import java.util.*;
+import java.util.Date;
 
 public class Saver {
     public static void saveDocument(Thread p_topThread, File p_xmlFile) {

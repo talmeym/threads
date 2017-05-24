@@ -9,6 +9,7 @@ import java.awt.*;
 import java.io.*;
 
 import static data.ComponentType.*;
+import static data.ComponentType.Thread;
 
 public class ImageUtil {
 

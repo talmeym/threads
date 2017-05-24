@@ -1,7 +1,7 @@
 package gui;
 
-import data.*;
 import data.Component;
+import data.*;
 import data.Thread;
 
 import java.awt.*;

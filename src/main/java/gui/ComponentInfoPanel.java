@@ -12,7 +12,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-import static data.ComponentChangeEvent.Field.*;
+import static data.ComponentChangeEvent.Field.TEXT;
 import static util.GuiUtil.setUpButtonLabel;
 
 class ComponentInfoPanel extends JPanel {

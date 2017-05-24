@@ -3,7 +3,7 @@ package data;
 import java.io.File;
 import java.util.*;
 
-import static data.ComponentChangeEvent.Field.*;
+import static data.ComponentChangeEvent.Field.CONTENT;
 import static java.util.Collections.sort;
 
 abstract class CollectionComponent <CONTENTS extends Component> extends Component implements ComponentChangeListener {

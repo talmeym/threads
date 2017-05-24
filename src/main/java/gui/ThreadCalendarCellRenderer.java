@@ -4,10 +4,10 @@ import data.*;
 import util.*;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.Component;
-import java.text.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 class ThreadCalendarCellRenderer implements TableCellRenderer {

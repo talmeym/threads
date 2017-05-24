@@ -1,6 +1,6 @@
 package data;
 
-import util.*;
+import util.TypeAwareTextComparator;
 
 import java.io.File;
 import java.util.*;

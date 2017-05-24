@@ -9,8 +9,7 @@ import java.awt.event.*;
 import java.util.List;
 
 import static util.GoogleUtil.isLinked;
-import static util.ImageUtil.getGoogleSmallIcon;
-import static util.ImageUtil.getLinkIcon;
+import static util.ImageUtil.*;
 
 class ReminderPanel extends JPanel implements GoogleSyncListener {
 	private Reminder o_reminder;

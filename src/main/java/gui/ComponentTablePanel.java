@@ -1,7 +1,7 @@
 package gui;
 
-import data.*;
 import data.Component;
+import data.*;
 import util.*;
 
 import javax.swing.*;

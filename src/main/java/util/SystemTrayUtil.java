@@ -8,7 +8,7 @@ import gui.WindowManager;
 import java.awt.*;
 import java.util.*;
 
-import static data.ComponentChangeEvent.Field.*;
+import static data.ComponentChangeEvent.Field.TEXT;
 import static gui.Actions.*;
 import static gui.DateSuggestionPanel.getDateSuggestion;
 
@@ -28,16 +28,12 @@ public class SystemTrayUtil {
 			MenuItem x_addActionItem = new MenuItem("Add Action");
 			o_popUpMenu.add(x_addActionItem);
 
-			x_addActionItem.addActionListener(e -> {
-				addAction(null, o_topLevelThread, getDateSuggestion(), null, true);
-			});
+			x_addActionItem.addActionListener(e -> addAction(null, o_topLevelThread, getDateSuggestion(), null, true));
 
 			MenuItem x_addUpdateItem = new MenuItem("Add Update");
 			o_popUpMenu.add(x_addUpdateItem);
 
-			x_addUpdateItem.addActionListener(e -> {
-				addUpdate(null, o_topLevelThread, null);
-			});
+			x_addUpdateItem.addActionListener(e -> addUpdate(null, o_topLevelThread, null));
 
 			o_trayIcon = new TrayIcon(ImageUtil.getThreadsImage(), "Threads", o_popUpMenu);
 			o_trayIcon.setImageAutoSize(true);
@@ -57,9 +53,7 @@ public class SystemTrayUtil {
 						MenuItem x_menuItem = new MenuItem((getMenuItemText(x_component)));
 						o_menuItems.put(x_component, x_menuItem);
 
-						x_menuItem.addActionListener(actionEvent -> {
-							WindowManager.getInstance().openComponent(x_component);
-						});
+						x_menuItem.addActionListener(actionEvent -> WindowManager.getInstance().openComponent(x_component));
 
 						x_component.addComponentChangeListener(e -> {
 							if(e.getSource() == x_component) {

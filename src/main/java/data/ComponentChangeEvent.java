@@ -1,7 +1,6 @@
 package data;
 
-import static data.ComponentChangeEvent.Field.CONTENT;
-import static data.ComponentChangeEvent.Field.PARENT;
+import static data.ComponentChangeEvent.Field.*;
 
 public class ComponentChangeEvent {
 

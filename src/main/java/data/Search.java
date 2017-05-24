@@ -1,6 +1,6 @@
 package data;
 
-import java.util.*;
+import java.util.UUID;
 
 public class Search {
 	private UUID o_id;
