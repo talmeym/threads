@@ -57,7 +57,7 @@ class ComponentInfoPanel extends JPanel {
 					o_activeLabel.setEnabled(o_component.isActive());
 				}
 
-				if (e.isComponentMove()) {
+				if (e.isComponentAdded()) {
 					o_breadcrumbsPanel.removeAll();
 
 					Component x_parent = o_component.getParentComponent();

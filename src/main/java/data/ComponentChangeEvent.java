@@ -6,11 +6,21 @@ import static data.ComponentChangeEvent.Field.PARENT;
 public class ComponentChangeEvent {
 
 	public enum Field {
-		TEXT,
-		ACTIVE,
-		DUE_DATE,
-		PARENT,
-		CONTENT
+		TEXT("Name"),
+		ACTIVE("Is Active"),
+		DUE_DATE("Due Date"),
+		PARENT("NotUsed"),
+		CONTENT("NotUsed");
+
+		private String o_displayString;
+
+		Field(String p_displayString) {
+			this.o_displayString = p_displayString;
+		}
+
+		public String toString() {
+			return o_displayString;
+		}
 	}
 
     private final Component o_component;
@@ -57,7 +67,7 @@ public class ComponentChangeEvent {
 		return o_field != CONTENT && o_field != PARENT && isChange();
 	}
 
-	public boolean isComponentMove() {
+	public boolean isComponentAdded() {
 		return o_field == PARENT && isAddition();
 	}
 
