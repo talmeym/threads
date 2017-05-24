@@ -8,10 +8,11 @@ public abstract class TimedActivity<LISTENER_TYPE extends ActivityListener> exte
 	private final Object o_lockObj = new Object();
 	private final List<LISTENER_TYPE> o_listeners = new ArrayList<>();
 	private boolean o_continueRunning = true;
-	private long o_nextSync = System.currentTimeMillis();
+	private long o_nextSync;
 
-	TimedActivity(int o_frequency) {
-		this.o_frequency = o_frequency;
+	TimedActivity(int p_frequency, boolean p_doImmediately) {
+		this.o_frequency = p_frequency;
+		o_nextSync = System.currentTimeMillis() + (p_doImmediately ? 0 : p_frequency);
 	}
 
 	public void addActivityListener(LISTENER_TYPE p_listener) {

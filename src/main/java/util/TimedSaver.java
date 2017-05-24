@@ -31,7 +31,7 @@ public class TimedSaver extends TimedActivity<TimedSaveListener> {
     private final File o_originalFile;
 
     private TimedSaver(Thread p_topThread, File p_orignalFile) {
-    	super(300000);
+    	super(300000, false);
 		o_topThread = p_topThread;
 		o_originalFile = p_orignalFile;
 		setDaemon(true);
@@ -45,7 +45,7 @@ public class TimedSaver extends TimedActivity<TimedSaveListener> {
 		try {
 			sleep(1000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			// do nothing
 		}
 	}
 

@@ -27,7 +27,7 @@ public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
 	}
 
     private GoogleSyncer(Thread p_topThread, boolean p_enabled) {
-    	super(120000);
+    	super(120000, true);
 
 		if(p_enabled) {
 			try {
