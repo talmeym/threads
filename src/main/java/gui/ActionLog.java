@@ -8,6 +8,7 @@ import util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
+import java.text.*;
 import java.util.*;
 import java.util.List;
 
@@ -18,6 +19,9 @@ import static util.ImageUtil.getGoogleVerySmallIcon;
 import static util.Settings.*;
 
 class ActionLog extends JFrame implements SettingChangeListener {
+	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
+
 	private List<Action> o_log = new ArrayList<>();
 
 	ActionLog(Thread p_topLevelThread) {
@@ -27,8 +31,7 @@ class ActionLog extends JFrame implements SettingChangeListener {
 
 		p_topLevelThread.addComponentChangeListener(e -> {
 			if(e.getField() != CONTENT) {
-				Component x_source = e.getSource();
-				o_log.add(new Action(new Date(), ImageUtil.getIconForType(x_source.getType()), x_source.getText(), getActionString(e), e.getOldValue() == null ? "-" : "'" + e.getOldValue() + "'", e.isValueChange() ? "=>" : "", e.getNewValue() == null ? "-" : "'" + e.getNewValue() + "'"));
+				o_log.add(buildAction(e));
 				x_tableModel.fireTableDataChanged();
 			}
 		});
@@ -78,6 +81,20 @@ class ActionLog extends JFrame implements SettingChangeListener {
 		x_contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		setContentPane(x_contentPane);
+	}
+
+	private Action buildAction(ComponentChangeEvent e) {
+		Component x_source = e.getSource();
+		return new Action(new Date(), ImageUtil.getIconForType(x_source.getType()), x_source.getText(), getActionString(e), getString(e.getOldValue()), e.isValueChange() ? "=>" : "", getString(e.getNewValue()));
+	}
+
+	private String getString(Object p_value) {
+		p_value = p_value instanceof Date ? getDueDateText(((Date)p_value)) : p_value;
+		return p_value == null ? "-" : "'" + p_value + "'";
+	}
+
+	private String getDueDateText(Date x_dueDate) {
+		return DateUtil.isAllDay(x_dueDate) ? s_dateFormat.format(x_dueDate) : s_dateTimeFormat.format(x_dueDate);
 	}
 
 	private void fixColumnWidth(JTable p_table, int p_column, int p_width) {
