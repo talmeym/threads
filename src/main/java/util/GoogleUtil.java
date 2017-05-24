@@ -193,7 +193,7 @@ public class GoogleUtil {
 			}
 
 			callBack(p_callbacks, ProgressCallBack::success);
-			GoogleSyncer.getInstance().finished();
+			GoogleSyncer.getInstance().componentsSynced(p_hasDueDates);
 		} catch (Throwable t) {
 			callBack(p_callbacks, c -> c.error(t.getMessage()));
 		}

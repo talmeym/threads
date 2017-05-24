@@ -1,6 +1,6 @@
 package gui;
 
-import data.Component;
+import data.*;
 import util.*;
 
 import javax.swing.table.DefaultTableModel;
@@ -53,6 +53,10 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 
 	@Override
 	public void googleSynced() {
+		fireTableDataChanged();
+	}
+
+	public void googleSynced(List<HasDueDate> p_hasDueDates) {
 		fireTableDataChanged();
 	}
 

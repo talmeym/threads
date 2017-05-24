@@ -26,6 +26,10 @@ public abstract class TimedActivity<LISTENER_TYPE extends ActivityListener> exte
 		}
 	}
 
+	List<LISTENER_TYPE> getListeners() {
+		return o_listeners;
+	}
+
 	public void run() {
 		while(continueRunning()) {
 			try {

@@ -1,5 +1,6 @@
 package gui;
 
+import data.Component;
 import data.*;
 import data.Thread;
 import util.*;
@@ -7,20 +8,17 @@ import util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
-import java.text.*;
 import java.util.*;
 import java.util.List;
 
 import static data.ComponentChangeEvent.Field.CONTENT;
 import static gui.GUIConstants.*;
 import static java.awt.BorderLayout.CENTER;
+import static util.ImageUtil.getGoogleVerySmallIcon;
 import static util.Settings.*;
 
 class ActionLog extends JFrame implements SettingChangeListener {
-	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
-
-	private List<Date> o_dates = new ArrayList<>();
-	private List<Object> o_log = new ArrayList<>();
+	private List<Action> o_log = new ArrayList<>();
 
 	ActionLog(Thread p_topLevelThread) {
 		super("Action Log");
@@ -29,8 +27,8 @@ class ActionLog extends JFrame implements SettingChangeListener {
 
 		p_topLevelThread.addComponentChangeListener(e -> {
 			if(e.getField() != CONTENT) {
-				o_dates.add(new Date());
-				o_log.add(e);
+				Component x_source = e.getSource();
+				o_log.add(new Action(new Date(), ImageUtil.getIconForType(x_source.getType()), x_source.getText(), getActionString(e), e.getOldValue() == null ? "-" : "'" + e.getOldValue() + "'", e.isValueChange() ? "=>" : "", e.getNewValue() == null ? "-" : "'" + e.getNewValue() + "'"));
 				x_tableModel.fireTableDataChanged();
 			}
 		});
@@ -38,30 +36,42 @@ class ActionLog extends JFrame implements SettingChangeListener {
 		GoogleSyncer.getInstance().addActivityListener(new GoogleSyncListener() {
 			@Override
 			public void googleSyncStarted() {
-				o_dates.add(new Date());
-				o_log.add("Google sync started ...");
+				o_log.add(new Action(new Date(), getGoogleVerySmallIcon(), "", "Google Sync started ...", "", "", ""));
 				x_tableModel.fireTableDataChanged();
 			}
 
 			@Override
 			public void googleSynced() {
-				o_dates.add(new Date());
-				o_log.add("Google sync completed");
+				o_log.add(new Action(new Date(), getGoogleVerySmallIcon(), "", "Google Sync Completed", "", "", ""));
+				x_tableModel.fireTableDataChanged();
+			}
+
+			@Override
+			public void googleSynced(List<HasDueDate> p_hasDueDates) {
+				if(p_hasDueDates.size() == 1) {
+					HasDueDate x_hasDueDate = p_hasDueDates.get(0);
+					o_log.add(new Action(new Date(), ImageUtil.getIconForType(x_hasDueDate.getType()), x_hasDueDate.getText(), "Linked to Google Calendar", "", "", ""));
+				} else {
+					o_log.add(new Action(new Date(), getGoogleVerySmallIcon(), p_hasDueDates.size() + " items", "Linked to Google Calendar", "", "", ""));
+				}
+
 				x_tableModel.fireTableDataChanged();
 			}
 		});
 
 		JTable x_table = new JTable(x_tableModel);
-		x_table.setRowHeight(s_tableRowHeight);
-		x_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		fixColumnWidth(x_table, 0, GUIConstants.s_creationDateColumnWidth);
 		fixColumnWidth(x_table, 1, GUIConstants.s_typeColumnWidth);
 		fixColumnWidth(x_table, 5, GUIConstants.s_typeColumnWidth);
-		CellRenderer x_cellRenderer = new CellRenderer();
+
+		TableCellRenderer x_cellRenderer = new BaseCellRenderer();
 		x_table.setDefaultRenderer(Date.class, x_cellRenderer);
 		x_table.setDefaultRenderer(String.class, x_cellRenderer);
-		x_table.setDefaultRenderer(ComponentType.class, x_cellRenderer);
+		x_table.setDefaultRenderer(Icon.class, x_cellRenderer);
+
+		x_table.setRowHeight(s_tableRowHeight);
+		x_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JPanel x_contentPane = new JPanel(new BorderLayout());
 		x_contentPane.add(new JScrollPane(x_table), CENTER);
@@ -110,7 +120,7 @@ class ActionLog extends JFrame implements SettingChangeListener {
 		public Class<?> getColumnClass(int p_col) {
 			switch(p_col) {
 				case 0: return Date.class;
-				case 2: return ComponentType.class;
+				case 1: return Icon.class;
 				default: return String.class;
 			}
 		}
@@ -122,40 +132,8 @@ class ActionLog extends JFrame implements SettingChangeListener {
 
 		@Override
 		public Object getValueAt(int p_row, int p_col) {
-			Date x_date = o_dates.get(p_row);
-			Object x_object = o_log.get(p_row);
-
-			if(x_object instanceof String) {
-				return p_col == 0 ? x_date : p_col == 3 ? x_object : "";
-			}
-
-			ComponentChangeEvent x_event = (ComponentChangeEvent) x_object;
-
-			switch(p_col) {
-				case 0: return x_date;
-				case 1: return x_event.getSource().getType();
-				case 2: return x_event.getSource().getText();
-				case 3: return getActionString(x_event);
-				case 4: return x_event.getOldValue() == null ? "-" : "'" + x_event.getOldValue() + "'";
-				case 5: return x_event.isValueChange() ? "=>" : "";
-				default: return x_event.getNewValue() == null ? "-" : "'" + x_event.getNewValue() + "'";
-			}
-		}
-
-		private String getActionString(ComponentChangeEvent p_event) {
-			if(p_event.isValueChange()) {
-				return "Changed '" + p_event.getField() + "'";
-			}
-
-			if(p_event.isComponentRemoved()) {
-				return "Removed From";
-			}
-
-			if(p_event.isComponentAdded()) {
-				return "Added To";
-			}
-
-			return null; // never get here
+			Action x_action = o_log.get(p_row);
+			return x_action.o_data[p_col];
 		}
 
 		public boolean isCellEditable(int row, int column) {
@@ -163,6 +141,27 @@ class ActionLog extends JFrame implements SettingChangeListener {
 		}
 	}
 
-	private class CellRenderer extends BaseCellRenderer {
+	private String getActionString(ComponentChangeEvent p_event) {
+		if(p_event.isValueChange()) {
+			return "Changed '" + p_event.getField() + "'";
+		}
+
+		if(p_event.isComponentRemoved()) {
+			return "Removed From";
+		}
+
+		if(p_event.isComponentAdded()) {
+			return "Added To";
+		}
+
+		return null; // never get here
+	}
+
+	private class Action {
+		private Object[] o_data;
+
+		public Action(Date p_date, Icon p_type, String p_name, String p_action, String p_oldValue, String p_arrow, String p_newValue) {
+			o_data = new Object[]{p_date, p_type, p_name, p_action, p_oldValue, p_arrow, p_newValue};
+		}
 	}
 }

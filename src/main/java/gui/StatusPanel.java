@@ -1,5 +1,6 @@
 package gui;
 
+import data.*;
 import data.Thread;
 import util.*;
 
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.*;
 import java.util.Date;
+import java.util.List;
 
 import static java.lang.Thread.sleep;
 import static util.GuiUtil.setUpButtonLabel;
@@ -136,6 +138,11 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		o_statusLabel.setText(s_dateFormat.format(new Date()));
 		o_statusLabel.setIcon(null);
 		o_lastGoogle = System.currentTimeMillis();
+	}
+
+	@Override
+	public void googleSynced(List<HasDueDate> p_hasDueDates) {
+		// do nothing
 	}
 
 	@Override

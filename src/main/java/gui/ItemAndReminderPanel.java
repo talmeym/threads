@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 import static gui.Actions.addReminder;
 import static util.GuiUtil.setUpButtonLabel;
@@ -132,6 +133,11 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 
 	@Override
 	public void googleSynced() {
+		tableRowClicked(-1, -1, null);
+	}
+
+	@Override
+	public void googleSynced(List<HasDueDate> p_hasDueDates) {
 		tableRowClicked(-1, -1, null);
 	}
 

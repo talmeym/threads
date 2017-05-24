@@ -94,4 +94,9 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 	public void googleSynced() {
 		tableRowClicked(-1, -1, null);
 	}
+
+	@Override
+	public void googleSynced(List<HasDueDate> p_hasDueDates) {
+		tableRowClicked(-1, -1, null);
+	}
 }

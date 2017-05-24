@@ -1,6 +1,6 @@
 package util;
 
-import data.HasDueDate;
+import data.*;
 import org.junit.Test;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -75,6 +75,11 @@ public class AllDayAwareDueDateComparatorTest {
 		return new HasDueDate() {
 			@Override
 			public UUID getId() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public ComponentType getType() {
 				throw new UnsupportedOperationException();
 			}
 

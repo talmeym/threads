@@ -1,9 +1,11 @@
 package util;
 
+import data.*;
 import data.Thread;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 
 public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
     private static GoogleSyncer s_INSTANCE = null;
@@ -51,5 +53,9 @@ public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
 	@Override
 	void informOfFinish(GoogleSyncListener p_listener) {
 		p_listener.googleSynced();
+	}
+
+	void componentsSynced(List<HasDueDate> p_hasDueDates) {
+		getListeners().forEach(l -> l.googleSynced(p_hasDueDates));
 	}
 }
