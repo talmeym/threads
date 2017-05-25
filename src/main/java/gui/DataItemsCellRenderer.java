@@ -20,10 +20,12 @@ abstract class DataItemsCellRenderer<INPUT_COMP extends data.Component, OUTPUT_C
 	public java.awt.Component getTableCellRendererComponent(JTable p_table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
 		java.awt.Component x_awtComponent = super.getTableCellRendererComponent(p_table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
 
-		OUTPUT_COMP x_component = o_list.get(p_row);
+		if(o_list != null) {
+			OUTPUT_COMP x_component = o_list.get(p_row);
 
-		if(x_component != null) {
-			customSetup(x_component, x_awtComponent, p_isSelected);
+			if (x_component != null) {
+				customSetup(x_component, x_awtComponent, p_isSelected);
+			}
 		}
 
 		return x_awtComponent;
@@ -51,7 +53,7 @@ abstract class DataItemsCellRenderer<INPUT_COMP extends data.Component, OUTPUT_C
 		return Color.WHITE;
 	}
 
-	public void reloadData() {
+	void reloadData() {
 		o_list = getDataItems(o_component);
 	}
 }
