@@ -7,15 +7,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.Component;
 import java.awt.event.*;
-import java.util.Calendar;
+import java.util.*;
+import java.util.List;
 
 import static gui.Actions.linkToGoogle;
+import static util.ImageUtil.getGoogleSmallIcon;
+import static util.ImageUtil.getLinkIcon;
 import static util.Settings.updateSetting;
 
 class ItemPanel extends ComponentTablePanel<Item, Reminder> {
     private final Item o_item;
 	private final JLabel o_calendarLabel = new JLabel(ImageUtil.getCalendarIcon());
-	private final JLabel o_linkItemLabel = new JLabel(ImageUtil.getLinkIcon());
+	private final JLabel o_linkItemLabel = new JLabel(getLinkIcon());
 
 	ItemPanel(Item p_item, final JPanel p_parentPanel) {
         super(new ItemReminderTableModel(p_item),  new ContentsCellRenderer(p_item));
@@ -75,11 +78,12 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 
 	@Override
 	public void googleSynced() {
-		if(GoogleUtil.isLinked(o_item)) {
-			o_linkItemLabel.setIcon(ImageUtil.getGoogleSmallIcon());
-		} else {
-			o_linkItemLabel.setIcon(ImageUtil.getLinkIcon());
-		}
+		o_linkItemLabel.setIcon(GoogleUtil.isLinked(o_item) ? getGoogleSmallIcon() : getLinkIcon());
+	}
+
+	@Override
+	public void googleSynced(List<HasDueDate> p_hasDueDates) {
+		o_linkItemLabel.setIcon(GoogleUtil.isLinked(o_item) ? getGoogleSmallIcon() : getLinkIcon());
 	}
 
 	void selectReminder(Reminder p_reminder) {
