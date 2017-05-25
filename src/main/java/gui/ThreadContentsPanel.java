@@ -33,7 +33,7 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 		x_addItemLabel.setToolTipText("Add Item");
 		x_addItemLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				add(getSelectedObject());
 			}
 		});

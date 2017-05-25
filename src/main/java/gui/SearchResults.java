@@ -47,11 +47,11 @@ class SearchResults extends JFrame implements SettingChangeListener {
 
 		o_table.addMouseListener(new MouseAdapter() {
 			 @Override
-			 public void mouseClicked(MouseEvent e) {
+			 public void mouseClicked(MouseEvent p_me) {
 				 int x_selectedRow = o_table.getSelectedRow();
 
-				 if(x_selectedRow != -1 && e.getButton() == MouseEvent.BUTTON1) {
-					 if(e.getClickCount() > 1) {
+				 if(x_selectedRow != -1 && p_me.getButton() == MouseEvent.BUTTON1) {
+					 if(p_me.getClickCount() > 1) {
 						 setVisible(false);
 					 }
 

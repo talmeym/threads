@@ -40,7 +40,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
         JLabel x_updateLabel = new JLabel(ImageUtil.getTimeUpdateIcon());
 		x_updateLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				TimedUpdater.getInstance().doAction();
 			}
 		});
@@ -59,7 +59,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 			JLabel x_googleLabel = new JLabel(ImageUtil.getGoogleVerySmallIcon());
 			x_googleLabel.addMouseListener(new MouseAdapter() {
 				@Override
-				public void mouseClicked(MouseEvent e) {
+				public void mouseClicked(MouseEvent p_me) {
 					new SwingWorker<Void, Void>() {
 
 						@Override
@@ -84,7 +84,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		JLabel x_saveLabel = new JLabel(ImageUtil.getSaveIcon());
 		x_saveLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				new SwingWorker<Void, Void>() {
 					@Override
 					protected Void doInBackground() throws Exception {
@@ -108,7 +108,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 
 		o_statusLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				o_actionLog.showLog();
 			}
 		});

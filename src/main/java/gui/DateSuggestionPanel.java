@@ -41,15 +41,15 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 
 
 		final DocumentListener x_listener = new DocumentListener() {
-			@Override public void insertUpdate(DocumentEvent documentEvent) {
+			@Override public void insertUpdate(DocumentEvent p_de) {
 				edited();
 			}
 
-			@Override public void removeUpdate(DocumentEvent documentEvent) {
+			@Override public void removeUpdate(DocumentEvent p_de) {
 				edited();
 			}
 
-			@Override public void changedUpdate(DocumentEvent documentEvent) {
+			@Override public void changedUpdate(DocumentEvent p_de) {
 				edited();
 			}
 
@@ -103,7 +103,7 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 		o_setLabel.setToolTipText("Apply Change");
 		o_setLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				setDueDate();
 			}
 		});
@@ -112,7 +112,7 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 		o_revertLabel.setToolTipText("Revert Change");
 		o_revertLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
 				o_dueDateField.setBackground(Color.white);
 				o_setLabel.setEnabled(false);
@@ -141,7 +141,7 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 		x_panel.add(x_buttonPanel, BorderLayout.EAST);
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
-		o_dueDateField.addActionListener(actionEvent -> setDueDate());
+		o_dueDateField.addActionListener(e -> setDueDate());
 
 		JButton x_pushBackButton = new JButton("Set");
 		x_pushBackButton.addActionListener(e -> pushBackAndSet());

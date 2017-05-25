@@ -58,15 +58,15 @@ class RemindDateSuggestionPanel extends JPanel {
 		o_reminder = p_reminder;
 
 		final DocumentListener x_listener = new DocumentListener() {
-			@Override public void insertUpdate(DocumentEvent documentEvent) {
+			@Override public void insertUpdate(DocumentEvent p_de) {
 				edited();
 			}
 
-			@Override public void removeUpdate(DocumentEvent documentEvent) {
+			@Override public void removeUpdate(DocumentEvent p_de) {
 				edited();
 			}
 
-			@Override public void changedUpdate(DocumentEvent documentEvent) {
+			@Override public void changedUpdate(DocumentEvent p_de) {
 				edited();
 			}
 
@@ -91,7 +91,7 @@ class RemindDateSuggestionPanel extends JPanel {
 		o_dueDateField.setToolTipText("Press enter to set");
 		o_dueDateField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
 
-		o_dueDateField.addActionListener(actionEvent -> setDueDate());
+		o_dueDateField.addActionListener(e -> setDueDate());
 
 		o_dueDateField.addFocusListener(new FocusListener() {
 			@Override
@@ -120,7 +120,7 @@ class RemindDateSuggestionPanel extends JPanel {
 		o_setLabel.setToolTipText("Apply Change");
 		o_setLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				setDueDate();
 			}
 		});
@@ -129,7 +129,7 @@ class RemindDateSuggestionPanel extends JPanel {
 		o_revertLabel.setToolTipText("Revert Change");
 		o_revertLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				o_dueDateField.setText(getDueDateText(o_reminder.getDueDate()));
 				o_dueDateField.setBackground(Color.white);
 				o_setLabel.setEnabled(false);

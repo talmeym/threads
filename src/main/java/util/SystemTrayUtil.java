@@ -53,7 +53,7 @@ public class SystemTrayUtil {
 						MenuItem x_menuItem = new MenuItem((getMenuItemText(x_component)));
 						o_menuItems.put(x_component, x_menuItem);
 
-						x_menuItem.addActionListener(actionEvent -> WindowManager.getInstance().openComponent(x_component));
+						x_menuItem.addActionListener(e -> WindowManager.getInstance().openComponent(x_component));
 
 						x_component.addComponentChangeListener(e -> {
 							if(e.getSource() == x_component) {

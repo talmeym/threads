@@ -50,25 +50,25 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 		x_linkLabel.setToolTipText("Link to Google Calendar");
 		x_linkLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 			}
 		});
 
 		x_linkLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				JPopupMenu x_popupMenu = new JPopupMenu();
 
 				JMenuItem x_linkActive = new JMenuItem("Link Active");
-				x_linkActive.addActionListener(actionEvent -> linkToGoogle(getHasDueDates(o_thread, true), p_parentPanel));
+				x_linkActive.addActionListener(e -> linkToGoogle(getHasDueDates(o_thread, true), p_parentPanel));
 
 				JMenuItem x_linkAll = new JMenuItem("Link All");
-				x_linkAll.addActionListener(actionEvent -> linkToGoogle(getHasDueDates(o_thread, false), p_parentPanel));
+				x_linkAll.addActionListener(e -> linkToGoogle(getHasDueDates(o_thread, false), p_parentPanel));
 
 				x_popupMenu.add(x_linkActive);
 				x_popupMenu.add(x_linkAll);
 
-				x_popupMenu.show(x_linkLabel, mouseEvent.getX(), mouseEvent.getY());
+				x_popupMenu.show(x_linkLabel, p_me.getX(), p_me.getY());
 			}
 		});
 		

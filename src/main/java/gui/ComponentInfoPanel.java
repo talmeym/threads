@@ -36,9 +36,9 @@ class ComponentInfoPanel extends JPanel {
 		final JLabel x_folderLabel = new JLabel(ImageUtil.getFolderIcon());
 
 		final DocumentListener x_listener = new DocumentListener() {
-			@Override public void insertUpdate(DocumentEvent documentEvent) { edited(); }
-			@Override public void removeUpdate(DocumentEvent documentEvent) { edited(); }
-			@Override public void changedUpdate(DocumentEvent documentEvent) { edited(); }
+			@Override public void insertUpdate(DocumentEvent p_de) { edited(); }
+			@Override public void removeUpdate(DocumentEvent p_de) { edited(); }
+			@Override public void changedUpdate(DocumentEvent p_de) { edited(); }
 
 			private void edited() {
 				o_textField.setBackground(ColourConstants.s_editedColour);
@@ -100,7 +100,7 @@ class ComponentInfoPanel extends JPanel {
 		x_parentLabel.setToolTipText("View Parent");
 		x_parentLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				if (x_parentLabel.isEnabled()) {
 					WindowManager.getInstance().openComponent(o_component.getParentComponent());
 				}
@@ -111,7 +111,7 @@ class ComponentInfoPanel extends JPanel {
 		o_setLabel.setToolTipText("Apply Change");
 		o_setLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				setText();
 			}
 		});
@@ -120,7 +120,7 @@ class ComponentInfoPanel extends JPanel {
 		o_revertLabel.setToolTipText("Revert Change");
 		o_revertLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				o_textField.setText(o_component.getText());
 				o_textField.setBackground(Color.white);
 				o_setLabel.setEnabled(false);
@@ -128,12 +128,12 @@ class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-        o_textField.addActionListener(actionEvent -> setText());
+        o_textField.addActionListener(e -> setText());
 
 		o_activeLabel.setToolTipText("Make Active/Inactive");
 		o_activeLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				if (x_parentLabel.isEnabled()) {
 					boolean x_active = !o_component.isActive();
 
@@ -151,7 +151,7 @@ class ComponentInfoPanel extends JPanel {
 		x_moveLabel.setToolTipText("Move");
 		x_moveLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				ThreadItem x_component = (ThreadItem) o_component;
 				Thread x_thread = null;
 
@@ -176,7 +176,7 @@ class ComponentInfoPanel extends JPanel {
 		x_removeLabel.setToolTipText("Remove");
 		x_removeLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				if(x_parentLabel.isEnabled()) {
 					Component x_parentComponent = o_component.getParentComponent();
 
@@ -199,7 +199,7 @@ class ComponentInfoPanel extends JPanel {
 
 		x_duplicateLabel.setToolTipText("Duplicate");
 		x_duplicateLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				if (x_parentLabel.isEnabled() && o_component.getParentComponent() != null) {
 					if (JOptionPane.showConfirmDialog(p_parentPanel, "Create duplicate of '" + o_component.getText() + "' ?", "Duplicate ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 						Component x_newComponent = null;
@@ -230,19 +230,19 @@ class ComponentInfoPanel extends JPanel {
 		x_folderLabel.setToolTipText("Document Folder");
 		x_folderLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				JPopupMenu x_popupMenu = new JPopupMenu();
 
 				JMenuItem x_setItem = new JMenuItem("Set");
-				x_setItem.addActionListener(actionEvent -> FolderManager.setDocFolder(o_component, p_parentPanel));
+				x_setItem.addActionListener(e -> FolderManager.setDocFolder(o_component, p_parentPanel));
 
 				JMenuItem x_openItem = new JMenuItem("Open");
 				x_openItem.setEnabled(o_component.getDocFolder() != null);
-				x_openItem.addActionListener(actionEvent -> FolderManager.openDocFolder(o_component));
+				x_openItem.addActionListener(e -> FolderManager.openDocFolder(o_component));
 
 				JMenuItem x_clearItem = new JMenuItem("Clear");
 				x_clearItem.setEnabled(o_component.getDocFolder() != null);
-				x_clearItem.addActionListener(actionEvent -> {
+				x_clearItem.addActionListener(e -> {
 					if(o_component.getDocFolder() != null) {
 						if (JOptionPane.showConfirmDialog(p_parentPanel, "Unset document folder '" + o_component.getDocFolder().getAbsolutePath() + "' ?", "Clear document folder for '" + o_component.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
 							o_component.setDocFolder(null);
@@ -254,7 +254,7 @@ class ComponentInfoPanel extends JPanel {
 				x_popupMenu.add(x_openItem);
 				x_popupMenu.add(x_clearItem);
 
-				x_popupMenu.show(x_folderLabel, mouseEvent.getX(), mouseEvent.getY());
+				x_popupMenu.show(x_folderLabel, p_me.getX(), p_me.getY());
 			}
 		});
 
@@ -284,7 +284,7 @@ class ComponentInfoPanel extends JPanel {
 
 					x_homeLabel.addMouseListener(new MouseAdapter() {
 						@Override
-						public void mouseClicked(MouseEvent mouseEvent) {
+						public void mouseClicked(MouseEvent p_me) {
 							WindowManager.getInstance().openComponent(x_homeComponent);
 						}
 					});
@@ -334,7 +334,7 @@ class ComponentInfoPanel extends JPanel {
 
 		x_label.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				WindowManager.getInstance().openComponent(x_parent);
 			}
 		});

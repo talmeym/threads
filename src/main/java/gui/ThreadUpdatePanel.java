@@ -31,7 +31,7 @@ class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
 		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addLabel.setToolTipText("Add Update");
 		x_addLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				addUpdate(getSelectedObject(), o_thread, p_parentPanel);
 			}
 		});

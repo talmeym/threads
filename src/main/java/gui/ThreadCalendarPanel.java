@@ -53,7 +53,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		JLabel x_previousLabel = new JLabel(ImageUtil.getLeftIcon());
 		x_previousLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				changeMonth(false);
 			}
 		});
@@ -61,7 +61,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		JLabel x_todayLabel = new JLabel(ImageUtil.getCalendarIcon());
 		x_todayLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				Calendar x_calendar = Calendar.getInstance();
 				int x_year = x_calendar.get(Calendar.YEAR);
 				int x_month = x_calendar.get(Calendar.MONTH);
@@ -73,7 +73,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		JLabel x_nextLabel = new JLabel(ImageUtil.getRightIcon());
 		x_nextLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				changeMonth(true);
 			}
 		});
@@ -193,9 +193,9 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			x_menu.add(new JSeparator(JSeparator.HORIZONTAL));
 		}
 
-		JMenuItem x_newMenuItem = new JMenuItem("Add Action", ImageUtil.getPlusVerySmallIcon());
-		x_newMenuItem.setForeground(Color.gray);
-		x_newMenuItem.addActionListener(actionEvent -> {
+		JMenuItem x_addMenuItem = new JMenuItem("Add Action", ImageUtil.getPlusVerySmallIcon());
+		x_addMenuItem.setForeground(Color.gray);
+		x_addMenuItem.addActionListener(e -> {
 			Item x_item = addAction(null, o_thread, p_date, o_parentPanel, false);
 
 			if(x_item != null && p_date.before(new Date())) {
@@ -205,19 +205,24 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			}
 		});
 
-		x_menu.add(x_newMenuItem);
+		x_menu.add(x_addMenuItem);
+
+		JMenuItem x_addFromTemplateMenuItem = new JMenuItem("Add From Template", ImageUtil.getTemplateVerySmallIcon());
+		x_addFromTemplateMenuItem.setForeground(Color.gray);
+		x_addFromTemplateMenuItem.addActionListener(e -> addActionFromTemplate(null, o_thread, p_date, o_parentPanel, false));
+		x_menu.add(x_addFromTemplateMenuItem);
 
 		if(x_components.size() > 0) {
 			JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", ImageUtil.getLinkVerySmallIcon());
 			x_linkMenuItem.setForeground(Color.gray);
 			x_menu.add(x_linkMenuItem);
-			x_linkMenuItem.addActionListener(actionEvent -> linkToGoogle(LookupHelper.getHasDueDates(x_components), o_parentPanel));
+			x_linkMenuItem.addActionListener(e -> linkToGoogle(LookupHelper.getHasDueDates(x_components), o_parentPanel));
 
 			JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", ImageUtil.getTickVerySmallIcon());
 			x_makeInactiveItem.setForeground(Color.gray);
 			x_menu.add(x_makeInactiveItem);
 
-			x_makeInactiveItem.addActionListener(actionEvent -> {
+			x_makeInactiveItem.addActionListener(e -> {
 				if (JOptionPane.showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 					x_components.forEach(c -> c.setActive(false));
 				}

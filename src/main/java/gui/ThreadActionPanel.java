@@ -11,6 +11,7 @@ import java.awt.event.*;
 
 import static data.ComponentType.Action;
 import static gui.Actions.addAction;
+import static gui.Actions.addActionFromTemplate;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
@@ -33,8 +34,16 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
 		x_addLabel.setToolTipText("Add Action");
 		x_addLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				addAction(getSelectedObject(), o_thread, DateSuggestionPanel.getDateSuggestion(), p_parentPanel, true);
+			}
+		});
+
+		JLabel x_addFromTemplateLabel = new JLabel(ImageUtil.getTemplateIcon());
+		x_addFromTemplateLabel.setToolTipText("Add From Template");
+		x_addFromTemplateLabel.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent p_me) {
+				addActionFromTemplate(getSelectedObject(), o_thread, DateSuggestionPanel.getDateSuggestion(), p_parentPanel, true);
 			}
 		});
 
@@ -63,6 +72,7 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
+		x_buttonPanel.add(setUpButtonLabel(x_addFromTemplateLabel));
 		x_buttonPanel.add(o_showNext7DaysRadioButton);
 		x_buttonPanel.add(o_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));

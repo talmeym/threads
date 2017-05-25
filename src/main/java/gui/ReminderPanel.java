@@ -25,7 +25,7 @@ class ReminderPanel extends JPanel implements GoogleSyncListener {
 		o_linkLabel.setToolTipText("Link to Google Calendar");
 		o_linkLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				if (o_linkLabel.isEnabled()) {
                     Actions.linkToGoogle(o_reminder, o_parentPanel);
                 }

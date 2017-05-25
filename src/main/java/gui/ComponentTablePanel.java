@@ -30,18 +30,18 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 
         o_table.addMouseListener(new MouseAdapter(){
 			@Override
-            public void mouseClicked(MouseEvent e) {
-				if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
+            public void mouseClicked(MouseEvent p_me) {
+				if(p_me.getButton() == MouseEvent.BUTTON1 && p_me.getClickCount() == 1) {
 					o_listeners.forEach(l -> l.tableRowClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject()));
 				}
 
-                if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+                if(p_me.getButton() == MouseEvent.BUTTON1 && p_me.getClickCount() == 2) {
 					o_listeners.forEach(l -> tableRowDoubleClicked(o_table.getSelectedRow(), o_table.getSelectedColumn(), getSelectedObject()));
                 }
 
-                if(e.getButton() == MouseEvent.BUTTON3) {
-					o_table.getSelectionModel().setSelectionInterval(o_table.rowAtPoint(e.getPoint()), o_table.rowAtPoint(e.getPoint()));
-					showContextMenu(o_table, o_table.rowAtPoint(e.getPoint()), o_table.columnAtPoint(e.getPoint()), e.getPoint(), getSelectedObject());
+                if(p_me.getButton() == MouseEvent.BUTTON3) {
+					o_table.getSelectionModel().setSelectionInterval(o_table.rowAtPoint(p_me.getPoint()), o_table.rowAtPoint(p_me.getPoint()));
+					showContextMenu(o_table, o_table.rowAtPoint(p_me.getPoint()), o_table.columnAtPoint(p_me.getPoint()), p_me.getPoint(), getSelectedObject());
 				}
             }
         });

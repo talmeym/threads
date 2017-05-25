@@ -66,7 +66,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 		o_addReminderLabel.setToolTipText("Add Reminder");
 		o_addReminderLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				addReminder(o_item, p_parentPanel, true);
 			}
 		});

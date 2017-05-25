@@ -161,6 +161,14 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/timeUpdate.png"));
 	}
 
+	public static Icon getTemplateIcon() {
+		return new ImageIcon(loadImage("/template.png"));
+	}
+
+	public static Icon getTemplateVerySmallIcon() {
+		return new ImageIcon(loadImage("/template_very_small.png"));
+	}
+
 	public static Icon getIconForType(ComponentType p_type) {
 		if(p_type == Thread) {
 			return getThreadIcon();

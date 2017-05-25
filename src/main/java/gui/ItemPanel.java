@@ -36,7 +36,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 		o_calendarLabel.setToolTipText("Show in Calendar");
 		o_calendarLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent p_me) {
 				if (o_calendarLabel.isEnabled()) {
 					Calendar x_calendar = Calendar.getInstance();
 					x_calendar.setTime(o_item.getDueDate());
@@ -51,7 +51,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 		o_linkItemLabel.setToolTipText("Link to Google Calendar");
 		o_linkItemLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
+			public void mouseClicked(MouseEvent p_me) {
 				if (o_linkItemLabel.isEnabled()) {
 					linkToGoogle(o_item, p_parentPanel);
 				}
