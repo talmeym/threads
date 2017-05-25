@@ -50,6 +50,7 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 		x_group.add(o_showAllRadioButton);
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		x_buttonPanel.add(new JLabel("View"));
 		x_buttonPanel.add(o_showDueRadioButton);
 		x_buttonPanel.add(o_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));

@@ -259,17 +259,17 @@ public class DateUtil {
 		return null;
 	}
 
-	private static Date parseTime(String x_firstPart) {
+	private static Date parseTime(String p_firstPart) {
 		Date x_date = null;
 
 		try {
-			x_date = new SimpleDateFormat("hh:mmaa").parse(x_firstPart.toUpperCase());
+			x_date = new SimpleDateFormat("hh:mmaa").parse(p_firstPart.toUpperCase());
 		} catch (ParseException e) {
 			try {
-				x_date = new SimpleDateFormat("HH:mm").parse(x_firstPart);
+				x_date = new SimpleDateFormat("HH:mm").parse(p_firstPart);
 			} catch (ParseException f) {
 				try {
-					x_date = new SimpleDateFormat("hhaa").parse(x_firstPart.toUpperCase());
+					x_date = new SimpleDateFormat("hhaa").parse(p_firstPart.toUpperCase());
 				} catch (ParseException g) {
 					// do nothing
 				}
@@ -277,5 +277,52 @@ public class DateUtil {
 		}
 
 		return x_date;
+	}
+
+	public static Date deriveReminderDate(String p_text, Date p_date) {
+		Date x_deriveDate = deriveDate(p_text, p_date);
+
+		if(x_deriveDate != null) {
+			return x_deriveDate;
+		}
+
+		if(p_text.contains(" ")) {
+			String x_firstPart = p_text.substring(0, p_text.indexOf(" "));
+
+			if(x_firstPart.endsWith(",")) {
+				x_firstPart = x_firstPart.substring(0, x_firstPart.length() - 1);
+			}
+
+			Integer x_derivedOffset = parseOffset(x_firstPart);
+
+			if(x_derivedOffset != null) {
+				return new Date(p_date.getTime() + x_derivedOffset);
+			}
+		}
+
+		return null;
+	}
+
+	private static Integer parseOffset(String p_firstPart) {
+		try {
+			Object[] x_results = new MessageFormat("{0,number}{1}").parse(p_firstPart);
+
+			if(x_results != null && x_results.length == 2) {
+				int x_number = Integer.parseInt(x_results[0].toString());
+				char x_letter = x_results[1].toString().toCharArray()[0];
+
+				switch(x_letter) {
+					case 's': return x_number * 1000;
+					case 'm': return x_number * 1000 * 60;
+					case 'h': return x_number * 1000 * 60 * 60;
+					case 'd': return x_number * 1000 * 60 * 60 * 24;
+					case 'w': return x_number * 1000 * 60 * 60 * 24 * 7;
+				}
+			}
+		} catch (IllegalArgumentException | ParseException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

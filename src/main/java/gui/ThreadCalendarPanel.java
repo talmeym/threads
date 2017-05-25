@@ -15,6 +15,8 @@ import java.util.List;
 import static gui.Actions.*;
 import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.*;
 import static java.lang.Integer.parseInt;
+import static util.DateUtil.getFirstThing;
+import static util.DateUtil.isAllDay;
 import static util.GoogleUtil.isLinked;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.ImageUtil.*;
@@ -199,8 +201,9 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		x_addMenuItem.setForeground(Color.gray);
 		x_addMenuItem.addActionListener(e -> {
 			Item x_item = addAction(null, o_thread, p_date, o_parentPanel, false);
+			Date x_dueDate = x_item.getDueDate();
 
-			if(x_item != null && p_date.before(new Date())) {
+			if(x_item != null && ((isAllDay(x_dueDate) && x_dueDate.before(getFirstThing(0))) || (!isAllDay(x_dueDate) && x_dueDate.before(new Date())))) {
 				if (JOptionPane.showConfirmDialog(o_parentPanel, "Your action is in the past. Set it Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
 					x_item.setActive(false);
 				}

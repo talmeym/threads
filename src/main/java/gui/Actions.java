@@ -10,6 +10,7 @@ import java.util.*;
 import static data.LookupHelper.getHasDueDates;
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import static util.DateUtil.deriveDate;
+import static util.DateUtil.deriveReminderDate;
 import static util.ImageUtil.getThreadsIcon;
 
 public class Actions {
@@ -151,7 +152,7 @@ public class Actions {
 			String x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, "Enter new Reminder:", "Add new Reminder to '" + p_item + "' ?", INFORMATION_MESSAGE, getThreadsIcon(), null, "New Reminder");
 
 			if(x_text != null) {
-				Date x_derivedDate = deriveDate(x_text, p_item.getDueDate());
+				Date x_derivedDate = deriveReminderDate(x_text, p_item.getDueDate());
 				Reminder x_reminder = new Reminder(x_derivedDate != null ? x_text.substring(x_text.indexOf(" ") + 1) : x_text, x_derivedDate != null ? x_derivedDate : p_item.getDueDate());
 				p_item.addReminder(x_reminder);
 

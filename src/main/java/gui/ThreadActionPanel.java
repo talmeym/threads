@@ -58,7 +58,7 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 		x_tableModel.setOnlyNext7Days(x_sevenDays);
 		((ThreadActionCellRenderer)o_table.getCellRenderer(0, 0)).setOnlyNext7Days(x_sevenDays);
 
-		o_showNext7DaysRadioButton = new JRadioButton("Next 7 Days", x_tableModel.onlyNext7Days());
+		o_showNext7DaysRadioButton = new JRadioButton("7 Days", x_tableModel.onlyNext7Days());
 		o_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyNext7Days());
 
 		o_showNext7DaysRadioButton.addChangeListener(e -> {
@@ -73,6 +73,8 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
 		x_buttonPanel.add(setUpButtonLabel(x_addFromTemplateLabel));
+		x_buttonPanel.add(new JSeparator(JSeparator.VERTICAL));
+		x_buttonPanel.add(new JLabel("View"));
 		x_buttonPanel.add(o_showNext7DaysRadioButton);
 		x_buttonPanel.add(o_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
