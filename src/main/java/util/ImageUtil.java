@@ -20,7 +20,7 @@ public class ImageUtil {
 	}
 
 	static Image getThreadsImage() {
-		return loadImage("/threads.gif");
+		return loadImage("/threads418x364.gif");
 	}
 
 	private static Image loadImage(String filename) {
@@ -38,135 +38,147 @@ public class ImageUtil {
 	}
 
 	public static Icon getThreadsIcon() {
-		return new ImageIcon(loadImage("/threads_icon.gif"));
+		return new ImageIcon(loadImage("/threads50x44.gif"));
 	}
 
 	public static Icon getPlusIcon() {
-		return new ImageIcon(loadImage("/plus.png"));
+		return new ImageIcon(loadImage("/plus20x20.png"));
 	}
 
-	public static Icon getPlusVerySmallIcon() {
-		return new ImageIcon(loadImage("/plus_very_small.png"));
+	public static Icon getPlusSmallIcon() {
+		return new ImageIcon(loadImage("/plus12x12.png"));
 	}
 
 	public static Icon getMinusIcon() {
-		return new ImageIcon(loadImage("/minus.png"));
+		return new ImageIcon(loadImage("/minus20x20.png"));
 	}
 
 	public static Icon getTickIcon() {
-		return new ImageIcon(loadImage("/tick.png"));
+		return new ImageIcon(loadImage("/tick20x20.png"));
 	}
 
-	public static Icon getTickVerySmallIcon() {
-		return new ImageIcon(loadImage("/tick_very_small.png"));
+	public static Icon getTickSmallIcon() {
+		return new ImageIcon(loadImage("/tick12x12.png"));
 	}
 
 	public static Icon getUpIcon() {
-		return new ImageIcon(loadImage("/up.png"));
+		return new ImageIcon(loadImage("/up20x20.png"));
 	}
 
 	public static Icon getCalendarIcon() {
-		return new ImageIcon(loadImage("/calendar.png"));
+		return new ImageIcon(loadImage("/calendar20x20.png"));
 	}
 
 	public static Icon getCalendarSmallIcon() {
-		return new ImageIcon(loadImage("/calendar_tab.png"));
+		return new ImageIcon(loadImage("/calendar16x16.png"));
 	}
 
 	public static Icon getLeftIcon() {
-		return new ImageIcon(loadImage("/left.png"));
+		return new ImageIcon(loadImage("/left20x20.png"));
 	}
 
 	public static Icon getRightIcon() {
-		return new ImageIcon(loadImage("/right.png"));
+		return new ImageIcon(loadImage("/right20x20.png"));
 	}
 
 	public static Icon getCrossIcon() {
-		return new ImageIcon(loadImage("/revert.png"));
+		return new ImageIcon(loadImage("/revert20x20.png"));
 	}
 
 	public static Icon getMoveIcon() {
-		return new ImageIcon(loadImage("/move.png"));
+		return new ImageIcon(loadImage("/move20x20.png"));
 	}
 
 	public static Icon getDuplicateIcon() {
-		return new ImageIcon(loadImage("/duplicate.png"));
+		return new ImageIcon(loadImage("/duplicate17x17.png"));
 	}
 
 	public static Icon getFolderIcon() {
-		return new ImageIcon(loadImage("/folder.png"));
+		return new ImageIcon(loadImage("/folder20x20.png"));
 	}
 
 	public static Icon getLinkIcon() {
-		return new ImageIcon(loadImage("/link.png"));
+		return new ImageIcon(loadImage("/link20x20.png"));
 	}
 
-	public static Icon getLinkVerySmallIcon() {
-		return new ImageIcon(loadImage("/link_very_small.png"));
+	public static Icon getLinkSmallIcon() {
+		return new ImageIcon(loadImage("/link12x12.png"));
 	}
 
 	public static Icon getGoogleIcon() {
-		return new ImageIcon(loadImage("/google.png"));
+		return new ImageIcon(loadImage("/google50x50.png"));
 	}
 
 	public static Icon getGoogleSmallIcon() {
-		return new ImageIcon(loadImage("/google_small.png"));
+		return new ImageIcon(loadImage("/google18x18.png"));
 	}
 
 	public static Icon getGoogleVerySmallIcon() {
-		return new ImageIcon(loadImage("/google_very_small.png"));
-	}
-
-	public static Icon getGoogleVerySmallBlankIcon() {
-		return new ImageIcon(loadImage("/google_very_small_blank.png"));
+		return new ImageIcon(loadImage("/google12x12.png"));
 	}
 
 	public static Icon getActionIcon() {
-		return new ImageIcon(loadImage("/action_tab.png"));
+		return new ImageIcon(loadImage("/action16x16.png"));
+	}
+
+	public static Icon getActionSmallIcon() {
+		return new ImageIcon(loadImage("/action12x12.png"));
 	}
 
 	public static Icon getUpdateIcon() {
-		return new ImageIcon(loadImage("/update.png"));
+		return new ImageIcon(loadImage("/update14x14.png"));
+	}
+
+	public static Icon getUpdateSmallIcon() {
+		return new ImageIcon(loadImage("/update12x12.png"));
 	}
 
 	public static Icon getThreadIcon() {
-		return new ImageIcon(loadImage("/thread.png"));
+		return new ImageIcon(loadImage("/thread15x15.png"));
+	}
+
+	public static Icon getThreadSmallIcon() {
+		return new ImageIcon(loadImage("/thread12x12.png"));
 	}
 
 	public static Icon getReminderIcon() {
-		return new ImageIcon(loadImage("/reminder_tab.png"));
+		return new ImageIcon(loadImage("/reminder20x20.png"));
+	}
+
+	public static Icon getReminderSmallIcon() {
+		return new ImageIcon(loadImage("/reminder12x12.png"));
 	}
 
 	public static Icon getReturnIcon() {
-		return new ImageIcon(loadImage("/set.png"));
+		return new ImageIcon(loadImage("/set22x18.png"));
 	}
 
 	public static Icon getFolderSmallIcon() {
-		return new ImageIcon(loadImage("/contents_tab.png"));
+		return new ImageIcon(loadImage("/contents12x12.png"));
 	}
 
 	public static Icon getTrashIcon() {
-		return new ImageIcon(loadImage("/trash.png"));
+		return new ImageIcon(loadImage("/trash19x22.png"));
 	}
 
 	public static Icon getHomeIcon() {
-		return new ImageIcon(loadImage("/home.png"));
+		return new ImageIcon(loadImage("/home22x20.png"));
 	}
 
 	public static Icon getSaveIcon() {
-		return new ImageIcon(loadImage("/save.png"));
+		return new ImageIcon(loadImage("/save12x12.png"));
 	}
 
 	public static Icon getTimeUpdateIcon() {
-		return new ImageIcon(loadImage("/timeUpdate.png"));
+		return new ImageIcon(loadImage("/timeUpdate12x12.png"));
 	}
 
 	public static Icon getTemplateIcon() {
-		return new ImageIcon(loadImage("/template.png"));
+		return new ImageIcon(loadImage("/template21x21.png"));
 	}
 
-	public static Icon getTemplateVerySmallIcon() {
-		return new ImageIcon(loadImage("/template_very_small.png"));
+	public static Icon getTemplateSmallIcon() {
+		return new ImageIcon(loadImage("/template12x12.png"));
 	}
 
 	public static Icon getIconForType(ComponentType p_type) {
@@ -181,6 +193,22 @@ public class ImageUtil {
 		}
 		if(p_type == Reminder) {
 			return getReminderIcon();
+		}
+
+		throw new IllegalArgumentException("Wrong type: " + p_type);
+	}
+	public static Icon getSmallIconForType(ComponentType p_type) {
+		if(p_type == Thread) {
+			return getThreadSmallIcon();
+		}
+		if(p_type == Update) {
+			return getUpdateSmallIcon();
+		}
+		if(p_type == Action) {
+			return getActionSmallIcon();
+		}
+		if(p_type == Reminder) {
+			return getReminderSmallIcon();
 		}
 
 		throw new IllegalArgumentException("Wrong type: " + p_type);

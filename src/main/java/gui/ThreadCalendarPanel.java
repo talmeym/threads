@@ -15,7 +15,9 @@ import java.util.List;
 import static gui.Actions.*;
 import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.*;
 import static java.lang.Integer.parseInt;
+import static util.GoogleUtil.isLinked;
 import static util.GuiUtil.setUpButtonLabel;
+import static util.ImageUtil.*;
 import static util.Settings.*;
 
 class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements SettingChangeListener {
@@ -179,7 +181,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		JPopupMenu x_menu = new JPopupMenu();
 
 		for(final Component x_component: x_components) {
-			Icon x_icon = GoogleUtil.isLinked(x_component) ? ImageUtil.getGoogleVerySmallIcon() : ImageUtil.getGoogleVerySmallBlankIcon();
+			Icon x_icon = isLinked(x_component) ? getGoogleVerySmallIcon() : getSmallIconForType(x_component.getType());
 			JMenuItem x_menuItem = new JMenuItem(buildTextForItem(x_component), x_icon);
 			x_menuItem.setForeground(x_component.isActive() ? Color.black : Color.gray);
 			x_menuItem.setBackground(x_component.isActive() && x_component instanceof HasDueDate ? ((HasDueDate)x_component).isDue() ? ColourConstants.s_goneByColour : Color.white : Color.white);
@@ -193,7 +195,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			x_menu.add(new JSeparator(JSeparator.HORIZONTAL));
 		}
 
-		JMenuItem x_addMenuItem = new JMenuItem("Add Action", ImageUtil.getPlusVerySmallIcon());
+		JMenuItem x_addMenuItem = new JMenuItem("Add Action", ImageUtil.getPlusSmallIcon());
 		x_addMenuItem.setForeground(Color.gray);
 		x_addMenuItem.addActionListener(e -> {
 			Item x_item = addAction(null, o_thread, p_date, o_parentPanel, false);
@@ -207,18 +209,18 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 
 		x_menu.add(x_addMenuItem);
 
-		JMenuItem x_addFromTemplateMenuItem = new JMenuItem("Add From Template", ImageUtil.getTemplateVerySmallIcon());
+		JMenuItem x_addFromTemplateMenuItem = new JMenuItem("Add From Template", ImageUtil.getTemplateSmallIcon());
 		x_addFromTemplateMenuItem.setForeground(Color.gray);
 		x_addFromTemplateMenuItem.addActionListener(e -> addActionFromTemplate(null, o_thread, p_date, o_parentPanel, false));
 		x_menu.add(x_addFromTemplateMenuItem);
 
 		if(x_components.size() > 0) {
-			JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", ImageUtil.getLinkVerySmallIcon());
+			JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", ImageUtil.getLinkSmallIcon());
 			x_linkMenuItem.setForeground(Color.gray);
 			x_menu.add(x_linkMenuItem);
 			x_linkMenuItem.addActionListener(e -> linkToGoogle(LookupHelper.getHasDueDates(x_components), o_parentPanel));
 
-			JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", ImageUtil.getTickVerySmallIcon());
+			JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", ImageUtil.getTickSmallIcon());
 			x_makeInactiveItem.setForeground(Color.gray);
 			x_menu.add(x_makeInactiveItem);
 

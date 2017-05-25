@@ -1,7 +1,7 @@
 package gui;
 
 import data.*;
-import util.*;
+import util.DateUtil;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.Component;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static util.ImageUtil.getSmallIconForType;
 
 class ThreadCalendarCellRenderer implements TableCellRenderer {
 
@@ -60,22 +62,13 @@ class ThreadCalendarCellRenderer implements TableCellRenderer {
 				setEnabled(true);
 			} else {
 				data.Component x_component = (data.Component) p_value;
-				setIcon(getIconForComponent(x_component));
+				setIcon(getSmallIconForType(x_component.getType()));
 				setText(buildTextForItem(x_component));
 				setEnabled(x_component.isActive());
 			}
 
 			setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
 			return this;
-		}
-
-		private Icon getIconForComponent(data.Component x_component) {
-			if(x_component instanceof Item) {
-				Item x_item = (Item) x_component;
-				return x_item.getDueDate() != null ? ImageUtil.getActionIcon() : ImageUtil.getUpdateIcon();
-			}
-
-			return ImageUtil.getReminderIcon();
 		}
 
 		static String buildTextForItem(data.Component x_component) {

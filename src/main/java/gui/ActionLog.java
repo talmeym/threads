@@ -15,7 +15,7 @@ import java.util.List;
 import static data.ComponentChangeEvent.Field.CONTENT;
 import static gui.GUIConstants.*;
 import static java.awt.BorderLayout.CENTER;
-import static util.ImageUtil.getGoogleVerySmallIcon;
+import static util.ImageUtil.getGoogleSmallIcon;
 import static util.Settings.*;
 
 class ActionLog extends JFrame implements SettingChangeListener {
@@ -39,13 +39,13 @@ class ActionLog extends JFrame implements SettingChangeListener {
 		GoogleSyncer.getInstance().addActivityListener(new GoogleSyncListener() {
 			@Override
 			public void googleSyncStarted() {
-				o_log.add(new Action(new Date(), getGoogleVerySmallIcon(), "", "Google Sync started ...", "", "", ""));
+				o_log.add(new Action(new Date(), getGoogleSmallIcon(), "", "Google Sync started ...", "", "", ""));
 				x_tableModel.fireTableDataChanged();
 			}
 
 			@Override
 			public void googleSynced() {
-				o_log.add(new Action(new Date(), getGoogleVerySmallIcon(), "", "Google Sync Completed", "", "", ""));
+				o_log.add(new Action(new Date(), getGoogleSmallIcon(), "", "Google Sync Completed", "", "", ""));
 				x_tableModel.fireTableDataChanged();
 			}
 
@@ -55,7 +55,7 @@ class ActionLog extends JFrame implements SettingChangeListener {
 					HasDueDate x_hasDueDate = p_hasDueDates.get(0);
 					o_log.add(new Action(new Date(), ImageUtil.getIconForType(x_hasDueDate.getType()), x_hasDueDate.getText(), "Linked to Google Calendar", "", "", ""));
 				} else {
-					o_log.add(new Action(new Date(), getGoogleVerySmallIcon(), p_hasDueDates.size() + " items", "Linked to Google Calendar", "", "", ""));
+					o_log.add(new Action(new Date(), getGoogleSmallIcon(), p_hasDueDates.size() + " items", "Linked to Google Calendar", "", "", ""));
 				}
 
 				x_tableModel.fireTableDataChanged();

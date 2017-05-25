@@ -41,15 +41,14 @@ public class ActionTemplate {
 		}
 	}
 
-	public Item buildAndAddToThread(Date p_startingDate, String p_replacementText, Thread p_thread) {
+	public Item buildAction(Date p_startingDate, String p_replacementText) {
 		Item x_item = new Item(getReplacementText(this.o_textTemplate, p_replacementText), p_startingDate);
-		p_thread.addThreadItem(x_item);
 		o_reminderTemplates.forEach(r -> x_item.addReminder(new Reminder(getReplacementText(r.o_textTemplate, p_replacementText), new Date(p_startingDate.getTime() + r.o_offset))));
 		return x_item;
 	}
 
-	private String getReplacementText(String p_textTemplate, String p_replacementText) {
-		return p_textTemplate.replace(s_TOKEN, p_replacementText);
+	private String getReplacementText(String p_templateText, String p_replacementText) {
+		return p_replacementText != null ? p_templateText.replace(s_TOKEN, p_replacementText) : p_templateText;
 	}
 
 	public String toString() {

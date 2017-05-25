@@ -16,6 +16,7 @@ public class Actions {
 	private static java.util.List<ActionTemplate> s_actionTemplates = new ArrayList<>();
 
 	static {
+		s_actionTemplates.add(new ActionTemplate("Back Appointment", null, null, "Back appointment", Arrays.asList(new ActionTemplate.ReminderTemplate("Got to Spine Inc.", 1000 * 60 * 15 * -1), new ActionTemplate.ReminderTemplate("Back appointment - 2h", 1000 * 60 * 60 * 2 * -1))));
 		s_actionTemplates.add(new ActionTemplate("Birthday", "Enter the person's name:", "Dave", "[TOKEN] Birthday", Arrays.asList(new ActionTemplate.ReminderTemplate("Wish [TOKEN] a happy birthday", 1000 * 60 * 60 * 10), new ActionTemplate.ReminderTemplate("Send [TOKEN] a birthday card", 1000 * 60 * 60 * 24 * 3 * -1), new ActionTemplate.ReminderTemplate("Buy [TOKEN] a present", 1000 * 60 * 60 * 24 * 7 * -1))));
 		s_actionTemplates.add(new ActionTemplate("Meeting", "Enter the meeting subject:", "Planning", "[TOKEN] Meeting", Arrays.asList(new ActionTemplate.ReminderTemplate("Go to [TOKEN] Meeting", 1000 * 60 * 10 * -1), new ActionTemplate.ReminderTemplate("Prepare for [TOKEN] Meeting ?", 1000 * 60 * 60 * 2 * -1))));
 	}
@@ -35,10 +36,17 @@ public class Actions {
 			}
 
 			if (x_thread != null) {
-				String x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, x_template.getTokenPrompt(), "Add new " + x_template.getName() + " to '" + x_thread + "' ?", INFORMATION_MESSAGE, getThreadsIcon(), null, x_template.getTokenDefault());
+				String x_text = null;
+				boolean x_proceed = true;
 
-				if (x_text != null) {
-					Item x_action = x_template.buildAndAddToThread(p_date, x_text, x_thread);
+				if(x_template.getTokenPrompt() != null) {
+					x_text = (String) JOptionPane.showInputDialog(p_enclosingPanel, x_template.getTokenPrompt(), "Add new " + x_template.getName() + " to '" + x_thread + "' ?", INFORMATION_MESSAGE, getThreadsIcon(), null, x_template.getTokenDefault());
+					x_proceed = x_text != null;
+				}
+
+				if (x_proceed) {
+					Item x_action = x_template.buildAction(p_date, x_text);
+					x_thread.addThreadItem(x_action);
 
 					if (p_openAfter) {
 						WindowManager.getInstance().openComponent(x_action);
