@@ -12,9 +12,8 @@ import static util.GoogleUtil.isLinked;
 import static util.ImageUtil.*;
 
 class ReminderPanel extends JPanel implements GoogleSyncListener {
-	private Reminder o_reminder;
-	private JPanel o_parentPanel;
-
+	private final Reminder o_reminder;
+	private final JPanel o_parentPanel;
 	private final JLabel o_linkLabel = new JLabel(getLinkIcon());
 
 	ReminderPanel(final Reminder p_reminder, JPanel p_parentPanel) {
@@ -46,7 +45,8 @@ class ReminderPanel extends JPanel implements GoogleSyncListener {
 		add(x_panel, BorderLayout.NORTH);
 
 		GoogleSyncer.getInstance().addActivityListener(this);
-    }
+		googleSynced();
+	}
 
 	@Override
 	public void googleSyncStarted() {

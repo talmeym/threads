@@ -69,6 +69,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 		add(x_panel, BorderLayout.NORTH);
 
 		GoogleSyncer.getInstance().addActivityListener(this);
+		googleSynced();
     }
 
 	@Override
