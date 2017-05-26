@@ -17,9 +17,11 @@ class NavigationAndComponentPanel extends JPanel implements SettingChangeListene
 
 	private final Map<UUID, JPanel> o_componentPanels = new HashMap<>();
 	private final NavigationPanel o_navigationPanel;
+	private final JFrame o_frame;
 
-	NavigationAndComponentPanel(Thread p_topLevelThread) {
+	NavigationAndComponentPanel(Thread p_topLevelThread, JFrame p_frame) {
 		super(new BorderLayout());
+		o_frame = p_frame;
 
 		o_navigationPanel = new NavigationPanel(p_topLevelThread);
 
@@ -61,11 +63,11 @@ class NavigationAndComponentPanel extends JPanel implements SettingChangeListene
 		}
 
 		if(p_component instanceof Item) {
-			x_panel = new ItemAndReminderPanel((Item) p_component, this);
+			x_panel = new ItemAndReminderPanel((Item) p_component, this, o_frame);
 		}
 
 		if(p_component instanceof Reminder) {
-			x_panel = new ItemAndReminderPanel(((Reminder)p_component).getParentItem(), this);
+			x_panel = new ItemAndReminderPanel(((Reminder)p_component).getParentItem(), this, o_frame);
 		}
 
 		return x_panel;

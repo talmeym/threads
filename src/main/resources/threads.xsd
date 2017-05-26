@@ -5,9 +5,27 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="thread" type="thread"/>
+				<xs:element name="action_template" type="action_template" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+
+	<xs:complexType name="action_template">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="token_prompt" type="xs:string"/>
+			<xs:element name="token_default" type="xs:string"/>
+			<xs:element name="text_template" type="xs:string"/>
+			<xs:element name="reminder_template" type="reminder_template" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="reminder_template">
+		<xs:sequence>
+			<xs:element name="text_template" type="xs:string"/>
+			<xs:element name="offset" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
 
 	<xs:complexType name="thread">
 		<xs:complexContent>

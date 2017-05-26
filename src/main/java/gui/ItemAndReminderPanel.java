@@ -26,7 +26,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 	private final Map<UUID, JPanel> o_reminderPanels = new HashMap<>();
 	private final JSplitPane o_splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
-	ItemAndReminderPanel(Item p_item, JPanel p_parentPanel) {
+	ItemAndReminderPanel(Item p_item, JPanel p_parentPanel, JFrame p_frame) {
 		super(new BorderLayout());
 		o_item = p_item;
 		o_parentPanel = p_parentPanel;
@@ -41,7 +41,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 			}
 		});
 
-		o_itemPanel = new ItemPanel(p_item, o_parentPanel);
+		o_itemPanel = new ItemPanel(p_item, o_parentPanel, p_frame);
 		o_itemPanel.addTableSelectionListener(this);
 
 		JLabel x_noneLabelLabel = new JLabel("No Reminders");

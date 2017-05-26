@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static data.Saver.saveDocument;
+import static gui.Actions.getActionTemplates;
 
 public class TimedSaver extends TimedActivity<TimedSaveListener> {
     private static TimedSaver s_INSTANCE = null;
@@ -39,8 +40,8 @@ public class TimedSaver extends TimedActivity<TimedSaveListener> {
     }
 
 	void action() {
-		saveDocument(o_topThread, o_originalFile);
-		saveDocument(o_topThread, getBackupFile());
+		saveDocument(o_topThread, getActionTemplates(), o_originalFile);
+		saveDocument(o_topThread, getActionTemplates(), getBackupFile());
 
 		try {
 			sleep(1000);

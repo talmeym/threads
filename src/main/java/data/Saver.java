@@ -1,16 +1,18 @@
 package data;
 
+import data.ActionTemplate.ReminderTemplate;
 import org.jdom.*;
 import org.jdom.output.*;
 
 import java.io.*;
-import java.util.Date;
+import java.util.*;
 
 public class Saver {
-    public static void saveDocument(Thread p_topThread, File p_xmlFile) {
+    public static void saveDocument(Thread p_topThread, List<ActionTemplate> p_actionTemplates, File p_xmlFile) {
         try {
             Element x_rootElem = new Element(XmlConstants.s_THREADS);
             x_rootElem.addContent(addThread(p_topThread));
+            p_actionTemplates.forEach(a -> x_rootElem.addContent(addActionTemplate(a)));
             Document x_doc = new Document(x_rootElem);
             addSchema(x_doc);
             XMLOutputter x_outputter = new XMLOutputter(Format.getPrettyFormat());
@@ -20,6 +22,27 @@ public class Saver {
             System.exit(1);
         }
     }
+
+	private static Element addActionTemplate(ActionTemplate p_actionTemplate) {
+		Element x_templateElem = new Element(XmlConstants.s_ACTION_TEMPLATE);
+		addContent(x_templateElem, XmlConstants.s_NAME, p_actionTemplate.getName());
+		addContent(x_templateElem, XmlConstants.s_TOKEN_PROMPT, p_actionTemplate.getTokenPrompt());
+		addContent(x_templateElem, XmlConstants.s_TOKEN_DEFAULT, p_actionTemplate.getTokenDefault());
+		addContent(x_templateElem, XmlConstants.s_TEXT_TEMPLATE, p_actionTemplate.getTextTemplate());
+
+		for(ReminderTemplate x_reminderTemplate: p_actionTemplate.getReminderTemplates()) {
+			x_templateElem.addContent(addReminderTemplate(x_reminderTemplate));
+		}
+
+		return x_templateElem;
+	}
+
+	private static Element addReminderTemplate(ReminderTemplate p_reminderTemplate) {
+		Element x_templateElem = new Element(XmlConstants.s_REMINDER_TEMPLATE);
+		addContent(x_templateElem, XmlConstants.s_TEXT_TEMPLATE, p_reminderTemplate.getTextTemplate());
+		addContent(x_templateElem, XmlConstants.s_OFFSET, String.valueOf(p_reminderTemplate.getOffset()));
+		return x_templateElem;
+	}
 
 	private static Element addThread(Thread p_thread) {
         Element x_threadElem = new Element(XmlConstants.s_THREAD);

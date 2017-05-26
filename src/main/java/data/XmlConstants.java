@@ -16,4 +16,11 @@ class XmlConstants {
     static final String s_THREAD = "thread";
     static final String s_DOC_FOLDER = "doc_folder";
 	static final String s_ID = "id";
+	static final String s_ACTION_TEMPLATE = "action_template";
+	static final String s_NAME = "name";
+	static final String s_TOKEN_PROMPT = "token_prompt";
+	static final String s_TOKEN_DEFAULT = "token_default";
+	static final String s_TEXT_TEMPLATE = "text_template";
+	static final String s_REMINDER_TEMPLATE = "reminder_template";
+	static final String s_OFFSET = "offset";
 }

@@ -11,16 +11,16 @@ import java.util.*;
 import java.util.List;
 
 import static gui.Actions.linkToGoogle;
-import static util.ImageUtil.getGoogleSmallIcon;
-import static util.ImageUtil.getLinkIcon;
+import static util.ImageUtil.*;
 import static util.Settings.updateSetting;
 
 class ItemPanel extends ComponentTablePanel<Item, Reminder> {
     private final Item o_item;
 	private final JLabel o_calendarLabel = new JLabel(ImageUtil.getCalendarIcon());
+	private final JLabel o_templateItemLabel = new JLabel(getTemplateIcon());
 	private final JLabel o_linkItemLabel = new JLabel(getLinkIcon());
 
-	ItemPanel(Item p_item, final JPanel p_parentPanel) {
+	ItemPanel(Item p_item, JPanel p_parentPanel, JFrame p_frame) {
         super(new ItemReminderTableModel(p_item),  new ContentsCellRenderer(p_item));
         o_item = p_item;
 
@@ -50,6 +50,17 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 			}
 		});
 
+		o_templateItemLabel.setEnabled(o_item.getDueDate() != null);
+		o_templateItemLabel.setToolTipText("Create Action Template");
+		o_templateItemLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(o_templateItemLabel.isEnabled()) {
+					new ActionTemplateBuilderDialog(o_item, p_frame);
+				}
+			}
+		});
+
 		o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
 		o_linkItemLabel.setToolTipText("Link to Google Calendar");
 		o_linkItemLabel.addMouseListener(new MouseAdapter() {
@@ -62,7 +73,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 		});
 
         JPanel x_panel = new JPanel(new BorderLayout());
-        x_panel.add(new ComponentInfoPanel(p_item, p_parentPanel, true, o_calendarLabel, o_linkItemLabel), BorderLayout.NORTH);
+        x_panel.add(new ComponentInfoPanel(p_item, p_parentPanel, true, o_calendarLabel, o_templateItemLabel, o_linkItemLabel), BorderLayout.NORTH);
         x_panel.add(new DateSuggestionPanel(o_item, p_parentPanel), BorderLayout.SOUTH);
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 

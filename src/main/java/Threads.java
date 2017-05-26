@@ -1,11 +1,15 @@
 import data.*;
+import data.Loader.Configuration;
 import data.Thread;
-import gui.WindowManager;
+import gui.*;
 import util.*;
 
 import java.awt.event.*;
 import java.io.File;
 
+import static data.Loader.loadConfiguration;
+import static gui.Actions.getActionTemplates;
+import static gui.Actions.setActionTemplates;
 import static util.Settings.registerForSetting;
 
 public class Threads {
@@ -14,7 +18,13 @@ public class Threads {
 
 		File x_dataFile = new File(args.length > 0 ? args[0] : "threads.xml");
 		File x_settingsFile = new File(x_dataFile.getParentFile(), x_dataFile.getName() + ".properties");
-		Thread x_topThread = x_dataFile.exists() ? Loader.loadDocumentThread(x_dataFile) : new Thread("Threads");
+
+		Configuration x_config = x_dataFile.exists() ? loadConfiguration(x_dataFile) : null;
+		Thread x_topThread = x_config != null ? x_config.getTopLevelThread() : new Thread("Threads");
+
+		if(x_config != null) {
+			setActionTemplates(x_config.getActionTemplates());
+		}
 
 		TimedUpdater.initialise();
 		TimedSaver.initialise(x_topThread, x_dataFile);
@@ -32,7 +42,7 @@ public class Threads {
 				TimedSaver.getInstance().stopRunning();
 				GoogleSyncer.getInstance().stopRunning();
 				TimedUpdater.getInstance().stopRunning();
-				Saver.saveDocument(x_topThread, x_dataFile);
+				Saver.saveDocument(x_topThread, getActionTemplates(), x_dataFile);
 				Settings.save(x_settingsFile);
 				System.exit(0);
 			}

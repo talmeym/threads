@@ -14,27 +14,28 @@ import java.util.List;
 import static java.lang.Thread.sleep;
 import static util.GuiUtil.setUpButtonLabel;
 
-class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, GoogleSyncListener, TimedSaveListener, SettingChangeListener {
+class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, GoogleSyncListener, TimedSaveListener {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm");
+
+	private final boolean o_showGoogle;
+	private final ActionLog o_actionLog;
 
 	private final JProgressBar o_updateProgress = new JProgressBar(JProgressBar.HORIZONTAL);
 	private final JProgressBar o_googleProgress = new JProgressBar(JProgressBar.HORIZONTAL);
 	private final JProgressBar o_saveProgress = new JProgressBar(JProgressBar.HORIZONTAL);
+
 	private final JLabel o_statusLabel;
 
 	private long o_lastUpdate = System.currentTimeMillis();
 	private long o_lastGoogle = System.currentTimeMillis();
 	private long o_lastSave = System.currentTimeMillis();
 
-	private boolean o_showGoogle;
-
-	private ActionLog o_actionLog;
 
 	StatusPanel(Thread p_topLevelThread) {
 		super(new GridLayout(0, 1, 5, 5));
 		o_actionLog = new ActionLog(p_topLevelThread);
 
-		o_showGoogle = Settings.registerForSetting(Settings.s_GOOGLE, this, "false").equals("true");
+		o_showGoogle = GoogleSyncer.getInstance().isGoogleEnabled();
 		o_updateProgress.setMinimum(0);
 
         JLabel x_updateLabel = new JLabel(ImageUtil.getTimeUpdateIcon());
@@ -184,10 +185,5 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
                 // do nothing
             }
         }
-	}
-
-	@Override
-	public void settingChanged(String p_name, Object p_value) {
-		// do nothing
 	}
 }

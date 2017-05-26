@@ -16,12 +16,6 @@ import static util.ImageUtil.getThreadsIcon;
 public class Actions {
 	private static java.util.List<ActionTemplate> s_actionTemplates = new ArrayList<>();
 
-	static {
-		s_actionTemplates.add(new ActionTemplate("Back Appointment", null, null, "Back appointment", Arrays.asList(new ActionTemplate.ReminderTemplate("Got to Spine Inc.", 1000 * 60 * 15 * -1), new ActionTemplate.ReminderTemplate("Back appointment - 2h", 1000 * 60 * 60 * 2 * -1))));
-		s_actionTemplates.add(new ActionTemplate("Birthday", "Enter the person's name:", "Dave", "[TOKEN] Birthday", Arrays.asList(new ActionTemplate.ReminderTemplate("Wish [TOKEN] a happy birthday", 1000 * 60 * 60 * 10), new ActionTemplate.ReminderTemplate("Send [TOKEN] a birthday card", 1000 * 60 * 60 * 24 * 3 * -1), new ActionTemplate.ReminderTemplate("Buy [TOKEN] a present", 1000 * 60 * 60 * 24 * 7 * -1))));
-		s_actionTemplates.add(new ActionTemplate("Meeting", "Enter the meeting subject:", "Planning", "[TOKEN] Meeting", Arrays.asList(new ActionTemplate.ReminderTemplate("Go to [TOKEN] Meeting", 1000 * 60 * 10 * -1), new ActionTemplate.ReminderTemplate("Prepare for [TOKEN] Meeting ?", 1000 * 60 * 60 * 2 * -1))));
-	}
-
 	static Item addActionFromTemplate(ThreadItem p_threadItem, Thread p_startingThread, Date p_date, JPanel p_enclosingPanel, boolean p_openAfter) {
 		ActionTemplate x_template = (ActionTemplate) JOptionPane.showInputDialog(p_enclosingPanel, "Choose a Template:", "Add From Template ?", INFORMATION_MESSAGE, getThreadsIcon(), s_actionTemplates.toArray(new Object[s_actionTemplates.size()]), s_actionTemplates.get(0));
 
@@ -264,39 +258,51 @@ public class Actions {
 		}
 	}
 
-	static void activate(Component p_component, JPanel p_parentPanel) {
+	static void activate(Component p_component, JPanel p_enclosingPanel) {
 		if (p_component != null) {
-			if (JOptionPane.showConfirmDialog(p_parentPanel, "Set '" + p_component.getText() + "' Active ?", "Set Active ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Set '" + p_component.getText() + "' Active ?", "Set Active ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				p_component.setActive(true);
 			}
 		}
 	}
 
-	static void deactivate(Component p_component, JPanel p_parentPanel) {
+	static void deactivate(Component p_component, JPanel p_enclosingPanel) {
 		if (p_component != null) {
-			if (JOptionPane.showConfirmDialog(p_parentPanel, "Set '" + p_component.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Set '" + p_component.getText() + "' Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				p_component.setActive(false);
 			}
 		}
 	}
 
-	public static void remove(ThreadItem p_threadItem, JPanel p_parentPanel) {
+	public static void remove(ThreadItem p_threadItem, JPanel p_enclosingPanel) {
 		if (p_threadItem != null) {
 			Thread x_thread = p_threadItem.getParentThread();
 
-			if (JOptionPane.showConfirmDialog(p_parentPanel, "Remove '" + p_threadItem.getText() + "' from '" + x_thread.getText() + "' ?", "Remove " + p_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Remove '" + p_threadItem.getText() + "' from '" + x_thread.getText() + "' ?", "Remove " + p_threadItem.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_thread.removeThreadItem(p_threadItem);
 			}
 		}
 	}
 
-	static void remove(Reminder p_reminder, JPanel p_parentPanel) {
+	static void remove(Reminder p_reminder, JPanel p_enclosingPanel) {
 		if (p_reminder != null) {
 			Item x_item = p_reminder.getParentItem();
 
-			if (JOptionPane.showConfirmDialog(p_parentPanel, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Remove " + p_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, getThreadsIcon()) == JOptionPane.OK_OPTION) {
+			if (JOptionPane.showConfirmDialog(p_enclosingPanel, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Remove " + p_reminder.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, getThreadsIcon()) == JOptionPane.OK_OPTION) {
 				x_item.removeReminder(p_reminder);
 			}
 		}
+	}
+
+	static void addActionTemplate(ActionTemplate p_actionTemplate) {
+		s_actionTemplates.add(p_actionTemplate);
+	}
+
+	public static void setActionTemplates(List<ActionTemplate> p_actionTemplate) {
+		s_actionTemplates = p_actionTemplate;
+	}
+
+	public static List<ActionTemplate> getActionTemplates() {
+		return s_actionTemplates;
 	}
 }
