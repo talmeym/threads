@@ -12,6 +12,7 @@ import java.awt.event.*;
 import static data.ComponentType.Action;
 import static gui.Actions.addAction;
 import static gui.Actions.addActionFromTemplate;
+import static javax.swing.SwingConstants.VERTICAL;
 import static util.GuiUtil.setUpButtonLabel;
 import static util.Settings.*;
 
@@ -73,8 +74,8 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
 		x_buttonPanel.add(setUpButtonLabel(x_addFromTemplateLabel));
-		x_buttonPanel.add(new JSeparator(JSeparator.VERTICAL));
-		x_buttonPanel.add(new JLabel("View"));
+		x_buttonPanel.add(new JSeparator(VERTICAL));
+		x_buttonPanel.add(new JLabel("View:"));
 		x_buttonPanel.add(o_showNext7DaysRadioButton);
 		x_buttonPanel.add(o_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));

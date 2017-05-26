@@ -55,6 +55,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		o_table.setGridColor(Color.lightGray);
 
 		JLabel x_previousLabel = new JLabel(ImageUtil.getLeftIcon());
+		x_previousLabel.setToolTipText("Previous Month");
 		x_previousLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -63,6 +64,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		});
 
 		JLabel x_todayLabel = new JLabel(ImageUtil.getCalendarIcon());
+		x_todayLabel.setToolTipText("Go to Today");
 		x_todayLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -75,6 +77,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		});
 
 		JLabel x_nextLabel = new JLabel(ImageUtil.getRightIcon());
+		x_nextLabel.setToolTipText("Next Month");
 		x_nextLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -127,10 +130,12 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		x_buttonPanel.add(setUpButtonLabel(x_previousLabel));
 		x_buttonPanel.add(setUpButtonLabel(x_todayLabel));
 		x_buttonPanel.add(setUpButtonLabel(x_nextLabel));
-		x_buttonPanel.add(o_allCheckBox);
+		x_buttonPanel.add(new JSeparator(JSeparator.VERTICAL));
+		x_buttonPanel.add(new JLabel("View:"));
 		x_buttonPanel.add(o_includeActionsCheckBox);
 		x_buttonPanel.add(o_includeUpdatesCheckBox);
 		x_buttonPanel.add(o_includeRemindersCheckBox);
+		x_buttonPanel.add(o_allCheckBox);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(o_currentMonthLabel, BorderLayout.NORTH);
