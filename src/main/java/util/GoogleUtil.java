@@ -180,11 +180,7 @@ public class GoogleUtil {
 			List<Event> x_events = getEvents(x_calendarId);
 
 			for(HasDueDate x_hasDueDate : p_hasDueDates) {
-				Event x_event = findEvent(x_events, x_hasDueDate);
-
-				if(x_event != null) {
-					s_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getDueDate())).execute();
-				} else {
+                if(findEvent(x_events, x_hasDueDate) == null) {
 					s_client.events().insert(x_calendarId, populateEvent(new Event(), x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getDueDate())).execute();
 				}
 
@@ -200,9 +196,11 @@ public class GoogleUtil {
 	}
 
 	private static Event findEvent(List<Event> x_events, HasDueDate x_item) {
+		String x_id = x_item.getId().toString();
+
 		if(x_events != null) {
 			for(Event x_event: x_events) {
-				if(x_item.getId().toString().equals(x_event.getDescription())) {
+				if(x_id.equals(x_event.getDescription())) {
 					return x_event;
 				}
 			}

@@ -2,15 +2,23 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.*;
+import util.GoogleLinkTask;
+import util.ProgressAdapter;
+import util.Settings;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static data.LookupHelper.getHasDueDates;
+import static java.util.Collections.singletonList;
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import static util.DateUtil.deriveDate;
 import static util.DateUtil.deriveReminderDate;
+import static util.GoogleUtil.isLinked;
+import static util.ImageUtil.getGoogleIcon;
 import static util.ImageUtil.getThreadsIcon;
 
 public class Actions {
@@ -172,12 +180,12 @@ public class Actions {
 		}
 	}
 
-	static void linkToGoogle(Thread x_thread, JPanel p_enclosingPanel, boolean p_activeOnly) {
+	static void linkToGoogle(Thread x_thread, JPanel p_enclosingPanel) {
 		if (checkGoogle(p_enclosingPanel)) {
 			return;
 		}
 
-		linkToGoogle(getHasDueDates(x_thread, p_activeOnly), p_enclosingPanel);
+		linkToGoogle(getHasDueDates(x_thread, false), p_enclosingPanel);
 	}
 
 	static void linkToGoogle(final Item p_item, final JPanel p_enclosingPanel) {
@@ -193,31 +201,38 @@ public class Actions {
 			return;
 		}
 
-		linkToGoogle(Collections.singletonList(p_reminder), p_enclosingPanel);
+		linkToGoogle(singletonList(p_reminder), p_enclosingPanel);
 	}
 
-	static void linkToGoogle(final List<HasDueDate> p_hasDueDates, final JPanel p_enclosingPanel) {
+	static void linkToGoogle(List<HasDueDate> p_hasDueDates, final JPanel p_enclosingPanel) {
 		if (checkGoogle(p_enclosingPanel) || p_hasDueDates.size() == 0) {
 			return;
 		}
 
-		String x_confirmMessage = p_hasDueDates.size() > 1 ? "Link " + p_hasDueDates.size() + " item" + (p_hasDueDates.size() > 1 ? "s" : "") + " to Google Calendar ?" : "Link '" + p_hasDueDates.get(0) + "' to Google Calendar ?";
-		String x_successMessage = p_hasDueDates.size() > 1 ? p_hasDueDates.size() + " Item" + (p_hasDueDates.size() > 1 ? "s were" : " was") + " linked to Google Calendar" : "'" + p_hasDueDates.get(0).getText() + "' was linked to Google Calendar";
+        List<HasDueDate> x_unlinkedHasDueDates = p_hasDueDates.stream().filter(h -> !isLinked(((Component) h))).collect(Collectors.toList());
+		String x_deltaString = x_unlinkedHasDueDates.size() != p_hasDueDates.size() ? " (of " + p_hasDueDates.size() + " Items)" : "";
 
-		if (JOptionPane.showConfirmDialog(p_enclosingPanel, x_confirmMessage, "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
-			GoogleLinkTask x_task = new GoogleLinkTask(p_hasDueDates, new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
-				@Override
-				public void success() {
-					JOptionPane.showMessageDialog(p_enclosingPanel, x_successMessage, "Link notification", JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon());
-				}
+        if(x_unlinkedHasDueDates.size() > 0) {
+			String x_confirmMessage = x_unlinkedHasDueDates.size() > 1 ? "Link " + x_unlinkedHasDueDates.size() + " item" + (x_unlinkedHasDueDates.size() > 1 ? "s" : "") + x_deltaString + " to Google Calendar ?" : "Link '" + x_unlinkedHasDueDates.get(0) + "'" + x_deltaString + " to Google Calendar ?";
+			String x_successMessage = x_unlinkedHasDueDates.size() > 1 ? x_unlinkedHasDueDates.size() + " Item" + (x_unlinkedHasDueDates.size() > 1 ? "s were" : " was") + " linked to Google Calendar" : "'" + x_unlinkedHasDueDates.get(0).getText() + "' was linked to Google Calendar";
 
-				@Override
-				public void error(String errorDesc) {
-					JOptionPane.showMessageDialog(p_enclosingPanel, errorDesc, "Error linking to Google Calendar ...", JOptionPane.ERROR_MESSAGE);
-				}
-			});
+			if (JOptionPane.showConfirmDialog(p_enclosingPanel, x_confirmMessage, "Link to Google Calendar ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				GoogleLinkTask x_task = new GoogleLinkTask(x_unlinkedHasDueDates, new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
+					@Override
+					public void success() {
+						JOptionPane.showMessageDialog(p_enclosingPanel, x_successMessage, "Link notification", JOptionPane.WARNING_MESSAGE, getGoogleIcon());
+					}
 
-			x_task.execute();
+					@Override
+					public void error(String errorDesc) {
+						JOptionPane.showMessageDialog(p_enclosingPanel, errorDesc, "Error linking to Google Calendar ...", JOptionPane.ERROR_MESSAGE);
+					}
+				});
+
+				x_task.execute();
+			}
+		} else {
+			JOptionPane.showMessageDialog(p_enclosingPanel, "All Items already linked", "All Good", INFORMATION_MESSAGE);
 		}
 	}
 

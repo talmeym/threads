@@ -5,6 +5,8 @@ import util.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static data.ComponentType.Action;
+
 public class LookupHelper {
 	public static List<Item> getAllActiveUpdates(Thread p_thread) {
 		List<Item> x_result = new ArrayList<>();
@@ -155,7 +157,7 @@ public class LookupHelper {
 					x_hasDueDates.add(h);
 
 					if (h instanceof Item && h.isActive()) {
-						x_hasDueDates.addAll(((Item) h).getReminders());
+						x_hasDueDates.addAll(((Item)h).getReminders());
 					}
 				});
 		return x_hasDueDates;
@@ -167,7 +169,9 @@ public class LookupHelper {
 				.filter(ti -> (!p_onlyActive || ti.isActive()))
 				.forEach(ti -> {
 					if(ti instanceof Item) {
-						x_hasDueDates.addAll(getHasDueDates((Item)ti, p_onlyActive));
+						if(((Item)ti).getDueDate() != null) {
+							x_hasDueDates.addAll(getHasDueDates((Item)ti, p_onlyActive));
+						}
 					} else {
 						x_hasDueDates.addAll(getHasDueDates((Thread)ti, p_onlyActive));
 					}

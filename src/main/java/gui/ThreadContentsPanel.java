@@ -72,7 +72,7 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 
 		if(p_threadItem instanceof Thread) {
 			final Thread x_thread = (Thread) p_threadItem;
-			linkToGoogle(x_thread, o_parentPanel, false);
+			linkToGoogle(x_thread, o_parentPanel);
 		}
 	}
 
