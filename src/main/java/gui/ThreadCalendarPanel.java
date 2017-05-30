@@ -90,7 +90,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			}
 		});
 
-		o_currentMonthLabel.setHorizontalAlignment(CENTER);
+		o_currentMonthLabel.setHorizontalAlignment(JLabel.CENTER);
 		o_currentMonthLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		ThreadCalendarTableModel x_tableModel = (ThreadCalendarTableModel) o_table.getModel();
@@ -143,8 +143,8 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		x_buttonPanel.add(o_allCheckBox);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-		add(o_currentMonthLabel, NORTH);
-		add(x_buttonPanel, SOUTH);
+		add(o_currentMonthLabel, BorderLayout.NORTH);
+		add(x_buttonPanel, BorderLayout.SOUTH);
 	}
 
 	private void setAllCheckbox() {
