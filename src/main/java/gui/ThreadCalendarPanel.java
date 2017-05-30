@@ -16,7 +16,7 @@ import static data.LookupHelper.getHasDueDates;
 import static gui.Actions.*;
 import static gui.ColourConstants.s_goneByColour;
 import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.*;
-import static gui.WidgetFactory.setUpButtonLabel;
+import static gui.WidgetFactory.createLabel;
 import static java.awt.Color.*;
 import static java.lang.Integer.parseInt;
 import static java.util.Calendar.*;
@@ -60,35 +60,13 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		o_table.setShowGrid(true);
 		o_table.setGridColor(lightGray);
 
-		JLabel x_previousLabel = new JLabel(getLeftIcon());
-		x_previousLabel.setToolTipText("Previous Month");
-		x_previousLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				changeMonth(false);
-			}
-		});
-
-		JLabel x_todayLabel = new JLabel(getCalendarIcon());
-		x_todayLabel.setToolTipText("Go to Today");
-		x_todayLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				Calendar x_calendar = Calendar.getInstance();
-				int x_year = x_calendar.get(YEAR);
-				int x_month = x_calendar.get(MONTH);
-				setTime(x_year, x_month);
-				updateSetting(s_DATE, x_month + "_" + x_year);
-			}
-		});
-
-		JLabel x_nextLabel = new JLabel(getRightIcon());
-		x_nextLabel.setToolTipText("Next Month");
-		x_nextLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				changeMonth(true);
-			}
+		JLabel x_previousLabel = createLabel(getLeftIcon(), "Previous Month", true, e -> changeMonth(false));
+		JLabel x_nextLabel = createLabel(getRightIcon(), "Next Month", true, e -> changeMonth(true));
+		JLabel x_todayLabel = createLabel(getCalendarIcon(), "Go to Today", true, e -> {
+			int x_year = x_calendar.get(YEAR);
+			int x_month = x_calendar.get(MONTH);
+			setTime(x_year, x_month);
+			updateSetting(s_DATE, x_month + "_" + x_year);
 		});
 
 		o_currentMonthLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -133,9 +111,9 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		});
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
-		x_buttonPanel.add(setUpButtonLabel(x_previousLabel));
-		x_buttonPanel.add(setUpButtonLabel(x_todayLabel));
-		x_buttonPanel.add(setUpButtonLabel(x_nextLabel));
+		x_buttonPanel.add(x_previousLabel);
+		x_buttonPanel.add(x_todayLabel);
+		x_buttonPanel.add(x_nextLabel);
 		x_buttonPanel.add(new JSeparator(JSeparator.VERTICAL));
 		x_buttonPanel.add(new JLabel("View:"));
 		x_buttonPanel.add(o_includeActionsCheckBox);
@@ -212,11 +190,14 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		x_addMenuItem.setForeground(gray);
 		x_addMenuItem.addActionListener(e -> {
 			Item x_item = addAction(null, o_thread, p_date, o_parentPanel, false);
-			Date x_dueDate = x_item.getDueDate();
 
-			if(x_item != null && ((isAllDay(x_dueDate) && x_dueDate.before(getFirstThing(0))) || (!isAllDay(x_dueDate) && x_dueDate.before(new Date())))) {
-				if (showConfirmDialog(o_parentPanel, "Your action is in the past. Set it Inactive ?", "Set Inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
-					x_item.setActive(false);
+			if(x_item != null) {
+				Date x_dueDate = x_item.getDueDate();
+
+				if ((isAllDay(x_dueDate) && x_dueDate.before(getFirstThing(0))) || (!isAllDay(x_dueDate) && x_dueDate.before(new Date()))) {
+					if (showConfirmDialog(o_parentPanel, "Your action is in the past. Set it Inactive ?", "Set Inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+						x_item.setActive(false);
+					}
 				}
 			}
 		});

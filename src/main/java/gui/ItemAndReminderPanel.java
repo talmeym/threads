@@ -5,12 +5,11 @@ import util.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
 import static gui.Actions.addReminder;
-import static gui.WidgetFactory.setUpButtonLabel;
+import static gui.WidgetFactory.createLabel;
 import static java.awt.BorderLayout.*;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.JSplitPane.VERTICAL_SPLIT;
@@ -24,7 +23,6 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 	private final Item o_item;
 	private final ItemPanel o_itemPanel;
 	private final JPanel o_parentPanel;
-	private final JLabel o_addReminderLabel = new JLabel(getPlusIcon());
 	private final CardLayout o_cardLayout = new CardLayout();
 	private final JPanel o_cardPanel = new JPanel(o_cardLayout);
 	private final Map<UUID, JPanel> o_reminderPanels = new HashMap<>();
@@ -36,12 +34,8 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 		o_parentPanel = p_parentPanel;
 
 		o_item.addComponentChangeListener(e -> {
-			if (e.getSource() == o_item) {
-				if (e.isContentRemoved()) {
-					o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
-				}
-
-				o_addReminderLabel.setEnabled(o_item.getDueDate() != null);
+			if (e.getSource() == o_item && e.isContentRemoved()) {
+				o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
 			}
 		});
 
@@ -66,17 +60,10 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 	    o_cardPanel.add(x_noneSelectedPanel, s_noneSelected);
 		o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
 
-		o_addReminderLabel.setEnabled(o_item.getDueDate() != null);
-		o_addReminderLabel.setToolTipText("Add Reminder");
-		o_addReminderLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				addReminder(o_item, p_parentPanel, true);
-			}
-		});
+		JLabel o_addReminderLabel = createLabel(getPlusIcon(), "Add Reminder", o_item, i -> i.getDueDate() != null, e -> addReminder(o_item, p_parentPanel, true));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
-		x_buttonPanel.add(setUpButtonLabel(o_addReminderLabel));
+		x_buttonPanel.add(o_addReminderLabel);
 
 		JPanel x_bottomPanel = new JPanel(new BorderLayout());
 		x_bottomPanel.add(o_cardPanel, CENTER);

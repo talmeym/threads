@@ -284,22 +284,26 @@ public class Actions {
 		}
 	}
 
-	public static void remove(ThreadItem p_threadItem, JPanel p_enclosingPanel) {
-		if (p_threadItem != null) {
-			Thread x_thread = p_threadItem.getParentThread();
+	public static void remove(Component p_component, JPanel p_enclosingPanel, boolean p_openParentAfter) {
+		if (p_component != null) {
+			Component x_parentComponent = p_component.getParentComponent();
 
-			if (showConfirmDialog(p_enclosingPanel, "Remove '" + p_threadItem.getText() + "' from '" + x_thread.getText() + "' ?", "Remove " + p_threadItem.getType() + " ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
-				x_thread.removeThreadItem(p_threadItem);
-			}
-		}
-	}
+			if(x_parentComponent != null) {
+				if (showConfirmDialog(p_enclosingPanel, "Remove '" + p_component.getText() + "' from '" + x_parentComponent.getText() + "' ?", "Remove " + p_component.getType() + " ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
+					if (p_component instanceof ThreadItem) {
+						ThreadItem x_threadItem = (ThreadItem) p_component;
+						x_threadItem.getParentThread().removeThreadItem(x_threadItem);
+					} else {
+						Item x_item = (Item) x_parentComponent;
+						x_item.removeReminder((Reminder) p_component);
+					}
 
-	static void remove(Reminder p_reminder, JPanel p_enclosingPanel) {
-		if (p_reminder != null) {
-			Item x_item = p_reminder.getParentItem();
-
-			if (showConfirmDialog(p_enclosingPanel, "Remove '" + p_reminder.getText() + "' from '" + x_item.getText() + "' ?", "Remove " + p_reminder.getType() + " ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
-				x_item.removeReminder(p_reminder);
+					if (p_openParentAfter) {
+						WindowManager.getInstance().openComponent(x_parentComponent);
+					}
+				}
+			} else {
+				showMessageDialog(p_enclosingPanel, "The root Thread cannot be deleted", "No can do", WARNING_MESSAGE, getThreadsIcon());
 			}
 		}
 	}

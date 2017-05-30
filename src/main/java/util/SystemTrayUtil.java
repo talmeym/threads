@@ -10,7 +10,7 @@ import java.util.*;
 
 import static data.ComponentChangeEvent.Field.TEXT;
 import static gui.Actions.*;
-import static gui.DateSuggestionPanel.getDateSuggestion;
+import static gui.ItemDateSuggestionPanel.getDateSuggestion;
 import static util.ImageUtil.getThreadsImage;
 
 public class SystemTrayUtil {

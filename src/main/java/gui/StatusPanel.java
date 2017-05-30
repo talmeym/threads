@@ -42,6 +42,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		o_updateProgress.setMinimum(0);
 
         JLabel x_updateLabel = new JLabel(getTimeUpdateIcon());
+        x_updateLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 		x_updateLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -49,7 +50,6 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 			}
 		});
 
-        x_updateLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 		JPanel x_updatePanel = new JPanel(new BorderLayout());
         x_updatePanel.add(setUpButtonLabel(x_updateLabel), WEST);
 		x_updatePanel.add(o_updateProgress, CENTER);
@@ -61,6 +61,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 			o_googleProgress.setMinimum(0);
 
 			JLabel x_googleLabel = new JLabel(getGoogleVerySmallIcon());
+			x_googleLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 			x_googleLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent p_me) {
@@ -75,7 +76,6 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 				}
 			});
 
-			x_googleLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 			JPanel x_googlePanel = new JPanel(new BorderLayout());
 			x_googlePanel.add(setUpButtonLabel(x_googleLabel), WEST);
 			x_googlePanel.add(o_googleProgress, CENTER);
@@ -86,6 +86,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		o_saveProgress.setMinimum(0);
 
 		JLabel x_saveLabel = new JLabel(getSaveIcon());
+        x_saveLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		x_saveLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -99,7 +100,6 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 			}
 		});
 
-        x_saveLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		JPanel x_savePanel = new JPanel(new BorderLayout());
         x_savePanel.add(setUpButtonLabel(x_saveLabel), WEST);
 		x_savePanel.add(o_saveProgress, CENTER);

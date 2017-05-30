@@ -5,12 +5,11 @@ import util.TimedUpdater;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 import static data.ComponentType.Thread;
 import static gui.Actions.*;
 import static gui.GUIConstants.*;
-import static gui.WidgetFactory.setUpButtonLabel;
+import static gui.WidgetFactory.createLabel;
 import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
 import static util.ImageUtil.getPlusIcon;
@@ -30,22 +29,16 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
 		fixColumnWidth(3, s_statsColumnWidth);
 		fixColumnWidth(4, s_statsColumnWidth);
 
-		JLabel x_addLabel = new JLabel(getPlusIcon());
-		x_addLabel.setToolTipText("Add Thread");
-		x_addLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent p_me) {
-				addThread(getSelectedObject(), o_thread, p_parentPanel);
-			}
-		});
+		JLabel x_addLabel = createLabel(getPlusIcon(), "Add Thread", true, e-> addThread(getSelectedObject(), o_thread, p_parentPanel));
 
 		o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel, false));
 		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
 		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_parentPanel));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
-		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
+		x_buttonPanel.add(x_addLabel);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
 		add(x_buttonPanel, SOUTH);

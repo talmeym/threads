@@ -12,6 +12,7 @@ import java.util.*;
 
 import static data.ComponentChangeEvent.Field.DUE_DATE;
 import static gui.ColourConstants.s_editedColour;
+import static gui.WidgetFactory.createLabel;
 import static gui.WidgetFactory.setUpButtonLabel;
 import static java.awt.BorderLayout.WEST;
 import static java.awt.Color.*;
@@ -57,8 +58,8 @@ class RemindDateSuggestionPanel extends JPanel {
 	private final Reminder o_reminder;
 
 	private final JTextField o_dueDateField = new JTextField();
-	private final JLabel o_setLabel = new JLabel(getReturnIcon());
-	private final JLabel o_revertLabel = new JLabel(getCrossIcon());
+	private final JLabel o_setLabel = createLabel(getReturnIcon(), "Apply Change", false, e -> setDueDate());
+	private final JLabel o_revertLabel = createLabel(getCrossIcon(), "Revert Change", false);
 
 	RemindDateSuggestionPanel(Reminder p_reminder) {
         super(new BorderLayout());
@@ -99,7 +100,6 @@ class RemindDateSuggestionPanel extends JPanel {
 		o_dueDateField.setBorder(createCompoundBorder(createLineBorder(lightGray), createEmptyBorder(0, 5, 0, 5)));
 
 		o_dueDateField.addActionListener(e -> setDueDate());
-
 		o_dueDateField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent focusEvent) {
@@ -123,17 +123,6 @@ class RemindDateSuggestionPanel extends JPanel {
 			}
 		});
 
-		o_setLabel.setEnabled(false);
-		o_setLabel.setToolTipText("Apply Change");
-		o_setLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				setDueDate();
-			}
-		});
-
-		o_revertLabel.setEnabled(false);
-		o_revertLabel.setToolTipText("Revert Change");
 		o_revertLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -158,8 +147,8 @@ class RemindDateSuggestionPanel extends JPanel {
 
 		JPanel x_buttonPanel = new JPanel();
 		x_buttonPanel.setLayout(new FlowLayout(LEFT));
-		x_buttonPanel.add(setUpButtonLabel(o_setLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_revertLabel));
+		x_buttonPanel.add(o_setLabel);
+		x_buttonPanel.add(o_revertLabel);
 		x_buttonPanel.setBorder(createEmptyBorder(7, 0, 0, 0));
 
 		JPanel x_panel = new JPanel(new BorderLayout());

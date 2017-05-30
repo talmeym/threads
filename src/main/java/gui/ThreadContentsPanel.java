@@ -7,11 +7,11 @@ import util.*;
 import javax.swing.*;
 import java.awt.Component;
 import java.awt.*;
-import java.awt.event.*;
 
 import static gui.Actions.*;
 import static gui.GUIConstants.*;
-import static gui.WidgetFactory.setUpButtonLabel;
+import static gui.ItemDateSuggestionPanel.getDateSuggestion;
+import static gui.WidgetFactory.createLabel;
 import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.JOptionPane.*;
@@ -34,23 +34,16 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
         fixColumnWidth(3, s_threadItemInfoColumnWidth);
         fixColumnWidth(4, s_googleStatusColumnWidth);
 
-		JLabel x_addItemLabel = new JLabel(getPlusIcon());
-		x_addItemLabel.setToolTipText("Add Item");
-		x_addItemLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				add(getSelectedObject());
-			}
-		});
+		JLabel x_addItemLabel = createLabel(getPlusIcon(), "Add Item", true, e -> add(getSelectedObject()));
 
         o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
         o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel, false));
 		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
 		o_popupMenu.setLinkActionListener(e -> link(getSelectedObject()));
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
-        x_buttonPanel.add(setUpButtonLabel(x_addItemLabel));
+        x_buttonPanel.add(x_addItemLabel);
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         add(x_buttonPanel, SOUTH);
@@ -66,7 +59,7 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 		switch(x_selection) {
 			case 0: addUpdate(p_threadItem, o_thread, o_parentPanel); break;
 			case 1: addThread(p_threadItem, o_thread, o_parentPanel); break;
-			case 2: addAction(p_threadItem, o_thread, DateSuggestionPanel.getDateSuggestion(), o_parentPanel, true); break;
+			case 2: addAction(p_threadItem, o_thread, getDateSuggestion(), o_parentPanel, true); break;
 		}
 	}
 

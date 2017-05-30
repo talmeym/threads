@@ -5,10 +5,10 @@ import util.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 import static data.LookupHelper.*;
 import static gui.Actions.linkToGoogle;
+import static gui.WidgetFactory.createLabel;
 import static java.awt.BorderLayout.*;
 import static java.awt.Color.*;
 import static util.ImageUtil.*;
@@ -48,32 +48,22 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 		o_tabs.setToolTipTextAt(4, "A view of all active Reminders");
 		o_tabs.setToolTipTextAt(5, "A calendar view of all Items");
 
-		final JLabel x_linkLabel = new JLabel(getLinkIcon());
-		x_linkLabel.setToolTipText("Link to Google Calendar");
-		x_linkLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-			}
+		final JLabel x_linkLabel = createLabel(getLinkIcon(), "Link to Google Calendar", true, e -> {
+			JPopupMenu x_popupMenu = new JPopupMenu();
+
+			JMenuItem x_linkActive = new JMenuItem("Link Active");
+			x_linkActive.addActionListener(f -> linkToGoogle(getHasDueDates(o_thread, true), p_parentPanel));
+
+			JMenuItem x_linkAll = new JMenuItem("Link All");
+			x_linkAll.addActionListener(f -> linkToGoogle(getHasDueDates(o_thread, false), p_parentPanel));
+
+			x_popupMenu.add(x_linkActive);
+			x_popupMenu.add(x_linkAll);
+
+			x_popupMenu.show(this, e.getX(), e.getY());
 		});
 
-		x_linkLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				JPopupMenu x_popupMenu = new JPopupMenu();
 
-				JMenuItem x_linkActive = new JMenuItem("Link Active");
-				x_linkActive.addActionListener(e -> linkToGoogle(getHasDueDates(o_thread, true), p_parentPanel));
-
-				JMenuItem x_linkAll = new JMenuItem("Link All");
-				x_linkAll.addActionListener(e -> linkToGoogle(getHasDueDates(o_thread, false), p_parentPanel));
-
-				x_popupMenu.add(x_linkActive);
-				x_popupMenu.add(x_linkAll);
-
-				x_popupMenu.show(x_linkLabel, p_me.getX(), p_me.getY());
-			}
-		});
-		
 		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_parentPanel, true, x_linkLabel);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 3, 0, 3));
 		add(componentInfoPanel, NORTH);

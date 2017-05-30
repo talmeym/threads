@@ -5,9 +5,10 @@ import util.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 
+import static gui.Actions.linkToGoogle;
+import static gui.WidgetFactory.createLabel;
 import static java.awt.BorderLayout.*;
 import static util.GoogleUtil.isLinked;
 import static util.ImageUtil.*;
@@ -15,22 +16,14 @@ import static util.ImageUtil.*;
 class ReminderPanel extends JPanel implements GoogleSyncListener {
 	private final Reminder o_reminder;
 	private final JPanel o_parentPanel;
-	private final JLabel o_linkLabel = new JLabel(getLinkIcon());
+	private final JLabel o_linkLabel;
 
 	ReminderPanel(final Reminder p_reminder, JPanel p_parentPanel) {
         super(new BorderLayout());
 		o_reminder = p_reminder;
 		o_parentPanel = p_parentPanel;
 
-		o_linkLabel.setToolTipText("Link to Google Calendar");
-		o_linkLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				if (o_linkLabel.isEnabled()) {
-                    Actions.linkToGoogle(o_reminder, o_parentPanel);
-                }
-			}
-		});
+		o_linkLabel = createLabel(getLinkIcon(), "Link to Google Calendar", true, e -> linkToGoogle(o_reminder, o_parentPanel));
 
 		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_reminder, this, false, o_linkLabel);
 		o_compInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));

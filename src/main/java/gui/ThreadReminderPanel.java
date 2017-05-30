@@ -31,7 +31,7 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 
 		o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel, false));
 		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_parentPanel));
 
 		boolean x_onlyDue = registerForSetting(s_ONLYDUE, this, true);
@@ -43,9 +43,9 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 		o_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyDueReminders());
 
 		o_showDueRadioButton.addChangeListener(e -> {
-			boolean selected = o_showDueRadioButton.isSelected();
-			x_tableModel.setOnlyDueReminders(selected);
-			updateSetting(s_ONLYDUE, selected);
+			boolean x_selected = o_showDueRadioButton.isSelected();
+			x_tableModel.setOnlyDueReminders(x_selected);
+			updateSetting(s_ONLYDUE, x_selected);
 		});
 
 		ButtonGroup x_group = new ButtonGroup();

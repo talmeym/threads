@@ -7,12 +7,11 @@ import util.*;
 import javax.swing.*;
 import java.awt.Component;
 import java.awt.*;
-import java.awt.event.*;
 
 import static data.ComponentType.Action;
 import static gui.Actions.*;
 import static gui.GUIConstants.*;
-import static gui.WidgetFactory.setUpButtonLabel;
+import static gui.WidgetFactory.*;
 import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.SwingConstants.VERTICAL;
@@ -35,25 +34,12 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
         fixColumnWidth(3, s_dateStatusColumnWidth);
         fixColumnWidth(4, s_googleStatusColumnWidth);
 
-		JLabel x_addLabel = new JLabel(getPlusIcon());
-		x_addLabel.setToolTipText("Add Action");
-		x_addLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent p_me) {
-				addAction(getSelectedObject(), o_thread, DateSuggestionPanel.getDateSuggestion(), p_parentPanel, true);
-			}
-		});
-
-		JLabel x_addFromTemplateLabel = new JLabel(getTemplateIcon());
-		x_addFromTemplateLabel.setToolTipText("Add From Template");
-		x_addFromTemplateLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent p_me) {
-				addActionFromTemplate(getSelectedObject(), o_thread, DateSuggestionPanel.getDateSuggestion(), p_parentPanel, true);
-			}
-		});
+		JLabel x_addLabel = createLabel(getPlusIcon(), "Add Action", true, e -> addAction(getSelectedObject(), o_thread, ItemDateSuggestionPanel.getDateSuggestion(), p_parentPanel, true));
+		JLabel x_addTemplateLabel = createLabel(getTemplateIcon(), "Add From Template", true, e -> addActionFromTemplate(getSelectedObject(), o_thread, ItemDateSuggestionPanel.getDateSuggestion(), p_parentPanel, true));
 
 		o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel, false));
 		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
 		o_popupMenu.setLinkActionListener(e -> Actions.linkToGoogle(getSelectedObject(), p_parentPanel));
 
@@ -75,8 +61,8 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 		x_group.add(o_showAllRadioButton);
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
-		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
-		x_buttonPanel.add(setUpButtonLabel(x_addFromTemplateLabel));
+		x_buttonPanel.add(x_addLabel);
+		x_buttonPanel.add(x_addTemplateLabel);
 		x_buttonPanel.add(new JSeparator(VERTICAL));
 		x_buttonPanel.add(new JLabel("View:"));
 		x_buttonPanel.add(o_showNext7DaysRadioButton);

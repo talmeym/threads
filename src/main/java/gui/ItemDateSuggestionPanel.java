@@ -11,6 +11,7 @@ import java.text.*;
 import java.util.*;
 
 import static gui.ColourConstants.s_editedColour;
+import static gui.WidgetFactory.createLabel;
 import static gui.WidgetFactory.setUpButtonLabel;
 import static java.awt.BorderLayout.*;
 import static java.awt.Color.*;
@@ -20,7 +21,7 @@ import static javax.swing.JOptionPane.*;
 import static util.DateUtil.isAllDay;
 import static util.ImageUtil.*;
 
-public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
+public class ItemDateSuggestionPanel extends JPanel implements TimedUpdateListener {
 	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
 	private static final String s_defaultTextString = "dd/mm/yy [hh:mm]";
@@ -39,10 +40,10 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 
 	private final JPanel o_parentPanel;
     private final JTextField o_dueDateField = new JTextField();
-	private final JLabel o_setLabel = new JLabel(getReturnIcon());
-	private final JLabel o_revertLabel = new JLabel(getCrossIcon());
+	private final JLabel o_setLabel = createLabel(getReturnIcon(), "Apply Change", false, e -> setDueDate());
+	private final JLabel o_revertLabel = createLabel(getCrossIcon(), "Revert Change", false);
 
-    DateSuggestionPanel(Item p_item, final JPanel p_parentPanel) {
+    ItemDateSuggestionPanel(Item p_item, final JPanel p_parentPanel) {
         super(new BorderLayout());
 		o_parentPanel = p_parentPanel;
 		o_item = p_item;
@@ -107,17 +108,6 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 			}
 		});
 
-		o_setLabel.setEnabled(false);
-		o_setLabel.setToolTipText("Apply Change");
-		o_setLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				setDueDate();
-			}
-		});
-
-		o_revertLabel.setEnabled(false);
-		o_revertLabel.setToolTipText("Revert Change");
 		o_revertLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -139,8 +129,8 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 
 		JPanel x_buttonPanel = new JPanel();
 		x_buttonPanel.setLayout(new FlowLayout(LEFT));
-		x_buttonPanel.add(setUpButtonLabel(o_setLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_revertLabel));
+		x_buttonPanel.add(o_setLabel);
+		x_buttonPanel.add(o_revertLabel);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(7, 0, 0, 0));
 
 		JPanel x_panel = new JPanel(new BorderLayout());

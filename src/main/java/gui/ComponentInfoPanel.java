@@ -12,8 +12,8 @@ import java.util.*;
 import java.util.List;
 
 import static data.ComponentChangeEvent.Field.TEXT;
-import static data.LookupHelper.getAllActiveThreads;
 import static gui.ColourConstants.s_editedColour;
+import static gui.WidgetFactory.createLabel;
 import static gui.WidgetFactory.setUpButtonLabel;
 import static java.awt.Color.*;
 import static java.awt.FlowLayout.LEFT;
@@ -24,22 +24,22 @@ import static util.ImageUtil.*;
 class ComponentInfoPanel extends JPanel {
     private final Component o_component;
 
-	private final JLabel o_activeLabel = new JLabel(getTickIcon());
 	private final JTextField o_textField = new JTextField();
-	private final JLabel o_setLabel = new JLabel(getReturnIcon());
-	private final JLabel o_revertLabel = new JLabel(getCrossIcon());
+	private final JLabel o_setLabel = createLabel(getReturnIcon(), "Apply Change", false, e-> setText());
+	private final JLabel o_revertLabel = createLabel(getCrossIcon(), "Revert Change", false);
 	private final JPanel o_breadcrumbsPanel = new JPanel(new FlowLayout(LEFT));
 
 	ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, boolean p_showParents, JLabel... p_extraLabels) {
         super(new BorderLayout());
         o_component = p_component;
 
-		final JLabel x_homeLabel = new JLabel(getHomeIcon());
-		final JLabel x_parentLabel = new JLabel(getUpIcon());
-		final JLabel x_moveLabel = new JLabel(getMoveIcon());
-		final JLabel x_removeLabel = new JLabel(getTrashIcon());
-		final JLabel x_duplicateLabel = new JLabel(getDuplicateIcon());
-		final JLabel x_folderLabel = new JLabel(getFolderIcon());
+		final JLabel x_homeLabel = createLabel(getHomeIcon(), "View Top", o_component.getParentComponent() != null);
+		final JLabel x_parentLabel = createLabel(getUpIcon(), "View Parent", o_component.getParentComponent() != null);
+		final JLabel o_activeLabel = createLabel(getTickIcon(), "Make Active/Inactive", o_component.isActive());
+		final JLabel x_moveLabel = createLabel(getMoveIcon(), "Move", o_component.getParentComponent() != null);
+		final JLabel x_removeLabel = createLabel(getTrashIcon(), "Remove", o_component.getParentComponent() != null);
+		final JLabel x_duplicateLabel = createLabel(getDuplicateIcon(), "Duplicate", o_component.getParentComponent() != null);
+		final JLabel x_folderLabel = createLabel(getFolderIcon(), "Document Folder", true);
 
 		final DocumentListener x_listener = new DocumentListener() {
 			@Override public void insertUpdate(DocumentEvent p_de) { edited(); }
@@ -96,14 +96,6 @@ class ComponentInfoPanel extends JPanel {
 		o_textField.getDocument().addDocumentListener(x_listener);
 		o_textField.setBorder(createCompoundBorder(createLineBorder(lightGray), createEmptyBorder(0, 5, 0, 5)));
 
-		x_homeLabel.setEnabled(o_component.getParentComponent() != null);
-		x_parentLabel.setEnabled(o_component.getParentComponent() != null);
-		o_activeLabel.setEnabled(o_component.isActive());
-		x_moveLabel.setEnabled(o_component.getParentComponent() != null);
-		x_removeLabel.setEnabled(o_component.getParentComponent() != null);
-		x_duplicateLabel.setEnabled(o_component.getParentComponent() != null);
-
-		x_parentLabel.setToolTipText("View Parent");
 		x_parentLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -113,17 +105,6 @@ class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-		o_setLabel.setEnabled(false);
-		o_setLabel.setToolTipText("Apply Change");
-		o_setLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				setText();
-			}
-		});
-
-		o_revertLabel.setEnabled(false);
-		o_revertLabel.setToolTipText("Revert Change");
 		o_revertLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -136,7 +117,6 @@ class ComponentInfoPanel extends JPanel {
 
         o_textField.addActionListener(e -> setText());
 
-		o_activeLabel.setToolTipText("Make Active/Inactive");
 		o_activeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -154,56 +134,20 @@ class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-		x_moveLabel.setToolTipText("Move");
 		x_moveLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
-				ThreadItem x_component = (ThreadItem) o_component;
-				Thread x_thread = null;
-
-				Thread x_topThread = (Thread) o_component.getHierarchy().get(0);
-				List<Thread> x_threads = getAllActiveThreads(x_topThread);
-				x_threads.add(0, x_topThread);
-				x_threads.remove(x_component.getParentThread());
-
-				if(x_threads.size() > 0) {
-					x_thread = (Thread) showInputDialog(p_parentPanel, "Choose a Thread to move it to:", "Move '" + o_component.getType() + "' ?", INFORMATION_MESSAGE, getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-				} else {
-					showMessageDialog(p_parentPanel, "This is no other Thread to move this Action to. Try creating another Thread.", "Nowhere to go", INFORMATION_MESSAGE, getThreadsIcon());
-				}
-
-				if(x_thread != null) {
-					x_component.getParentThread().removeThreadItem(x_component);
-					x_thread.addThreadItem(x_component);
-				}
+				Actions.move((ThreadItem) o_component, ((ThreadItem) o_component).getParentThread(), p_parentPanel);
 			}
 		});
 
-		x_removeLabel.setToolTipText("Remove");
 		x_removeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
-				if(x_parentLabel.isEnabled()) {
-					Component x_parentComponent = o_component.getParentComponent();
-
-					if(showConfirmDialog(p_parentPanel, "Remove '" + o_component.getText() + "' from '" + x_parentComponent.getText() + "' ?", "Remove " + o_component.getType() + " ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
-						if(o_component instanceof ThreadItem) {
-							ThreadItem x_threadItem = (ThreadItem) o_component;
-							x_threadItem.getParentThread().removeThreadItem(x_threadItem);
-						} else {
-							Item x_item = (Item) x_parentComponent;
-							x_item.removeReminder((Reminder)o_component);
-						}
-
-						WindowManager.getInstance().openComponent(x_parentComponent);
-					}
-				} else {
-					showMessageDialog(p_parentPanel, "The root Thread cannot be deleted", "No can do", WARNING_MESSAGE, getThreadsIcon());
-				}
+				Actions.remove(o_component, p_parentPanel, true);
 			}
 		});
 
-		x_duplicateLabel.setToolTipText("Duplicate");
 		x_duplicateLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent p_me) {
 				if (x_parentLabel.isEnabled() && o_component.getParentComponent() != null) {
@@ -233,7 +177,6 @@ class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-		x_folderLabel.setToolTipText("Document Folder");
 		x_folderLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -267,8 +210,8 @@ class ComponentInfoPanel extends JPanel {
         JPanel x_parentButtonsPanel = new JPanel(new FlowLayout(LEFT));
 
 		if(p_showParents) {
-			x_parentButtonsPanel.add(setUpButtonLabel(x_homeLabel), BorderLayout.CENTER);
-			x_parentButtonsPanel.add(setUpButtonLabel(x_parentLabel), BorderLayout.CENTER);
+			x_parentButtonsPanel.add(x_homeLabel, BorderLayout.CENTER);
+			x_parentButtonsPanel.add(x_parentLabel, BorderLayout.CENTER);
 			x_parentButtonsPanel.setBorder(createEmptyBorder(0, 5, 0, 0));
 
 			Component x_parent = o_component.getParentComponent();
@@ -306,21 +249,20 @@ class ComponentInfoPanel extends JPanel {
 		}
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
-        x_buttonPanel.add(setUpButtonLabel(o_setLabel));
-        x_buttonPanel.add(setUpButtonLabel(o_revertLabel));
-		x_buttonPanel.add(setUpButtonLabel(o_activeLabel));
+        x_buttonPanel.add(o_setLabel);
+        x_buttonPanel.add(o_revertLabel);
+		x_buttonPanel.add(o_activeLabel);
 
 		if(!(o_component instanceof Reminder)) {
-			x_buttonPanel.add(setUpButtonLabel(x_moveLabel));
+			x_buttonPanel.add(x_moveLabel);
 		}
 
-        x_buttonPanel.add(setUpButtonLabel(x_removeLabel));
-        x_buttonPanel.add(setUpButtonLabel(x_duplicateLabel));
-        x_buttonPanel.add(setUpButtonLabel(x_folderLabel));
+        x_buttonPanel.add(x_removeLabel);
+        x_buttonPanel.add(x_duplicateLabel);
+        x_buttonPanel.add(x_folderLabel);
 		x_buttonPanel.setBorder(createEmptyBorder(0, 0, 0, 5));
 
 		for(JLabel x_label: p_extraLabels) {
-			setUpButtonLabel(x_label);
 			x_buttonPanel.add(x_label);
 		}
 
