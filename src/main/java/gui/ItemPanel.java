@@ -14,6 +14,7 @@ import static gui.GUIConstants.*;
 import static gui.WidgetFactory.createLabel;
 import static java.awt.BorderLayout.*;
 import static java.util.Calendar.*;
+import static javax.swing.BorderFactory.createEmptyBorder;
 import static util.GoogleUtil.isLinked;
 import static util.ImageUtil.*;
 import static util.Settings.*;
@@ -41,10 +42,12 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
         fixColumnWidth(2, s_dateStatusColumnWidth);
         fixColumnWidth(3, 30);
 
+
         JPanel x_panel = new JPanel(new BorderLayout());
         x_panel.add(new ComponentInfoPanel(p_item, p_parentPanel, true, o_calendarLabel, o_templateItemLabel, o_linkItemLabel), NORTH);
-        x_panel.add(new ItemDateSuggestionPanel(o_item, p_parentPanel), SOUTH);
-		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+        x_panel.add(new ItemDateSuggestionPanel(o_item, p_parentPanel), CENTER);
+		x_panel.add(new ItemNotesPanel(o_item), SOUTH);
+		x_panel.setBorder(createEmptyBorder(0, 0, 5, 0));
 
 		add(x_panel, NORTH);
 

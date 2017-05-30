@@ -52,6 +52,7 @@
 			<xs:extension base="component">
 				<xs:sequence>
 					<xs:element name="due_dt" type="xs:string" minOccurs="0"/>
+					<xs:element name="notes" type="notes" minOccurs="0"/>
 					<xs:element name="reminder" type="reminder" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="doc_folder" minOccurs="0">
 						<xs:simpleType>
@@ -63,6 +64,12 @@
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="notes">
+			<xs:sequence>
+				<xs:element name="pre" type="xs:string"/>
+			</xs:sequence>
 	</xs:complexType>
 
 	<xs:complexType name="reminder">

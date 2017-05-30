@@ -36,6 +36,5 @@ public class Search {
 			o_search = new Search();
 			return x_search;
 		}
-
 	}
 }

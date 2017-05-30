@@ -75,6 +75,14 @@ public class Saver {
 			}
 		}
 
+		String x_notes = p_item.getNotes();
+
+		if(x_notes != null && x_notes.length() > 0) {
+			Element x_notesElem = new Element(s_NOTES);
+			x_itemElem.addContent(x_notesElem);
+			addContent(x_notesElem, s_PRE, x_notes);
+		}
+
 		addDocFolder(x_itemElem, p_item);
 		return x_itemElem;
     }

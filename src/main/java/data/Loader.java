@@ -115,7 +115,14 @@ public class Loader {
 			}
 		}
 
-		return new Item(id, x_creationDate, x_modifiedDate, x_active, x_text, x_dueDate, x_reminderList, loadDocFolder(p_element));
+		Element x_notesElem = p_element.getChild(s_NOTES);
+		String x_notes = null;
+
+		if(x_notesElem != null) {
+			x_notes = x_notesElem.getChildText(s_PRE);
+		}
+
+		return new Item(id, x_creationDate, x_modifiedDate, x_active, x_text, x_dueDate, x_notes, x_reminderList, loadDocFolder(p_element));
     }
 
     private static Reminder loadReminder(Element p_element) {

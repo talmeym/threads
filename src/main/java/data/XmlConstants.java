@@ -11,6 +11,8 @@ class XmlConstants {
     static final String s_ACTIVE = "active";
     static final String s_TEXT = "text";
     static final String s_DUE = "due_dt";
+    static final String s_PRE = "pre";
+    static final String s_NOTES = "notes";
     static final String s_REMINDER = "reminder";
     static final String s_REM_DATE = "remind_dt";
     static final String s_THREAD = "thread";

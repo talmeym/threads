@@ -8,18 +8,20 @@ import static util.DateUtil.*;
 
 public class Item extends ThreadItem<Reminder> implements HasDueDate {
     private Date o_dueDate;
-    
+	private String o_notes;
+
     public Item(String text, Date p_dueDate) {
-        this(UUID.randomUUID(), new Date(), new Date(), true, text, p_dueDate, null, null);
+        this(UUID.randomUUID(), new Date(), new Date(), true, text, p_dueDate, null, null, null);
     }
     
-    public Item(UUID id, Date p_creationDate, Date p_modifledDate, boolean p_active, String p_text, Date p_dueDate, List<Reminder> p_reminders, File p_docFolder) {
+    public Item(UUID id, Date p_creationDate, Date p_modifledDate, boolean p_active, String p_text, Date p_dueDate, String p_notes, List<Reminder> p_reminders, File p_docFolder) {
         super(id, p_creationDate, p_modifledDate, p_active, p_text, p_reminders, (obj1, obj2) -> obj1.getDueDate().compareTo(obj2.getDueDate()), p_docFolder);
 		o_dueDate = p_dueDate;
+		o_notes = p_notes;
     }
 
 	public Item(Item p_item, boolean p_addCopyText) {
-		this(UUID.randomUUID(), new Date(), new Date(), p_item.isActive(), (p_addCopyText ? "Copy of " : "") + p_item.getText(), p_item.getDueDate(), new ArrayList<>(), p_item.getDocFolder());
+		this(UUID.randomUUID(), new Date(), new Date(), p_item.isActive(), (p_addCopyText ? "Copy of " : "") + p_item.getText(), p_item.getDueDate(), p_item.getNotes(), new ArrayList<>(), p_item.getDocFolder());
 		p_item.getReminders().forEach(x_reminder -> addReminder(new Reminder(x_reminder, false)));
 	}
 
@@ -63,6 +65,14 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 			changed(DUE_DATE, x_oldValue, p_dueDate);
 		}
     }
+
+	public String getNotes() {
+		return o_notes;
+	}
+
+	public void setNotes(String o_notes) {
+		this.o_notes = o_notes;
+	}
 
 	@Override
 	public boolean isDue() {

@@ -206,6 +206,6 @@ public class LookupHelperTest {
 	}
 
 	private Item buildItem(boolean p_active, Date p_dueDate, Date p_modifiedDate) {
-		return new Item(UUID.randomUUID(), null, p_modifiedDate, p_active, "Test Item", p_dueDate, null, null);
+		return new Item(UUID.randomUUID(), null, p_modifiedDate, p_active, "Test Item", p_dueDate, null, null, null);
 	}
 }
