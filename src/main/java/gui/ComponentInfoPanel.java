@@ -3,7 +3,6 @@ package gui;
 import data.Component;
 import data.*;
 import data.Thread;
-import util.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -13,27 +12,34 @@ import java.util.*;
 import java.util.List;
 
 import static data.ComponentChangeEvent.Field.TEXT;
-import static util.GuiUtil.setUpButtonLabel;
+import static data.LookupHelper.getAllActiveThreads;
+import static gui.ColourConstants.s_editedColour;
+import static gui.WidgetFactory.setUpButtonLabel;
+import static java.awt.Color.*;
+import static java.awt.FlowLayout.LEFT;
+import static javax.swing.BorderFactory.*;
+import static javax.swing.JOptionPane.*;
+import static util.ImageUtil.*;
 
 class ComponentInfoPanel extends JPanel {
     private final Component o_component;
 
-	private final JLabel o_activeLabel = new JLabel(ImageUtil.getTickIcon());
+	private final JLabel o_activeLabel = new JLabel(getTickIcon());
 	private final JTextField o_textField = new JTextField();
-	private final JLabel o_setLabel = new JLabel(ImageUtil.getReturnIcon());
-	private final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
-	private final JPanel o_breadcrumbsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	private final JLabel o_setLabel = new JLabel(getReturnIcon());
+	private final JLabel o_revertLabel = new JLabel(getCrossIcon());
+	private final JPanel o_breadcrumbsPanel = new JPanel(new FlowLayout(LEFT));
 
 	ComponentInfoPanel(Component p_component, final JPanel p_parentPanel, boolean p_showParents, JLabel... p_extraLabels) {
         super(new BorderLayout());
         o_component = p_component;
 
-		final JLabel x_homeLabel = new JLabel(ImageUtil.getHomeIcon());
-		final JLabel x_parentLabel = new JLabel(ImageUtil.getUpIcon());
-		final JLabel x_moveLabel = new JLabel(ImageUtil.getMoveIcon());
-		final JLabel x_removeLabel = new JLabel(ImageUtil.getTrashIcon());
-		final JLabel x_duplicateLabel = new JLabel(ImageUtil.getDuplicateIcon());
-		final JLabel x_folderLabel = new JLabel(ImageUtil.getFolderIcon());
+		final JLabel x_homeLabel = new JLabel(getHomeIcon());
+		final JLabel x_parentLabel = new JLabel(getUpIcon());
+		final JLabel x_moveLabel = new JLabel(getMoveIcon());
+		final JLabel x_removeLabel = new JLabel(getTrashIcon());
+		final JLabel x_duplicateLabel = new JLabel(getDuplicateIcon());
+		final JLabel x_folderLabel = new JLabel(getFolderIcon());
 
 		final DocumentListener x_listener = new DocumentListener() {
 			@Override public void insertUpdate(DocumentEvent p_de) { edited(); }
@@ -41,7 +47,7 @@ class ComponentInfoPanel extends JPanel {
 			@Override public void changedUpdate(DocumentEvent p_de) { edited(); }
 
 			private void edited() {
-				o_textField.setBackground(ColourConstants.s_editedColour);
+				o_textField.setBackground(s_editedColour);
 				o_setLabel.setEnabled(true);
 				o_revertLabel.setEnabled(true);
 			}
@@ -53,7 +59,7 @@ class ComponentInfoPanel extends JPanel {
 					o_textField.getDocument().removeDocumentListener(x_listener);
 					o_textField.setText(o_component.getText());
 					o_textField.getDocument().addDocumentListener(x_listener);
-					o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
+					o_textField.setForeground(o_component.isActive() ? black : gray);
 					o_activeLabel.setEnabled(o_component.isActive());
 				}
 
@@ -85,10 +91,10 @@ class ComponentInfoPanel extends JPanel {
 		});
 
 		o_textField.setText(p_component.getText());
-		o_textField.setForeground(p_component.isActive() ? Color.black : Color.gray);
+		o_textField.setForeground(p_component.isActive() ? black : gray);
 		o_textField.setToolTipText("Press enter to set");
 		o_textField.getDocument().addDocumentListener(x_listener);
-		o_textField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
+		o_textField.setBorder(createCompoundBorder(createLineBorder(lightGray), createEmptyBorder(0, 5, 0, 5)));
 
 		x_homeLabel.setEnabled(o_component.getParentComponent() != null);
 		x_parentLabel.setEnabled(o_component.getParentComponent() != null);
@@ -122,7 +128,7 @@ class ComponentInfoPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
 				o_textField.setText(o_component.getText());
-				o_textField.setBackground(Color.white);
+				o_textField.setBackground(white);
 				o_setLabel.setEnabled(false);
 				o_revertLabel.setEnabled(false);
 			}
@@ -137,13 +143,13 @@ class ComponentInfoPanel extends JPanel {
 				if (x_parentLabel.isEnabled()) {
 					boolean x_active = !o_component.isActive();
 
-					if(JOptionPane.showConfirmDialog(p_parentPanel, "Set '" + o_component.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+					if(showConfirmDialog(p_parentPanel, "Set '" + o_component.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 						o_component.setActive(x_active);
 						o_activeLabel.setEnabled(o_component.isActive());
-						o_textField.setForeground(o_component.isActive() ? Color.black : Color.gray);
+						o_textField.setForeground(o_component.isActive() ? black : gray);
 					}
 				} else {
-					JOptionPane.showMessageDialog(p_parentPanel, "The root Thread cannot be made inactive", "No can do", JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon());
+					showMessageDialog(p_parentPanel, "The root Thread cannot be made inactive", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});
@@ -156,14 +162,14 @@ class ComponentInfoPanel extends JPanel {
 				Thread x_thread = null;
 
 				Thread x_topThread = (Thread) o_component.getHierarchy().get(0);
-				List<Thread> x_threads = LookupHelper.getAllActiveThreads(x_topThread);
+				List<Thread> x_threads = getAllActiveThreads(x_topThread);
 				x_threads.add(0, x_topThread);
 				x_threads.remove(x_component.getParentThread());
 
 				if(x_threads.size() > 0) {
-					x_thread = (Thread) JOptionPane.showInputDialog(p_parentPanel, "Choose a Thread to move it to:", "Move '" + o_component.getType() + "' ?", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
+					x_thread = (Thread) showInputDialog(p_parentPanel, "Choose a Thread to move it to:", "Move '" + o_component.getType() + "' ?", INFORMATION_MESSAGE, getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 				} else {
-					JOptionPane.showMessageDialog(p_parentPanel, "This is no other Thread to move this Action to. Try creating another Thread.", "Nowhere to go", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
+					showMessageDialog(p_parentPanel, "This is no other Thread to move this Action to. Try creating another Thread.", "Nowhere to go", INFORMATION_MESSAGE, getThreadsIcon());
 				}
 
 				if(x_thread != null) {
@@ -180,7 +186,7 @@ class ComponentInfoPanel extends JPanel {
 				if(x_parentLabel.isEnabled()) {
 					Component x_parentComponent = o_component.getParentComponent();
 
-					if(JOptionPane.showConfirmDialog(p_parentPanel, "Remove '" + o_component.getText() + "' from '" + x_parentComponent.getText() + "' ?", "Remove " + o_component.getType() + " ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+					if(showConfirmDialog(p_parentPanel, "Remove '" + o_component.getText() + "' from '" + x_parentComponent.getText() + "' ?", "Remove " + o_component.getType() + " ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 						if(o_component instanceof ThreadItem) {
 							ThreadItem x_threadItem = (ThreadItem) o_component;
 							x_threadItem.getParentThread().removeThreadItem(x_threadItem);
@@ -192,7 +198,7 @@ class ComponentInfoPanel extends JPanel {
 						WindowManager.getInstance().openComponent(x_parentComponent);
 					}
 				} else {
-					JOptionPane.showMessageDialog(p_parentPanel, "The root Thread cannot be deleted", "No can do", JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon());
+					showMessageDialog(p_parentPanel, "The root Thread cannot be deleted", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});
@@ -201,7 +207,7 @@ class ComponentInfoPanel extends JPanel {
 		x_duplicateLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent p_me) {
 				if (x_parentLabel.isEnabled() && o_component.getParentComponent() != null) {
-					if (JOptionPane.showConfirmDialog(p_parentPanel, "Create duplicate of '" + o_component.getText() + "' ?", "Duplicate ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+					if (showConfirmDialog(p_parentPanel, "Create duplicate of '" + o_component.getText() + "' ?", "Duplicate ?", OK_CANCEL_OPTION, INFORMATION_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 						Component x_newComponent = null;
 
 						if (o_component instanceof Thread) {
@@ -222,7 +228,7 @@ class ComponentInfoPanel extends JPanel {
 						WindowManager.getInstance().openComponent(x_newComponent);
 					}
 				} else {
-					JOptionPane.showMessageDialog(p_parentPanel, "The root Thread cannot be duplicated", "No can do", JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon());
+					showMessageDialog(p_parentPanel, "The root Thread cannot be duplicated", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});
@@ -244,7 +250,7 @@ class ComponentInfoPanel extends JPanel {
 				x_clearItem.setEnabled(o_component.getDocFolder() != null);
 				x_clearItem.addActionListener(e -> {
 					if(o_component.getDocFolder() != null) {
-						if (JOptionPane.showConfirmDialog(p_parentPanel, "Unset document folder '" + o_component.getDocFolder().getAbsolutePath() + "' ?", "Clear document folder for '" + o_component.getText() + "' ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+						if (showConfirmDialog(p_parentPanel, "Unset document folder '" + o_component.getDocFolder().getAbsolutePath() + "' ?", "Clear document folder for '" + o_component.getText() + "' ?", OK_CANCEL_OPTION, INFORMATION_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 							o_component.setDocFolder(null);
 						}
 					}
@@ -258,12 +264,12 @@ class ComponentInfoPanel extends JPanel {
 			}
 		});
 
-        JPanel x_parentButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel x_parentButtonsPanel = new JPanel(new FlowLayout(LEFT));
 
 		if(p_showParents) {
 			x_parentButtonsPanel.add(setUpButtonLabel(x_homeLabel), BorderLayout.CENTER);
 			x_parentButtonsPanel.add(setUpButtonLabel(x_parentLabel), BorderLayout.CENTER);
-			x_parentButtonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+			x_parentButtonsPanel.setBorder(createEmptyBorder(0, 5, 0, 0));
 
 			Component x_parent = o_component.getParentComponent();
 			List<JLabel> x_parentLabels = new ArrayList<>();
@@ -299,7 +305,7 @@ class ComponentInfoPanel extends JPanel {
 			}
 		}
 
-        JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
         x_buttonPanel.add(setUpButtonLabel(o_setLabel));
         x_buttonPanel.add(setUpButtonLabel(o_revertLabel));
 		x_buttonPanel.add(setUpButtonLabel(o_activeLabel));
@@ -311,7 +317,7 @@ class ComponentInfoPanel extends JPanel {
         x_buttonPanel.add(setUpButtonLabel(x_removeLabel));
         x_buttonPanel.add(setUpButtonLabel(x_duplicateLabel));
         x_buttonPanel.add(setUpButtonLabel(x_folderLabel));
-		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		x_buttonPanel.setBorder(createEmptyBorder(0, 0, 0, 5));
 
 		for(JLabel x_label: p_extraLabels) {
 			setUpButtonLabel(x_label);
@@ -351,6 +357,6 @@ class ComponentInfoPanel extends JPanel {
 		o_textField.setText(o_component.getText());
 		o_setLabel.setEnabled(false);
 		o_revertLabel.setEnabled(false);
-		o_textField.setBackground(Color.white);
+		o_textField.setBackground(white);
 	}
 }

@@ -15,7 +15,9 @@ import java.util.List;
 import static data.ComponentChangeEvent.Field.CONTENT;
 import static gui.GUIConstants.*;
 import static java.awt.BorderLayout.CENTER;
-import static util.ImageUtil.getGoogleSmallIcon;
+import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
+import static util.DateUtil.isAllDay;
+import static util.ImageUtil.*;
 import static util.Settings.*;
 
 class ActionLog extends JFrame implements SettingChangeListener {
@@ -53,7 +55,7 @@ class ActionLog extends JFrame implements SettingChangeListener {
 			public void googleSynced(List<HasDueDate> p_hasDueDates) {
 				if(p_hasDueDates.size() == 1) {
 					HasDueDate x_hasDueDate = p_hasDueDates.get(0);
-					o_log.add(new Action(new Date(), ImageUtil.getIconForType(x_hasDueDate.getType()), x_hasDueDate.getText(), "Linked to Google Calendar", "", "", ""));
+					o_log.add(new Action(new Date(), getIconForType(x_hasDueDate.getType()), x_hasDueDate.getText(), "Linked to Google Calendar", "", "", ""));
 				} else {
 					o_log.add(new Action(new Date(), getGoogleSmallIcon(), p_hasDueDates.size() + " items", "Linked to Google Calendar", "", "", ""));
 				}
@@ -64,9 +66,9 @@ class ActionLog extends JFrame implements SettingChangeListener {
 
 		JTable x_table = new JTable(x_tableModel);
 
-		fixColumnWidth(x_table, 0, GUIConstants.s_creationDateColumnWidth);
-		fixColumnWidth(x_table, 1, GUIConstants.s_typeColumnWidth);
-		fixColumnWidth(x_table, 5, GUIConstants.s_typeColumnWidth);
+		fixColumnWidth(x_table, 0, s_creationDateColumnWidth);
+		fixColumnWidth(x_table, 1, s_typeColumnWidth);
+		fixColumnWidth(x_table, 5, s_typeColumnWidth);
 
 		TableCellRenderer x_cellRenderer = new BaseCellRenderer();
 		x_table.setDefaultRenderer(Date.class, x_cellRenderer);
@@ -74,7 +76,7 @@ class ActionLog extends JFrame implements SettingChangeListener {
 		x_table.setDefaultRenderer(Icon.class, x_cellRenderer);
 
 		x_table.setRowHeight(s_tableRowHeight);
-		x_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		x_table.setSelectionMode(SINGLE_SELECTION);
 
 		JPanel x_contentPane = new JPanel(new BorderLayout());
 		x_contentPane.add(new JScrollPane(x_table), CENTER);
@@ -85,7 +87,7 @@ class ActionLog extends JFrame implements SettingChangeListener {
 
 	private Action buildAction(ComponentChangeEvent e) {
 		Component x_source = e.getSource();
-		return new Action(new Date(), ImageUtil.getIconForType(x_source.getType()), x_source.getText(), getActionString(e), getString(e.getOldValue()), e.isValueChange() ? "=>" : "", getString(e.getNewValue()));
+		return new Action(new Date(), getIconForType(x_source.getType()), x_source.getText(), getActionString(e), getString(e.getOldValue()), e.isValueChange() ? "=>" : "", getString(e.getNewValue()));
 	}
 
 	private String getString(Object p_value) {
@@ -94,7 +96,7 @@ class ActionLog extends JFrame implements SettingChangeListener {
 	}
 
 	private String getDueDateText(Date x_dueDate) {
-		return DateUtil.isAllDay(x_dueDate) ? s_dateFormat.format(x_dueDate) : s_dateTimeFormat.format(x_dueDate);
+		return isAllDay(x_dueDate) ? s_dateFormat.format(x_dueDate) : s_dateTimeFormat.format(x_dueDate);
 	}
 
 	private void fixColumnWidth(JTable p_table, int p_column, int p_width) {
@@ -113,7 +115,7 @@ class ActionLog extends JFrame implements SettingChangeListener {
 		int x_height = registerForSetting(s_WINH, this, s_windowHeight);
 		int x_x = registerForSetting(s_WINY, this, s_windowX);
 		int x_y = registerForSetting(s_WINY, this, s_windowY);
-		int x_splitDivider = registerForSetting(Settings.s_NAVDIVLOC, this, 250);
+		int x_splitDivider = registerForSetting(s_NAVDIVLOC, this, 250);
 
 		setSize(new Dimension(1000, 400));
 		setLocation(new Point(x_x + x_splitDivider + 5, x_y + x_height - 470));

@@ -1,16 +1,15 @@
-import data.*;
 import data.Loader.Configuration;
+import data.*;
 import data.Thread;
-import gui.*;
+import gui.WindowManager;
 import util.*;
 
 import java.awt.event.*;
 import java.io.File;
 
 import static data.Loader.loadConfiguration;
-import static gui.Actions.getActionTemplates;
-import static gui.Actions.setActionTemplates;
-import static util.Settings.registerForSetting;
+import static gui.Actions.*;
+import static util.Settings.*;
 
 public class Threads {
     public static void main(String[] args) {
@@ -31,9 +30,9 @@ public class Threads {
 		NotificationUpdater.initialise(x_topThread);
 		SystemTrayUtil.initialise(x_topThread);
 
-		Settings.load(x_settingsFile);
+		load(x_settingsFile);
 
-		boolean x_googleEnabled = registerForSetting(Settings.s_GOOGLE, (p_name, p_value) -> { }, false);
+		boolean x_googleEnabled = registerForSetting(s_GOOGLE, (p_name, p_value) -> { }, false);
 		GoogleSyncer.initialise(x_topThread, x_googleEnabled);
 
 		WindowManager.initialise(x_topThread, new WindowAdapter(){
@@ -43,7 +42,7 @@ public class Threads {
 				GoogleSyncer.getInstance().stopRunning();
 				TimedUpdater.getInstance().stopRunning();
 				Saver.saveDocument(x_topThread, getActionTemplates(), x_dataFile);
-				Settings.save(x_settingsFile);
+				save(x_settingsFile);
 				System.exit(0);
 			}
 		});

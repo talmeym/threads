@@ -5,6 +5,8 @@ import data.HasDueDate;
 import javax.swing.*;
 import java.util.List;
 
+import static util.GoogleUtil.linkHasDueDatesToGoogle;
+
 public class GoogleLinkTask extends SwingWorker<Void, Void> {
 	private final List<HasDueDate> o_hasDueDates;
 	private final ProgressCallBack[] o_callbacks;
@@ -16,7 +18,7 @@ public class GoogleLinkTask extends SwingWorker<Void, Void> {
 
 	@Override
 	protected Void doInBackground() throws Exception {
-		GoogleUtil.linkHasDueDatesToGoogle(o_hasDueDates, o_callbacks);
+		linkHasDueDatesToGoogle(o_hasDueDates, o_callbacks);
 		return null;
 	}
 }

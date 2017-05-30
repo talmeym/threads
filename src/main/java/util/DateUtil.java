@@ -3,6 +3,7 @@ package util;
 import java.text.*;
 import java.util.*;
 
+import static java.lang.Integer.parseInt;
 import static java.util.Calendar.*;
 
 public class DateUtil {
@@ -126,17 +127,17 @@ public class DateUtil {
 	public static Date makeStartOfDay(Date p_date) {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.setTime(p_date);
-		x_calendar.set(Calendar.HOUR_OF_DAY, 0);
-		x_calendar.set(Calendar.MINUTE, 0);
-		x_calendar.set(Calendar.SECOND, 0);
-		x_calendar.set(Calendar.MILLISECOND, 0);
+		x_calendar.set(HOUR_OF_DAY, 0);
+		x_calendar.set(MINUTE, 0);
+		x_calendar.set(SECOND, 0);
+		x_calendar.set(MILLISECOND, 0);
 		return x_calendar.getTime();
 	}
 
 	public static boolean isAllDay(Date p_date) {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.setTime(p_date);
-		return x_calendar.get(Calendar.HOUR_OF_DAY) == 0 && x_calendar.get(Calendar.MINUTE) == 0;
+		return x_calendar.get(HOUR_OF_DAY) == 0 && x_calendar.get(MINUTE) == 0;
 	}
 
 	public static boolean isToday(Date p_date) {
@@ -153,7 +154,7 @@ public class DateUtil {
 
 	public static boolean isWithin7Days(Date p_dueDate, boolean p_includePast) {
 		Date x_date = new Date();
-		Date x_now = isAllDay(p_dueDate) || DateUtil.timeIsBefore(p_dueDate, x_date) ? makeStartOfDay(x_date) : x_date;
+		Date x_now = isAllDay(p_dueDate) || timeIsBefore(p_dueDate, x_date) ? makeStartOfDay(x_date) : x_date;
 		long x_diff = p_dueDate.getTime() - x_now.getTime();
 		int x_sevenDays = 1000 * 60 * 60 * 24 * 7;
 		return p_includePast ? Math.abs(x_diff) < x_sevenDays : x_diff > 0 && x_diff < x_sevenDays;
@@ -161,7 +162,7 @@ public class DateUtil {
 
 	public static boolean isBefore7DaysFromNow(Date p_dueDate) {
 		Date x_date = new Date();
-		Date x_now = isAllDay(p_dueDate) || DateUtil.timeIsBefore(p_dueDate, x_date) ? makeStartOfDay(x_date) : x_date;
+		Date x_now = isAllDay(p_dueDate) || timeIsBefore(p_dueDate, x_date) ? makeStartOfDay(x_date) : x_date;
 		long x_diff = p_dueDate.getTime() - x_now.getTime();
 		int x_sevenDays = 1000 * 60 * 60 * 24 * 7;
 		return x_diff < 0 || x_diff < x_sevenDays;
@@ -174,9 +175,9 @@ public class DateUtil {
 		Calendar x_calendar2 = Calendar.getInstance();
 		x_calendar2.setTime(p_referenceDate);
 
-		return x_calendar1.get(Calendar.YEAR) == x_calendar2.get(Calendar.YEAR)
-				&& x_calendar1.get(Calendar.MONTH) == x_calendar2.get(Calendar.MONTH)
-				&& x_calendar1.get(Calendar.DAY_OF_MONTH) == x_calendar2.get(Calendar.DAY_OF_MONTH);
+		return x_calendar1.get(YEAR) == x_calendar2.get(YEAR)
+				&& x_calendar1.get(MONTH) == x_calendar2.get(MONTH)
+				&& x_calendar1.get(DAY_OF_MONTH) == x_calendar2.get(DAY_OF_MONTH);
 	}
 
 	private static boolean showingMinutes(boolean x_past, int x_mins, Date p_dueDate) {
@@ -199,8 +200,8 @@ public class DateUtil {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.set(HOUR_OF_DAY, 23);
 		x_calendar.set(MINUTE, 59);
-		x_calendar.set(Calendar.SECOND, 59);
-		x_calendar.set(Calendar.MILLISECOND, 999);
+		x_calendar.set(SECOND, 59);
+		x_calendar.set(MILLISECOND, 999);
 		x_calendar.add(DATE, p_offset);
 		return x_calendar.getTime();
 	}
@@ -209,8 +210,8 @@ public class DateUtil {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.set(HOUR_OF_DAY, 0);
 		x_calendar.set(MINUTE, 0);
-		x_calendar.set(Calendar.SECOND, 0);
-		x_calendar.set(Calendar.MILLISECOND, 0);
+		x_calendar.set(SECOND, 0);
+		x_calendar.set(MILLISECOND, 0);
 		x_calendar.add(DATE, p_offset);
 		return x_calendar.getTime();
 	}
@@ -250,8 +251,8 @@ public class DateUtil {
 				x_calendar.setTime(p_date);
 				Calendar x_derivedCal = Calendar.getInstance();
 				x_derivedCal.setTime(x_derivedTime);
-				x_calendar.set(Calendar.HOUR_OF_DAY, x_derivedCal.get(Calendar.HOUR_OF_DAY));
-				x_calendar.set(Calendar.MINUTE, x_derivedCal.get(Calendar.MINUTE));
+				x_calendar.set(HOUR_OF_DAY, x_derivedCal.get(HOUR_OF_DAY));
+				x_calendar.set(MINUTE, x_derivedCal.get(MINUTE));
 				return x_calendar.getTime();
 			}
 		}
@@ -308,7 +309,7 @@ public class DateUtil {
 			Object[] x_results = new MessageFormat("{0,number}{1}").parse(p_firstPart);
 
 			if(x_results != null && x_results.length == 2) {
-				int x_number = Integer.parseInt(x_results[0].toString());
+				int x_number = parseInt(x_results[0].toString());
 				char x_letter = x_results[1].toString().toCharArray()[0];
 
 				switch(x_letter) {

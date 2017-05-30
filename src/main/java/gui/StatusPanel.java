@@ -11,8 +11,11 @@ import java.text.*;
 import java.util.*;
 import java.util.List;
 
+import static gui.WidgetFactory.setUpButtonLabel;
+import static java.awt.BorderLayout.*;
+import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
-import static util.GuiUtil.setUpButtonLabel;
+import static util.ImageUtil.*;
 
 class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, GoogleSyncListener, TimedSaveListener {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm");
@@ -26,9 +29,9 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 
 	private final JLabel o_statusLabel;
 
-	private long o_lastUpdate = System.currentTimeMillis();
-	private long o_lastGoogle = System.currentTimeMillis();
-	private long o_lastSave = System.currentTimeMillis();
+	private long o_lastUpdate = currentTimeMillis();
+	private long o_lastGoogle = currentTimeMillis();
+	private long o_lastSave = currentTimeMillis();
 
 
 	StatusPanel(Thread p_topLevelThread) {
@@ -38,7 +41,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		o_showGoogle = GoogleSyncer.getInstance().isGoogleEnabled();
 		o_updateProgress.setMinimum(0);
 
-        JLabel x_updateLabel = new JLabel(ImageUtil.getTimeUpdateIcon());
+        JLabel x_updateLabel = new JLabel(getTimeUpdateIcon());
 		x_updateLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -48,8 +51,8 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 
         x_updateLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 		JPanel x_updatePanel = new JPanel(new BorderLayout());
-        x_updatePanel.add(setUpButtonLabel(x_updateLabel), BorderLayout.WEST);
-		x_updatePanel.add(o_updateProgress, BorderLayout.CENTER);
+        x_updatePanel.add(setUpButtonLabel(x_updateLabel), WEST);
+		x_updatePanel.add(o_updateProgress, CENTER);
 		x_updatePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		add(x_updatePanel);
 
@@ -57,7 +60,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		if(o_showGoogle) {
 			o_googleProgress.setMinimum(0);
 
-			JLabel x_googleLabel = new JLabel(ImageUtil.getGoogleVerySmallIcon());
+			JLabel x_googleLabel = new JLabel(getGoogleVerySmallIcon());
 			x_googleLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent p_me) {
@@ -74,15 +77,15 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 
 			x_googleLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 			JPanel x_googlePanel = new JPanel(new BorderLayout());
-			x_googlePanel.add(setUpButtonLabel(x_googleLabel), BorderLayout.WEST);
-			x_googlePanel.add(o_googleProgress, BorderLayout.CENTER);
+			x_googlePanel.add(setUpButtonLabel(x_googleLabel), WEST);
+			x_googlePanel.add(o_googleProgress, CENTER);
 			x_googlePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 			add(x_googlePanel);
 		}
 
 		o_saveProgress.setMinimum(0);
 
-		JLabel x_saveLabel = new JLabel(ImageUtil.getSaveIcon());
+		JLabel x_saveLabel = new JLabel(getSaveIcon());
 		x_saveLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
@@ -98,8 +101,8 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 
         x_saveLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		JPanel x_savePanel = new JPanel(new BorderLayout());
-        x_savePanel.add(setUpButtonLabel(x_saveLabel), BorderLayout.WEST);
-		x_savePanel.add(o_saveProgress, BorderLayout.CENTER);
+        x_savePanel.add(setUpButtonLabel(x_saveLabel), WEST);
+		x_savePanel.add(o_saveProgress, CENTER);
 		x_savePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		add(x_savePanel);
 
@@ -125,20 +128,20 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 
 	@Override
 	public void timeUpdate() {
-		o_lastUpdate = System.currentTimeMillis();
+		o_lastUpdate = currentTimeMillis();
 	}
 
 	@Override
 	public void googleSyncStarted() {
 		o_statusLabel.setText("Syncing with Google Calendar ...");
-		o_statusLabel.setIcon(ImageUtil.getGoogleVerySmallIcon());
+		o_statusLabel.setIcon(getGoogleVerySmallIcon());
 	}
 
 	@Override
 	public void googleSynced() {
 		o_statusLabel.setText(s_dateFormat.format(new Date()));
 		o_statusLabel.setIcon(null);
-		o_lastGoogle = System.currentTimeMillis();
+		o_lastGoogle = currentTimeMillis();
 	}
 
 	@Override
@@ -149,14 +152,14 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 	@Override
 	public void saveStarted() {
 		o_statusLabel.setText("Saving data to Local Disc ...");
-		o_statusLabel.setIcon(ImageUtil.getSaveIcon());
+		o_statusLabel.setIcon(getSaveIcon());
 	}
 
 	@Override
 	public void saved() {
 		o_statusLabel.setText(s_dateFormat.format(new Date()));
 		o_statusLabel.setIcon(null);
-		o_lastSave = System.currentTimeMillis();
+		o_lastSave = currentTimeMillis();
 	}
 
 	@Override
@@ -164,21 +167,22 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		while(true) {
             try {
                 sleep(1000);
+				long x_currentTimeMillis = currentTimeMillis();
 
                 int x_updateMax = (int) (TimedUpdater.getInstance().nextSync() - o_lastUpdate);
-                int x_updateNow = (int) (System.currentTimeMillis() - o_lastUpdate);
+				int x_updateNow = (int) (x_currentTimeMillis - o_lastUpdate);
                 o_updateProgress.setMaximum(x_updateMax);
                 o_updateProgress.setValue(x_updateMax - x_updateNow);
 
 				if(o_showGoogle) {
 					int x_googleMax = (int) (GoogleSyncer.getInstance().nextSync() - o_lastGoogle);
-					int x_googleNow = (int) (System.currentTimeMillis() - o_lastGoogle);
+					int x_googleNow = (int) (x_currentTimeMillis - o_lastGoogle);
 					o_googleProgress.setMaximum(x_googleMax);
 					o_googleProgress.setValue(x_googleMax - x_googleNow);
 				}
 
                 int x_saveMax = (int) (TimedSaver.getInstance().nextSync() - o_lastSave);
-                int x_saveNow = (int) (System.currentTimeMillis() - o_lastSave);
+                int x_saveNow = (int) (x_currentTimeMillis - o_lastSave);
                 o_saveProgress.setMaximum(x_saveMax);
                 o_saveProgress.setValue(x_saveMax - x_saveNow);
             } catch (InterruptedException e) {

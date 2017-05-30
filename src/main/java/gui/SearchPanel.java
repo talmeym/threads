@@ -3,14 +3,17 @@ package gui;
 import data.Component;
 import data.*;
 import data.Thread;
-import util.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.Color.*;
 import static javax.swing.BorderFactory.createEmptyBorder;
+import static javax.swing.JOptionPane.*;
+import static util.ImageUtil.getThreadsIcon;
 
 class SearchPanel extends JPanel {
 	private static final String s_defaultTextString = " Search ...";
@@ -41,7 +44,7 @@ class SearchPanel extends JPanel {
 		});
 
 		o_searchField.addActionListener(e -> search());
-		add(o_searchField, BorderLayout.CENTER);
+		add(o_searchField, CENTER);
 		setBorder(createEmptyBorder(0, 0, 5, 0));
 	}
 
@@ -53,7 +56,7 @@ class SearchPanel extends JPanel {
 		if(x_results.size() > 0) {
 			new SearchResults(o_topLevelThread, x_search, x_text, x_results);
 		} else {
-			JOptionPane.showMessageDialog(this, "'" + x_text + "' Not Found", "No Results Found", JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon());
+			showMessageDialog(this, "'" + x_text + "' Not Found", "No Results Found", INFORMATION_MESSAGE, getThreadsIcon());
 		}
 
 		setText("");
@@ -61,6 +64,6 @@ class SearchPanel extends JPanel {
 
 	private void setText(String p_text) {
 		o_searchField.setText(p_text);
-		o_searchField.setForeground(s_defaultTextString.equals(p_text) ? Color.gray : Color.black);
+		o_searchField.setForeground(s_defaultTextString.equals(p_text) ? gray : black);
 	}
 }

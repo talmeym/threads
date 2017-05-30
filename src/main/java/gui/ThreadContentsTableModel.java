@@ -2,11 +2,12 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.*;
 
 import java.util.*;
 
 import static data.LookupHelper.*;
+import static util.DateUtil.getDateStatus;
+import static util.GoogleUtil.isLinked;
 
 class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
 	private TableDataCache<String> o_cache = new TableDataCache<>();
@@ -33,7 +34,7 @@ class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
 			case 1: return x_threadItem.getType();
 			case 2: return x_threadItem.getText();
 			case 3: return o_cache.fillOrGet(row, col, () -> getInfoString(x_threadItem));
-			default: return GoogleUtil.isLinked(x_threadItem);
+			default: return isLinked(x_threadItem);
         }
     }
 
@@ -50,13 +51,13 @@ class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
 
 			if(x_item.getDueDate() != null) {
 				if(x_item.getDueDate().before(new Date())) {
-					return "Due " + DateUtil.getDateStatus(x_item.getDueDate());
+					return "Due " + getDateStatus(x_item.getDueDate());
 				}
 
-				return "Due in " + DateUtil.getDateStatus(x_item.getDueDate());
+				return "Due in " + getDateStatus(x_item.getDueDate());
 			}
 
-			return "Updated " + DateUtil.getDateStatus(x_item.getCreationDate());
+			return "Updated " + getDateStatus(x_item.getCreationDate());
 		}
 
 		return ""; // never get here

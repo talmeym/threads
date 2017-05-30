@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
+import static util.GoogleUtil.syncWithGoogle;
+
 public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
     private static GoogleSyncer s_INSTANCE = null;
 	private final boolean o_enabled;
@@ -44,7 +46,7 @@ public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
     }
 
 	void action() {
-			GoogleUtil.syncWithGoogle();
+			syncWithGoogle();
 		}
 
 	@Override

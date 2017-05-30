@@ -1,12 +1,10 @@
 package data;
 
-import util.DateUtil;
-
 import java.io.File;
 import java.util.*;
 
 import static data.ComponentChangeEvent.Field.DUE_DATE;
-import static util.DateUtil.TODAY;
+import static util.DateUtil.*;
 
 public class Item extends ThreadItem<Reminder> implements HasDueDate {
     private Date o_dueDate;
@@ -68,7 +66,7 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 
 	@Override
 	public boolean isDue() {
-		return isActive() && o_dueDate != null && (DateUtil.isAllDay(o_dueDate) ? o_dueDate.before(DateUtil.getFirstThing(TODAY)) : o_dueDate.before(new Date()));
+		return isActive() && o_dueDate != null && (isAllDay(o_dueDate) ? o_dueDate.before(getFirstThing(TODAY)) : o_dueDate.before(new Date()));
 
 	}
 

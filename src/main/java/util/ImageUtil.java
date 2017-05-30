@@ -121,7 +121,7 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/action16x16.png"));
 	}
 
-	public static Icon getActionSmallIcon() {
+	private static Icon getActionSmallIcon() {
 		return new ImageIcon(loadImage("/action12x12.png"));
 	}
 
@@ -129,7 +129,7 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/update14x14.png"));
 	}
 
-	public static Icon getUpdateSmallIcon() {
+	private static Icon getUpdateSmallIcon() {
 		return new ImageIcon(loadImage("/update12x12.png"));
 	}
 
@@ -137,7 +137,7 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/thread15x15.png"));
 	}
 
-	public static Icon getThreadSmallIcon() {
+	private static Icon getThreadSmallIcon() {
 		return new ImageIcon(loadImage("/thread12x12.png"));
 	}
 
@@ -145,7 +145,7 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/reminder20x20.png"));
 	}
 
-	public static Icon getReminderSmallIcon() {
+	private static Icon getReminderSmallIcon() {
 		return new ImageIcon(loadImage("/reminder12x12.png"));
 	}
 
@@ -174,7 +174,7 @@ public class ImageUtil {
 	}
 
 	public static Icon getTemplateIcon() {
-		return new ImageIcon(loadImage("/template21x21.png"));
+		return new ImageIcon(loadImage("/template17x16.png"));
 	}
 
 	public static Icon getTemplateSmallIcon() {

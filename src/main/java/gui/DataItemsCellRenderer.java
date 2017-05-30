@@ -5,6 +5,8 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import static gui.ColourConstants.*;
+import static java.awt.Color.white;
 import static util.DateUtil.*;
 
 abstract class DataItemsCellRenderer<INPUT_COMP extends data.Component, OUTPUT_COMP extends data.Component> extends BaseCellRenderer {
@@ -41,16 +43,16 @@ abstract class DataItemsCellRenderer<INPUT_COMP extends data.Component, OUTPUT_C
 		Date x_now = isAllDay(p_dueDate) ? makeStartOfDay(new Date()) : new Date();
 
 		if(isAllDay(p_dueDate) ? p_dueDate.before(getFirstThing(TODAY)) : p_dueDate.before(x_now)) {
-			return ColourConstants.s_goneByColour;
+			return s_goneByColour;
 		} else if(isToday(p_dueDate)) {
-			return ColourConstants.s_todayColour;
+			return s_todayColour;
 		} else if(isTomorrow(p_dueDate)) {
-			return ColourConstants.s_tomorrowColour;
+			return s_tomorrowColour;
 		} else if(isWithin7Days(p_dueDate, true)) {
-			return ColourConstants.s_thisWeekColour;
+			return s_thisWeekColour;
 		}
 
-		return Color.WHITE;
+		return white;
 	}
 
 	void reloadData() {

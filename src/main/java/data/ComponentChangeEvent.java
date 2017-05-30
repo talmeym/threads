@@ -50,20 +50,20 @@ public class ComponentChangeEvent {
 		return o_newValue;
 	}
 
-	public boolean isAddition() {
+	private boolean isAddition() {
 		return o_oldValue == null && o_newValue != null;
 	}
 
-	public boolean isRemoval() {
+	private boolean isRemoval() {
 		return o_oldValue != null && o_newValue == null;
 	}
 
-	public boolean isChange() {
+	private boolean isChange() {
 		return o_oldValue != null && o_newValue != null;
 	}
 
 	public boolean isValueChange() {
-		return o_field != CONTENT && o_field != PARENT && isChange();
+		return o_field != CONTENT && o_field != PARENT;
 	}
 
 	public boolean isComponentAdded() {

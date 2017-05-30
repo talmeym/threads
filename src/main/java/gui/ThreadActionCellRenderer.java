@@ -6,6 +6,8 @@ import data.Thread;
 import java.awt.Component;
 import java.util.List;
 
+import static data.LookupHelper.getAllActiveActions;
+
 class ThreadActionCellRenderer extends DataItemsCellRenderer<Thread, Item> {
 	private boolean o_onlyNext7Days;
 
@@ -15,7 +17,7 @@ class ThreadActionCellRenderer extends DataItemsCellRenderer<Thread, Item> {
 
 	@Override
 	List<Item> getDataItems(Thread p_thread) {
-		return LookupHelper.getAllActiveActions(p_thread, o_onlyNext7Days);
+		return getAllActiveActions(p_thread, o_onlyNext7Days);
 	}
 
 	@Override

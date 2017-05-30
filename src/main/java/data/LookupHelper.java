@@ -5,7 +5,7 @@ import util.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static data.ComponentType.Action;
+import static util.DateUtil.*;
 
 public class LookupHelper {
 	public static List<Item> getAllActiveUpdates(Thread p_thread) {
@@ -95,7 +95,7 @@ public class LookupHelper {
 		return p_thread.getThreadItems().stream()
 				.filter(ti -> ti instanceof Item && ti.isActive())
 				.map(ti -> (Item) ti)
-				.filter(i -> i.getDueDate() != null && (!p_onlyNext7DaysOrBefore || DateUtil.isBefore7DaysFromNow(i.getDueDate())))
+				.filter(i -> i.getDueDate() != null && (!p_onlyNext7DaysOrBefore || isBefore7DaysFromNow(i.getDueDate())))
 				.collect(Collectors.toList());
 	}
 
@@ -103,7 +103,7 @@ public class LookupHelper {
 		return p_thread.getThreadItems().stream()
 				.filter(ti -> ti instanceof Item)
 				.map(ti -> (Item) ti)
-				.filter(i -> i.getDueDate() != null && DateUtil.isSameDay(i.getDueDate(), p_date))
+				.filter(i -> i.getDueDate() != null && isSameDay(i.getDueDate(), p_date))
 				.collect(Collectors.toList());
 	}
 
@@ -119,7 +119,7 @@ public class LookupHelper {
 		return p_thread.getThreadItems().stream()
 				.filter(ti -> ti instanceof Item)
 				.map(ti -> (Item) ti)
-				.filter(i -> i.getDueDate() == null && DateUtil.isSameDay(i.getModifiedDate(), p_date))
+				.filter(i -> i.getDueDate() == null && isSameDay(i.getModifiedDate(), p_date))
 				.collect(Collectors.toList());
 	}
 
@@ -202,7 +202,7 @@ public class LookupHelper {
 
 	static List<Reminder> getRemindersForDay(Item p_item, Date p_date) {
 		return p_item.getReminders().stream()
-				.filter(r -> DateUtil.isSameDay(r.getDueDate(), p_date))
+				.filter(r -> isSameDay(r.getDueDate(), p_date))
 				.collect(Collectors.toList());
 	}
 }

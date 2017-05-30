@@ -1,83 +1,52 @@
 package gui;
 
 import data.*;
-import util.*;
+import util.GoogleSyncer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Component;
-import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
 import static gui.Actions.linkToGoogle;
+import static gui.GUIConstants.*;
+import static gui.WidgetFactory.createLabel;
+import static java.awt.BorderLayout.*;
+import static java.util.Calendar.*;
+import static util.GoogleUtil.isLinked;
 import static util.ImageUtil.*;
-import static util.Settings.updateSetting;
+import static util.Settings.*;
 
 class ItemPanel extends ComponentTablePanel<Item, Reminder> {
     private final Item o_item;
-	private final JLabel o_calendarLabel = new JLabel(ImageUtil.getCalendarIcon());
-	private final JLabel o_templateItemLabel = new JLabel(getTemplateIcon());
-	private final JLabel o_linkItemLabel = new JLabel(getLinkIcon());
+	private final JLabel o_linkItemLabel;
 
 	ItemPanel(Item p_item, JPanel p_parentPanel, JFrame p_frame) {
         super(new ItemReminderTableModel(p_item),  new ContentsCellRenderer(p_item));
         o_item = p_item;
 
-		o_item.addComponentChangeListener(e -> {
-			if(e.getSource() == o_item && e.isValueChange()) {
-				o_calendarLabel.setEnabled(o_item.getDueDate() != null);
-				o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
-			}
+		JLabel o_calendarLabel = createLabel(getCalendarIcon(), "Show in Calendar", o_item, i -> i.getDueDate() != null, e -> {
+			Calendar x_calendar = Calendar.getInstance();
+			x_calendar.setTime(o_item.getDueDate());
+			updateSetting(s_TABINDEX, 5);
+			updateSetting(s_DATE, x_calendar.get(MONTH) + "_" + x_calendar.get(YEAR));
+			WindowManager.getInstance().openComponent(o_item.getParentThread());
 		});
 
-        fixColumnWidth(1, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
+		JLabel o_templateItemLabel = createLabel(getTemplateIcon(), "Create Action Template", o_item, i -> o_item.getDueDate() != null && o_item.getReminders().size() > 0, e -> new ActionTemplateBuilderDialog(o_item, p_frame));
+		o_linkItemLabel = createLabel(getLinkIcon(), "Link to Google Calendar", o_item, i -> o_item.getDueDate() != null, e -> linkToGoogle(o_item, p_parentPanel));
+
+		fixColumnWidth(1, s_creationDateColumnWidth);
+        fixColumnWidth(2, s_dateStatusColumnWidth);
         fixColumnWidth(3, 30);
 
-		o_calendarLabel.setEnabled(o_item.getDueDate() != null);
-		o_calendarLabel.setToolTipText("Show in Calendar");
-		o_calendarLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				if (o_calendarLabel.isEnabled()) {
-					Calendar x_calendar = Calendar.getInstance();
-					x_calendar.setTime(o_item.getDueDate());
-					updateSetting(Settings.s_TABINDEX, 5);
-					updateSetting(Settings.s_DATE, x_calendar.get(Calendar.MONTH) + "_" + x_calendar.get(Calendar.YEAR));
-					WindowManager.getInstance().openComponent(o_item.getParentThread());
-				}
-			}
-		});
-
-		o_templateItemLabel.setEnabled(o_item.getDueDate() != null);
-		o_templateItemLabel.setToolTipText("Create Action Template");
-		o_templateItemLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(o_templateItemLabel.isEnabled()) {
-					new ActionTemplateBuilderDialog(o_item, p_frame);
-				}
-			}
-		});
-
-		o_linkItemLabel.setEnabled(o_item.getDueDate() != null);
-		o_linkItemLabel.setToolTipText("Link to Google Calendar");
-		o_linkItemLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				if (o_linkItemLabel.isEnabled()) {
-					linkToGoogle(o_item, p_parentPanel);
-				}
-			}
-		});
-
         JPanel x_panel = new JPanel(new BorderLayout());
-        x_panel.add(new ComponentInfoPanel(p_item, p_parentPanel, true, o_calendarLabel, o_templateItemLabel, o_linkItemLabel), BorderLayout.NORTH);
-        x_panel.add(new DateSuggestionPanel(o_item, p_parentPanel), BorderLayout.SOUTH);
+        x_panel.add(new ComponentInfoPanel(p_item, p_parentPanel, true, o_calendarLabel, o_templateItemLabel, o_linkItemLabel), NORTH);
+        x_panel.add(new DateSuggestionPanel(o_item, p_parentPanel), SOUTH);
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
-		add(x_panel, BorderLayout.NORTH);
+		add(x_panel, NORTH);
 
 		GoogleSyncer.getInstance().addActivityListener(this);
 		googleSynced();
@@ -90,12 +59,12 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 
 	@Override
 	public void googleSynced() {
-		o_linkItemLabel.setIcon(GoogleUtil.isLinked(o_item) ? getGoogleSmallIcon() : getLinkIcon());
+		o_linkItemLabel.setIcon(isLinked(o_item) ? getGoogleSmallIcon() : getLinkIcon());
 	}
 
 	@Override
 	public void googleSynced(List<HasDueDate> p_hasDueDates) {
-		o_linkItemLabel.setIcon(GoogleUtil.isLinked(o_item) ? getGoogleSmallIcon() : getLinkIcon());
+		o_linkItemLabel.setIcon(isLinked(o_item) ? getGoogleSmallIcon() : getLinkIcon());
 	}
 
 	void selectReminder(Reminder p_reminder) {

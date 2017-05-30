@@ -1,12 +1,11 @@
 package data;
 
-import util.DateUtil;
-
 import java.io.File;
 import java.util.*;
 
 import static data.ComponentChangeEvent.Field.DUE_DATE;
-import static util.DateUtil.TODAY;
+import static java.util.Collections.*;
+import static util.DateUtil.*;
 
 public class Reminder extends Component implements HasDueDate
 {
@@ -46,7 +45,7 @@ public class Reminder extends Component implements HasDueDate
 
 	@Override
 	public boolean isDue() {
-		return isActive() && (DateUtil.isAllDay(o_dueDate) ? o_dueDate.before(DateUtil.getFirstThing(TODAY)) : o_dueDate.before(new Date()));
+		return isActive() && (isAllDay(o_dueDate) ? o_dueDate.before(getFirstThing(TODAY)) : o_dueDate.before(new Date()));
 	}
 
 	@Override
@@ -56,6 +55,6 @@ public class Reminder extends Component implements HasDueDate
 
 	@Override
 	public List<Component> search(Search p_search) {
-		return p_search.check(this) ? Collections.singletonList(this) : Collections.emptyList();
+		return p_search.check(this) ? singletonList(this) : emptyList();
 	}
 }

@@ -1,6 +1,5 @@
 package gui;
 
-import data.*;
 import data.Thread;
 import util.*;
 
@@ -8,8 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import static data.LookupHelper.getHasDueDates;
+import static data.LookupHelper.*;
 import static gui.Actions.linkToGoogle;
+import static java.awt.BorderLayout.*;
+import static java.awt.Color.*;
+import static util.ImageUtil.*;
 import static util.Settings.*;
 
 class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeListener {
@@ -26,18 +28,18 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 		});
 
 		o_tabs = new JTabbedPane();
-        o_tabs.addTab("Contents", ImageUtil.getFolderSmallIcon(), new ThreadContentsPanel(p_thread, p_parentPanel));
-        o_tabs.addTab("Threads", ImageUtil.getThreadIcon(), new ThreadThreadPanel(p_thread, p_parentPanel));
-        o_tabs.addTab("Updates", ImageUtil.getUpdateIcon(), new ThreadUpdatePanel(p_thread, p_parentPanel));
-        o_tabs.addTab("Actions", ImageUtil.getActionIcon(), new ThreadActionPanel(p_thread, p_parentPanel));
-        o_tabs.addTab("Reminders", ImageUtil.getReminderIcon(), new ThreadReminderPanel(p_thread, p_parentPanel));
-        o_tabs.addTab("Calendar", ImageUtil.getCalendarSmallIcon(), new ThreadCalendarPanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Contents", getFolderSmallIcon(), new ThreadContentsPanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Threads", getThreadIcon(), new ThreadThreadPanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Updates", getUpdateIcon(), new ThreadUpdatePanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Actions", getActionIcon(), new ThreadActionPanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Reminders", getReminderIcon(), new ThreadReminderPanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Calendar", getCalendarSmallIcon(), new ThreadCalendarPanel(p_thread, p_parentPanel));
 
-		o_tabs.setBackgroundAt(1, Color.gray);
-		o_tabs.setBackgroundAt(2, Color.gray);
-		o_tabs.setBackgroundAt(3, Color.gray);
-		o_tabs.setBackgroundAt(4, Color.gray);
-		o_tabs.setBackgroundAt(5, Color.white);
+		o_tabs.setBackgroundAt(1, gray);
+		o_tabs.setBackgroundAt(2, gray);
+		o_tabs.setBackgroundAt(3, gray);
+		o_tabs.setBackgroundAt(4, gray);
+		o_tabs.setBackgroundAt(5, white);
 
 		o_tabs.setToolTipTextAt(0, "The contents of this Thread");
 		o_tabs.setToolTipTextAt(1, "A view of all active Threads");
@@ -46,7 +48,7 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 		o_tabs.setToolTipTextAt(4, "A view of all active Reminders");
 		o_tabs.setToolTipTextAt(5, "A calendar view of all Items");
 
-		final JLabel x_linkLabel = new JLabel(ImageUtil.getLinkIcon());
+		final JLabel x_linkLabel = new JLabel(getLinkIcon());
 		x_linkLabel.setToolTipText("Link to Google Calendar");
 		x_linkLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -74,11 +76,11 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 		
 		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_parentPanel, true, x_linkLabel);
 		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 3, 0, 3));
-		add(componentInfoPanel, BorderLayout.NORTH);
-        add(o_tabs, BorderLayout.CENTER);
+		add(componentInfoPanel, NORTH);
+        add(o_tabs, CENTER);
 
-		o_tabs.setSelectedIndex(registerForSetting(Settings.s_TABINDEX, this, 0));
-		o_tabs.addChangeListener(changeEvent -> updateSetting(Settings.s_TABINDEX, "" + o_tabs.getSelectedIndex()));
+		o_tabs.setSelectedIndex(registerForSetting(s_TABINDEX, this, 0));
+		o_tabs.addChangeListener(changeEvent -> updateSetting(s_TABINDEX, "" + o_tabs.getSelectedIndex()));
 
         TimedUpdater.getInstance().addActivityListener(this);
         setActionTabBackground();
@@ -91,9 +93,9 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
     }
 
 	private void setActionTabBackground() {
-        if(LookupHelper.getAllActiveDueActions(o_thread).size() > 0) {
+        if(getAllActiveDueActions(o_thread).size() > 0) {
             o_tabs.setTitleAt(3, "Actions *");
-            o_tabs.setBackgroundAt(3, Color.red);
+            o_tabs.setBackgroundAt(3, red);
         } else {
 			o_tabs.setTitleAt(3, "Actions");
             o_tabs.setBackgroundAt(3, o_tabs.getBackgroundAt(1));
@@ -101,9 +103,9 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
     }
 
     private void setReminderTabBackground() {
-        if(LookupHelper.getAllActiveReminders(o_thread, true).size() > 0) {
+        if(getAllActiveReminders(o_thread, true).size() > 0) {
             o_tabs.setTitleAt(4, "Reminders *");
-            o_tabs.setBackgroundAt(4, Color.red);
+            o_tabs.setBackgroundAt(4, red);
         } else {
 			o_tabs.setTitleAt(4, "Reminders");
             o_tabs.setBackgroundAt(4, o_tabs.getBackgroundAt(1));
@@ -111,7 +113,7 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
     }
 
 	static void setTabIndex(int p_tabIndex) {
-		updateSetting(Settings.s_TABINDEX, "" + p_tabIndex);
+		updateSetting(s_TABINDEX, "" + p_tabIndex);
 	}
 
 	@Override

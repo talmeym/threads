@@ -1,15 +1,17 @@
 package gui;
 
 import data.*;
-import util.DateUtil;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
 import java.awt.Component;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static gui.ColourConstants.*;
+import static java.awt.Color.*;
+import static java.util.Calendar.*;
+import static util.DateUtil.*;
 import static util.ImageUtil.getSmallIconForType;
 
 class ThreadCalendarCellRenderer implements TableCellRenderer {
@@ -18,8 +20,8 @@ class ThreadCalendarCellRenderer implements TableCellRenderer {
 	private int o_month;
 
 	ThreadCalendarCellRenderer() {
-		o_year = Calendar.getInstance().get(Calendar.YEAR);
-		o_month = Calendar.getInstance().get(Calendar.MONTH);
+		o_year = Calendar.getInstance().get(YEAR);
+		o_month = Calendar.getInstance().get(MONTH);
 	}
 
 	@Override
@@ -31,15 +33,15 @@ class ThreadCalendarCellRenderer implements TableCellRenderer {
 
 		Object[] x_listValues = new Object[x_values.length];
 		System.arraycopy(x_values, 1, x_listValues, 1, x_values.length - 1);
-		x_listValues[0] = DateUtil.isToday(x_date) ? "Today" : new SimpleDateFormat(x_calendar.get(Calendar.DAY_OF_MONTH) == 1  || (row == 0 && column == 0) ? "d MMM" : "d").format(x_date);
+		x_listValues[0] = isToday(x_date) ? "Today" : new SimpleDateFormat(x_calendar.get(DAY_OF_MONTH) == 1  || (row == 0 && column == 0) ? "d MMM" : "d").format(x_date);
 
 		final JList<Object> x_list = new JList<>(x_listValues);
 		x_list.setCellRenderer(new MyListCellRenderer());
 		x_list.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        x_list.setBackground(column > 4 ? ColourConstants.s_weekendColour : Color.white);
+        x_list.setBackground(column > 4 ? s_weekendColour : white);
 
-		if(!(x_calendar.get(Calendar.YEAR) == o_year && x_calendar.get(Calendar.MONTH) == o_month)) {
-			x_list.setBackground(ColourConstants.s_offMonthColour);
+		if(!(x_calendar.get(YEAR) == o_year && x_calendar.get(MONTH) == o_month)) {
+			x_list.setBackground(s_offMonthColour);
 		}
 
 		setColourForTime(x_date, x_list);
@@ -58,7 +60,7 @@ class ThreadCalendarCellRenderer implements TableCellRenderer {
 
 			if(p_value instanceof String) {
 				setText((String)p_value);
-				setForeground(Color.black);
+				setForeground(black);
 				setEnabled(true);
 			} else {
 				data.Component x_component = (data.Component) p_value;
@@ -75,7 +77,7 @@ class ThreadCalendarCellRenderer implements TableCellRenderer {
 			StringBuilder x_builder = new StringBuilder();
 			Date x_dueDate = x_component instanceof HasDueDate && ((HasDueDate)x_component).getDueDate() != null ? ((HasDueDate)x_component).getDueDate() : x_component.getModifiedDate();
 
-			if(!DateUtil.isAllDay(x_dueDate)) {
+			if(!isAllDay(x_dueDate)) {
 				x_builder.append(new SimpleDateFormat("h:mmaa").format(x_dueDate).toLowerCase()).append(". ");
 			}
 
@@ -90,13 +92,13 @@ class ThreadCalendarCellRenderer implements TableCellRenderer {
 
 	private static void setColourForTime(Date p_dueDate, JList p_list) {
 		if(anyDueItems(p_list)) {
-			p_list.setBackground(ColourConstants.s_goneByColour);
-		} else if(DateUtil.isToday(p_dueDate)) {
-			p_list.setBackground(ColourConstants.s_todayColour);
-		} else if(DateUtil.isTomorrow(p_dueDate)) {
-			p_list.setBackground(ColourConstants.s_tomorrowColour);
-		} else if(DateUtil.isWithin7Days(p_dueDate, false)) {
-			p_list.setBackground(ColourConstants.s_thisWeekColour);
+			p_list.setBackground(s_goneByColour);
+		} else if(isToday(p_dueDate)) {
+			p_list.setBackground(s_todayColour);
+		} else if(isTomorrow(p_dueDate)) {
+			p_list.setBackground(s_tomorrowColour);
+		} else if(isWithin7Days(p_dueDate, false)) {
+			p_list.setBackground(s_thisWeekColour);
 		}
 	}
 

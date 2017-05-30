@@ -3,7 +3,7 @@ package gui;
 import data.Component;
 import data.*;
 import data.Thread;
-import util.*;
+import util.SettingChangeListener;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -16,6 +16,10 @@ import java.util.List;
 import static data.LookupHelper.*;
 import static gui.GUIConstants.*;
 import static java.awt.BorderLayout.CENTER;
+import static java.awt.Color.*;
+import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
+import static util.DateUtil.getDateStatus;
+import static util.GoogleUtil.isLinked;
 import static util.Settings.*;
 
 class SearchResults extends JFrame implements SettingChangeListener {
@@ -43,7 +47,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		o_table.setDefaultRenderer(String.class, x_cellRenderer);
 		o_table.setDefaultRenderer(Boolean.class, x_cellRenderer);
 		o_table.setRowHeight(s_tableRowHeight);
-		o_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		o_table.setSelectionMode(SINGLE_SELECTION);
 
 		o_table.addMouseListener(new MouseAdapter() {
 			 @Override
@@ -74,7 +78,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		int x_height = registerForSetting(s_WINH, this, s_windowHeight);
 		int x_x = registerForSetting(s_WINY, this, s_windowX);
 		int x_y = registerForSetting(s_WINY, this, s_windowY);
-		int x_splitDivider = registerForSetting(Settings.s_NAVDIVLOC, this, 250);
+		int x_splitDivider = registerForSetting(s_NAVDIVLOC, this, 250);
 
 		setSize(new Dimension(800, 400));
 		setLocation(new Point(x_x + x_splitDivider + 5, x_y + x_height - 470));
@@ -128,7 +132,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 				case 1: return x_component.getType();
 				case 2: return x_component.getText();
 				case 3: return o_cache.fillOrGet(p_row, p_col, () -> getInfoString(x_component));
-				default: return GoogleUtil.isLinked(x_component);
+				default: return isLinked(x_component);
 			}
 		}
 
@@ -145,13 +149,13 @@ class SearchResults extends JFrame implements SettingChangeListener {
 
 				if(x_item.getDueDate() != null) {
 					if(x_item.getDueDate().before(new Date())) {
-						return "Due " + DateUtil.getDateStatus(x_item.getDueDate());
+						return "Due " + getDateStatus(x_item.getDueDate());
 					}
 
-					return "Due in " + DateUtil.getDateStatus(x_item.getDueDate());
+					return "Due in " + getDateStatus(x_item.getDueDate());
 				}
 
-				return "Updated " + DateUtil.getDateStatus(x_item.getCreationDate());
+				return "Updated " + getDateStatus(x_item.getCreationDate());
 			}
 
 			if(x_component instanceof Reminder) {
@@ -181,7 +185,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 
 		@Override
 		void customSetup(Component p_component, java.awt.Component p_awtComponent, boolean p_isSelected) {
-			p_awtComponent.setForeground(p_component.isActive() ? Color.black : Color.gray);
+			p_awtComponent.setForeground(p_component.isActive() ? black : gray);
 		}
 	}
 }

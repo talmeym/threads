@@ -10,6 +10,8 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.List;
 
+import static java.awt.BorderLayout.*;
+
 class NavigationPanel extends JPanel implements TreeSelectionListener {
 	private final JTree o_navigationTree;
 
@@ -21,15 +23,15 @@ class NavigationPanel extends JPanel implements TreeSelectionListener {
 		o_navigationTree.addTreeSelectionListener(this);
 
 		JPanel x_treePanel = new JPanel(new BorderLayout());
-		x_treePanel.add(new JScrollPane(o_navigationTree), BorderLayout.CENTER);
+		x_treePanel.add(new JScrollPane(o_navigationTree), CENTER);
 		x_treePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		JPanel x_panel = new JPanel(new BorderLayout());
-		x_panel.add(new SearchPanel(p_topLevelThread), BorderLayout.CENTER);
-		x_panel.add(new StatusPanel(p_topLevelThread), BorderLayout.SOUTH);
+		x_panel.add(new SearchPanel(p_topLevelThread), CENTER);
+		x_panel.add(new StatusPanel(p_topLevelThread), SOUTH);
 
-		add(x_treePanel, BorderLayout.CENTER);
-		add(x_panel, BorderLayout.SOUTH);
+		add(x_treePanel, CENTER);
+		add(x_panel, SOUTH);
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
 	}
 

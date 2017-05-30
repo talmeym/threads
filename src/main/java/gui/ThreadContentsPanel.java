@@ -5,12 +5,17 @@ import data.Thread;
 import util.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.Component;
+import java.awt.*;
 import java.awt.event.*;
 
 import static gui.Actions.*;
-import static util.GuiUtil.setUpButtonLabel;
+import static gui.GUIConstants.*;
+import static gui.WidgetFactory.setUpButtonLabel;
+import static java.awt.BorderLayout.SOUTH;
+import static java.awt.FlowLayout.LEFT;
+import static javax.swing.JOptionPane.*;
+import static util.ImageUtil.*;
 
 class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 {
@@ -24,12 +29,12 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 		o_parentPanel = p_parentPanel;
 		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
 
-        fixColumnWidth(0, GUIConstants.s_creationDateColumnWidth);
-        fixColumnWidth(1, GUIConstants.s_typeColumnWidth);
-        fixColumnWidth(3, GUIConstants.s_threadItemInfoColumnWidth);
-        fixColumnWidth(4, GUIConstants.s_googleStatusColumnWidth);
+        fixColumnWidth(0, s_creationDateColumnWidth);
+        fixColumnWidth(1, s_typeColumnWidth);
+        fixColumnWidth(3, s_threadItemInfoColumnWidth);
+        fixColumnWidth(4, s_googleStatusColumnWidth);
 
-		JLabel x_addItemLabel = new JLabel(ImageUtil.getPlusIcon());
+		JLabel x_addItemLabel = new JLabel(getPlusIcon());
 		x_addItemLabel.setToolTipText("Add Item");
 		x_addItemLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -44,11 +49,11 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
 		o_popupMenu.setLinkActionListener(e -> link(getSelectedObject()));
 
-        JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
         x_buttonPanel.add(setUpButtonLabel(x_addItemLabel));
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-        add(x_buttonPanel, BorderLayout.SOUTH);
+        add(x_buttonPanel, SOUTH);
 
 		TimedUpdater.getInstance().addActivityListener(this);
 		GoogleSyncer.getInstance().addActivityListener(this);
@@ -56,7 +61,7 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 
 	public void add(ThreadItem p_threadItem) {
 		String[] x_options = {"Update", "Thread", "Action", "Cancel"};
-		int x_selection = JOptionPane.showOptionDialog(o_parentPanel, "What would you like to add ?", "Add Something ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon(), x_options, x_options[2]);
+		int x_selection = showOptionDialog(o_parentPanel, "What would you like to add ?", "Add Something ?", OK_CANCEL_OPTION, INFORMATION_MESSAGE, getThreadsIcon(), x_options, x_options[2]);
 
 		switch(x_selection) {
 			case 0: addUpdate(p_threadItem, o_thread, o_parentPanel); break;

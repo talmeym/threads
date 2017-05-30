@@ -2,9 +2,12 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.*;
 
 import java.util.*;
+
+import static data.LookupHelper.getAllActiveActions;
+import static util.DateUtil.*;
+import static util.GoogleUtil.isLinked;
 
 class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
 	private boolean o_onlyNext7Days = true;
@@ -28,15 +31,15 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
         switch(col) {
 			case 0: return x_action.getParentThread().getText();
 			case 1: return x_action.getText();
-			case 2: return DateUtil.getFormattedDate(x_action.getDueDate());
-			case 3: return DateUtil.getDateStatus(x_action.getDueDate());
-			default: return GoogleUtil.isLinked(x_action);
+			case 2: return getFormattedDate(x_action.getDueDate());
+			case 3: return getDateStatus(x_action.getDueDate());
+			default: return isLinked(x_action);
         }
     }
 
     @Override
 	List<Item> getDataItems() {
-		return LookupHelper.getAllActiveActions(getComponent(), o_onlyNext7Days);
+		return getAllActiveActions(getComponent(), o_onlyNext7Days);
 	}
 
 	boolean onlyNext7Days() {

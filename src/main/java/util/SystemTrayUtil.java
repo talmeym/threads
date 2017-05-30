@@ -11,6 +11,7 @@ import java.util.*;
 import static data.ComponentChangeEvent.Field.TEXT;
 import static gui.Actions.*;
 import static gui.DateSuggestionPanel.getDateSuggestion;
+import static util.ImageUtil.getThreadsImage;
 
 public class SystemTrayUtil {
 	private static PopupMenu o_popUpMenu;
@@ -35,7 +36,7 @@ public class SystemTrayUtil {
 
 			x_addUpdateItem.addActionListener(e -> addUpdate(null, o_topLevelThread, null));
 
-			o_trayIcon = new TrayIcon(ImageUtil.getThreadsImage(), "Threads", o_popUpMenu);
+			o_trayIcon = new TrayIcon(getThreadsImage(), "Threads", o_popUpMenu);
 			o_trayIcon.setImageAutoSize(true);
 			SystemTray systemTray = SystemTray.getSystemTray();
 			systemTray.add(o_trayIcon);

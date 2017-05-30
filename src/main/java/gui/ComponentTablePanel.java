@@ -11,6 +11,9 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
+import static gui.GUIConstants.s_tableRowHeight;
+import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
+
 abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends JPanel implements TimedUpdateListener, GoogleSyncListener, TableSelectionListener<TYPE> {
 	private final ComponentTableModel<COMPONENT, TYPE> o_tableModel;
 	final JTable o_table;
@@ -21,12 +24,12 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 		o_tableModel = p_tableModel;
 		o_listeners.add(this);
 		o_table = new JTable(p_tableModel);
-        o_table.setRowHeight(GUIConstants.s_tableRowHeight);
+        o_table.setRowHeight(s_tableRowHeight);
         o_table.setDefaultRenderer(String.class, p_cellRenderer);
         o_table.setDefaultRenderer(Object[].class, p_cellRenderer);
         o_table.setDefaultRenderer(Date.class, p_cellRenderer);
         o_table.setDefaultRenderer(ComponentType.class, p_cellRenderer);
-		o_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		o_table.setSelectionMode(SINGLE_SELECTION);
 
         o_table.addMouseListener(new MouseAdapter(){
 			@Override

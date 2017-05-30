@@ -7,10 +7,12 @@ import org.jdom.output.*;
 import java.io.*;
 import java.util.*;
 
+import static data.XmlConstants.*;
+
 public class Saver {
     public static void saveDocument(Thread p_topThread, List<ActionTemplate> p_actionTemplates, File p_xmlFile) {
         try {
-            Element x_rootElem = new Element(XmlConstants.s_THREADS);
+            Element x_rootElem = new Element(s_THREADS);
             x_rootElem.addContent(addThread(p_topThread));
             p_actionTemplates.forEach(a -> x_rootElem.addContent(addActionTemplate(a)));
             Document x_doc = new Document(x_rootElem);
@@ -24,11 +26,11 @@ public class Saver {
     }
 
 	private static Element addActionTemplate(ActionTemplate p_actionTemplate) {
-		Element x_templateElem = new Element(XmlConstants.s_ACTION_TEMPLATE);
-		addContent(x_templateElem, XmlConstants.s_NAME, p_actionTemplate.getName());
-		addContent(x_templateElem, XmlConstants.s_TOKEN_PROMPT, p_actionTemplate.getTokenPrompt());
-		addContent(x_templateElem, XmlConstants.s_TOKEN_DEFAULT, p_actionTemplate.getTokenDefault());
-		addContent(x_templateElem, XmlConstants.s_TEXT_TEMPLATE, p_actionTemplate.getTextTemplate());
+		Element x_templateElem = new Element(s_ACTION_TEMPLATE);
+		addContent(x_templateElem, s_NAME, p_actionTemplate.getName());
+		addContent(x_templateElem, s_TOKEN_PROMPT, p_actionTemplate.getTokenPrompt());
+		addContent(x_templateElem, s_TOKEN_DEFAULT, p_actionTemplate.getTokenDefault());
+		addContent(x_templateElem, s_TEXT_TEMPLATE, p_actionTemplate.getTextTemplate());
 
 		for(ReminderTemplate x_reminderTemplate: p_actionTemplate.getReminderTemplates()) {
 			x_templateElem.addContent(addReminderTemplate(x_reminderTemplate));
@@ -38,14 +40,14 @@ public class Saver {
 	}
 
 	private static Element addReminderTemplate(ReminderTemplate p_reminderTemplate) {
-		Element x_templateElem = new Element(XmlConstants.s_REMINDER_TEMPLATE);
-		addContent(x_templateElem, XmlConstants.s_TEXT_TEMPLATE, p_reminderTemplate.getTextTemplate());
-		addContent(x_templateElem, XmlConstants.s_OFFSET, String.valueOf(p_reminderTemplate.getOffset()));
+		Element x_templateElem = new Element(s_REMINDER_TEMPLATE);
+		addContent(x_templateElem, s_TEXT_TEMPLATE, p_reminderTemplate.getTextTemplate());
+		addContent(x_templateElem, s_OFFSET, String.valueOf(p_reminderTemplate.getOffset()));
 		return x_templateElem;
 	}
 
 	private static Element addThread(Thread p_thread) {
-        Element x_threadElem = new Element(XmlConstants.s_THREAD);
+        Element x_threadElem = new Element(s_THREAD);
         addComponentData(x_threadElem, p_thread);
     
         for(ThreadItem x_groupItem: p_thread.getThreadItems()) {
@@ -62,11 +64,11 @@ public class Saver {
     }
     
     private static Element addItem(Item p_item) {
-        Element x_itemElem = new Element(XmlConstants.s_ITEM);
+        Element x_itemElem = new Element(s_ITEM);
         addComponentData(x_itemElem, p_item);
 
 		if(p_item.getDueDate() != null) {
-			addContent(x_itemElem, XmlConstants.s_DUE, addDateTime(p_item.getDueDate()));
+			addContent(x_itemElem, s_DUE, addDateTime(p_item.getDueDate()));
 
 			for(Reminder x_reminder: p_item.getReminders()) {
 				x_itemElem.addContent(addReminder(x_reminder));
@@ -78,19 +80,19 @@ public class Saver {
     }
     
     private static Element addReminder(Reminder p_reminder) {
-        Element x_reminderElem = new Element(XmlConstants.s_REMINDER);
+        Element x_reminderElem = new Element(s_REMINDER);
         addComponentData(x_reminderElem, p_reminder);        
-        addContent(x_reminderElem, XmlConstants.s_REM_DATE, addDateTime(p_reminder.getDueDate()));
+        addContent(x_reminderElem, s_REM_DATE, addDateTime(p_reminder.getDueDate()));
 		addDocFolder(x_reminderElem, p_reminder);
 		return x_reminderElem;
     }
 
     private static void addComponentData(Element p_element, Component p_component) {
-		p_element.setAttribute(XmlConstants.s_ID, p_component.getId().toString());
-        p_element.setAttribute(XmlConstants.s_CREATED, addDateTime(p_component.getCreationDate()));
-        p_element.setAttribute(XmlConstants.s_MODIFIED, addDateTime(p_component.getModifiedDate()));
-        p_element.setAttribute(XmlConstants.s_ACTIVE, addBoolean(p_component.isActive()));
-        addContent(p_element, XmlConstants.s_TEXT, p_component.getText());
+		p_element.setAttribute(s_ID, p_component.getId().toString());
+        p_element.setAttribute(s_CREATED, addDateTime(p_component.getCreationDate()));
+        p_element.setAttribute(s_MODIFIED, addDateTime(p_component.getModifiedDate()));
+        p_element.setAttribute(s_ACTIVE, addBoolean(p_component.isActive()));
+        addContent(p_element, s_TEXT, p_component.getText());
     }
 
     private static void addContent(Element p_element, String p_name, String p_value) {

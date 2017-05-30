@@ -5,6 +5,8 @@ import data.Thread;
 
 import java.util.*;
 
+import static data.LookupHelper.getAllComponents;
+
 class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
 	private TableDataCache<Object[]> o_cache = new TableDataCache<>();
 
@@ -37,7 +39,7 @@ class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
 	public Object getValueAt(int p_row, int p_col) {
 		return o_cache.fillOrGet(p_row, p_col, () -> {
 			Date x_date = getDataItem(p_row, p_col);
-			List<Component> x_components = LookupHelper.getAllComponents(getComponent(), x_date, o_includeActions, o_includeUpdates, o_includeReminders);
+			List<Component> x_components = getAllComponents(getComponent(), x_date, o_includeActions, o_includeUpdates, o_includeReminders);
 			Object[] x_value = new Object[x_components.size() + 1];
 			x_value[0] = x_date;
 			System.arraycopy(x_components.toArray(new Component[x_components.size()]), 0, x_value, 1, x_components.size());

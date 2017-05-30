@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.*;
 
+import static data.LookupHelper.*;
 import static java.util.Calendar.DAY_OF_MONTH;
 import static org.junit.Assert.assertEquals;
 
@@ -17,8 +18,8 @@ public class LookupHelperTest {
 		p_thread.addThreadItem((ThreadItem[]) buildItems(true, get10DaysFromNow(), 3)); // active actions due 10 days from now
 		p_thread.addThreadItem((ThreadItem[]) buildItems(false, new Date(), 3));        // inactive actions due today
 
-		assertEquals(6, LookupHelper.getActiveActions(p_thread, false).size());
-		assertEquals(3, LookupHelper.getActiveActions(p_thread, true).size());
+		assertEquals(6, getActiveActions(p_thread, false).size());
+		assertEquals(3, getActiveActions(p_thread, true).size());
 	}
 
 	@Test
@@ -29,8 +30,8 @@ public class LookupHelperTest {
 		p_thread.addThreadItem((ThreadItem[]) buildItems(true, get10DaysFromNow(), 3)); // active actions due 10 days from now
 		p_thread.addThreadItem((ThreadItem[]) buildItems(false, new Date(), 3));        // inactive actions due today
 
-		assertEquals(6, LookupHelper.getActionsForDay(p_thread, new Date()).size());
-		assertEquals(3, LookupHelper.getActionsForDay(p_thread, get10DaysFromNow()).size());
+		assertEquals(6, getActionsForDay(p_thread, new Date()).size());
+		assertEquals(3, getActionsForDay(p_thread, get10DaysFromNow()).size());
 	}
 
 	@Test
@@ -41,8 +42,8 @@ public class LookupHelperTest {
 		p_thread.addThreadItem((ThreadItem[]) buildItems(true, null, get10DaysFromNow(), 3));       // updates made 10 days from now
 		p_thread.addThreadItem((ThreadItem[]) buildItems(true, new Date(), get10DaysFromNow(), 3)); // actions made 10 days from now
 
-		assertEquals(3, LookupHelper.getUpdatesForDay(p_thread, new Date()).size());
-		assertEquals(3, LookupHelper.getUpdatesForDay(p_thread, get10DaysFromNow()).size());
+		assertEquals(3, getUpdatesForDay(p_thread, new Date()).size());
+		assertEquals(3, getUpdatesForDay(p_thread, get10DaysFromNow()).size());
 	}
 
 	@Test
@@ -53,7 +54,7 @@ public class LookupHelperTest {
 		p_thread.addThreadItem((ThreadItem[]) buildItems(false, get10DaysFromNow(), 3)); // inactive actions 10 days from now
 		p_thread.addThreadItem((ThreadItem[]) buildItems(true, new Date(), 3));          // active actions
 
-		assertEquals(9, LookupHelper.getActions(p_thread).size());
+		assertEquals(9, getActions(p_thread).size());
 	}
 
 	@Test
@@ -65,7 +66,7 @@ public class LookupHelperTest {
 		p_thread.addThreadItem((ThreadItem[]) buildItems(true, get10DaysAgo(), 3));     // active due actions
 		p_thread.addThreadItem((ThreadItem[]) buildItems(false, new Date(), 3));        // inactive due actions
 
-		assertEquals(6, LookupHelper.getActiveDueActions(p_thread).size());
+		assertEquals(6, getActiveDueActions(p_thread).size());
 	}
 
 	@Test
@@ -77,8 +78,8 @@ public class LookupHelperTest {
 		item.addReminder(buildReminders(true, item, get10DaysFromNow(), 1));  // active, not due
 		item.addReminder(buildReminders(false, item, get10DaysFromNow(), 1)); // inactive, not due
 
-		assertEquals(3, LookupHelper.getActiveReminders(item, false).size()); // all active
-		assertEquals(2, LookupHelper.getActiveReminders(item, true).size());  // all active and due
+		assertEquals(3, getActiveReminders(item, false).size()); // all active
+		assertEquals(2, getActiveReminders(item, true).size());  // all active and due
 	}
 
 	@Test
@@ -88,8 +89,8 @@ public class LookupHelperTest {
 		item.addReminder(buildReminders(false, item, new Date(), 3));
 		item.addReminder(buildReminders(false, item, get10DaysFromNow(), 2));
 
-		assertEquals(3, LookupHelper.getRemindersForDay(item, new Date()).size());
-		assertEquals(2, LookupHelper.getRemindersForDay(item, get10DaysFromNow()).size());
+		assertEquals(3, getRemindersForDay(item, new Date()).size());
+		assertEquals(2, getRemindersForDay(item, get10DaysFromNow()).size());
 	}
 
 	@Test
@@ -100,7 +101,7 @@ public class LookupHelperTest {
 		p_thread.addThreadItem((ThreadItem[]) buildItems(true, new Date(), 3));         // active actions
 		p_thread.addThreadItem((ThreadItem[]) buildItems(false, new Date(), 3));        // inactive actions
 
-		assertEquals(3, LookupHelper.getActiveUpdates(p_thread).size());
+		assertEquals(3, getActiveUpdates(p_thread).size());
 	}
 
 	@Test
@@ -113,15 +114,15 @@ public class LookupHelperTest {
 		Item x_item4 = buildItemWithReminders(true, true, get10DaysFromNow(), 5);
 		p_thread.addThreadItem(x_item, x_item2, x_item3, x_item4);
 
-		assertEquals(10, LookupHelper.getRemindersForDay(p_thread, new Date()).size());
+		assertEquals(10, getRemindersForDay(p_thread, new Date()).size());
 	}
 
 	@Test
 	public void testGetHasDueDates_item() {
 		Item p_item = buildItemWithReminders(true, true, new Date(), 5);
 		p_item.addReminder(buildReminders(false, p_item, new Date(), 5));
-		assertEquals(6, LookupHelper.getHasDueDates(p_item, true).size());
-		assertEquals(11, LookupHelper.getHasDueDates(p_item, false).size());
+		assertEquals(6, getHasDueDates(p_item, true).size());
+		assertEquals(11, getHasDueDates(p_item, false).size());
 	}
 
 	@Test
@@ -134,8 +135,8 @@ public class LookupHelperTest {
 		Item x_item4 = buildItemWithReminders(true, true, new Date(), 5);
 		p_thread.addThreadItem(x_item1, x_item2, x_item3, x_item4);
 
-		assertEquals(7, LookupHelper.getHasDueDates(p_thread, true).size());
-		assertEquals(24, LookupHelper.getHasDueDates(p_thread, false).size());
+		assertEquals(7, getHasDueDates(p_thread, true).size());
+		assertEquals(24, getHasDueDates(p_thread, false).size());
 	}
 
 	@Test
@@ -150,7 +151,7 @@ public class LookupHelperTest {
 		x_thread.addThreadItem(x_item5);
 		List<Component> x_comps = Arrays.asList(x_reminder, x_item1, x_item2, x_item3, x_item4, x_thread);
 
-		assertEquals(8, LookupHelper.getHasDueDates(x_comps).size());
+		assertEquals(8, getHasDueDates(x_comps).size());
 	}
 
 	private Item buildItemWithReminders(boolean p_active, boolean p_reminderActive, Date p_reminderDate, int p_reminderCount) {

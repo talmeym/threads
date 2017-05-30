@@ -10,7 +10,15 @@ import java.awt.event.*;
 import java.text.*;
 import java.util.*;
 
-import static util.GuiUtil.setUpButtonLabel;
+import static gui.ColourConstants.s_editedColour;
+import static gui.WidgetFactory.setUpButtonLabel;
+import static java.awt.BorderLayout.*;
+import static java.awt.Color.*;
+import static java.awt.FlowLayout.LEFT;
+import static javax.swing.BoxLayout.Y_AXIS;
+import static javax.swing.JOptionPane.*;
+import static util.DateUtil.isAllDay;
+import static util.ImageUtil.*;
 
 public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
@@ -31,8 +39,8 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 
 	private final JPanel o_parentPanel;
     private final JTextField o_dueDateField = new JTextField();
-	private final JLabel o_setLabel = new JLabel(ImageUtil.getReturnIcon());
-	private final JLabel o_revertLabel = new JLabel(ImageUtil.getCrossIcon());
+	private final JLabel o_setLabel = new JLabel(getReturnIcon());
+	private final JLabel o_revertLabel = new JLabel(getCrossIcon());
 
     DateSuggestionPanel(Item p_item, final JPanel p_parentPanel) {
         super(new BorderLayout());
@@ -54,7 +62,7 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 			}
 
 			private void edited() {
-				o_dueDateField.setBackground(ColourConstants.s_editedColour);
+				o_dueDateField.setBackground(s_editedColour);
 				o_setLabel.setEnabled(true);
 				o_revertLabel.setEnabled(true);
 			}
@@ -65,29 +73,29 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 				o_dueDateField.getDocument().removeDocumentListener(x_listener);
 				o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
 				o_dueDateField.getDocument().addDocumentListener(x_listener);
-				o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
+				o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? black : gray);
 			}
 		});
 
 		o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
-		o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
+		o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? black : gray);
 		o_dueDateField.setToolTipText("Press enter to set");
 		o_dueDateField.getDocument().addDocumentListener(x_listener);
 		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
-		o_dueDateField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
+		o_dueDateField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(lightGray), BorderFactory.createEmptyBorder(0, 5, 0, 5)));
 
 		o_dueDateField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent focusEvent) {
 				if(o_dueDateField.getText().equals(s_defaultTextString)) {
-					setDueDateText("", o_item.isActive() ? Color.black : Color.gray);
+					setDueDateText("", o_item.isActive() ? black : gray);
 				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent focusEvent) {
 				if(o_item.getDueDate() == null && o_dueDateField.getText().length() == 0) {
-					setDueDateText(s_defaultTextString, Color.gray);
+					setDueDateText(s_defaultTextString, gray);
 				}
 			}
 
@@ -114,7 +122,7 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
 				o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
-				o_dueDateField.setBackground(Color.white);
+				o_dueDateField.setBackground(white);
 				o_setLabel.setEnabled(false);
 				o_revertLabel.setEnabled(false);
 			}
@@ -123,22 +131,22 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 		setUpDropDowns();
 
 		JPanel x_fieldPanel = new JPanel();
-		x_fieldPanel.setLayout(new BoxLayout(x_fieldPanel, BoxLayout.Y_AXIS));
+		x_fieldPanel.setLayout(new BoxLayout(x_fieldPanel, Y_AXIS));
 		x_fieldPanel.add(Box.createVerticalStrut(13));
 		x_fieldPanel.add(o_dueDateField);
 		x_fieldPanel.add(Box.createVerticalStrut(14));
 		x_fieldPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
 		JPanel x_buttonPanel = new JPanel();
-		x_buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		x_buttonPanel.setLayout(new FlowLayout(LEFT));
 		x_buttonPanel.add(setUpButtonLabel(o_setLabel));
 		x_buttonPanel.add(setUpButtonLabel(o_revertLabel));
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(7, 0, 0, 0));
 
 		JPanel x_panel = new JPanel(new BorderLayout());
-		x_panel.add(new JLabel("Due Date"), BorderLayout.WEST);
-		x_panel.add(x_fieldPanel, BorderLayout.CENTER);
-		x_panel.add(x_buttonPanel, BorderLayout.EAST);
+		x_panel.add(new JLabel("Due Date"), WEST);
+		x_panel.add(x_fieldPanel, CENTER);
+		x_panel.add(x_buttonPanel, EAST);
 		x_panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
 		o_dueDateField.addActionListener(e -> setDueDate());
@@ -161,12 +169,12 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 		x_quickSetPanel.add(x_suggestButton);
 		x_quickSetPanel.setBorder(BorderFactory.createTitledBorder("Quick Set"));
 
-		JPanel x_panelsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel x_panelsPanel = new JPanel(new FlowLayout(LEFT));
 		x_panelsPanel.add(x_pushbackPanel);
 		x_panelsPanel.add(x_quickSetPanel);
 
-		add(x_panel, BorderLayout.CENTER);
-		add(x_panelsPanel, BorderLayout.EAST);
+		add(x_panel, CENTER);
+		add(x_panelsPanel, EAST);
 
 		TimedUpdater.getInstance().addActivityListener(this);
 	}
@@ -232,7 +240,7 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
         x_calendar.set(Calendar.DAY_OF_WEEK, ((DateItem)o_dayBox.getSelectedItem()).o_value);
 		x_calendar.add(Calendar.DATE, ((DateItem)o_weekBox.getSelectedItem()).o_value);
 		o_dueDateField.setText(getDueDateText(x_calendar.getTime()));
-		o_dueDateField.setForeground(o_item.isActive() ? Color.black : Color.gray);
+		o_dueDateField.setForeground(o_item.isActive() ? black : gray);
 		setDueDate();
     }
 
@@ -258,7 +266,7 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 				}
 
 				o_dueDateField.setText(getDueDateText(x_calendar.getTime()));
-				o_dueDateField.setForeground(o_item.isActive() ? Color.black : Color.gray);
+				o_dueDateField.setForeground(o_item.isActive() ? black : gray);
 				setDueDate();
 			}
 		}
@@ -274,14 +282,14 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 				Date x_currentDate = o_item.getDueDate();
 				o_item.setDueDate(x_dueDate);
 
-				if(o_item.getReminderCount() > 0 && JOptionPane.showConfirmDialog(o_parentPanel, "This action has reminders.\nDo you want to keep their relative positions ?", "Keep Reminders Relative ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getThreadsIcon()) == JOptionPane.OK_OPTION) {
+				if((o_item.getReminderCount() > 0) && (showConfirmDialog(o_parentPanel, "This action has reminders.\nDo you want to keep their relative positions ?", "Keep Reminders Relative ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION)) {
 					for(Reminder x_reminder: o_item.getReminders()) {
 						x_reminder.setDueDate(new Date(x_dueDate.getTime() + (x_reminder.getDueDate().getTime() - x_currentDate.getTime())));
 					}
 				}
 			}
 		} else {
-			if(JOptionPane.showConfirmDialog(o_parentPanel, "Removing Due Date will convert this Action into an Update. Any Reminders will be automatically removed. Continue ?", "Convert to Update ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, ImageUtil.getThreadsIcon()) == 0) {
+			if(showConfirmDialog(o_parentPanel, "Removing Due Date will convert this Action into an Update. Any Reminders will be automatically removed. Continue ?", "Convert to Update ?", OK_CANCEL_OPTION, INFORMATION_MESSAGE, getThreadsIcon()) == 0) {
 				o_item.removeAllReminder();
 				o_item.setDueDate(null);
 			}
@@ -292,10 +300,10 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 
 	private void revertDueDateField() {
 		o_dueDateField.setText(getDueDateText(o_item.getDueDate()));
-		o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? Color.black : Color.gray);
+		o_dueDateField.setForeground(o_item.getDueDate() != null && o_item.isActive() ? black : gray);
 		o_setLabel.setEnabled(false);
 		o_revertLabel.setEnabled(false);
-		o_dueDateField.setBackground(Color.white);
+		o_dueDateField.setBackground(white);
 	}
 
 	private Date parseDate(String p_text) {
@@ -311,7 +319,7 @@ public class DateSuggestionPanel extends JPanel implements TimedUpdateListener {
 	}
 
 	private String getDueDateText(Date x_dueDate) {
-		return x_dueDate != null ? DateUtil.isAllDay(x_dueDate) ? s_dateFormat.format(x_dueDate) : s_dateTimeFormat.format(x_dueDate) : s_defaultTextString;
+		return x_dueDate != null ? isAllDay(x_dueDate) ? s_dateFormat.format(x_dueDate) : s_dateTimeFormat.format(x_dueDate) : s_defaultTextString;
 	}
 
 	@Override

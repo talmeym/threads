@@ -1,17 +1,18 @@
 package gui;
 
 import data.ComponentType;
-import util.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+import static util.ImageUtil.*;
+
 class ContextualPopupMenu {
-	private final JMenuItem o_activeLabel = new JMenuItem("Set Inactive", ImageUtil.getTickIcon());
-	private final JMenuItem o_removeLabel = new JMenuItem("Remove", ImageUtil.getMinusIcon());
-	private final JMenuItem o_moveLabel = new JMenuItem("Move", ImageUtil.getMoveIcon());
-	private final JMenuItem o_linkLabel = new JMenuItem("Link",ImageUtil.getLinkIcon());
+	private final JMenuItem o_activeLabel = new JMenuItem("Set Inactive", getTickIcon());
+	private final JMenuItem o_removeLabel = new JMenuItem("Remove", getMinusIcon());
+	private final JMenuItem o_moveLabel = new JMenuItem("Move", getMoveIcon());
+	private final JMenuItem o_linkLabel = new JMenuItem("Link", getLinkIcon());
 
 	private boolean o_moveEnabled;
 	private boolean o_linkEnabled;

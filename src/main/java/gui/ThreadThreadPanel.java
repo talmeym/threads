@@ -1,7 +1,7 @@
 package gui;
 
 import data.Thread;
-import util.*;
+import util.TimedUpdater;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,8 +9,12 @@ import java.awt.event.*;
 
 import static data.ComponentType.Thread;
 import static gui.Actions.*;
-import static util.GuiUtil.setUpButtonLabel;
-import static util.Settings.s_SEVENDAYS;
+import static gui.GUIConstants.*;
+import static gui.WidgetFactory.setUpButtonLabel;
+import static java.awt.BorderLayout.SOUTH;
+import static java.awt.FlowLayout.LEFT;
+import static util.ImageUtil.getPlusIcon;
+import static util.Settings.*;
 
 class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
     private final Thread o_thread;
@@ -21,12 +25,12 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
 		o_thread = p_thread;
 		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
 
-        fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
-		fixColumnWidth(2, GUIConstants.s_statsColumnWidth);
-		fixColumnWidth(3, GUIConstants.s_statsColumnWidth);
-		fixColumnWidth(4, GUIConstants.s_statsColumnWidth);
+        fixColumnWidth(0, s_threadColumnWidth);
+		fixColumnWidth(2, s_statsColumnWidth);
+		fixColumnWidth(3, s_statsColumnWidth);
+		fixColumnWidth(4, s_statsColumnWidth);
 
-		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
+		JLabel x_addLabel = new JLabel(getPlusIcon());
 		x_addLabel.setToolTipText("Add Thread");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent p_me) {
@@ -40,11 +44,11 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
 		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
 		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_parentPanel));
 
-		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-		add(x_buttonPanel, BorderLayout.SOUTH);
+		add(x_buttonPanel, SOUTH);
 
 		TimedUpdater.getInstance().addActivityListener(this);
 	}
@@ -69,7 +73,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
 
 				if(p_col > 1) {
 					if(p_col == 4) {
-						Settings.updateSetting(s_SEVENDAYS, false);
+						updateSetting(s_SEVENDAYS, false);
 					}
 
 					ThreadPanel.setTabIndex(p_col - 1);

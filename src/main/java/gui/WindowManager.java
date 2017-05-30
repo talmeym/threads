@@ -3,7 +3,7 @@ package gui;
 import data.Component;
 import data.*;
 import data.Thread;
-import util.*;
+import util.SettingChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.*;
 
+import static gui.GUIConstants.*;
 import static util.ImageUtil.addIcon;
 import static util.Settings.*;
 
@@ -44,10 +45,10 @@ public class WindowManager implements SettingChangeListener {
 		x_window.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
-				updateSetting(Settings.s_WINX, "" + new Double(x_window.getLocation().getX()).intValue());
-				updateSetting(Settings.s_WINY, "" + new Double(x_window.getLocation().getY()).intValue());
-				updateSetting(Settings.s_WINW, "" + new Double(x_window.getSize().getWidth()).intValue());
-				updateSetting(Settings.s_WINH, "" + new Double(x_window.getSize().getHeight()).intValue());
+				updateSetting(s_WINX, "" + new Double(x_window.getLocation().getX()).intValue());
+				updateSetting(s_WINY, "" + new Double(x_window.getLocation().getY()).intValue());
+				updateSetting(s_WINW, "" + new Double(x_window.getSize().getWidth()).intValue());
+				updateSetting(s_WINH, "" + new Double(x_window.getSize().getHeight()).intValue());
 			}
 		});
 
@@ -58,7 +59,7 @@ public class WindowManager implements SettingChangeListener {
 			}
 		});
 
-		String x_firstUuid = registerForSetting(Settings.s_UUID, this, p_topLevelThread.getId().toString());
+		String x_firstUuid = registerForSetting(s_UUID, this, p_topLevelThread.getId().toString());
 		Component x_firstComponent = p_topLevelThread;
 
 		if(x_firstUuid != null) {
@@ -68,14 +69,14 @@ public class WindowManager implements SettingChangeListener {
 
 		o_navigationAndComponentPanel.showComponent(x_firstComponent);
 
-		x_window.setSize(new Dimension(registerForSetting(Settings.s_WINW, this, GUIConstants.s_windowWidth), registerForSetting(Settings.s_WINH, this, GUIConstants.s_windowHeight)));
-		x_window.setLocation(new Point(registerForSetting(Settings.s_WINX, this, GUIConstants.s_windowX), registerForSetting(Settings.s_WINY, this, GUIConstants.s_windowY)));
+		x_window.setSize(new Dimension(registerForSetting(s_WINW, this, s_windowWidth), registerForSetting(s_WINH, this, s_windowHeight)));
+		x_window.setLocation(new Point(registerForSetting(s_WINX, this, s_windowX), registerForSetting(s_WINY, this, s_windowY)));
 		x_window.setVisible(true);
 	}
 
 	public void openComponent(Component p_component) {
 		o_navigationAndComponentPanel.showComponent(p_component);
-		updateSetting(Settings.s_UUID, p_component.getId().toString());
+		updateSetting(s_UUID, p_component.getId().toString());
 	}
 
 	@Override

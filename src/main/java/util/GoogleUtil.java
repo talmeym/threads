@@ -22,6 +22,9 @@ import java.text.*;
 import java.util.*;
 import java.util.function.Consumer;
 
+import static java.util.UUID.fromString;
+import static util.DateUtil.*;
+
 public class GoogleUtil {
 
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -80,11 +83,11 @@ public class GoogleUtil {
 					Date x_start = new Date(x_date != null ? x_date.getValue() : x_dateTime.getValue());
 
 					if(x_date != null && x_date.isDateOnly()) {
-						x_start = DateUtil.makeStartOfDay(x_start);
+						x_start = makeStartOfDay(x_start);
 					}
 
 					if(x_description != null && !x_description.trim().isEmpty()) {
-						Search x_search = new Search.Builder().withId(UUID.fromString(x_description)).build();
+						Search x_search = new Search.Builder().withId(fromString(x_description)).build();
 						List<Component> x_results = s_topLevelThread.search(x_search);
 						Component x_component = x_results.size() > 0 ? x_results.get(0) : null;
 
@@ -244,7 +247,7 @@ public class GoogleUtil {
 		event.setSummary(text);
 		event.setDescription(id.toString());
 
-		if(DateUtil.isAllDay(dueDate)) {
+		if(isAllDay(dueDate)) {
 			event.setStart(new EventDateTime().set("date", new DateTime(s_dateFormat.format(dueDate))));
 			event.setEnd(new EventDateTime().set("date", new DateTime(s_dateFormat.format(dueDate))));
 		} else {

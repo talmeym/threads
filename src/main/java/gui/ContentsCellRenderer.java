@@ -1,12 +1,11 @@
 package gui;
 
-import data.Component;
 import data.*;
 import data.Thread;
 
-import java.awt.*;
 import java.util.*;
-import java.util.List;
+
+import static java.awt.Color.*;
 
 class ContentsCellRenderer extends DataItemsCellRenderer<Component, Component> {
     ContentsCellRenderer(Component p_component) {
@@ -28,6 +27,6 @@ class ContentsCellRenderer extends DataItemsCellRenderer<Component, Component> {
 
 	@Override
 	void customSetup(Component p_component, java.awt.Component p_awtComponent, boolean p_isSelected) {
-		p_awtComponent.setForeground(p_component.isActive() ? Color.black : Color.gray);
+		p_awtComponent.setForeground(p_component.isActive() ? black : gray);
 	}
 }

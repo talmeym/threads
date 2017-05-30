@@ -3,12 +3,13 @@ package gui;
 import data.Component;
 import data.*;
 import data.Thread;
-import util.*;
+import util.SettingChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
+import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
 import static util.Settings.*;
 
 class NavigationAndComponentPanel extends JPanel implements SettingChangeListener {
@@ -25,14 +26,14 @@ class NavigationAndComponentPanel extends JPanel implements SettingChangeListene
 
 		o_navigationPanel = new NavigationPanel(p_topLevelThread);
 
-		JSplitPane x_splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		JSplitPane x_splitPane = new JSplitPane(HORIZONTAL_SPLIT);
 		x_splitPane.setLeftComponent(o_navigationPanel);
 		x_splitPane.setRightComponent(o_cardPanel);
-		x_splitPane.setDividerLocation(registerForSetting(Settings.s_NAVDIVLOC, this, 250));
+		x_splitPane.setDividerLocation(registerForSetting(s_NAVDIVLOC, this, 250));
 
 		x_splitPane.addPropertyChangeListener(propertyChangeEvent -> {
 			if(propertyChangeEvent.getPropertyName().equals("dividerLocation")) {
-				updateSetting(Settings.s_NAVDIVLOC, "" + propertyChangeEvent.getNewValue());
+				updateSetting(s_NAVDIVLOC, "" + propertyChangeEvent.getNewValue());
 			}
 		});
 

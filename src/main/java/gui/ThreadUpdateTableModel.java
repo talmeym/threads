@@ -2,9 +2,11 @@ package gui;
 
 import data.*;
 import data.Thread;
-import util.DateUtil;
 
 import java.util.*;
+
+import static data.LookupHelper.getAllActiveUpdates;
+import static util.DateUtil.*;
 
 class ThreadUpdateTableModel extends ComponentTableModel<Thread, Item> {
 	ThreadUpdateTableModel(Thread p_thread) {
@@ -26,13 +28,13 @@ class ThreadUpdateTableModel extends ComponentTableModel<Thread, Item> {
         switch(col) {
 			case 0: return x_update.getParentThread().getText();
 			case 1: return x_update.getText();
-			case 2: return DateUtil.getFormattedDate(x_update.getModifiedDate());
-			default: return DateUtil.getDateStatus(x_update.getModifiedDate());
+			case 2: return getFormattedDate(x_update.getModifiedDate());
+			default: return getDateStatus(x_update.getModifiedDate());
         }
     }
 
     @Override
 	List<Item> getDataItems() {
-		return LookupHelper.getAllActiveUpdates(getComponent());
+		return getAllActiveUpdates(getComponent());
 	}
 }

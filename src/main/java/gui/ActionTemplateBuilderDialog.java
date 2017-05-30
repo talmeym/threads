@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.List;
 
 import static java.awt.BorderLayout.*;
+import static java.awt.Color.*;
 
 class ActionTemplateBuilderDialog extends JDialog {
 
@@ -42,13 +43,13 @@ class ActionTemplateBuilderDialog extends JDialog {
 		x_itemField.setText(o_item.getText());
 		x_itemResultField.setText(o_item.getText());
 
-		x_promptNumberLabel.setForeground(Color.gray);
-		x_promptInstLabel.setForeground(Color.gray);
-		x_promptLabel.setForeground(Color.gray);
+		x_promptNumberLabel.setForeground(gray);
+		x_promptInstLabel.setForeground(gray);
+		x_promptLabel.setForeground(gray);
 		x_promptField.setEnabled(false);
-		x_answerNumberLabel.setForeground(Color.gray);
-		x_answerInstLabel.setForeground(Color.gray);
-		x_answerLabel.setForeground(Color.gray);
+		x_answerNumberLabel.setForeground(gray);
+		x_answerInstLabel.setForeground(gray);
+		x_answerLabel.setForeground(gray);
 		x_answerField.setEnabled(false);
 
 		x_saveButton.setEnabled(false);
@@ -127,13 +128,13 @@ class ActionTemplateBuilderDialog extends JDialog {
 			}
 
 			void setPromptAndAnswerEnabled() {
-				x_promptNumberLabel.setForeground(x_tokenField.getText().length() > 0 ? Color.black : Color.gray);
-				x_promptInstLabel.setForeground(x_tokenField.getText().length() > 0 ? Color.black : Color.gray);
-				x_promptLabel.setForeground(x_tokenField.getText().length() > 0 ? Color.black : Color.gray);
+				x_promptNumberLabel.setForeground(x_tokenField.getText().length() > 0 ? black : gray);
+				x_promptInstLabel.setForeground(x_tokenField.getText().length() > 0 ? black : gray);
+				x_promptLabel.setForeground(x_tokenField.getText().length() > 0 ? black : gray);
 				x_promptField.setEnabled(x_tokenField.getText().length() > 0);
-				x_answerNumberLabel.setForeground(x_tokenField.getText().length() > 0 ? Color.black : Color.gray);
-				x_answerInstLabel.setForeground(x_tokenField.getText().length() > 0 ? Color.black : Color.gray);
-				x_answerLabel.setForeground(x_tokenField.getText().length() > 0 ? Color.black : Color.gray);
+				x_answerNumberLabel.setForeground(x_tokenField.getText().length() > 0 ? black : gray);
+				x_answerInstLabel.setForeground(x_tokenField.getText().length() > 0 ? black : gray);
+				x_answerLabel.setForeground(x_tokenField.getText().length() > 0 ? black : gray);
 				x_answerField.setEnabled(x_tokenField.getText().length() > 0);
 			}
 		});

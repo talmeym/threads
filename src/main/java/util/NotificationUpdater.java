@@ -6,6 +6,7 @@ import data.Thread;
 import java.util.*;
 
 import static data.ComponentChangeEvent.Field.DUE_DATE;
+import static data.LookupHelper.*;
 
 public class NotificationUpdater {
 	private static NotificationUpdater s_INSTANCE = null;
@@ -42,8 +43,8 @@ public class NotificationUpdater {
 
 	private void processAlerts() {
 		List<Component> x_dueComponents = new ArrayList<>();
-		x_dueComponents.addAll(LookupHelper.getAllActiveReminders(o_topLevelThread, true));
-		x_dueComponents.addAll(LookupHelper.getAllActiveDueActions(o_topLevelThread));
+		x_dueComponents.addAll(getAllActiveReminders(o_topLevelThread, true));
+		x_dueComponents.addAll(getAllActiveDueActions(o_topLevelThread));
 		x_dueComponents.removeAll(o_alertedComponents);
 
 		if(x_dueComponents.size() > 0) {

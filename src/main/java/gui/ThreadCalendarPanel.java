@@ -3,7 +3,7 @@ package gui;
 import data.Component;
 import data.*;
 import data.Thread;
-import util.*;
+import util.SettingChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,13 +12,18 @@ import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.List;
 
+import static data.LookupHelper.getHasDueDates;
 import static gui.Actions.*;
+import static gui.ColourConstants.s_goneByColour;
 import static gui.ThreadCalendarCellRenderer.MyListCellRenderer.*;
+import static gui.WidgetFactory.setUpButtonLabel;
+import static java.awt.Color.*;
 import static java.lang.Integer.parseInt;
-import static util.DateUtil.getFirstThing;
-import static util.DateUtil.isAllDay;
+import static java.util.Calendar.*;
+import static javax.swing.JOptionPane.*;
+import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
+import static util.DateUtil.*;
 import static util.GoogleUtil.isLinked;
-import static util.GuiUtil.setUpButtonLabel;
 import static util.ImageUtil.*;
 import static util.Settings.*;
 
@@ -27,7 +32,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 
 	private final Thread o_thread;
 	private final JPanel o_parentPanel;
-	private final JLabel o_currentMonthLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH)));
+	private final JLabel o_currentMonthLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(YEAR), Calendar.getInstance().get(MONTH)));
 	private final JCheckBox o_includeActionsCheckBox = new JCheckBox("Actions");
 	private final JCheckBox o_includeUpdatesCheckBox = new JCheckBox("Updates");
 	private final JCheckBox o_includeRemindersCheckBox = new JCheckBox("Reminders");
@@ -40,7 +45,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		o_parentPanel = p_parentPanel;
 
 		Calendar x_calendar = Calendar.getInstance();
-		setTime(registerForSetting(Settings.s_DATE, this, x_calendar.get(Calendar.MONTH) + "_" + x_calendar.get(Calendar.YEAR)));
+		setTime(registerForSetting(s_DATE, this, x_calendar.get(MONTH) + "_" + x_calendar.get(YEAR)));
 		addTableSelectionListener(this);
 
 		addComponentListener(new ComponentAdapter() {
@@ -50,11 +55,11 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			}
 		});
 
-		o_table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		o_table.setSelectionMode(SINGLE_SELECTION);
 		o_table.setShowGrid(true);
-		o_table.setGridColor(Color.lightGray);
+		o_table.setGridColor(lightGray);
 
-		JLabel x_previousLabel = new JLabel(ImageUtil.getLeftIcon());
+		JLabel x_previousLabel = new JLabel(getLeftIcon());
 		x_previousLabel.setToolTipText("Previous Month");
 		x_previousLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -63,20 +68,20 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			}
 		});
 
-		JLabel x_todayLabel = new JLabel(ImageUtil.getCalendarIcon());
+		JLabel x_todayLabel = new JLabel(getCalendarIcon());
 		x_todayLabel.setToolTipText("Go to Today");
 		x_todayLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
 				Calendar x_calendar = Calendar.getInstance();
-				int x_year = x_calendar.get(Calendar.YEAR);
-				int x_month = x_calendar.get(Calendar.MONTH);
+				int x_year = x_calendar.get(YEAR);
+				int x_month = x_calendar.get(MONTH);
 				setTime(x_year, x_month);
-				updateSetting(Settings.s_DATE, x_month + "_" + x_year);
+				updateSetting(s_DATE, x_month + "_" + x_year);
 			}
 		});
 
-		JLabel x_nextLabel = new JLabel(ImageUtil.getRightIcon());
+		JLabel x_nextLabel = new JLabel(getRightIcon());
 		x_nextLabel.setToolTipText("Next Month");
 		x_nextLabel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -85,7 +90,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			}
 		});
 
-		o_currentMonthLabel.setHorizontalAlignment(JLabel.CENTER);
+		o_currentMonthLabel.setHorizontalAlignment(CENTER);
 		o_currentMonthLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		ThreadCalendarTableModel x_tableModel = (ThreadCalendarTableModel) o_table.getModel();
@@ -126,7 +131,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			updateSetting(s_CALENDARREM, o_includeRemindersCheckBox.isSelected());
 		});
 
-		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_previousLabel));
 		x_buttonPanel.add(setUpButtonLabel(x_todayLabel));
 		x_buttonPanel.add(setUpButtonLabel(x_nextLabel));
@@ -138,8 +143,8 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		x_buttonPanel.add(o_allCheckBox);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-		add(o_currentMonthLabel, BorderLayout.NORTH);
-		add(x_buttonPanel, BorderLayout.SOUTH);
+		add(o_currentMonthLabel, NORTH);
+		add(x_buttonPanel, SOUTH);
 	}
 
 	private void setAllCheckbox() {
@@ -153,7 +158,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		int x_year = up ? x_currentMonth == 11 ? x_currentYear + 1 : x_currentYear : x_currentMonth == 0 ? x_currentYear - 1 : x_currentYear;
 		int x_month = up ? x_currentMonth == 11 ? 0 : x_currentMonth + 1 : x_currentMonth == 0 ? 11 : x_currentMonth - 1;
 		setTime(x_year, x_month);
-		updateSetting(Settings.s_DATE, x_month + "_" + x_year);
+		updateSetting(s_DATE, x_month + "_" + x_year);
 	}
 
 	private void setTime(String x_date) {
@@ -190,8 +195,8 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		for(final Component x_component: x_components) {
 			Icon x_icon = isLinked(x_component) ? getGoogleVerySmallIcon() : getSmallIconForType(x_component.getType());
 			JMenuItem x_menuItem = new JMenuItem(buildTextForItem(x_component), x_icon);
-			x_menuItem.setForeground(x_component.isActive() ? Color.black : Color.gray);
-			x_menuItem.setBackground(x_component.isActive() && x_component instanceof HasDueDate ? ((HasDueDate)x_component).isDue() ? ColourConstants.s_goneByColour : Color.white : Color.white);
+			x_menuItem.setForeground(x_component.isActive() ? black : gray);
+			x_menuItem.setBackground(x_component.isActive() && x_component instanceof HasDueDate ? ((HasDueDate)x_component).isDue() ? s_goneByColour : white : white);
 			x_menuItem.setFont(x_component.isActive() ? x_menuItem.getFont() : makeStrikeThrough(x_menuItem.getFont()));
 			x_menuItem.setToolTipText(buildToolTipTextForItem(x_component));
 			x_menu.add(x_menuItem);
@@ -202,14 +207,14 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			x_menu.add(new JSeparator(JSeparator.HORIZONTAL));
 		}
 
-		JMenuItem x_addMenuItem = new JMenuItem("Add Action", ImageUtil.getPlusSmallIcon());
-		x_addMenuItem.setForeground(Color.gray);
+		JMenuItem x_addMenuItem = new JMenuItem("Add Action", getPlusSmallIcon());
+		x_addMenuItem.setForeground(gray);
 		x_addMenuItem.addActionListener(e -> {
 			Item x_item = addAction(null, o_thread, p_date, o_parentPanel, false);
 			Date x_dueDate = x_item.getDueDate();
 
 			if(x_item != null && ((isAllDay(x_dueDate) && x_dueDate.before(getFirstThing(0))) || (!isAllDay(x_dueDate) && x_dueDate.before(new Date())))) {
-				if (JOptionPane.showConfirmDialog(o_parentPanel, "Your action is in the past. Set it Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				if (showConfirmDialog(o_parentPanel, "Your action is in the past. Set it Inactive ?", "Set Inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
 					x_item.setActive(false);
 				}
 			}
@@ -217,23 +222,23 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 
 		x_menu.add(x_addMenuItem);
 
-		JMenuItem x_addFromTemplateMenuItem = new JMenuItem("Add From Template", ImageUtil.getTemplateSmallIcon());
-		x_addFromTemplateMenuItem.setForeground(Color.gray);
+		JMenuItem x_addFromTemplateMenuItem = new JMenuItem("Add From Template", getTemplateSmallIcon());
+		x_addFromTemplateMenuItem.setForeground(gray);
 		x_addFromTemplateMenuItem.addActionListener(e -> addActionFromTemplate(null, o_thread, p_date, o_parentPanel, false));
 		x_menu.add(x_addFromTemplateMenuItem);
 
 		if(x_components.size() > 0) {
-			JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", ImageUtil.getLinkSmallIcon());
-			x_linkMenuItem.setForeground(Color.gray);
+			JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", getLinkSmallIcon());
+			x_linkMenuItem.setForeground(gray);
 			x_menu.add(x_linkMenuItem);
-			x_linkMenuItem.addActionListener(e -> linkToGoogle(LookupHelper.getHasDueDates(x_components), o_parentPanel));
+			x_linkMenuItem.addActionListener(e -> linkToGoogle(getHasDueDates(x_components), o_parentPanel));
 
-			JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", ImageUtil.getTickSmallIcon());
-			x_makeInactiveItem.setForeground(Color.gray);
+			JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", getTickSmallIcon());
+			x_makeInactiveItem.setForeground(gray);
 			x_menu.add(x_makeInactiveItem);
 
 			x_makeInactiveItem.addActionListener(e -> {
-				if (JOptionPane.showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " Inactive ?", "Set Inactive ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, ImageUtil.getGoogleIcon()) == JOptionPane.OK_OPTION) {
+				if (showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " Inactive ?", "Set Inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
 					x_components.forEach(c -> c.setActive(false));
 				}
 			});
@@ -251,7 +256,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 
 	@Override
 	public void settingChanged(String p_name, Object p_value) {
-		if(p_name.equals(Settings.s_DATE)) {
+		if(p_name.equals(s_DATE)) {
 			setTime((String) p_value);
 			return;
 		}

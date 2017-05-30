@@ -5,15 +5,18 @@ import data.Thread;
 import util.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.Component;
+import java.awt.*;
 import java.awt.event.*;
 
 import static data.ComponentType.Action;
-import static gui.Actions.addAction;
-import static gui.Actions.addActionFromTemplate;
+import static gui.Actions.*;
+import static gui.GUIConstants.*;
+import static gui.WidgetFactory.setUpButtonLabel;
+import static java.awt.BorderLayout.SOUTH;
+import static java.awt.FlowLayout.LEFT;
 import static javax.swing.SwingConstants.VERTICAL;
-import static util.GuiUtil.setUpButtonLabel;
+import static util.ImageUtil.*;
 import static util.Settings.*;
 
 class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements SettingChangeListener {
@@ -27,12 +30,12 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
         o_thread = p_thread;
 		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
 
-        fixColumnWidth(0, GUIConstants.s_threadColumnWidth);
-        fixColumnWidth(2, GUIConstants.s_dateStatusColumnWidth);
-        fixColumnWidth(3, GUIConstants.s_dateStatusColumnWidth);
-        fixColumnWidth(4, GUIConstants.s_googleStatusColumnWidth);
+        fixColumnWidth(0, s_threadColumnWidth);
+        fixColumnWidth(2, s_dateStatusColumnWidth);
+        fixColumnWidth(3, s_dateStatusColumnWidth);
+        fixColumnWidth(4, s_googleStatusColumnWidth);
 
-		JLabel x_addLabel = new JLabel(ImageUtil.getPlusIcon());
+		JLabel x_addLabel = new JLabel(getPlusIcon());
 		x_addLabel.setToolTipText("Add Action");
 		x_addLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent p_me) {
@@ -40,7 +43,7 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 			}
 		});
 
-		JLabel x_addFromTemplateLabel = new JLabel(ImageUtil.getTemplateIcon());
+		JLabel x_addFromTemplateLabel = new JLabel(getTemplateIcon());
 		x_addFromTemplateLabel.setToolTipText("Add From Template");
 		x_addFromTemplateLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent p_me) {
@@ -64,14 +67,14 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 
 		o_showNext7DaysRadioButton.addChangeListener(e -> {
 			x_tableModel.setOnlyNext7Days(o_showNext7DaysRadioButton.isSelected());
-			updateSetting(Settings.s_SEVENDAYS, o_showNext7DaysRadioButton.isSelected());
+			updateSetting(s_SEVENDAYS, o_showNext7DaysRadioButton.isSelected());
 		});
 
 		ButtonGroup x_group = new ButtonGroup();
 		x_group.add(o_showNext7DaysRadioButton);
 		x_group.add(o_showAllRadioButton);
 
-		JPanel x_buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
 		x_buttonPanel.add(setUpButtonLabel(x_addLabel));
 		x_buttonPanel.add(setUpButtonLabel(x_addFromTemplateLabel));
 		x_buttonPanel.add(new JSeparator(VERTICAL));
@@ -80,7 +83,7 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 		x_buttonPanel.add(o_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-		add(x_buttonPanel, BorderLayout.SOUTH);
+		add(x_buttonPanel, SOUTH);
 
 		TimedUpdater.getInstance().addActivityListener(this);
 		GoogleSyncer.getInstance().addActivityListener(this);
