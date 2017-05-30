@@ -37,11 +37,11 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 		JLabel x_addLabel = createLabel(getPlusIcon(), "Add Action", true, e -> addAction(getSelectedObject(), o_thread, ItemDateSuggestionPanel.getDateSuggestion(), p_parentPanel, true));
 		JLabel x_addTemplateLabel = createLabel(getTemplateIcon(), "Add From Template", true, e -> addActionFromTemplate(getSelectedObject(), o_thread, ItemDateSuggestionPanel.getDateSuggestion(), p_parentPanel, true));
 
-		o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel, false));
-		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
-		o_popupMenu.setLinkActionListener(e -> Actions.linkToGoogle(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setActivateActionListener(e -> activateComponent(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setDeactivateActionListener(e -> deactivateComponent(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> removeComponent(getSelectedObject(), p_parentPanel, false));
+		o_popupMenu.setMoveActionListener(e -> moveThreadItem(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_parentPanel));
 
 		boolean x_sevenDays = registerForSetting(s_SEVENDAYS, this, true);
 		ThreadActionTableModel x_tableModel = (ThreadActionTableModel) o_table.getModel();

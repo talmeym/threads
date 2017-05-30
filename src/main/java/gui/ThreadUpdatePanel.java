@@ -33,10 +33,10 @@ class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
 
 		JLabel x_addLabel = createLabel(getPlusIcon(), "Add Update", true, e -> addUpdate(getSelectedObject(), o_thread, p_parentPanel));
 
-		o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel, false));
-		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, o_parentPanel));
+		o_popupMenu.setActivateActionListener(e -> Actions.activateComponent(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivateComponent(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> Actions.removeComponent(getSelectedObject(), p_parentPanel, false));
+		o_popupMenu.setMoveActionListener(e -> Actions.moveThreadItem(getSelectedObject(), o_parentPanel));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
 		x_buttonPanel.add(x_addLabel);

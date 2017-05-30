@@ -31,10 +31,10 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
 
 		JLabel x_addLabel = createLabel(getPlusIcon(), "Add Thread", true, e-> addThread(getSelectedObject(), o_thread, p_parentPanel));
 
-		o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel, false));
-		o_popupMenu.setMoveActionListener(e -> Actions.move(getSelectedObject(), o_thread, p_parentPanel));
+		o_popupMenu.setActivateActionListener(e -> Actions.activateComponent(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivateComponent(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> Actions.removeComponent(getSelectedObject(), p_parentPanel, false));
+		o_popupMenu.setMoveActionListener(e -> Actions.moveThreadItem(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_parentPanel));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));

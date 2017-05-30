@@ -10,7 +10,7 @@ import static util.ImageUtil.*;
 
 class ContextualPopupMenu {
 	private final JMenuItem o_activeLabel = new JMenuItem("Set Inactive", getTickIcon());
-	private final JMenuItem o_removeLabel = new JMenuItem("Remove", getMinusIcon());
+	private final JMenuItem o_removeLabel = new JMenuItem("Remove", getTrashIcon());
 	private final JMenuItem o_moveLabel = new JMenuItem("Move", getMoveIcon());
 	private final JMenuItem o_linkLabel = new JMenuItem("Link", getLinkIcon());
 
@@ -79,7 +79,7 @@ class ContextualPopupMenu {
 		o_linkLabel.removeActionListener(o_linkListener);
 
 		if(p_linkEnabled) {
-				o_linkLabel.addActionListener(o_linkListener);
+			o_linkLabel.addActionListener(o_linkListener);
 		}
 
 		o_activeLabel.removeActionListener(o_activateListener);

@@ -49,10 +49,6 @@ public class ImageUtil {
 		return new ImageIcon(loadImage("/plus12x12.png"));
 	}
 
-	public static Icon getMinusIcon() {
-		return new ImageIcon(loadImage("/minus20x20.png"));
-	}
-
 	public static Icon getTickIcon() {
 		return new ImageIcon(loadImage("/tick20x20.png"));
 	}

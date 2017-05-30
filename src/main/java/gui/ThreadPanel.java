@@ -51,10 +51,10 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 		final JLabel x_linkLabel = createLabel(getLinkIcon(), "Link to Google Calendar", true, e -> {
 			JPopupMenu x_popupMenu = new JPopupMenu();
 
-			JMenuItem x_linkActive = new JMenuItem("Link Active");
+			JMenuItem x_linkActive = new JMenuItem("Link active");
 			x_linkActive.addActionListener(f -> linkToGoogle(getHasDueDates(o_thread, true), p_parentPanel));
 
-			JMenuItem x_linkAll = new JMenuItem("Link All");
+			JMenuItem x_linkAll = new JMenuItem("Link all");
 			x_linkAll.addActionListener(f -> linkToGoogle(getHasDueDates(o_thread, false), p_parentPanel));
 
 			x_popupMenu.add(x_linkActive);

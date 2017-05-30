@@ -129,7 +129,7 @@ public class Actions {
 				Item x_update = new Item(x_text, null);
 				x_thread.addThreadItem(x_update);
 
-				if (getActiveUpdates(x_thread).size() == 2 && showConfirmDialog(p_enclosingPanel, "Set previous updates inactive ?", "Supersede Previous Updates ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
+				if (getActiveUpdates(x_thread).size() == 2 && showConfirmDialog(p_enclosingPanel, "Set previous updates Inactive ?", "Supersede Previous Updates ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 					x_thread.getThreadItems().stream()
 							.filter(ti -> ti instanceof Item)
 							.map(ti -> (Item) ti)
@@ -167,12 +167,7 @@ public class Actions {
 	private static Thread chooseThread(Thread p_startingThread, JPanel p_enclosingPanel, String x_title) {
 		List<Thread> x_threads = getAllActiveThreads(p_startingThread);
 		x_threads.add(0, p_startingThread);
-
-		if (x_threads.size() > 1) {
-			return (Thread) showInputDialog(p_enclosingPanel, "Choose a Thread to add it to:", x_title, INFORMATION_MESSAGE, getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
-		} else {
-			return p_startingThread;
-		}
+		return x_threads.size() > 1 ? (Thread) showInputDialog(p_enclosingPanel, "Choose a Thread to add it to:", x_title, INFORMATION_MESSAGE, getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0)) : p_startingThread;
 	}
 
 	static void linkToGoogle(Thread x_thread, JPanel p_enclosingPanel) {
@@ -240,13 +235,12 @@ public class Actions {
 		return false;
 	}
 
-	static void move(ThreadItem p_threadItem, Thread o_startingThread, JPanel o_enclosingPanel) {
+	static void moveThreadItem(ThreadItem p_threadItem, JPanel o_enclosingPanel) {
 		if (p_threadItem != null) {
 			Thread x_thread = null;
 
-			Thread x_topThread = (Thread) o_startingThread.getHierarchy().get(0);
+			Thread x_topThread = (Thread) p_threadItem.getHierarchy().get(0);
 			List<Thread> x_threads = getAllActiveThreads(x_topThread);
-
 			x_threads.add(0, x_topThread);
 			x_threads.remove(p_threadItem.getParentThread());
 
@@ -268,7 +262,7 @@ public class Actions {
 		}
 	}
 
-	static void activate(Component p_component, JPanel p_enclosingPanel) {
+	static void activateComponent(Component p_component, JPanel p_enclosingPanel) {
 		if (p_component != null) {
 			if (showConfirmDialog(p_enclosingPanel, "Set '" + p_component.getText() + "' Active ?", "Set Active ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 				p_component.setActive(true);
@@ -276,7 +270,7 @@ public class Actions {
 		}
 	}
 
-	static void deactivate(Component p_component, JPanel p_enclosingPanel) {
+	static void deactivateComponent(Component p_component, JPanel p_enclosingPanel) {
 		if (p_component != null) {
 			if (showConfirmDialog(p_enclosingPanel, "Set '" + p_component.getText() + "' Inactive ?", "Set Inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 				p_component.setActive(false);
@@ -284,7 +278,7 @@ public class Actions {
 		}
 	}
 
-	public static void remove(Component p_component, JPanel p_enclosingPanel, boolean p_openParentAfter) {
+	public static void removeComponent(Component p_component, JPanel p_enclosingPanel, boolean p_openParentAfter) {
 		if (p_component != null) {
 			Component x_parentComponent = p_component.getParentComponent();
 
@@ -303,7 +297,7 @@ public class Actions {
 					}
 				}
 			} else {
-				showMessageDialog(p_enclosingPanel, "The root Thread cannot be deleted", "No can do", WARNING_MESSAGE, getThreadsIcon());
+				showMessageDialog(p_enclosingPanel, "The root Thread cannot be Removed", "No can do", WARNING_MESSAGE, getThreadsIcon());
 			}
 		}
 	}

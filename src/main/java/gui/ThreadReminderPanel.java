@@ -29,9 +29,9 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
         fixColumnWidth(3, s_dateStatusColumnWidth);
         fixColumnWidth(4, s_googleStatusColumnWidth);
 
-		o_popupMenu.setActivateActionListener(e -> Actions.activate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivate(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setRemoveActionListener(e -> Actions.remove(getSelectedObject(), p_parentPanel, false));
+		o_popupMenu.setActivateActionListener(e -> Actions.activateComponent(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivateComponent(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setRemoveActionListener(e -> Actions.removeComponent(getSelectedObject(), p_parentPanel, false));
 		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_parentPanel));
 
 		boolean x_onlyDue = registerForSetting(s_ONLYDUE, this, true);

@@ -12,6 +12,8 @@ import java.util.*;
 import java.util.List;
 
 import static data.ComponentChangeEvent.Field.TEXT;
+import static gui.Actions.moveThreadItem;
+import static gui.Actions.removeComponent;
 import static gui.ColourConstants.s_editedColour;
 import static gui.WidgetFactory.createLabel;
 import static gui.WidgetFactory.setUpButtonLabel;
@@ -25,7 +27,7 @@ class ComponentInfoPanel extends JPanel {
     private final Component o_component;
 
 	private final JTextField o_textField = new JTextField();
-	private final JLabel o_setLabel = createLabel(getReturnIcon(), "Apply Change", false, e-> setText());
+	private final JLabel o_applyLabel = createLabel(getReturnIcon(), "Apply Change", false, e-> setText());
 	private final JLabel o_revertLabel = createLabel(getCrossIcon(), "Revert Change", false);
 	private final JPanel o_breadcrumbsPanel = new JPanel(new FlowLayout(LEFT));
 
@@ -33,13 +35,13 @@ class ComponentInfoPanel extends JPanel {
         super(new BorderLayout());
         o_component = p_component;
 
-		final JLabel x_homeLabel = createLabel(getHomeIcon(), "View Top", o_component.getParentComponent() != null);
-		final JLabel x_parentLabel = createLabel(getUpIcon(), "View Parent", o_component.getParentComponent() != null);
-		final JLabel o_activeLabel = createLabel(getTickIcon(), "Make Active/Inactive", o_component.isActive());
+		final JLabel x_homeLabel = createLabel(getHomeIcon(), "Go to Top", o_component.getParentComponent() != null);
+		final JLabel x_parentLabel = createLabel(getUpIcon(), "Go to Parent", o_component.getParentComponent() != null);
+		final JLabel o_activeLabel = createLabel(getTickIcon(), "Set Active / Inactive", o_component.isActive());
 		final JLabel x_moveLabel = createLabel(getMoveIcon(), "Move", o_component.getParentComponent() != null);
 		final JLabel x_removeLabel = createLabel(getTrashIcon(), "Remove", o_component.getParentComponent() != null);
 		final JLabel x_duplicateLabel = createLabel(getDuplicateIcon(), "Duplicate", o_component.getParentComponent() != null);
-		final JLabel x_folderLabel = createLabel(getFolderIcon(), "Document Folder", true);
+		final JLabel x_folderLabel = createLabel(getFolderIcon(), "Document folder", true);
 
 		final DocumentListener x_listener = new DocumentListener() {
 			@Override public void insertUpdate(DocumentEvent p_de) { edited(); }
@@ -48,7 +50,7 @@ class ComponentInfoPanel extends JPanel {
 
 			private void edited() {
 				o_textField.setBackground(s_editedColour);
-				o_setLabel.setEnabled(true);
+				o_applyLabel.setEnabled(true);
 				o_revertLabel.setEnabled(true);
 			}
 		};
@@ -92,35 +94,48 @@ class ComponentInfoPanel extends JPanel {
 
 		o_textField.setText(p_component.getText());
 		o_textField.setForeground(p_component.isActive() ? black : gray);
-		o_textField.setToolTipText("Press enter to set");
+		o_textField.setToolTipText("Press enter to Apply Change");
 		o_textField.getDocument().addDocumentListener(x_listener);
 		o_textField.setBorder(createCompoundBorder(createLineBorder(lightGray), createEmptyBorder(0, 5, 0, 5)));
-
-		x_parentLabel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				if (x_parentLabel.isEnabled()) {
-					WindowManager.getInstance().openComponent(o_component.getParentComponent());
-				}
-			}
-		});
 
 		o_revertLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
 				o_textField.setText(o_component.getText());
 				o_textField.setBackground(white);
-				o_setLabel.setEnabled(false);
+				o_applyLabel.setEnabled(false);
 				o_revertLabel.setEnabled(false);
 			}
 		});
 
         o_textField.addActionListener(e -> setText());
 
+		x_homeLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent p_me) {
+				if(o_component.getParentComponent() != null) {
+					WindowManager.getInstance().openComponent(p_component.getHierarchy().get(0));
+				} else {
+					showMessageDialog(p_parentPanel, "You are already at the top Thread", "No can do", WARNING_MESSAGE, getThreadsIcon());
+				}
+			}
+		});
+
+		x_parentLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(o_component.getParentComponent() != null) {
+					WindowManager.getInstance().openComponent(o_component.getParentComponent());
+				} else {
+					showMessageDialog(p_parentPanel, "You are already at the top Thread", "No can do", WARNING_MESSAGE, getThreadsIcon());
+				}
+			}
+		});
+
 		o_activeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
-				if (x_parentLabel.isEnabled()) {
+				if (o_component.getParentComponent() != null) {
 					boolean x_active = !o_component.isActive();
 
 					if(showConfirmDialog(p_parentPanel, "Set '" + o_component.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
@@ -129,28 +144,36 @@ class ComponentInfoPanel extends JPanel {
 						o_textField.setForeground(o_component.isActive() ? black : gray);
 					}
 				} else {
-					showMessageDialog(p_parentPanel, "The root Thread cannot be made inactive", "No can do", WARNING_MESSAGE, getThreadsIcon());
+					showMessageDialog(p_parentPanel, "The top Thread cannot be made Inactive", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});
 
 		x_moveLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				Actions.move((ThreadItem) o_component, ((ThreadItem) o_component).getParentThread(), p_parentPanel);
+			public void mouseClicked(MouseEvent e) {
+				if(o_component.getParentComponent() != null) {
+					moveThreadItem((ThreadItem) o_component, p_parentPanel);
+				} else {
+					showMessageDialog(p_parentPanel, "The top Thread cannot be Moved", "No can do", WARNING_MESSAGE, getThreadsIcon());
+				}
 			}
 		});
 
 		x_removeLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent p_me) {
-				Actions.remove(o_component, p_parentPanel, true);
+			public void mouseClicked(MouseEvent e) {
+				if(o_component.getParentComponent() != null) {
+					removeComponent(o_component, p_parentPanel, true);
+				} else {
+					showMessageDialog(p_parentPanel, "The top Thread cannot be Removed", "No can do", WARNING_MESSAGE, getThreadsIcon());
+				}
 			}
 		});
 
 		x_duplicateLabel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent p_me) {
-				if (x_parentLabel.isEnabled() && o_component.getParentComponent() != null) {
+				if (o_component.getParentComponent() != null) {
 					if (showConfirmDialog(p_parentPanel, "Create duplicate of '" + o_component.getText() + "' ?", "Duplicate ?", OK_CANCEL_OPTION, INFORMATION_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 						Component x_newComponent = null;
 
@@ -172,7 +195,7 @@ class ComponentInfoPanel extends JPanel {
 						WindowManager.getInstance().openComponent(x_newComponent);
 					}
 				} else {
-					showMessageDialog(p_parentPanel, "The root Thread cannot be duplicated", "No can do", WARNING_MESSAGE, getThreadsIcon());
+					showMessageDialog(p_parentPanel, "The top Thread cannot be Duplicated", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});
@@ -228,17 +251,6 @@ class ComponentInfoPanel extends JPanel {
 					}
 				});
 
-				if(x_parent.getParentComponent() == null) {
-					final Component x_homeComponent = x_parent;
-
-					x_homeLabel.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent p_me) {
-							WindowManager.getInstance().openComponent(x_homeComponent);
-						}
-					});
-				}
-
 				x_parent = x_parent.getParentComponent();
 			}
 
@@ -249,7 +261,7 @@ class ComponentInfoPanel extends JPanel {
 		}
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
-        x_buttonPanel.add(o_setLabel);
+        x_buttonPanel.add(o_applyLabel);
         x_buttonPanel.add(o_revertLabel);
 		x_buttonPanel.add(o_activeLabel);
 
@@ -297,7 +309,7 @@ class ComponentInfoPanel extends JPanel {
 		}
 
 		o_textField.setText(o_component.getText());
-		o_setLabel.setEnabled(false);
+		o_applyLabel.setEnabled(false);
 		o_revertLabel.setEnabled(false);
 		o_textField.setBackground(white);
 	}
