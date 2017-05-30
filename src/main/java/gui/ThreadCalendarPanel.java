@@ -26,6 +26,7 @@ import static util.DateUtil.*;
 import static util.GoogleUtil.isLinked;
 import static util.ImageUtil.*;
 import static util.Settings.*;
+import static java.awt.FlowLayout.LEFT;
 
 class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements SettingChangeListener {
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
