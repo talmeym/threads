@@ -7,6 +7,8 @@ import threads.util.TimedUpdater;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
@@ -51,19 +53,24 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 		o_tabs.setToolTipTextAt(4, "A view of all active Reminders");
 		o_tabs.setToolTipTextAt(5, "A calendar view of all Items");
 
-		final JLabel x_linkLabel = createLabel(getLinkIcon(), "Link to Google Calendar", true, e -> {
-			JPopupMenu x_popupMenu = new JPopupMenu();
+		JLabel x_linkLabel = createLabel(getLinkIcon(), "Link to Google Calendar", true);
 
-			JMenuItem x_linkActive = new JMenuItem("Link active");
-			x_linkActive.addActionListener(f -> linkToGoogle(getHasDueDates(o_thread, true), p_parentPanel));
+		x_linkLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JPopupMenu x_popupMenu = new JPopupMenu();
 
-			JMenuItem x_linkAll = new JMenuItem("Link all");
-			x_linkAll.addActionListener(f -> linkToGoogle(getHasDueDates(o_thread, false), p_parentPanel));
+				JMenuItem x_linkActive = new JMenuItem("Link active");
+				x_linkActive.addActionListener(f -> linkToGoogle(getHasDueDates(o_thread, true), p_parentPanel));
 
-			x_popupMenu.add(x_linkActive);
-			x_popupMenu.add(x_linkAll);
+				JMenuItem x_linkAll = new JMenuItem("Link all");
+				x_linkAll.addActionListener(f -> linkToGoogle(getHasDueDates(o_thread, false), p_parentPanel));
 
-			x_popupMenu.show(this, e.getX(), e.getY());
+				x_popupMenu.add(x_linkActive);
+				x_popupMenu.add(x_linkAll);
+
+				x_popupMenu.show(x_linkLabel, e.getX(), e.getY());
+			}
 		});
 
 
