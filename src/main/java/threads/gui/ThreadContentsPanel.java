@@ -9,8 +9,10 @@ import threads.util.TimedUpdater;
 import javax.swing.*;
 import java.awt.*;
 
+import static java.awt.BorderLayout.NORTH;
 import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
+import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.JOptionPane.*;
 import static threads.gui.Actions.*;
 import static threads.gui.GUIConstants.*;
@@ -24,6 +26,7 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
     private final Thread o_thread;
 	private JPanel o_parentPanel;
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, true, null);
+	private final JLabel o_topLabel = new JLabel("0 Items");
 
 	ThreadContentsPanel(final Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadContentsTableModel(p_thread), new ContentsCellRenderer(p_thread));
@@ -38,6 +41,11 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 
 		JLabel x_addItemLabel = createLabel(getPlusIcon(), "Add Item", true, e -> add(getSelectedObject()));
 
+		o_topLabel.setHorizontalAlignment(JLabel.CENTER);
+		o_topLabel.setText(o_table.getModel().getRowCount() + " Items");
+        o_thread.addComponentChangeListener(l -> o_topLabel.setText(o_table.getModel().getRowCount() + " Items"));
+        o_topLabel.setBorder(createEmptyBorder(0, 5, 5, 5));
+
         o_popupMenu.setActivateActionListener(e -> Actions.activateComponent(getSelectedObject(), p_parentPanel));
         o_popupMenu.setDeactivateActionListener(e -> Actions.deactivateComponent(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setRemoveActionListener(e -> Actions.removeComponent(getSelectedObject(), p_parentPanel, false));
@@ -48,6 +56,7 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
         x_buttonPanel.add(x_addItemLabel);
         x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
+        add(o_topLabel, NORTH);
         add(x_buttonPanel, SOUTH);
 
 		TimedUpdater.getInstance().addActivityListener(this);

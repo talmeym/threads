@@ -9,8 +9,10 @@ import threads.util.TimedUpdater;
 import javax.swing.*;
 import java.awt.*;
 
+import static java.awt.BorderLayout.NORTH;
 import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
+import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.SwingConstants.VERTICAL;
 import static threads.data.ComponentType.Action;
 import static threads.gui.Actions.*;
@@ -25,6 +27,7 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, true, Action);
 	private final JRadioButton o_showNext7DaysRadioButton;
 	private final JRadioButton o_showAllRadioButton;
+	private final JLabel o_topLabel = new JLabel("0 Actions");
 
 	ThreadActionPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadActionTableModel(p_thread), new ThreadActionCellRenderer(p_thread));
@@ -56,13 +59,19 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 		o_showNext7DaysRadioButton.addChangeListener(e -> {
 			x_tableModel.setOnlyNext7Days(o_showNext7DaysRadioButton.isSelected());
 			updateSetting(s_SEVENDAYS, o_showNext7DaysRadioButton.isSelected());
+            o_topLabel.setText(o_table.getModel().getRowCount() + " Actions");
 		});
 
 		ButtonGroup x_group = new ButtonGroup();
 		x_group.add(o_showNext7DaysRadioButton);
 		x_group.add(o_showAllRadioButton);
 
-		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
+        o_topLabel.setHorizontalAlignment(JLabel.CENTER);
+        o_topLabel.setText(o_table.getModel().getRowCount() + " Actions");
+        o_thread.addComponentChangeListener(l -> o_topLabel.setText(o_table.getModel().getRowCount() + " Actions"));
+        o_topLabel.setBorder(createEmptyBorder(0, 5, 5, 5));
+
+        JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
 		x_buttonPanel.add(x_addLabel);
 		x_buttonPanel.add(x_addTemplateLabel);
 		x_buttonPanel.add(new JSeparator(VERTICAL));
@@ -71,7 +80,8 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 		x_buttonPanel.add(o_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-		add(x_buttonPanel, SOUTH);
+        add(o_topLabel, NORTH);
+        add(x_buttonPanel, SOUTH);
 
 		TimedUpdater.getInstance().addActivityListener(this);
 		GoogleSyncer.getInstance().addActivityListener(this);

@@ -7,8 +7,10 @@ import threads.util.TimedUpdater;
 import javax.swing.*;
 import java.awt.*;
 
+import static java.awt.BorderLayout.NORTH;
 import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
+import static javax.swing.BorderFactory.createEmptyBorder;
 import static threads.data.ComponentType.Update;
 import static threads.gui.Actions.addUpdate;
 import static threads.gui.GUIConstants.s_dateStatusColumnWidth;
@@ -20,6 +22,7 @@ class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
     private final Thread o_thread;
 	private JPanel o_parentPanel;
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, false, Update);
+	private final JLabel o_topLabel = new JLabel("0 Updates");
 
 	ThreadUpdatePanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadUpdateTableModel(p_thread), new BaseCellRenderer());
@@ -33,6 +36,11 @@ class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
 
 		JLabel x_addLabel = createLabel(getPlusIcon(), "Add Update", true, e -> addUpdate(getSelectedObject(), o_thread, p_parentPanel));
 
+		o_topLabel.setHorizontalAlignment(JLabel.CENTER);
+		o_topLabel.setText(o_table.getModel().getRowCount() + " Updates");
+		o_thread.addComponentChangeListener(l -> o_topLabel.setText(o_table.getModel().getRowCount() + " Updates"));
+		o_topLabel.setBorder(createEmptyBorder(0, 5, 5, 5));
+
 		o_popupMenu.setActivateActionListener(e -> Actions.activateComponent(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivateComponent(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setRemoveActionListener(e -> Actions.removeComponent(getSelectedObject(), p_parentPanel, false));
@@ -42,6 +50,7 @@ class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
 		x_buttonPanel.add(x_addLabel);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
+        add(o_topLabel, NORTH);
 		add(x_buttonPanel, SOUTH);
 
 		TimedUpdater.getInstance().addActivityListener(this);

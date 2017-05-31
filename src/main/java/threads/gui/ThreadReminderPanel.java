@@ -9,8 +9,10 @@ import threads.util.TimedUpdater;
 import javax.swing.*;
 import java.awt.*;
 
+import static java.awt.BorderLayout.NORTH;
 import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
+import static javax.swing.BorderFactory.createEmptyBorder;
 import static threads.data.ComponentType.Reminder;
 import static threads.gui.Actions.linkToGoogle;
 import static threads.gui.GUIConstants.*;
@@ -20,6 +22,7 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 	private final JRadioButton o_showDueRadioButton;
 	private final JRadioButton o_showAllRadioButton;
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(false, true, Reminder);
+	private final JLabel o_topLabel = new JLabel("0 Reminders");
 
 	ThreadReminderPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadReminderTableModel(p_thread), new ThreadReminderCellRenderer(p_thread));
@@ -47,18 +50,25 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 			boolean x_selected = o_showDueRadioButton.isSelected();
 			x_tableModel.setOnlyDueReminders(x_selected);
 			updateSetting(s_ONLYDUE, x_selected);
-		});
+            o_topLabel.setText(o_table.getModel().getRowCount() + " Reminders");
+        });
 
 		ButtonGroup x_group = new ButtonGroup();
 		x_group.add(o_showDueRadioButton);
 		x_group.add(o_showAllRadioButton);
+
+		o_topLabel.setHorizontalAlignment(JLabel.CENTER);
+		o_topLabel.setText(o_table.getModel().getRowCount() + " Reminders");
+		p_thread.addComponentChangeListener(l -> o_topLabel.setText(o_table.getModel().getRowCount() + " Reminders"));
+		o_topLabel.setBorder(createEmptyBorder(0, 5, 5, 5));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
 		x_buttonPanel.add(new JLabel("View:"));
 		x_buttonPanel.add(o_showDueRadioButton);
 		x_buttonPanel.add(o_showAllRadioButton);
 		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-        
+
+        add(o_topLabel, NORTH);
         add(x_buttonPanel, SOUTH);
 
 		TimedUpdater.getInstance().addActivityListener(this);

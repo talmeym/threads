@@ -19,6 +19,7 @@ import static java.awt.FlowLayout.LEFT;
 import static java.lang.Integer.parseInt;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.YEAR;
+import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.JOptionPane.*;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static threads.data.LookupHelper.getHasDueDates;
@@ -37,12 +38,13 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
 	private final Thread o_thread;
+
 	private final JPanel o_parentPanel;
-	private final JLabel o_currentMonthLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(YEAR), Calendar.getInstance().get(MONTH)));
 	private final JCheckBox o_includeActionsCheckBox = new JCheckBox("Actions");
 	private final JCheckBox o_includeUpdatesCheckBox = new JCheckBox("Updates");
 	private final JCheckBox o_includeRemindersCheckBox = new JCheckBox("Reminders");
 	private final JCheckBox o_allCheckBox = new JCheckBox("All");
+	private final JLabel o_topLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(YEAR), Calendar.getInstance().get(MONTH)));
 
 
 	ThreadCalendarPanel(Thread p_thread, JPanel p_parentPanel) {
@@ -74,8 +76,8 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			updateSetting(s_DATE, x_month + "_" + x_year);
 		});
 
-		o_currentMonthLabel.setHorizontalAlignment(JLabel.CENTER);
-		o_currentMonthLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
+		o_topLabel.setHorizontalAlignment(JLabel.CENTER);
+		o_topLabel.setBorder(createEmptyBorder(0, 5, 5, 5));
 
 		ThreadCalendarTableModel x_tableModel = (ThreadCalendarTableModel) o_table.getModel();
 		x_tableModel.setIncludeActions(registerForSetting(s_CALENDARACT, this, true));
@@ -125,9 +127,9 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		x_buttonPanel.add(o_includeUpdatesCheckBox);
 		x_buttonPanel.add(o_includeRemindersCheckBox);
 		x_buttonPanel.add(o_allCheckBox);
-		x_buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+		x_buttonPanel.setBorder(createEmptyBorder(5, 0, 0, 0));
 
-		add(o_currentMonthLabel, BorderLayout.NORTH);
+		add(o_topLabel, BorderLayout.NORTH);
 		add(x_buttonPanel, BorderLayout.SOUTH);
 	}
 
@@ -152,7 +154,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 	private void setTime(int p_year, int p_month) {
 		((ThreadCalendarTableModel) o_table.getModel()).setTime(p_year, p_month);
 		((ThreadCalendarCellRenderer)o_table.getCellRenderer(0, 0)).setTime(p_year, p_month);
-		o_currentMonthLabel.setText(getMonthLabel(p_year, p_month));
+		o_topLabel.setText(getMonthLabel(p_year, p_month));
 	}
 
 	private String getMonthLabel(int p_year, int x_month) {
