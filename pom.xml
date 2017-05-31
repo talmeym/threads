@@ -6,9 +6,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.emarte.threads</groupId>
 	<artifactId>threads</artifactId>
-	<version>0.0.83</version>
+	<version>0.0.84</version>
 	<packaging>jar</packaging>
-	<name>Threads</name>
+	<name>threads.Threads</name>
 
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
@@ -29,7 +29,7 @@
 						<index>true</index>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>Threads</mainClass>
+							<mainClass>threads.Threads</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
