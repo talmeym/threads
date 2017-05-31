@@ -325,7 +325,7 @@ public class DateUtil {
 				}
 			}
 		} catch (IllegalArgumentException | ParseException e) {
-			e.printStackTrace();
+			// do nothing
 		}
 
 		return null;

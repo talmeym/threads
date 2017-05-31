@@ -13,6 +13,8 @@ import java.awt.event.MouseEvent;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
 import static java.awt.Color.*;
+import static java.lang.Integer.parseInt;
+import static javax.swing.BorderFactory.createEmptyBorder;
 import static threads.data.LookupHelper.*;
 import static threads.gui.Actions.linkToGoogle;
 import static threads.gui.WidgetFactory.createLabel;
@@ -59,14 +61,13 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 			}
 		});
 
-
 		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_parentPanel, true, x_linkLabel);
-		componentInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 3, 0, 3));
+		componentInfoPanel.setBorder(createEmptyBorder(5, 3, 0, 3));
 		add(componentInfoPanel, NORTH);
         add(o_tabs, CENTER);
 
 		o_tabs.setSelectedIndex(registerForSetting(s_TABINDEX, this, 0));
-		o_tabs.addChangeListener(changeEvent -> updateSetting(s_TABINDEX, "" + o_tabs.getSelectedIndex()));
+		o_tabs.addChangeListener(e -> updateSetting(s_TABINDEX, "" + o_tabs.getSelectedIndex()));
 
         TimedUpdater.getInstance().addActivityListener(this);
         setActionTabBackground();
@@ -85,23 +86,15 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
     }
 
 	private void setActionTabBackground() {
-        if(getAllActiveDueActions(o_thread).size() > 0) {
-            o_tabs.setTitleAt(3, "Actions *");
-            o_tabs.setBackgroundAt(3, red);
-        } else {
-			o_tabs.setTitleAt(3, "Actions");
-            o_tabs.setBackgroundAt(3, o_tabs.getBackgroundAt(1));
-        }
+        boolean x_dueActions = getAllActiveDueActions(o_thread).size() > 0;
+        o_tabs.setTitleAt(3, x_dueActions ? "Actions *" : "Actions");
+        o_tabs.setBackgroundAt(3, x_dueActions ? red : o_tabs.getBackgroundAt(1));
     }
 
     private void setReminderTabBackground() {
-        if(getAllActiveReminders(o_thread, true).size() > 0) {
-            o_tabs.setTitleAt(4, "Reminders *");
-            o_tabs.setBackgroundAt(4, red);
-        } else {
-			o_tabs.setTitleAt(4, "Reminders");
-            o_tabs.setBackgroundAt(4, o_tabs.getBackgroundAt(1));
-        }
+        boolean x_dueReminders = getAllActiveReminders(o_thread, true).size() > 0;
+        o_tabs.setTitleAt(4, x_dueReminders ? "Reminders *" : "Reminders");
+        o_tabs.setBackgroundAt(4, x_dueReminders ? red : o_tabs.getBackgroundAt(1));
     }
 
 	static void setTabIndex(int p_tabIndex) {
@@ -110,6 +103,6 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 
 	@Override
 	public void settingChanged(String p_name, Object p_value) {
-		o_tabs.setSelectedIndex(Integer.parseInt(p_value.toString()));
+		o_tabs.setSelectedIndex(parseInt(p_value.toString()));
 	}
 }
