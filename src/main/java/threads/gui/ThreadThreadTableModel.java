@@ -10,7 +10,7 @@ class ThreadThreadTableModel extends ComponentTableModel<Thread, Thread> {
 	private TableDataCache<Integer> o_cache = new TableDataCache<>();
 
 	ThreadThreadTableModel(Thread p_thread) {
-        super(p_thread, new String[]{"Parent", "Thread", "threads.Threads", "Updates", "Actions"});
+        super(p_thread, new String[]{"Parent", "Thread", "Threads", "Updates", "Actions"});
     }
 
 	@Override

@@ -38,7 +38,7 @@ public class SystemTrayUtil {
 
 			x_addUpdateItem.addActionListener(e -> addUpdate(null, o_topLevelThread, null));
 
-			o_trayIcon = new TrayIcon(getThreadsImage(), "threads.Threads", o_popUpMenu);
+			o_trayIcon = new TrayIcon(getThreadsImage(), "Threads", o_popUpMenu);
 			o_trayIcon.setImageAutoSize(true);
 			SystemTray systemTray = SystemTray.getSystemTray();
 			systemTray.add(o_trayIcon);
@@ -48,7 +48,7 @@ public class SystemTrayUtil {
 					Component x_component = p_dueComponents.get(0);
 					displayNotification(x_component instanceof Item ? "Action Overdue" : "Reminder", x_component.getText());
 				} else if (p_dueComponents.size() > 1) {
-					displayNotification("threads.Threads", "You have " + p_dueComponents.size() + " new notifications.");
+					displayNotification("Threads", "You have " + p_dueComponents.size() + " new notifications.");
 				}
 
 				for (final Component x_component : p_dueComponents) {

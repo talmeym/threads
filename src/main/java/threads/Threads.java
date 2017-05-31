@@ -24,7 +24,7 @@ public class Threads {
 
 	public Threads(File p_dataFile, Configuration p_configuration) {
 		File x_settingsFile = new File(p_dataFile.getParentFile(), p_dataFile.getName() + ".properties");
-		Thread x_topThread = p_configuration != null ? p_configuration.getTopLevelThread() : new Thread("threads.Threads");
+		Thread x_topThread = p_configuration != null ? p_configuration.getTopLevelThread() : new Thread("Threads");
 
 		if(p_configuration != null) {
 			setActionTemplates(p_configuration.getActionTemplates());

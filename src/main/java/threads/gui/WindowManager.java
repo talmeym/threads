@@ -40,7 +40,7 @@ public class WindowManager implements SettingChangeListener {
 	private WindowManager(Thread p_topLevelThread, WindowListener p_listener) {
 		standardiseFontSizes();
 
-		JFrame x_window = new JFrame("threads.Threads");
+		JFrame x_window = new JFrame("Threads");
 		addIcon(x_window);
 		o_navigationAndComponentPanel = new NavigationAndComponentPanel(p_topLevelThread, x_window);
 		x_window.setContentPane(o_navigationAndComponentPanel);

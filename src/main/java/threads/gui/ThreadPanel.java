@@ -32,7 +32,7 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 
 		o_tabs = new JTabbedPane();
         o_tabs.addTab("Contents", getFolderSmallIcon(), new ThreadContentsPanel(p_thread, p_parentPanel));
-        o_tabs.addTab("threads.Threads", getThreadIcon(), new ThreadThreadPanel(p_thread, p_parentPanel));
+        o_tabs.addTab("Threads", getThreadIcon(), new ThreadThreadPanel(p_thread, p_parentPanel));
         o_tabs.addTab("Updates", getUpdateIcon(), new ThreadUpdatePanel(p_thread, p_parentPanel));
         o_tabs.addTab("Actions", getActionIcon(), new ThreadActionPanel(p_thread, p_parentPanel));
         o_tabs.addTab("Reminders", getReminderIcon(), new ThreadReminderPanel(p_thread, p_parentPanel));
@@ -45,7 +45,7 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 		o_tabs.setBackgroundAt(5, white);
 
 		o_tabs.setToolTipTextAt(0, "The contents of this Thread");
-		o_tabs.setToolTipTextAt(1, "A view of all active threads.Threads");
+		o_tabs.setToolTipTextAt(1, "A view of all active Threads");
 		o_tabs.setToolTipTextAt(2, "A view of all active Updates");
 		o_tabs.setToolTipTextAt(3, "A view of all active Actions");
 		o_tabs.setToolTipTextAt(4, "A view of all active Reminders");

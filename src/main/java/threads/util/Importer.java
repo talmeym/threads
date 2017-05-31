@@ -50,7 +50,7 @@ public class Importer {
     public static void main(String[] args) throws GeneralSecurityException, IOException {
         s_httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         s_dataStoreFactory = new FileDataStoreFactory(new File("credstore"));
-        s_client = new com.google.api.services.calendar.Calendar.Builder(s_httpTransport, s_JSON_FACTORY, authorize()).setApplicationName("threads.Threads").build();
+        s_client = new com.google.api.services.calendar.Calendar.Builder(s_httpTransport, s_JSON_FACTORY, authorize()).setApplicationName("Threads").build();
 
         CalendarList x_feed = s_client.calendarList().list().execute();
 

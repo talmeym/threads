@@ -79,7 +79,7 @@ public class Settings {
 
 	public static void save(File file) {
 		try {
-			settings.store(new FileWriter(file), "threads.Threads settings");
+			settings.store(new FileWriter(file), "Threads Settings");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -66,7 +66,7 @@ public class GoogleUtil {
 		if(s_client == null) {
 			s_httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 			s_dataStoreFactory = new FileDataStoreFactory(new File("credstore"));
-			s_client = new com.google.api.services.calendar.Calendar.Builder(s_httpTransport, s_JSON_FACTORY, authorize()).setApplicationName("threads.Threads").build();
+			s_client = new com.google.api.services.calendar.Calendar.Builder(s_httpTransport, s_JSON_FACTORY, authorize()).setApplicationName("Threads").build();
 		}
 	}
 
@@ -242,7 +242,7 @@ public class GoogleUtil {
 		}
 
 		Calendar entry = new Calendar();
-		entry.setSummary("threads.Threads - " + s_topLevelThread.getText());
+		entry.setSummary("Threads - " + s_topLevelThread.getText());
 		entry.setDescription(s_topLevelThread.getId().toString());
 		Calendar calendar = s_client.calendars().insert(entry).execute();
 		return calendar.getId();
