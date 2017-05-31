@@ -2,6 +2,7 @@ package threads.gui;
 
 import threads.data.Item;
 import threads.data.Thread;
+import threads.util.TimedUpdater;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import static threads.util.DateUtil.getFormattedDate;
 class ThreadUpdateTableModel extends ComponentTableModel<Thread, Item> {
 	ThreadUpdateTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Thread", "Update", "Update Date", "Updated"});
+        TimedUpdater.getInstance().addActivityListener(this::reloadData);
     }
 
 	@Override

@@ -2,6 +2,7 @@ package threads.gui;
 
 import threads.data.Reminder;
 import threads.data.Thread;
+import threads.util.TimedUpdater;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
 
 	ThreadReminderTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Action", "Reminder", "Due Date", "Due", ""});
+		TimedUpdater.getInstance().addActivityListener(this::reloadData);
 	}
 
 	@Override

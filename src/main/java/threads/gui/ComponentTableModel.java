@@ -20,7 +20,6 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
         o_columnNames = p_columnNames;
 		o_component.addComponentChangeListener(e -> reloadData());
 		o_dataItems = getDataItems();
-		TimedUpdater.getInstance().addActivityListener(this::reloadData);
 		GoogleSyncer.getInstance().addActivityListener(this);
     }
     

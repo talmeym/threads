@@ -2,6 +2,7 @@ package threads.gui;
 
 import threads.data.Item;
 import threads.data.Thread;
+import threads.util.TimedUpdater;
 
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,8 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
 
 	ThreadActionTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Thread", "Action", "Due Date", "Due", ""});
-    }
+		TimedUpdater.getInstance().addActivityListener(this::reloadData);
+	}
 
     @Override
     public Class getColumnClass(int col) {

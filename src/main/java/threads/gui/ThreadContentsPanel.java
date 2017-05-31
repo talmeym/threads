@@ -59,7 +59,6 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
         add(o_topLabel, NORTH);
         add(x_buttonPanel, SOUTH);
 
-		TimedUpdater.getInstance().addActivityListener(this);
 		GoogleSyncer.getInstance().addActivityListener(this);
     }
 
