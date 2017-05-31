@@ -5,7 +5,8 @@ import java.util.UUID;
 public class Search {
 	private UUID o_id;
 	private String o_text;
-	private String o_notes;
+	private boolean o_includeNotes = false;
+	private boolean o_caseSensitive = false;
 
 	boolean check(Component p_component) {
 		if(o_id != null && checkId(p_component)) {
@@ -16,7 +17,7 @@ public class Search {
 			return true;
 		}
 
-        if(o_notes != null && p_component instanceof Item && checkNotes((Item) p_component)) {
+        if(o_includeNotes && p_component instanceof Item && checkNotes((Item) p_component)) {
 			return true;
 		}
 
@@ -28,11 +29,12 @@ public class Search {
     }
 
     private boolean checkText(Component p_component) {
-        return p_component.getText().toLowerCase().contains(o_text.toLowerCase());
+        return o_caseSensitive ? p_component.getText().contains(o_text) : p_component.getText().toLowerCase().contains(o_text.toLowerCase());
     }
 
     private boolean checkNotes(Item p_component) {
-        return p_component.getNotes() != null && p_component.getNotes().contains(o_notes);
+        return p_component.getNotes() != null && (o_caseSensitive ? p_component.getNotes().contains(o_text) : p_component.getNotes().toLowerCase().contains(o_text.toLowerCase()));
+
     }
 
     public static class Builder {
@@ -48,10 +50,15 @@ public class Search {
 			return this;
 		}
 
-		public Builder withNotes(String p_notes) {
-			o_search.o_notes = p_notes;
+		public Builder includeNotes(boolean p_includeNotes) {
+			o_search.o_includeNotes = p_includeNotes;
 			return this;
 		}
+
+		public Builder caseSensitive(boolean p_caseSensitive) {
+		    o_search.o_caseSensitive = p_caseSensitive;
+		    return this;
+        }
 
 		public Search build() {
 			Search x_search = o_search;

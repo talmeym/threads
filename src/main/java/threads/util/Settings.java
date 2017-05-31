@@ -23,6 +23,7 @@ public class Settings {
 	public static final String s_SEVENDAYS = "sevendays";
 	public static final String s_GOOGLE = "google";
 	public static final String s_SEARCHNOTES = "searchnotes";
+	public static final String s_SEARCHCASE = "searchcase";
 
 	private static Map<String, List<SettingChangeListener>> interestedParties = new HashMap<>();
 	private static Properties settings = new Properties();
