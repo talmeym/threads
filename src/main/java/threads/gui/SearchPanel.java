@@ -20,8 +20,7 @@ import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 import static threads.util.ImageUtil.getThreadsIcon;
-import static threads.util.Settings.registerForSetting;
-import static threads.util.Settings.s_SEARCHNOTES;
+import static threads.util.Settings.*;
 
 class SearchPanel extends JPanel implements SettingChangeListener {
 	private static final String s_defaultTextString = " Search ...";
@@ -37,6 +36,7 @@ class SearchPanel extends JPanel implements SettingChangeListener {
 		setText(s_defaultTextString);
 
 		o_includeNotesCheckBox.setSelected(registerForSetting(s_SEARCHNOTES, this, false));
+		o_includeNotesCheckBox.addActionListener(l -> updateSetting(s_SEARCHNOTES, o_includeNotesCheckBox.isSelected()));
 
 		o_searchField.addFocusListener(new FocusListener() {
 			@Override
