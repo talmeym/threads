@@ -21,7 +21,7 @@ import static threads.util.Settings.*;
 
 class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeListener {
 	private final Thread o_thread;
-	private final JTabbedPane o_tabs;
+	private final JTabbedPane o_tabs = new JTabbedPane();
 
 	ThreadPanel(Thread p_thread, JPanel p_parentPanel) {
         super(new BorderLayout());
@@ -32,26 +32,12 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
 			setReminderTabBackground();
 		});
 
-		o_tabs = new JTabbedPane();
-        o_tabs.addTab("Contents", getFolderSmallIcon(), new ThreadContentsPanel(p_thread, p_parentPanel));
-        o_tabs.addTab("Threads", getThreadIcon(), new ThreadThreadPanel(p_thread, p_parentPanel));
-        o_tabs.addTab("Updates", getUpdateIcon(), new ThreadUpdatePanel(p_thread, p_parentPanel));
-        o_tabs.addTab("Actions", getActionIcon(), new ThreadActionPanel(p_thread, p_parentPanel));
-        o_tabs.addTab("Reminders", getReminderIcon(), new ThreadReminderPanel(p_thread, p_parentPanel));
-        o_tabs.addTab("Calendar", getCalendarSmallIcon(), new ThreadCalendarPanel(p_thread, p_parentPanel));
-
-		o_tabs.setBackgroundAt(1, gray);
-		o_tabs.setBackgroundAt(2, gray);
-		o_tabs.setBackgroundAt(3, gray);
-		o_tabs.setBackgroundAt(4, gray);
-		o_tabs.setBackgroundAt(5, white);
-
-		o_tabs.setToolTipTextAt(0, "The contents of this Thread");
-		o_tabs.setToolTipTextAt(1, "A view of all active Threads");
-		o_tabs.setToolTipTextAt(2, "A view of all active Updates");
-		o_tabs.setToolTipTextAt(3, "A view of all active Actions");
-		o_tabs.setToolTipTextAt(4, "A view of all active Reminders");
-		o_tabs.setToolTipTextAt(5, "A calendar view of all Items");
+		addTab("Contents", "The contents of this Thread", getFolderSmallIcon(), new ThreadContentsPanel(p_thread, p_parentPanel), white);
+        addTab("Threads", "A view of all active Threads", getThreadIcon(), new ThreadThreadPanel(p_thread, p_parentPanel), gray);
+        addTab("Updates", "A view of all active Updates", getUpdateIcon(), new ThreadUpdatePanel(p_thread, p_parentPanel), gray);
+        addTab("Actions", "A view of all active Actions", getActionIcon(), new ThreadActionPanel(p_thread, p_parentPanel), gray);
+        addTab("Reminders", "A view of all active Reminders", getReminderIcon(), new ThreadReminderPanel(p_thread, p_parentPanel), gray);
+        addTab("Calendar", "A calendar view of all Items", getCalendarSmallIcon(), new ThreadCalendarPanel(p_thread, p_parentPanel), white);
 
 		JLabel x_linkLabel = createLabel(getLinkIcon(), "Link to Google Calendar", true);
 
@@ -85,6 +71,12 @@ class ThreadPanel extends JPanel implements TimedUpdateListener, SettingChangeLi
         TimedUpdater.getInstance().addActivityListener(this);
         setActionTabBackground();
 		setReminderTabBackground();
+    }
+
+    private void addTab(String p_title, String p_toolTipText, Icon p_icon, JPanel p_panel, Color p_color) {
+        o_tabs.addTab(p_title, p_icon, p_panel, p_toolTipText);
+        o_tabs.setBackgroundAt(o_tabs.getTabCount() - 1, p_color);
+
     }
 
     public void timeUpdate() {
