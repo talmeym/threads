@@ -36,7 +36,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 	private TableDataCache<String> o_cache = new TableDataCache<>();
 
 	SearchResults(Thread p_topLevelThread, Search p_search, String p_searchTerm, List<Component> p_searchResults) {
-		super("Search Results - '" + p_searchTerm + "'");
+		super("Search Results - '" + p_searchTerm + "' - " + p_searchResults.size() + " Items");
 		o_searchResults = p_searchResults;
 		TableModel x_tableModel = new TableModel();
 		CellRenderer x_cellRenderer = new CellRenderer(p_topLevelThread);
