@@ -8,20 +8,32 @@ public class Search {
 	private String o_notes;
 
 	boolean check(Component p_component) {
-		if(o_id != null && p_component.getId().equals(o_id)) {
+		if(o_id != null && checkId(p_component)) {
 			return true;
 		}
 
-		if(o_text != null && p_component.getText().toLowerCase().contains(o_text.toLowerCase())) {
+		if(o_text != null && checkText(p_component)) {
 			return true;
 		}
 
-        if(o_notes != null && p_component instanceof Item && ((Item) p_component).getNotes() != null && ((Item) p_component).getNotes().contains(o_notes)) {
+        if(o_notes != null && p_component instanceof Item && checkNotes((Item) p_component)) {
 			return true;
 		}
 
 		return false;
 	}
+
+    private boolean checkId(Component p_component) {
+        return p_component.getId().equals(o_id);
+    }
+
+    private boolean checkText(Component p_component) {
+        return p_component.getText().toLowerCase().contains(o_text.toLowerCase());
+    }
+
+    private boolean checkNotes(Item p_component) {
+        return p_component.getNotes() != null && p_component.getNotes().contains(o_notes);
+    }
 
     public static class Builder {
 		private Search o_search = new Search();
