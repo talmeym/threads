@@ -28,6 +28,7 @@ public class FontUtil {
 		put("Table.font", x_font);
 		put("TableHeader.font", x_font);
 		put("TextField.font", x_font);
+		put("TextArea.font", x_font);
 		put("TextPane.font", x_font);
 		put("TitledBorder.font", x_font);
 		put("ToolTip.font", x_font);
