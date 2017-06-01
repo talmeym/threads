@@ -29,8 +29,11 @@ import static threads.util.DateUtil.*;
 public class GoogleUtil {
 
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+
 	private static final String s_FROM_GOOGLE = "From Google";
 	private static final String s_NAME_TXT = "name.txt";
+	private static final String s_APP_NAME = "Threads";
 
 	private static final int s_COMP_UPDATED = 0;
 	private static final int s_EVENT_UPDATED = 1;
@@ -55,7 +58,7 @@ public class GoogleUtil {
 		if(x_folders != null) {
 			for(File x_clientFolder : x_folders) {
 				s_dataStoreFactory = new FileDataStoreFactory(x_clientFolder);
-				Calendar x_client = new Calendar.Builder(s_httpTransport, s_JSON_FACTORY, authorize()).setApplicationName("Threads").build();
+				Calendar x_client = new Calendar.Builder(s_httpTransport, s_JSON_FACTORY, authorize()).setApplicationName(s_APP_NAME).build();
 				s_googleAccounts.add(new GoogleAccount(readNameFromFile(x_clientFolder), x_client));
 			}
 		}
@@ -65,7 +68,7 @@ public class GoogleUtil {
 		try {
 			File x_clientFolder = new File(s_credStoreDir, "client_" + s_googleAccounts.size());
 			s_dataStoreFactory = new FileDataStoreFactory(x_clientFolder);
-			s_googleAccounts.add(new GoogleAccount(p_name, new Calendar.Builder(s_httpTransport, s_JSON_FACTORY, authorize()).setApplicationName("Threads").build()));
+			s_googleAccounts.add(new GoogleAccount(p_name, new Calendar.Builder(s_httpTransport, s_JSON_FACTORY, authorize()).setApplicationName(s_APP_NAME).build()));
 			writeNameToFile(p_name, x_clientFolder);
 			return true;
 		} catch (IOException e) {
@@ -203,10 +206,10 @@ public class GoogleUtil {
 					s_linkedComponents.get(x_googleAccount).addAll(x_syncedComponents);
 				}
 
-				System.out.println("Calendar Sync [" + new Date() + "][" + x_googleAccount.getName() + "]: " + x_events.size() + " events from google, " + x_stats[s_COMP_UPDATED] + " components updated, " + x_stats[s_EVENT_UPDATED] + " events updated, " + x_stats[s_COMP_CREATED] + " components created, " + x_stats[s_EVENT_DELETED] + " events deleted.");
+				System.out.println("CalendarSync[" + s_dateTimeFormat.format(new Date()) + "][" + x_googleAccount.getName() + "]: " + x_events.size() + " events from google, " + x_stats[s_COMP_UPDATED] + " components updated, " + x_stats[s_EVENT_UPDATED] + " events updated, " + x_stats[s_COMP_CREATED] + " components created, " + x_stats[s_EVENT_DELETED] + " events deleted.");
 			}
 		} catch(Throwable t){
-			System.out.println("Google Calendar Sync [" + new Date() + "]: Error talking to Google Calendar: " + t.getClass().getName() + ":" + t.getMessage());
+			System.out.println("CalendarSync[" + s_dateTimeFormat.format(new Date()) + "]: Error talking to Google: " + t.getClass().getName() + ":" + t.getMessage());
 		}
 	}
 
@@ -255,10 +258,6 @@ public class GoogleUtil {
 	}
 
 	private static String findCalendar(com.google.api.services.calendar.Calendar p_client) throws IOException {
-		if(s_topLevelThread == null) {
-			throw new IllegalStateException("Google not successfully synced");
-		}
-
 		CalendarList x_feed = p_client.calendarList().list().execute();
 
 		if (x_feed.getItems() != null) {
