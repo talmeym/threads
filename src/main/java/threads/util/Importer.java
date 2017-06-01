@@ -82,7 +82,7 @@ public class Importer {
                             x_item.setNotes(x_event.getDescription());
                             x_item.setActive(false);
 
-                            System.out.println(".");
+                            System.out.println(x_event.getSummary());
 
                             x_thread.addThreadItem(x_item);
                         }
