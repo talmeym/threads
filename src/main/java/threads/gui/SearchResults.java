@@ -3,7 +3,7 @@ package threads.gui;
 import threads.data.Component;
 import threads.data.*;
 import threads.data.Thread;
-import threads.util.SettingChangeListener;
+import threads.util.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -19,7 +19,7 @@ import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static threads.data.LookupHelper.*;
 import static threads.gui.GUIConstants.*;
 import static threads.util.DateUtil.getDateStatus;
-import static threads.util.GoogleUtil.isLinked;
+import static threads.util.GoogleUtil.googleAccount;
 import static threads.util.Settings.*;
 
 class SearchResults extends JFrame implements SettingChangeListener {
@@ -45,7 +45,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		o_table.setDefaultRenderer(Date.class, x_cellRenderer);
 		o_table.setDefaultRenderer(ComponentType.class, x_cellRenderer);
 		o_table.setDefaultRenderer(String.class, x_cellRenderer);
-		o_table.setDefaultRenderer(Boolean.class, x_cellRenderer);
+		o_table.setDefaultRenderer(GoogleAccount.class, x_cellRenderer);
 		o_table.setRowHeight(s_tableRowHeight);
 		o_table.setSelectionMode(SINGLE_SELECTION);
 
@@ -113,7 +113,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 			switch(col) {
 				case 0: return Date.class;
 				case 1: return ComponentType.class;
-				case 4: return Boolean.class;
+				case 4: return GoogleAccount.class;
 				default: return String.class;
 			}
 		}
@@ -132,7 +132,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 				case 1: return x_component.getType();
 				case 2: return x_component.getText();
 				case 3: return o_cache.fillOrGet(p_row, p_col, () -> getInfoString(x_component));
-				default: return isLinked(x_component);
+				default: return googleAccount(x_component);
 			}
 		}
 
@@ -172,7 +172,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		}
 	}
 
-	private class CellRenderer extends DefaultTableCellRenderer {
+	private class CellRenderer extends BaseCellRenderer {
 		@Override
 		public java.awt.Component getTableCellRendererComponent(JTable o_table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
 			java.awt.Component x_awtComponent = super.getTableCellRendererComponent(o_table, p_value, p_isSelected, p_hasFocus, p_row, p_col);

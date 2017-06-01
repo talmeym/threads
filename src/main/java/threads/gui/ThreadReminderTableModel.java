@@ -1,15 +1,14 @@
 package threads.gui;
 
-import threads.data.Reminder;
+import threads.data.*;
 import threads.data.Thread;
 import threads.util.TimedUpdater;
 
 import java.util.List;
 
 import static threads.data.LookupHelper.getAllActiveReminders;
-import static threads.util.DateUtil.getDateStatus;
-import static threads.util.DateUtil.getFormattedDate;
-import static threads.util.GoogleUtil.isLinked;
+import static threads.util.DateUtil.*;
+import static threads.util.GoogleUtil.googleAccount;
 
 class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
 	private boolean o_onlyDueReminders = true;
@@ -33,7 +32,7 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
 			case 1: return x_dueReminder.getText();
 			case 2: return getFormattedDate(x_dueReminder.getDueDate());
 			case 3: return getDateStatus(x_dueReminder.getDueDate());
-			default: return isLinked(x_dueReminder);
+			default: return googleAccount(x_dueReminder);
         }
     }
 

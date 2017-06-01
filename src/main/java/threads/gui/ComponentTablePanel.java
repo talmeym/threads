@@ -31,6 +31,7 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
         o_table.setDefaultRenderer(Object[].class, p_cellRenderer);
         o_table.setDefaultRenderer(Date.class, p_cellRenderer);
         o_table.setDefaultRenderer(ComponentType.class, p_cellRenderer);
+        o_table.setDefaultRenderer(GoogleAccount.class, p_cellRenderer);
 		o_table.setSelectionMode(SINGLE_SELECTION);
 
         o_table.addMouseListener(new MouseAdapter(){

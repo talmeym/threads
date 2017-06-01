@@ -1,13 +1,11 @@
 package threads.gui;
 
-import threads.data.Item;
-import threads.data.Reminder;
+import threads.data.*;
 
 import java.util.List;
 
-import static threads.util.DateUtil.getDateStatus;
-import static threads.util.DateUtil.getFormattedDate;
-import static threads.util.GoogleUtil.isLinked;
+import static threads.util.DateUtil.*;
+import static threads.util.GoogleUtil.googleAccount;
 
 class ItemReminderTableModel extends ComponentTableModel<Item, Reminder> {
     ItemReminderTableModel(Item p_item) {
@@ -27,7 +25,7 @@ class ItemReminderTableModel extends ComponentTableModel<Item, Reminder> {
 			case 0: return x_reminder.getText();
 			case 1: return getFormattedDate(x_reminder.getDueDate());
 			case 2: return getDateStatus(x_reminder.getDueDate(), x_reminder.getParentItem().getDueDate(), "before");
-			default: return isLinked(x_reminder);
+			default: return googleAccount(x_reminder);
         }
     }
 

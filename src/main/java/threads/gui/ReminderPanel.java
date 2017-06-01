@@ -1,21 +1,17 @@
 package threads.gui;
 
-import threads.data.HasDueDate;
-import threads.data.Reminder;
-import threads.util.GoogleSyncListener;
-import threads.util.GoogleSyncer;
+import threads.data.*;
+import threads.util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.NORTH;
+import static java.awt.BorderLayout.*;
 import static threads.gui.Actions.linkToGoogle;
 import static threads.gui.WidgetFactory.createLabel;
-import static threads.util.GoogleUtil.isLinked;
-import static threads.util.ImageUtil.getGoogleSmallIcon;
-import static threads.util.ImageUtil.getLinkIcon;
+import static threads.util.GoogleUtil.googleAccount;
+import static threads.util.ImageUtil.*;
 
 class ReminderPanel extends JPanel implements GoogleSyncListener {
 	private final Reminder o_reminder;
@@ -53,10 +49,16 @@ class ReminderPanel extends JPanel implements GoogleSyncListener {
 
 	@Override
 	public void googleSynced() {
-		o_linkLabel.setIcon(isLinked(o_reminder) ? getGoogleSmallIcon() : getLinkIcon());
+		setLinkLabelText();
 	}
 
 	public void googleSynced(List<HasDueDate> p_hasDueDates) {
-		o_linkLabel.setIcon(isLinked(o_reminder) ? getGoogleSmallIcon() : getLinkIcon());
+		setLinkLabelText();
+	}
+
+	public void setLinkLabelText() {
+		GoogleAccount x_account = googleAccount(o_reminder);
+		o_linkLabel.setIcon(x_account != null ? getGoogleSmallIcon() : getLinkIcon());
+		o_linkLabel.setToolTipText(x_account != null ? x_account.getName() : "Link to Google Calendar");
 	}
 }

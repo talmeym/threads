@@ -1,16 +1,13 @@
 package threads.gui;
 
-import threads.data.ComponentType;
-import threads.data.Item;
+import threads.data.*;
 import threads.data.Thread;
-import threads.data.ThreadItem;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static threads.data.LookupHelper.*;
 import static threads.util.DateUtil.getDateStatus;
-import static threads.util.GoogleUtil.isLinked;
+import static threads.util.GoogleUtil.googleAccount;
 
 class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
 	private TableDataCache<String> o_cache = new TableDataCache<>();
@@ -37,7 +34,7 @@ class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
 			case 1: return x_threadItem.getType();
 			case 2: return x_threadItem.getText();
 			case 3: return o_cache.fillOrGet(row, col, () -> getInfoString(x_threadItem));
-			default: return isLinked(x_threadItem);
+			default: return googleAccount(x_threadItem);
         }
     }
 

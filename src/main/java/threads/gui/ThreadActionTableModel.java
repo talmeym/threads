@@ -1,16 +1,14 @@
 package threads.gui;
 
-import threads.data.Item;
+import threads.data.*;
 import threads.data.Thread;
 import threads.util.TimedUpdater;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static threads.data.LookupHelper.getAllActiveActions;
-import static threads.util.DateUtil.getDateStatus;
-import static threads.util.DateUtil.getFormattedDate;
-import static threads.util.GoogleUtil.isLinked;
+import static threads.util.DateUtil.*;
+import static threads.util.GoogleUtil.googleAccount;
 
 class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
 	private boolean o_onlyNext7Days = true;
@@ -37,7 +35,7 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
 			case 1: return x_action.getText();
 			case 2: return getFormattedDate(x_action.getDueDate());
 			case 3: return getDateStatus(x_action.getDueDate());
-			default: return isLinked(x_action);
+			default: return googleAccount(x_action);
         }
     }
 

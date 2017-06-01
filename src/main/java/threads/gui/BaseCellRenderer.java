@@ -1,22 +1,19 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.ComponentType;
+import threads.util.GoogleAccount;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.awt.Component;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.Date;
 
-import static java.awt.Color.black;
-import static java.awt.Color.white;
+import static java.awt.Color.*;
 import static java.lang.String.valueOf;
 import static threads.gui.ColourConstants.*;
 import static threads.util.DateUtil.*;
-import static threads.util.ImageUtil.getGoogleSmallIcon;
-import static threads.util.ImageUtil.getIconForType;
+import static threads.util.ImageUtil.*;
 
 class BaseCellRenderer<COMPONENT extends threads.data.Component, DATA_TYPE> extends DefaultTableCellRenderer {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
@@ -26,15 +23,11 @@ class BaseCellRenderer<COMPONENT extends threads.data.Component, DATA_TYPE> exte
 	@Override
 	public void setValue(Object p_value) {
 		setText("");
+		setToolTipText("");
 		setIcon(null);
 		setHorizontalAlignment(LEFT);
 
-		if(p_value instanceof Boolean) {
-			if((Boolean) p_value) {
-				setIcon(getGoogleSmallIcon());
-				setHorizontalAlignment(CENTER);
-			}
-		} else if(p_value instanceof ComponentType) {
+		if(p_value instanceof ComponentType) {
 			setIcon(getIconForType((ComponentType)p_value));
 			setHorizontalAlignment(CENTER);
 		} else if(p_value instanceof Icon) {
@@ -42,8 +35,13 @@ class BaseCellRenderer<COMPONENT extends threads.data.Component, DATA_TYPE> exte
 			setHorizontalAlignment(CENTER);
 		} else if(p_value instanceof Date) {
 			setText(s_dateFormat.format((Date)p_value));
-		} else {
-			setText(valueOf(p_value));
+		} else if(p_value instanceof GoogleAccount) {
+			setIcon(getGoogleSmallIcon());
+			setHorizontalAlignment(CENTER);
+			setToolTipText(((GoogleAccount)p_value).getName());
+		}
+		else {
+			setText(p_value == null ? "" : valueOf(p_value));
 		}
 	}
 

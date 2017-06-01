@@ -1,19 +1,20 @@
 package threads.util;
 
 import threads.data.Component;
-import threads.data.Item;
+import threads.data.*;
 import threads.data.Thread;
 import threads.gui.WindowManager;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+import static java.awt.TrayIcon.MessageType.INFO;
+import static javax.swing.JOptionPane.*;
 import static threads.data.ComponentChangeEvent.Field.TEXT;
-import static threads.gui.Actions.addAction;
-import static threads.gui.Actions.addUpdate;
+import static threads.gui.Actions.*;
 import static threads.gui.ItemDateSuggestionPanel.getDateSuggestion;
-import static threads.util.ImageUtil.getThreadsImage;
+import static threads.util.GoogleUtil.addNewGoogleAccount;
+import static threads.util.ImageUtil.*;
 
 public class SystemTrayUtil {
 	private static PopupMenu o_popUpMenu;
@@ -37,6 +38,18 @@ public class SystemTrayUtil {
 			o_popUpMenu.add(x_addUpdateItem);
 
 			x_addUpdateItem.addActionListener(e -> addUpdate(null, o_topLevelThread, null));
+
+			MenuItem x_addGoogleAccount = new MenuItem("Add Google Account");
+			o_popUpMenu.add(x_addGoogleAccount);
+
+			x_addGoogleAccount.addActionListener(e -> {
+				String x_name = (String) showInputDialog(null, "Name the new Account:", "Add Google Account ?", INFORMATION_MESSAGE, getThreadsIcon(), null, "Home");
+
+				if(x_name != null) {
+					boolean x_added = addNewGoogleAccount(x_name);
+					displayNotification("Google Account '" + x_name + "'", (x_added ? "Successfully" : "Unsuccessfully") + " added.");
+				}
+			});
 
 			o_trayIcon = new TrayIcon(getThreadsImage(), "Threads", o_popUpMenu);
 			o_trayIcon.setImageAutoSize(true);
@@ -86,6 +99,6 @@ public class SystemTrayUtil {
 	}
 
 	private static void displayNotification(String caption, String text) {
-		o_trayIcon.displayMessage(caption, text, TrayIcon.MessageType.INFO);
+		o_trayIcon.displayMessage(caption, text, INFO);
 	}
 }
