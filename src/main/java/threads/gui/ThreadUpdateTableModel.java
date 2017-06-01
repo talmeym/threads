@@ -14,7 +14,7 @@ import static threads.util.DateUtil.getFormattedDate;
 class ThreadUpdateTableModel extends ComponentTableModel<Thread, Item> {
 	ThreadUpdateTableModel(Thread p_thread) {
         super(p_thread, new String[]{"Thread", "Update", "Update Date", "Updated"});
-        TimedUpdater.getInstance().addActivityListener(this::reloadData);
+        TimedUpdater.getInstance().addActivityListener(this::fireTableDataChanged);
     }
 
 	@Override
