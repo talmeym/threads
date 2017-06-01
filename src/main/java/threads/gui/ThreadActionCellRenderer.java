@@ -1,34 +1,16 @@
 package threads.gui;
 
-import threads.data.Item;
+import threads.data.*;
 import threads.data.Thread;
 
-import java.awt.*;
-import java.util.List;
+import javax.swing.*;
 
-import static threads.data.LookupHelper.getAllActiveActions;
-
-class ThreadActionCellRenderer extends DataItemsCellRenderer<Thread, Item> {
-	private boolean o_onlyNext7Days;
-
-	ThreadActionCellRenderer(Thread p_thread) {
-		super(p_thread);
-    }
-
+class ThreadActionCellRenderer extends BaseCellRenderer<Thread, Item> {
 	@Override
-	List<Item> getDataItems(Thread p_thread) {
-		return getAllActiveActions(p_thread, o_onlyNext7Days);
-	}
-
-	@Override
-	void customSetup(Item p_item, Component p_awtComponent, boolean p_isSelected) {
-		if(!p_isSelected) {
-			p_awtComponent.setBackground(getColourForTime(p_item.getDueDate()));
-		}
-	}
-
-	void setOnlyNext7Days(boolean p_onlyNext7Days) {
-		this.o_onlyNext7Days = p_onlyNext7Days;
-		reloadData();
+	public java.awt.Component getTableCellRendererComponent(JTable p_table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
+		java.awt.Component x_awtComponent = super.getTableCellRendererComponent(p_table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
+		Item x_item = o_tableModel.getDataItem(p_row, p_col);
+		x_awtComponent.setBackground(getColourForTime(x_item.getDueDate()));
+		return x_awtComponent;
 	}
 }

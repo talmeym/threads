@@ -6,20 +6,15 @@ import threads.data.Thread;
 import threads.util.SettingChangeListener;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
+import java.awt.event.*;
+import java.text.*;
+import java.util.*;
 import java.util.List;
 
 import static java.awt.BorderLayout.CENTER;
-import static java.awt.Color.black;
-import static java.awt.Color.gray;
+import static java.awt.Color.*;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static threads.data.LookupHelper.*;
 import static threads.gui.GUIConstants.*;
@@ -39,7 +34,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		super("Search Results - '" + p_searchTerm + "' - " + p_searchResults.size() + " Items");
 		o_searchResults = p_searchResults;
 		TableModel x_tableModel = new TableModel();
-		CellRenderer x_cellRenderer = new CellRenderer(p_topLevelThread);
+		CellRenderer x_cellRenderer = new CellRenderer();
 
 		p_topLevelThread.addComponentChangeListener(e -> {
 			o_searchResults = p_topLevelThread.search(p_search);
@@ -177,20 +172,12 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		}
 	}
 
-	private class CellRenderer extends DataItemsCellRenderer<Thread, Component> {
-
-		CellRenderer(Thread p_topLevelThread) {
-			super(p_topLevelThread);
-		}
-
+	private class CellRenderer extends DefaultTableCellRenderer {
 		@Override
-		List<Component> getDataItems(Thread p_topLevelThread) {
-			return o_searchResults;
-		}
-
-		@Override
-		void customSetup(Component p_component, java.awt.Component p_awtComponent, boolean p_isSelected) {
-			p_awtComponent.setForeground(p_component.isActive() ? black : gray);
+		public java.awt.Component getTableCellRendererComponent(JTable o_table, Object p_value, boolean p_isSelected, boolean p_hasFocus, int p_row, int p_col) {
+			java.awt.Component x_awtComponent = super.getTableCellRendererComponent(o_table, p_value, p_isSelected, p_hasFocus, p_row, p_col);
+			x_awtComponent.setForeground(o_searchResults.get(p_row).isActive() ? black : gray);
+			return x_awtComponent;
 		}
 	}
 }

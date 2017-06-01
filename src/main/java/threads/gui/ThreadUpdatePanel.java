@@ -25,7 +25,7 @@ class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
 	private final JLabel o_topLabel = new JLabel("0 Updates");
 
 	ThreadUpdatePanel(Thread p_thread, JPanel p_parentPanel) {
-        super(new ThreadUpdateTableModel(p_thread), new BaseCellRenderer());
+        super(new ThreadUpdateTableModel(p_thread), new BaseCellRenderer<>());
         o_thread = p_thread;
 		o_parentPanel = p_parentPanel;
 		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));

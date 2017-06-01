@@ -1,16 +1,14 @@
 package threads.gui;
 
-import threads.data.Item;
+import threads.data.*;
 import threads.data.Thread;
-import threads.data.ThreadItem;
 import threads.util.GoogleSyncer;
-import threads.util.TimedUpdater;
 
 import javax.swing.*;
+import java.awt.Component;
 import java.awt.*;
 
-import static java.awt.BorderLayout.NORTH;
-import static java.awt.BorderLayout.SOUTH;
+import static java.awt.BorderLayout.*;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.JOptionPane.*;
@@ -18,8 +16,7 @@ import static threads.gui.Actions.*;
 import static threads.gui.GUIConstants.*;
 import static threads.gui.ItemDateSuggestionPanel.getDateSuggestion;
 import static threads.gui.WidgetFactory.createLabel;
-import static threads.util.ImageUtil.getPlusIcon;
-import static threads.util.ImageUtil.getThreadsIcon;
+import static threads.util.ImageUtil.*;
 
 class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 {
@@ -29,7 +26,7 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 	private final JLabel o_topLabel = new JLabel("0 Items");
 
 	ThreadContentsPanel(final Thread p_thread, JPanel p_parentPanel) {
-        super(new ThreadContentsTableModel(p_thread), new ContentsCellRenderer(p_thread));
+        super(new ThreadContentsTableModel(p_thread), new ThreadContentsCellRenderer());
         o_thread = p_thread;
 		o_parentPanel = p_parentPanel;
 		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));

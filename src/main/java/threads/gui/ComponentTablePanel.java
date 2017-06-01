@@ -1,19 +1,14 @@
 package threads.gui;
 
 import threads.data.Component;
-import threads.data.ComponentType;
-import threads.data.HasDueDate;
-import threads.util.GoogleSyncListener;
-import threads.util.TimedUpdateListener;
+import threads.data.*;
+import threads.util.*;
 
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Date;
+import java.awt.event.*;
+import java.util.*;
 import java.util.List;
 
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
@@ -24,8 +19,10 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 	final JTable o_table;
 	private final List<TableSelectionListener<TYPE>> o_listeners = new ArrayList<>();
 
-	ComponentTablePanel(ComponentTableModel<COMPONENT, TYPE> p_tableModel, TableCellRenderer p_cellRenderer) {
+	ComponentTablePanel(ComponentTableModel<COMPONENT, TYPE> p_tableModel, BaseCellRenderer<COMPONENT, TYPE> p_cellRenderer) {
         super(new BorderLayout());
+		p_cellRenderer.setTableModel(p_tableModel);
+
 		o_tableModel = p_tableModel;
 		o_listeners.add(this);
 		o_table = new JTable(p_tableModel);

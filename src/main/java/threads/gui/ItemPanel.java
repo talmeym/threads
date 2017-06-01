@@ -1,23 +1,19 @@
 package threads.gui;
 
-import threads.data.HasDueDate;
-import threads.data.Item;
-import threads.data.Reminder;
+import threads.data.*;
 import threads.util.GoogleSyncer;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
 import java.awt.*;
-import java.util.Calendar;
+import java.awt.Component;
+import java.util.*;
 import java.util.List;
 
 import static java.awt.BorderLayout.*;
-import static java.util.Calendar.MONTH;
-import static java.util.Calendar.YEAR;
+import static java.util.Calendar.*;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static threads.gui.Actions.linkToGoogle;
-import static threads.gui.GUIConstants.s_creationDateColumnWidth;
-import static threads.gui.GUIConstants.s_dateStatusColumnWidth;
+import static threads.gui.GUIConstants.*;
 import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.GoogleUtil.isLinked;
 import static threads.util.ImageUtil.*;
@@ -28,7 +24,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 	private final JLabel o_linkItemLabel;
 
 	ItemPanel(Item p_item, JPanel p_parentPanel, JFrame p_frame) {
-        super(new ItemReminderTableModel(p_item),  new ContentsCellRenderer(p_item));
+        super(new ItemReminderTableModel(p_item),  new ItemReminderCellRenderer());
         o_item = p_item;
 
 		JLabel o_calendarLabel = createLabel(getCalendarIcon(), "Show in Calendar", o_item, i -> i.getDueDate() != null, e -> {

@@ -1,16 +1,14 @@
 package threads.gui;
 
-import threads.data.Reminder;
+import threads.data.*;
 import threads.data.Thread;
-import threads.util.GoogleSyncer;
-import threads.util.SettingChangeListener;
-import threads.util.TimedUpdater;
+import threads.util.*;
 
 import javax.swing.*;
+import java.awt.Component;
 import java.awt.*;
 
-import static java.awt.BorderLayout.NORTH;
-import static java.awt.BorderLayout.SOUTH;
+import static java.awt.BorderLayout.*;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static threads.data.ComponentType.Reminder;
@@ -25,11 +23,11 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 	private final JLabel o_topLabel = new JLabel("0 Reminders");
 
 	ThreadReminderPanel(Thread p_thread, JPanel p_parentPanel) {
-        super(new ThreadReminderTableModel(p_thread), new ThreadReminderCellRenderer(p_thread));
+        super(new ThreadReminderTableModel(p_thread), new ThreadReminderCellRenderer());
 		p_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
 
 		fixColumnWidth(0, s_threadColumnWidth);
-        fixColumnWidth(2, s_creationDateColumnWidth);
+        fixColumnWidth(2, s_dateStatusColumnWidth);
         fixColumnWidth(3, s_dateStatusColumnWidth);
         fixColumnWidth(4, s_googleStatusColumnWidth);
 
@@ -41,7 +39,6 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 		boolean x_onlyDue = registerForSetting(s_ONLYDUE, this, true);
 		ThreadReminderTableModel x_tableModel = (ThreadReminderTableModel) o_table.getModel();
 		x_tableModel.setOnlyDueReminders(x_onlyDue);
-		((ThreadReminderCellRenderer)o_table.getCellRenderer(0, 0)).setOnlyDueReminders(x_onlyDue);
 
 		o_showDueRadioButton = new JRadioButton("Due", x_tableModel.onlyDueReminders());
 		o_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyDueReminders());
@@ -100,7 +97,6 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 	public void settingChanged(String p_name, Object p_value) {
 		boolean x_onlyDue = (Boolean) p_value;
 		((ThreadReminderTableModel)o_table.getModel()).setOnlyDueReminders(x_onlyDue);
-		((ThreadReminderCellRenderer)o_table.getCellRenderer(0, 0)).setOnlyDueReminders(x_onlyDue);
 		o_showDueRadioButton.setSelected(x_onlyDue);
 		o_showAllRadioButton.setSelected(!x_onlyDue);
 	}

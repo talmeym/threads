@@ -17,7 +17,7 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
 
 	ThreadActionTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Thread", "Action", "Due Date", "Due", ""});
-		TimedUpdater.getInstance().addActivityListener(this::reloadData);
+		TimedUpdater.getInstance().addActivityListener(this::fireTableDataChanged);
 	}
 
     @Override

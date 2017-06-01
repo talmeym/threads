@@ -1,23 +1,20 @@
 package threads.gui;
 
-import threads.data.HasDueDate;
-import threads.data.Reminder;
+import threads.data.*;
+import threads.data.Thread;
 
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+import java.awt.Component;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
-import static java.awt.Color.black;
-import static java.awt.Color.white;
+import static java.awt.Color.*;
 import static java.util.Calendar.*;
 import static threads.gui.ColourConstants.*;
 import static threads.util.DateUtil.*;
 import static threads.util.ImageUtil.getSmallIconForType;
 
-class ThreadCalendarCellRenderer implements TableCellRenderer {
+class ThreadCalendarCellRenderer extends BaseCellRenderer<Thread, Date> {
 
 	private int o_year;
 	private int o_month;
