@@ -135,7 +135,7 @@ public class Actions {
 				Item x_update = new Item(x_text, null);
 				x_thread.addThreadItem(x_update);
 
-				if (getActiveUpdates(x_thread).size() == 2 && showConfirmDialog(p_enclosingPanel, "Set previous updates Inactive ?", "Supersede Previous Updates ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
+				if (getActiveUpdates(x_thread).size() == 2 && showConfirmDialog(p_enclosingPanel, "Set previous updates inactive ?", "Supersede Previous Updates ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 					x_thread.getThreadItems().stream()
 							.filter(ti -> ti instanceof Item)
 							.map(ti -> (Item) ti)
@@ -212,12 +212,12 @@ public class Actions {
 			GoogleAccount x_googleAccount;
 
 			if(x_googleAccounts.size() == 0) {
-				showMessageDialog(p_enclosingPanel, "No Google Calendars Found", "No Can Do", INFORMATION_MESSAGE);
+				showMessageDialog(p_enclosingPanel, "No Google accounts found.", "No Can Do", INFORMATION_MESSAGE, getGoogleIcon());
 				return;
 			} else if(x_googleAccounts.size() == 1) {
 				x_googleAccount = x_googleAccounts.get(0);
 			} else {
-				x_googleAccount = (GoogleAccount) showInputDialog(p_enclosingPanel, "Choose a Google Account:", "Link to Google Calendar ?", INFORMATION_MESSAGE, getThreadsIcon(), x_googleAccounts.toArray(new Object[x_googleAccounts.size()]), x_googleAccounts.get(0));
+				x_googleAccount = (GoogleAccount) showInputDialog(p_enclosingPanel, "Choose a Google Account:", "Link to Google Calendar ?", INFORMATION_MESSAGE, getGoogleIcon(), x_googleAccounts.toArray(new Object[x_googleAccounts.size()]), x_googleAccounts.get(0));
 			}
 
 			if(x_googleAccount != null) {
@@ -229,12 +229,12 @@ public class Actions {
 					GoogleLinkTask x_task = new GoogleLinkTask(x_googleAccount, x_unlinkedHasDueDates, new GoogleProgressWindow(p_enclosingPanel), new ProgressAdapter() {
 						@Override
 						public void success() {
-							showMessageDialog(p_enclosingPanel, x_successMessage, "Link notification", WARNING_MESSAGE, getGoogleIcon());
+							showMessageDialog(p_enclosingPanel, x_successMessage, "All Good", WARNING_MESSAGE, getGoogleIcon());
 						}
 
 						@Override
 						public void error(String errorDesc) {
-							showMessageDialog(p_enclosingPanel, errorDesc, "Error linking to Google Calendar ...", ERROR_MESSAGE);
+							showMessageDialog(p_enclosingPanel, "Error linking to Google Calendar: " + errorDesc, "No Can Do", ERROR_MESSAGE, getGoogleIcon());
 						}
 					});
 
@@ -242,13 +242,13 @@ public class Actions {
 				}
 			}
 		} else {
-			showMessageDialog(p_enclosingPanel, "All Items already linked", "All Good", INFORMATION_MESSAGE);
+			showMessageDialog(p_enclosingPanel, "All Items already linked.", "All Good", INFORMATION_MESSAGE, getGoogleIcon());
 		}
 	}
 
 	private static boolean checkGoogle(JPanel p_enclosingPanel) {
 		if(!registerForSetting(s_GOOGLE, (p_name, p_value) -> { }, false)) {
-			showMessageDialog(p_enclosingPanel, "Google is disabled", "No Google", INFORMATION_MESSAGE);
+			showMessageDialog(p_enclosingPanel, "Google is disabled.", "No Can Do", INFORMATION_MESSAGE, getGoogleIcon());
 			return true;
 		}
 
@@ -272,7 +272,7 @@ public class Actions {
 			if (x_threads.size() > 0) {
 				x_thread = (Thread) showInputDialog(o_enclosingPanel, "Choose a Thread to move it to:", "Move '" + p_threadItem + "' ?", INFORMATION_MESSAGE, getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0));
 			} else {
-				showMessageDialog(o_enclosingPanel, "This is no other Thread to move this " + p_threadItem.getType() + " to. Try creating another Thread.", "Nowhere to go", INFORMATION_MESSAGE, getThreadsIcon());
+				showMessageDialog(o_enclosingPanel, "This is no other Thread to move this " + p_threadItem.getType() + " to. Try creating another Thread.", "No Can Do", INFORMATION_MESSAGE, getThreadsIcon());
 			}
 
 			if (x_thread != null) {
@@ -284,7 +284,7 @@ public class Actions {
 
 	static void activateComponent(Component p_component, JPanel p_enclosingPanel) {
 		if (p_component != null) {
-			if (showConfirmDialog(p_enclosingPanel, "Set '" + p_component.getText() + "' Active ?", "Set Active ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
+			if (showConfirmDialog(p_enclosingPanel, "Set '" + p_component.getText() + "' active ?", "Set active ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 				p_component.setActive(true);
 			}
 		}
@@ -292,7 +292,7 @@ public class Actions {
 
 	static void deactivateComponent(Component p_component, JPanel p_enclosingPanel) {
 		if (p_component != null) {
-			if (showConfirmDialog(p_enclosingPanel, "Set '" + p_component.getText() + "' Inactive ?", "Set Inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
+			if (showConfirmDialog(p_enclosingPanel, "Set '" + p_component.getText() + "' inactive ?", "Set inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 				p_component.setActive(false);
 			}
 		}
@@ -317,7 +317,7 @@ public class Actions {
 					}
 				}
 			} else {
-				showMessageDialog(p_enclosingPanel, "The root Thread cannot be Removed", "No can do", WARNING_MESSAGE, getThreadsIcon());
+				showMessageDialog(p_enclosingPanel, "The top Thread cannot be removed.", "No can do", WARNING_MESSAGE, getThreadsIcon());
 			}
 		}
 	}

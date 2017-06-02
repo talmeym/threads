@@ -202,7 +202,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 				Date x_dueDate = x_item.getDueDate();
 
 				if ((isAllDay(x_dueDate) && x_dueDate.before(getFirstThing(0))) || (!isAllDay(x_dueDate) && x_dueDate.before(new Date()))) {
-					if (showConfirmDialog(o_parentPanel, "Your action is in the past. Set it Inactive ?", "Set Inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+					if (showConfirmDialog(o_parentPanel, "Your action is in the past. Set it inactive ?", "Set inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
 						x_item.setActive(false);
 					}
 				}
@@ -227,7 +227,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			x_menu.add(x_makeInactiveItem);
 
 			x_makeInactiveItem.addActionListener(e -> {
-				if (showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " Inactive ?", "Set Inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+				if (showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " inactive ?", "Set inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
 					x_components.forEach(c -> c.setActive(false));
 				}
 			});

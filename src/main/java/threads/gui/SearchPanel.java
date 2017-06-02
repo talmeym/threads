@@ -12,7 +12,6 @@ import java.util.List;
 
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.NORTH;
-import static java.awt.BorderLayout.SOUTH;
 import static java.awt.Color.black;
 import static java.awt.Color.gray;
 import static javax.swing.BorderFactory.createEmptyBorder;
@@ -75,7 +74,7 @@ class SearchPanel extends JPanel {
 		if(x_results.size() > 0) {
 			new SearchResults(o_topLevelThread, x_builder.build(), x_text, x_results);
 		} else {
-			showMessageDialog(this, "'" + x_text + "' Not Found", "No Results Found", INFORMATION_MESSAGE, getThreadsIcon());
+			showMessageDialog(this, "'" + x_text + "' not found.", "No Can Do", INFORMATION_MESSAGE, getThreadsIcon());
 		}
 
 		setText("");

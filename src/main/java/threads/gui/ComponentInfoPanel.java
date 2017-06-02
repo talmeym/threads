@@ -119,7 +119,7 @@ class ComponentInfoPanel extends JPanel {
 				if(o_component.getParentComponent() != null) {
 					WindowManager.getInstance().openComponent(p_component.getHierarchy().get(0));
 				} else {
-					showMessageDialog(p_parentPanel, "You are already at the top Thread", "No can do", WARNING_MESSAGE, getThreadsIcon());
+					showMessageDialog(p_parentPanel, "You are already at the top Thread.", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});
@@ -130,7 +130,7 @@ class ComponentInfoPanel extends JPanel {
 				if(o_component.getParentComponent() != null) {
 					WindowManager.getInstance().openComponent(o_component.getParentComponent());
 				} else {
-					showMessageDialog(p_parentPanel, "You are already at the top Thread", "No can do", WARNING_MESSAGE, getThreadsIcon());
+					showMessageDialog(p_parentPanel, "You are already at the top Thread.", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});
@@ -141,13 +141,13 @@ class ComponentInfoPanel extends JPanel {
 				if (o_component.getParentComponent() != null) {
 					boolean x_active = !o_component.isActive();
 
-					if(showConfirmDialog(p_parentPanel, "Set '" + o_component.getText() + "' " + (x_active ? "Active" : "Inactive") + " ?", "Set " + (x_active ? "Active" : "Inactive") + " ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
+					if(showConfirmDialog(p_parentPanel, "Set '" + o_component.getText() + "' " + (x_active ? "active" : "inactive") + " ?", "Set " + (x_active ? "active" : "inactive") + " ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 						o_component.setActive(x_active);
 						o_activeLabel.setEnabled(o_component.isActive());
 						o_textField.setForeground(o_component.isActive() ? black : gray);
 					}
 				} else {
-					showMessageDialog(p_parentPanel, "The top Thread cannot be made Inactive", "No can do", WARNING_MESSAGE, getThreadsIcon());
+					showMessageDialog(p_parentPanel, "The top Thread cannot be made inactive.", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});
@@ -158,7 +158,7 @@ class ComponentInfoPanel extends JPanel {
 				if(o_component.getParentComponent() != null) {
 					moveThreadItem((ThreadItem) o_component, p_parentPanel);
 				} else {
-					showMessageDialog(p_parentPanel, "The top Thread cannot be Moved", "No can do", WARNING_MESSAGE, getThreadsIcon());
+					showMessageDialog(p_parentPanel, "The top Thread cannot be moved.", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});
@@ -169,7 +169,7 @@ class ComponentInfoPanel extends JPanel {
 				if(o_component.getParentComponent() != null) {
 					removeComponent(o_component, p_parentPanel, true);
 				} else {
-					showMessageDialog(p_parentPanel, "The top Thread cannot be Removed", "No can do", WARNING_MESSAGE, getThreadsIcon());
+					showMessageDialog(p_parentPanel, "The top Thread cannot be removed.", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});
@@ -198,7 +198,7 @@ class ComponentInfoPanel extends JPanel {
 						WindowManager.getInstance().openComponent(x_newComponent);
 					}
 				} else {
-					showMessageDialog(p_parentPanel, "The top Thread cannot be Duplicated", "No can do", WARNING_MESSAGE, getThreadsIcon());
+					showMessageDialog(p_parentPanel, "The top Thread cannot be duplicated.", "No can do", WARNING_MESSAGE, getThreadsIcon());
 				}
 			}
 		});

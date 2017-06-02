@@ -43,11 +43,11 @@ public class SystemTrayUtil {
 			o_popUpMenu.add(x_addGoogleAccount);
 
 			x_addGoogleAccount.addActionListener(e -> {
-				String x_name = (String) showInputDialog(null, "Name the new Account:", "Add Google Account ?", INFORMATION_MESSAGE, getThreadsIcon(), null, "Home");
+				String x_name = (String) showInputDialog(null, "Name the new account:", "Add Google Account ?", INFORMATION_MESSAGE, getThreadsIcon(), null, "Home");
 
 				if(x_name != null) {
 					boolean x_added = addNewGoogleAccount(x_name);
-					displayNotification("Google Account '" + x_name + "'", (x_added ? "Successfully" : "Unsuccessfully") + " added.");
+					displayNotification("Google Account '" + x_name + "'", (x_added ? "successfully" : "unsuccessfully") + " added.");
 				}
 			});
 
@@ -81,7 +81,7 @@ public class SystemTrayUtil {
 							}
 						});
 
-						if(o_popUpMenu.getItemCount() == 2) {
+						if(o_popUpMenu.getItemCount() == 3) {
 							o_popUpMenu.addSeparator();
 						}
 
