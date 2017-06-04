@@ -103,10 +103,10 @@ public class GoogleUtil {
 
 	static void syncWithGoogle() {
 		List<UUID> x_syncedComponents = new ArrayList<>();
-		int[] x_stats = new int[4]; // comp updated 0, event updated 1, comp created 2, event deleted 3
 
 		try {
 			for (GoogleAccount x_googleAccount: s_googleAccounts) {
+				int[] x_stats = new int[4]; // comp updated 0, event updated 1, comp created 2, event deleted 3
 				Calendar x_client = x_googleAccount.getCalendarClient();
 				String x_calendarId = findCalendar(x_client);
 				List<Event> x_events = getEvents(x_client, x_calendarId);
