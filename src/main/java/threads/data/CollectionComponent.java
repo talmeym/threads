@@ -18,14 +18,6 @@ abstract class CollectionComponent <CONTENTS extends Component> extends Componen
 			p_components.forEach(this::addComponent);
         }
     }
-    
-    int getComponentCount() {
-        return o_components.size();
-    }
-    
-    protected CONTENTS getComponent(int p_index) {
-		return o_components.get(p_index);
-    }
 
     List<CONTENTS> getComponents() {
     	// defensive copy

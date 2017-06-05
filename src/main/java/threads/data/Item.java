@@ -28,14 +28,6 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 		p_item.getReminders().forEach(x_reminder -> addReminder(new Reminder(x_reminder, false)));
 	}
 
-	public int getReminderCount() {
-		return getComponentCount();
-	}
-
-	public Reminder getReminder(int p_index) {
-		return getComponent(p_index);
-	}
-
 	public List<Reminder> getReminders() {
 		return new ArrayList<>(getComponents());
 	}

@@ -19,7 +19,7 @@ class ItemReminderTableModel extends ComponentTableModel<Item, Reminder> {
 
 	@Override
     public Object getValueAt(int row, int col) {
-		Reminder x_reminder = getComponent().getReminder(row);
+		Reminder x_reminder = getDataItem(row, col);
         
         switch(col) {
 			case 0: return x_reminder.getText();

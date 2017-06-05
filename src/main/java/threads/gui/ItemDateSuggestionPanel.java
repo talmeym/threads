@@ -139,7 +139,7 @@ public class ItemDateSuggestionPanel extends DateSuggestionPanel<Item> implement
 				Date x_currentDate = o_hasDueDate.getDueDate();
 				o_hasDueDate.setDueDate(x_dueDate);
 
-				if((o_hasDueDate.getReminderCount() > 0) && (showConfirmDialog(o_parentPanel, "This action has reminders.\nDo you want to keep their relative positions ?", "Keep Reminders Relative ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION)) {
+				if((o_hasDueDate.getReminders().size() > 0) && (showConfirmDialog(o_parentPanel, "This action has reminders.\nDo you want to keep their relative positions ?", "Keep Reminders Relative ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION)) {
 					for(Reminder x_reminder: o_hasDueDate.getReminders()) {
 						x_reminder.setDueDate(new Date(x_dueDate.getTime() + (x_reminder.getDueDate().getTime() - x_currentDate.getTime())));
 					}

@@ -11,7 +11,7 @@ import java.util.List;
 import static threads.data.ComponentType.*;
 import static threads.data.ComponentType.Thread;
 
-public class TypeAwareTextComparator<TYPE extends Component> implements Comparator<TYPE> {
+public class TypeAwareTextAndDateComparator<TYPE extends Component> implements Comparator<TYPE> {
     public int compare(TYPE obj1, TYPE obj2) {
 		ComponentType x_type1 = obj1.getType();
 		ComponentType x_type2 = obj2.getType();

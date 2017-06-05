@@ -40,7 +40,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 
 		o_item.addComponentChangeListener(e -> {
 			if (e.getSource() == o_item && e.isContentRemoved()) {
-				o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
+				o_cardLayout.show(o_cardPanel, o_item.getReminders().size() > 0 ? s_noneSelected : s_none);
 			}
 		});
 
@@ -63,7 +63,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 
 	    o_cardPanel.add(x_nonePanel, s_none);
 	    o_cardPanel.add(x_noneSelectedPanel, s_noneSelected);
-		o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
+		o_cardLayout.show(o_cardPanel, o_item.getReminders().size() > 0 ? s_noneSelected : s_none);
 
 		JLabel o_addReminderLabel = createLabel(getPlusIcon(), "Add Reminder", o_item, i -> i.getDueDate() != null, e -> addReminder(o_item, p_parentPanel, true));
 
@@ -96,7 +96,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 		if(p_reminder != null) {
 			showReminder(p_reminder);
 		} else {
-			o_cardLayout.show(o_cardPanel, o_item.getReminderCount() > 0 ? s_noneSelected : s_none);
+			o_cardLayout.show(o_cardPanel, o_item.getReminders().size() > 0 ? s_noneSelected : s_none);
 		}
 	}
 

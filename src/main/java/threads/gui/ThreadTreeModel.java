@@ -51,7 +51,7 @@ class ThreadTreeModel implements TreeModel, ComponentChangeListener {
 
     public Object getChild(Object p_parent, int p_index) {
         if(p_parent instanceof Thread) {
-            return ((Thread)p_parent).getThreadItem(p_index);
+            return ((Thread)p_parent).getThreadItems().get(p_index);
         }
         
         return null;
