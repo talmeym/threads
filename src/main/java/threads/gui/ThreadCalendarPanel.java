@@ -4,7 +4,7 @@ import threads.data.Component;
 import threads.data.HasDueDate;
 import threads.data.Item;
 import threads.data.Thread;
-import threads.util.SettingChangeListener;
+import threads.util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +30,7 @@ import static threads.gui.ThreadCalendarCellRenderer.MyListCellRenderer.buildToo
 import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.DateUtil.getFirstThing;
 import static threads.util.DateUtil.isAllDay;
+import static threads.util.FontUtil.makeStrikeThrough;
 import static threads.util.GoogleUtil.isLinked;
 import static threads.util.ImageUtil.*;
 import static threads.util.Settings.*;
@@ -233,13 +234,6 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		}
 
 		return x_menu;
-	}
-
-	@SuppressWarnings("unchecked")
-	private Font makeStrikeThrough(Font x_font) {
-		Map attributes = x_font.getAttributes();
-		attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
-		return new Font(attributes);
 	}
 
 	@Override

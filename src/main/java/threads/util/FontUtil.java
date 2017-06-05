@@ -1,6 +1,8 @@
 package threads.util;
 
 import java.awt.*;
+import java.awt.font.TextAttribute;
+import java.util.Map;
 
 import static javax.swing.UIManager.get;
 import static javax.swing.UIManager.put;
@@ -33,5 +35,12 @@ public class FontUtil {
 		put("TitledBorder.font", x_font);
 		put("ToolTip.font", x_font);
 		put("Tree.font", x_font);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static Font makeStrikeThrough(Font x_font) {
+		Map attributes = x_font.getAttributes();
+		attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+		return new Font(attributes);
 	}
 }

@@ -10,6 +10,7 @@ import java.util.*;
 
 import static java.awt.Color.*;
 import static java.util.Calendar.*;
+import static javax.swing.BorderFactory.createEmptyBorder;
 import static threads.gui.ColourConstants.*;
 import static threads.util.DateUtil.*;
 import static threads.util.ImageUtil.getSmallIconForType;
@@ -37,7 +38,7 @@ class ThreadCalendarCellRenderer extends BaseCellRenderer<Thread, Date> {
 
 		final JList<Object> x_list = new JList<>(x_listValues);
 		x_list.setCellRenderer(new MyListCellRenderer());
-		x_list.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		x_list.setBorder(createEmptyBorder(5, 5, 5, 5));
         x_list.setBackground(column > 4 ? s_weekendColour : white);
 
 		if(!(x_calendar.get(YEAR) == o_year && x_calendar.get(MONTH) == o_month)) {
@@ -69,7 +70,7 @@ class ThreadCalendarCellRenderer extends BaseCellRenderer<Thread, Date> {
 				setEnabled(x_component.isActive());
 			}
 
-			setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
+			setBorder(createEmptyBorder(0, 0, 2, 0));
 			return this;
 		}
 
@@ -103,13 +104,16 @@ class ThreadCalendarCellRenderer extends BaseCellRenderer<Thread, Date> {
 	}
 
 	private static boolean anyDueItems(JList p_list) {
-		for(int i = 0; i < p_list.getModel().getSize(); i++) {
-			Object x_obj = p_list.getModel().getElementAt(i);
+		ListModel x_model = p_list.getModel();
+
+		for(int i = 0; i < x_model.getSize(); i++) {
+			Object x_obj = x_model.getElementAt(i);
 
 			if(x_obj instanceof HasDueDate && ((HasDueDate)x_obj).isDue()) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
