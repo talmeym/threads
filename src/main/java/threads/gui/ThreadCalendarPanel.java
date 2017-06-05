@@ -46,7 +46,6 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 	private final JCheckBox o_allCheckBox = new JCheckBox("All");
 	private final JLabel o_topLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(YEAR), Calendar.getInstance().get(MONTH)));
 
-
 	ThreadCalendarPanel(Thread p_thread, JPanel p_parentPanel) {
 		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
 		o_thread = p_thread;

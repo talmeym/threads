@@ -1,6 +1,5 @@
 package threads.util;
 
-import com.apple.eawt.Application;
 import threads.data.ComponentType;
 
 import javax.swing.*;
@@ -15,12 +14,6 @@ import static threads.data.ComponentType.Thread;
 
 public class ImageUtil {
 	private static Map<String, Image> p_imageCache = new HashMap<>();
-
-	public static void addIcon(Window p_window) {
-		Image image = getThreadsImage();
-		p_window.setIconImage(image);
-		Application.getApplication().setDockIconImage(image);
-	}
 
 	private static Image getImage(String p_filename) {
 		if(p_imageCache.containsKey(p_filename)) {
@@ -39,10 +32,10 @@ public class ImageUtil {
 			// do nothing
 		}
 
-		throw new RuntimeException("Cannot load image");
+		throw new RuntimeException("Cannot load image: " + p_filename);
 	}
 
-	static Image getThreadsImage() {
+	public static Image getThreadsImage() {
 		return getImage("/threads418x364.gif");
 	}
 
