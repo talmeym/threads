@@ -130,23 +130,26 @@ public class ItemDateSuggestionPanel extends DateSuggestionPanel<Item> implement
 
 	@Override
 	void set() {
+		boolean x_dueDateSet = o_hasDueDate.getDueDate() != null;
 		String x_text = o_dueDateField.getText();
 
 		if(!StringUtils.isEmpty(x_text)) {
-			Date x_dueDate = parseDate(x_text);
+			if(x_dueDateSet || showConfirmDialog(o_parentPanel, "Setting Due Date will convert this Update into an Action. Continue ?", "Convert to Action ?", OK_CANCEL_OPTION, INFORMATION_MESSAGE, getThreadsIcon()) == OK_OPTION) {
+				Date x_dueDate = parseDate(x_text);
 
-			if(x_dueDate != null && !x_dueDate.equals(o_hasDueDate.getDueDate())) {
-				Date x_currentDate = o_hasDueDate.getDueDate();
-				o_hasDueDate.setDueDate(x_dueDate);
+				if(x_dueDate != null && !x_dueDate.equals(o_hasDueDate.getDueDate())) {
+					Date x_currentDate = o_hasDueDate.getDueDate();
+					o_hasDueDate.setDueDate(x_dueDate);
 
-				if((o_hasDueDate.getReminderCount() > 0) && (showConfirmDialog(o_parentPanel, "This action has reminders.\nDo you want to keep their relative positions ?", "Keep Reminders Relative ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION)) {
-					for(Reminder x_reminder: o_hasDueDate.getReminders()) {
-						x_reminder.setDueDate(new Date(x_dueDate.getTime() + (x_reminder.getDueDate().getTime() - x_currentDate.getTime())));
+					if((o_hasDueDate.getReminderCount() > 0) && (showConfirmDialog(o_parentPanel, "This action has reminders.\nDo you want to keep their relative positions ?", "Keep Reminders Relative ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getThreadsIcon()) == OK_OPTION)) {
+						for(Reminder x_reminder: o_hasDueDate.getReminders()) {
+							x_reminder.setDueDate(new Date(x_dueDate.getTime() + (x_reminder.getDueDate().getTime() - x_currentDate.getTime())));
+						}
 					}
 				}
 			}
 		} else {
-			if(showConfirmDialog(o_parentPanel, "Removing Due Date will convert this Action into an Update. Any Reminders will be automatically removed. Continue ?", "Convert to Update ?", OK_CANCEL_OPTION, INFORMATION_MESSAGE, getThreadsIcon()) == 0) {
+			if(!x_dueDateSet || showConfirmDialog(o_parentPanel, "Removing Due Date will convert this Action into an Update. Any Reminders will be automatically removed. Continue ?", "Convert to Update ?", OK_CANCEL_OPTION, INFORMATION_MESSAGE, getThreadsIcon()) == OK_OPTION) {
 				o_hasDueDate.removeAllReminder();
 				o_hasDueDate.setDueDate(null);
 			}
