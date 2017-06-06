@@ -9,6 +9,7 @@ public class ComponentChangeEvent {
 		TEXT("Name"),
 		ACTIVE("Is Active"),
 		DUE_DATE("Due Date"),
+		NOTES("Notes"),
 		PARENT("NotUsed"),
 		CONTENT("NotUsed");
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static threads.data.ComponentChangeEvent.Field.DUE_DATE;
+import static threads.data.ComponentChangeEvent.Field.NOTES;
 import static threads.util.DateUtil.*;
 
 public class Item extends ThreadItem<Reminder> implements HasDueDate {
@@ -73,8 +74,13 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 		return o_notes;
 	}
 
-	public void setNotes(String o_notes) {
-		this.o_notes = o_notes;
+	public void setNotes(String p_notes) {
+		String x_oldValue = o_notes;
+
+		if(!same(x_oldValue, p_notes)) {
+			o_notes = p_notes;
+			changed(NOTES, x_oldValue, p_notes);
+		}
 	}
 
 	@Override

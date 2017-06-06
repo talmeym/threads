@@ -1,6 +1,6 @@
 package threads.gui;
 
-import threads.data.Item;
+import threads.data.*;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -18,14 +18,14 @@ import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.ImageUtil.getCrossIcon;
 import static threads.util.ImageUtil.getReturnIcon;
 
-class ItemNotesPanel extends JPanel {
-	ItemNotesPanel(Item p_item) {
+class HasDueDateNotesPanel extends JPanel {
+	HasDueDateNotesPanel(HasDueDate p_hasDueDate) {
 		super(new BorderLayout());
 
 		JLabel x_notesLabel = new JLabel("Notes");
 		x_notesLabel.setBorder(createEmptyBorder(0, 0, 0, 10));
 
-		JTextArea x_notesArea = new JTextArea(p_item.getNotes());
+		JTextArea x_notesArea = new JTextArea(p_hasDueDate.getNotes());
 
 		JLabel x_applyLabel = createLabel(getReturnIcon(), "Apply Change", false);
 		JLabel x_revertLabel = createLabel(getCrossIcon(), "Revert Change", false);
@@ -33,7 +33,7 @@ class ItemNotesPanel extends JPanel {
 		x_applyLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				p_item.setNotes(x_notesArea.getText());
+				p_hasDueDate.setNotes(x_notesArea.getText());
 				x_notesArea.setBackground(white);
 				x_applyLabel.setEnabled(false);
 				x_revertLabel.setEnabled(false);
@@ -43,23 +43,26 @@ class ItemNotesPanel extends JPanel {
 		x_revertLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				x_notesArea.setText(p_item.getNotes());
+				x_notesArea.setText(p_hasDueDate.getNotes());
 				x_notesArea.setBackground(white);
 				x_applyLabel.setEnabled(false);
 				x_revertLabel.setEnabled(false);
 			}
 		});
 
-		x_notesArea.getDocument().addDocumentListener(new DocumentListener() {
-			@Override public void insertUpdate(DocumentEvent p_de) {
+		DocumentListener x_listener = new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent p_de) {
 				edited();
 			}
 
-			@Override public void removeUpdate(DocumentEvent p_de) {
+			@Override
+			public void removeUpdate(DocumentEvent p_de) {
 				edited();
 			}
 
-			@Override public void changedUpdate(DocumentEvent p_de) {
+			@Override
+			public void changedUpdate(DocumentEvent p_de) {
 				edited();
 			}
 
@@ -67,6 +70,16 @@ class ItemNotesPanel extends JPanel {
 				x_notesArea.setBackground(s_editedColour);
 				x_applyLabel.setEnabled(true);
 				x_revertLabel.setEnabled(true);
+			}
+		};
+		x_notesArea.getDocument().addDocumentListener(x_listener);
+
+		p_hasDueDate.addComponentChangeListener(e -> {
+			if(e.getSource() == p_hasDueDate) {
+				x_notesArea.getDocument().removeDocumentListener(x_listener);
+				x_notesArea.setText(p_hasDueDate.getNotes());
+				x_notesArea.getDocument().addDocumentListener(x_listener);
+				x_notesArea.setBackground(white);
 			}
 		});
 

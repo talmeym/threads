@@ -72,14 +72,6 @@ public class Saver {
         Element x_itemElem = new Element(s_ITEM);
         addComponentData(x_itemElem, p_item);
 
-		if(p_item.getDueDate() != null) {
-			addContent(x_itemElem, s_DUE, addDateTime(p_item.getDueDate()));
-
-			for(Reminder x_reminder: p_item.getReminders()) {
-				x_itemElem.addContent(addReminder(x_reminder));
-			}
-		}
-
 		String x_notes = p_item.getNotes();
 
 		if(x_notes != null && x_notes.length() > 0) {
@@ -88,14 +80,32 @@ public class Saver {
 			addContent(x_notesElem, s_PRE, x_notes);
 		}
 
+		if(p_item.getDueDate() != null) {
+			addContent(x_itemElem, s_DUE_DATE, addDateTime(p_item.getDueDate()));
+
+			for(Reminder x_reminder: p_item.getReminders()) {
+				x_itemElem.addContent(addReminder(x_reminder));
+			}
+		}
+
+
 		addDocFolder(x_itemElem, p_item);
 		return x_itemElem;
     }
     
     private static Element addReminder(Reminder p_reminder) {
         Element x_reminderElem = new Element(s_REMINDER);
-        addComponentData(x_reminderElem, p_reminder);        
-        addContent(x_reminderElem, s_REM_DATE, addDateTime(p_reminder.getDueDate()));
+        addComponentData(x_reminderElem, p_reminder);
+
+		String x_notes = p_reminder.getNotes();
+
+		if(x_notes != null && x_notes.length() > 0) {
+			Element x_notesElem = new Element(s_NOTES);
+			x_reminderElem.addContent(x_notesElem);
+			addContent(x_notesElem, s_PRE, x_notes);
+		}
+
+		addContent(x_reminderElem, s_DUE_DATE, addDateTime(p_reminder.getDueDate()));
 		addDocFolder(x_reminderElem, p_reminder);
 		return x_reminderElem;
     }
