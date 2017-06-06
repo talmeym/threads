@@ -15,5 +15,5 @@ public interface HasDueDate {
 	void setNotes(String p_notes);
 	boolean isDue();
 	void addComponentChangeListener(ComponentChangeListener p_listener);
-
+	Date getModifiedDate();
 }

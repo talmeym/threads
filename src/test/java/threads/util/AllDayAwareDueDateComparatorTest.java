@@ -125,7 +125,12 @@ public class AllDayAwareDueDateComparatorTest {
 
 			@Override
 			public void addComponentChangeListener(ComponentChangeListener p_listener) {
+				throw new UnsupportedOperationException();
+			}
 
+			@Override
+			public Date getModifiedDate() {
+				throw new UnsupportedOperationException();
 			}
 		};
 	}

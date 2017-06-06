@@ -122,33 +122,25 @@ public class GoogleUtil {
 					if (x_threadsId != null && !x_threadsId.trim().isEmpty()) {
 						Search x_search = new Search.Builder().withId(fromString(x_threadsId)).build();
 						List<Component> x_results = s_topLevelThread.search(x_search);
-						Component x_component = x_results.size() > 0 ? x_results.get(0) : null;
+						HasDueDate x_hasDueDate = (HasDueDate) (x_results.size() > 0 ? x_results.get(0) : null);
 
-						if (x_component != null) {
-							x_syncedComponents.add(x_component.getId());
+						if (x_hasDueDate != null) {
+							x_syncedComponents.add(x_hasDueDate.getId());
 
-							Date x_componentModified = x_component.getModifiedDate();
+							Date x_componentModified = x_hasDueDate.getModifiedDate();
 							Date x_eventModified = new Date(x_event.getUpdated().getValue());
 
 							if (x_eventModified.after(x_componentModified)) {
-								if (x_component instanceof HasDueDate) {
-									HasDueDate x_hasDueDate = (HasDueDate) x_component;
-
-									if (!(nullProofEqual(x_summary, x_hasDueDate.getText()) && nullProofEqual(x_description, x_hasDueDate.getNotes()) && nullProofEqual(x_start, x_hasDueDate.getDueDate()))) {
-										x_hasDueDate.setText(x_summary);
-										x_hasDueDate.setNotes(x_description);
-										x_hasDueDate.setDueDate(x_start);
-										x_stats[s_COMP_UPDATED] += 1;
-									}
+								if (!(nullProofEqual(x_summary, x_hasDueDate.getText()) && nullProofEqual(x_description, x_hasDueDate.getNotes()) && nullProofEqual(x_start, x_hasDueDate.getDueDate()))) {
+									x_hasDueDate.setText(x_summary);
+									x_hasDueDate.setNotes(x_description);
+									x_hasDueDate.setDueDate(x_start);
+									x_stats[s_COMP_UPDATED] += 1;
 								}
 							} else {
-								if (x_component instanceof HasDueDate) {
-									HasDueDate x_hasDueDate = (HasDueDate) x_component;
-
-									if (!(nullProofEqual(x_summary, x_hasDueDate.getText()) && nullProofEqual(x_description, x_hasDueDate.getNotes()) && nullProofEqual(x_start, x_hasDueDate.getDueDate()))) {
-										x_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getNotes(), x_hasDueDate.getDueDate())).execute();
-										x_stats[s_EVENT_UPDATED] += 1;
-									}
+								if (!(nullProofEqual(x_summary, x_hasDueDate.getText()) && nullProofEqual(x_description, x_hasDueDate.getNotes()) && nullProofEqual(x_start, x_hasDueDate.getDueDate()))) {
+									x_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getNotes(), x_hasDueDate.getDueDate())).execute();
+									x_stats[s_EVENT_UPDATED] += 1;
 								}
 							}
 						} else {
@@ -230,7 +222,7 @@ public class GoogleUtil {
 		p_event.setExtendedProperties(x_extendedProperties);
 	}
 
-	static void linkHasDueDatesToGoogle(GoogleAccount p_googleAccount, List<HasDueDate> p_hasDueDates, ProgressCallBack... p_callbacks) {
+	static void linkToGoogle(GoogleAccount p_googleAccount, List<HasDueDate> p_hasDueDates, ProgressCallBack... p_callbacks) {
 		callBack(p_callbacks, c -> c.started(p_hasDueDates.size()));
 
 		try {
@@ -337,14 +329,14 @@ public class GoogleUtil {
 		return x_events;
 	}
 
-	public static boolean isLinked(Component component) {
-		return googleAccount(component) != null;
+	public static boolean isLinked(Component p_component) {
+		return googleAccount(p_component) != null;
 	}
 
-	public static GoogleAccount googleAccount(Component component) {
+	public static GoogleAccount googleAccount(Component p_component) {
 		synchronized (s_linkedComponents) {
 			for(GoogleAccount x_googleAccount: s_linkedComponents.keySet()) {
-				if(s_linkedComponents.get(x_googleAccount).contains(component.getId())) {
+				if(s_linkedComponents.get(x_googleAccount).contains(p_component.getId())) {
 					return x_googleAccount;
 				}
 			}
