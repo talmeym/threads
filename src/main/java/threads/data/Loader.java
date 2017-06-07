@@ -108,7 +108,7 @@ public class Loader {
 		Date x_modifiedDate = loadModifiedDate(p_element);
         boolean x_active = loadActiveFlag(p_element);
         String x_text = loadText(p_element);
-		String x_dueDateStr = p_element.getChildText(s_DUE);
+		String x_dueDateStr = p_element.getChildText(s_DUE_DATE);
 		Date x_dueDate = null;
 		List<Reminder> x_reminderList = new ArrayList<>();
 
@@ -122,14 +122,7 @@ public class Loader {
 			}
 		}
 
-		Element x_notesElem = p_element.getChild(s_NOTES);
-		String x_notes = null;
-
-		if(x_notesElem != null) {
-			x_notes = x_notesElem.getChildText(s_PRE);
-		}
-
-		return new Item(id, x_creationDate, x_modifiedDate, x_active, x_text, x_dueDate, x_notes, x_reminderList, loadDocFolder(p_element));
+		return new Item(id, x_creationDate, x_modifiedDate, x_active, x_text, x_dueDate, loadNotes(p_element), x_reminderList, loadDocFolder(p_element));
     }
 
     private static Reminder loadReminder(Element p_element) {
@@ -138,9 +131,19 @@ public class Loader {
 		Date x_modifiedDate = loadModifiedDate(p_element);
         boolean x_active = loadActiveFlag(p_element);
         String x_text = loadText(p_element);
-        Date x_date = loadDateTime(p_element.getChildText(s_REM_DATE));
-		return new Reminder(id, x_creationDate, x_modifiedDate, x_active, x_text, x_date, loadDocFolder(p_element));
+        Date x_date = loadDateTime(p_element.getChildText(s_DUE_DATE));
+		return new Reminder(id, x_creationDate, x_modifiedDate, x_active, x_text, x_date, loadNotes(p_element), loadDocFolder(p_element));
     }
+
+	private static String loadNotes(Element p_element) {
+		Element x_notesElem = p_element.getChild(s_NOTES);
+		String x_notes = null;
+
+		if(x_notesElem != null) {
+			x_notes = x_notesElem.getChildText(s_PRE);
+		}
+		return x_notes;
+	}
 
 	private static UUID loadId(Element p_element) {
 		return UUID.fromString(p_element.getAttributeValue(s_ID));

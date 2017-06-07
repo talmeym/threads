@@ -12,6 +12,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.*;
 import com.google.api.services.calendar.model.*;
+import com.google.api.services.calendar.model.Event.ExtendedProperties;
 import threads.data.*;
 import threads.data.Thread;
 
@@ -34,6 +35,7 @@ public class GoogleUtil {
 	private static final String s_FROM_GOOGLE = "From Google";
 	private static final String s_NAME_TXT = "name.txt";
 	private static final String s_APP_NAME = "Threads";
+	private static final String s_THREADS_ID = "ThreadsID";
 
 	private static final int s_COMP_UPDATED = 0;
 	private static final int s_EVENT_UPDATED = 1;
@@ -114,61 +116,31 @@ public class GoogleUtil {
 				for (Event x_event : x_events) {
 					String x_summary = x_event.getSummary();
 					String x_description = x_event.getDescription();
+					Date x_start = getDate(x_event.getStart());
+					String x_threadsId = getThreadsId(x_event);
 
-					DateTime x_date = x_event.getStart().getDate();
-					DateTime x_dateTime = x_event.getStart().getDateTime();
-					Date x_start = new Date(x_date != null ? x_date.getValue() : x_dateTime.getValue());
-
-					if (x_date != null && x_date.isDateOnly()) {
-						x_start = makeStartOfDay(x_start);
-					}
-
-					if (x_description != null && !x_description.trim().isEmpty()) {
-						Search x_search = new Search.Builder().withId(fromString(x_description)).build();
+					if (x_threadsId != null && !x_threadsId.trim().isEmpty()) {
+						Search x_search = new Search.Builder().withId(fromString(x_threadsId)).build();
 						List<Component> x_results = s_topLevelThread.search(x_search);
-						Component x_component = x_results.size() > 0 ? x_results.get(0) : null;
+						HasDueDate x_hasDueDate = (HasDueDate) (x_results.size() > 0 ? x_results.get(0) : null);
 
-						if (x_component != null) {
-							x_syncedComponents.add(x_component.getId());
+						if (x_hasDueDate != null) {
+							x_syncedComponents.add(x_hasDueDate.getId());
 
-							Date x_componentModified = x_component.getModifiedDate();
+							Date x_componentModified = x_hasDueDate.getModifiedDate();
 							Date x_eventModified = new Date(x_event.getUpdated().getValue());
 
 							if (x_eventModified.after(x_componentModified)) {
-								if (x_component instanceof Item) {
-									Item x_item = (Item) x_component;
-
-									if (!(x_summary.equals(x_item.getText()) && x_start.equals(x_item.getDueDate()))) {
-										x_item.setText(x_summary);
-										x_item.setDueDate(x_start);
-										x_stats[s_COMP_UPDATED] += 1;
-									}
-								}
-								if (x_component instanceof Reminder) {
-									Reminder x_reminder = (Reminder) x_component;
-
-									if (!(x_summary.equals(x_reminder.getText()) && x_start.equals(x_reminder.getDueDate()))) {
-										x_reminder.setText(x_summary);
-										x_reminder.setDueDate(x_start);
-										x_stats[s_COMP_UPDATED] += 1;
-									}
+								if (!(nullProofEqual(x_summary, x_hasDueDate.getText()) && nullProofEqual(x_description, x_hasDueDate.getNotes()) && nullProofEqual(x_start, x_hasDueDate.getDueDate()))) {
+									x_hasDueDate.setText(x_summary);
+									x_hasDueDate.setNotes(x_description);
+									x_hasDueDate.setDueDate(x_start);
+									x_stats[s_COMP_UPDATED] += 1;
 								}
 							} else {
-								if (x_component instanceof Item) {
-									Item x_item = (Item) x_component;
-
-									if (!(x_summary.equals(x_item.getText()) && x_start.equals(x_item.getDueDate()))) {
-										x_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_item.getId(), x_item.getText(), x_item.getDueDate())).execute();
-										x_stats[s_EVENT_UPDATED] += 1;
-									}
-								}
-								if (x_component instanceof Reminder) {
-									Reminder x_reminder = (Reminder) x_component;
-
-									if (!(x_summary.equals(x_reminder.getText()) && x_start.equals(x_reminder.getDueDate()))) {
-										x_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_reminder.getId(), x_reminder.getText(), x_reminder.getDueDate())).execute();
-										x_stats[s_EVENT_UPDATED] += 1;
-									}
+								if (!(nullProofEqual(x_summary, x_hasDueDate.getText()) && nullProofEqual(x_description, x_hasDueDate.getNotes()) && nullProofEqual(x_start, x_hasDueDate.getDueDate()))) {
+									x_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getNotes(), x_hasDueDate.getDueDate())).execute();
+									x_stats[s_EVENT_UPDATED] += 1;
 								}
 							}
 						} else {
@@ -177,6 +149,7 @@ public class GoogleUtil {
 						}
 					} else {
 						Item x_item = new Item(x_summary, x_start);
+						x_item.setNotes(x_event.getDescription());
 						x_syncedComponents.add(x_item.getId());
 						Thread x_threadToAddTo = null;
 
@@ -194,7 +167,7 @@ public class GoogleUtil {
 
 						x_threadToAddTo.addThreadItem(x_item);
 
-						x_event.setDescription(x_item.getId().toString());
+						addThreadsIdToEvent(x_item.getId(), x_event);
 						x_client.events().patch(x_calendarId, x_event.getId(), x_event).execute();
 						x_stats[s_COMP_CREATED] += 1;
 					}
@@ -213,7 +186,43 @@ public class GoogleUtil {
 		}
 	}
 
-	static void linkHasDueDatesToGoogle(GoogleAccount p_googleAccount, List<HasDueDate> p_hasDueDates, ProgressCallBack... p_callbacks) {
+	private static String getThreadsId(Event x_event) {
+		String x_threadsId = null;
+
+		if(x_event.getExtendedProperties() != null && x_event.getExtendedProperties().getPrivate() != null) {
+			x_threadsId = x_event.getExtendedProperties().getPrivate().get(s_THREADS_ID);
+		}
+		return x_threadsId;
+	}
+
+	private static Date getDate(EventDateTime x_startEvent) {
+		DateTime x_date = x_startEvent.getDate();
+		DateTime x_dateTime = x_startEvent.getDateTime();
+		Date x_start = new Date(x_date != null ? x_date.getValue() : x_dateTime.getValue());
+
+		if (x_date != null && x_date.isDateOnly()) {
+			x_start = makeStartOfDay(x_start);
+		}
+		return x_start;
+	}
+
+	private static boolean nullProofEqual(Object p_obj1, Object p_obj2) {
+		if(p_obj1 != null && p_obj2 != null) {
+			return p_obj1.equals(p_obj2);
+		}
+
+		return p_obj1 == null && p_obj2 == null;
+	}
+
+	private static void addThreadsIdToEvent(UUID p_id, Event p_event) {
+		ExtendedProperties x_extendedProperties = p_event.getExtendedProperties() != null ? p_event.getExtendedProperties() : new ExtendedProperties();
+		HashMap<String, String> x_privates = x_extendedProperties.getPrivate() != null ? new HashMap<>(x_extendedProperties.getPrivate()) : new HashMap<>();
+		x_privates.put(s_THREADS_ID, p_id.toString());
+		x_extendedProperties.setPrivate(x_privates);
+		p_event.setExtendedProperties(x_extendedProperties);
+	}
+
+	static void linkToGoogle(GoogleAccount p_googleAccount, List<HasDueDate> p_hasDueDates, ProgressCallBack... p_callbacks) {
 		callBack(p_callbacks, c -> c.started(p_hasDueDates.size()));
 
 		try {
@@ -223,7 +232,7 @@ public class GoogleUtil {
 
 			for(HasDueDate x_hasDueDate : p_hasDueDates) {
                 if(findEvent(x_events, x_hasDueDate) == null) {
-					x_client.events().insert(x_calendarId, populateEvent(new Event(), x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getDueDate())).execute();
+					x_client.events().insert(x_calendarId, populateEvent(new Event(), x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getNotes(), x_hasDueDate.getDueDate())).execute();
 				}
 
 				callBack(p_callbacks, c -> c.progress(x_hasDueDate.getText()));
@@ -242,8 +251,10 @@ public class GoogleUtil {
 
 		if(x_events != null) {
 			for(Event x_event: x_events) {
-				if(x_id.equals(x_event.getDescription())) {
-					return x_event;
+				if(x_event.getExtendedProperties() != null && x_event.getExtendedProperties().getPrivate() != null) {
+					if(x_id.equals(x_event.getExtendedProperties().getPrivate().get(s_THREADS_ID))) {
+						return x_event;
+					}
 				}
 			}
 		}
@@ -278,9 +289,10 @@ public class GoogleUtil {
 		return x_calendar.getId();
 	}
 
-	private static Event populateEvent(Event p_event, UUID p_id, String p_text, Date p_dueDate) {
+	private static Event populateEvent(Event p_event, UUID p_id, String p_text, String p_notes, Date p_dueDate) {
+		addThreadsIdToEvent(p_id, p_event);
 		p_event.setSummary(p_text);
-		p_event.setDescription(p_id.toString());
+		p_event.setDescription(p_notes);
 
 		if(isAllDay(p_dueDate)) {
 			p_event.setStart(new EventDateTime().set("date", new DateTime(s_dateFormat.format(p_dueDate))));
@@ -317,14 +329,14 @@ public class GoogleUtil {
 		return x_events;
 	}
 
-	public static boolean isLinked(Component component) {
-		return googleAccount(component) != null;
+	public static boolean isLinked(Component p_component) {
+		return googleAccount(p_component) != null;
 	}
 
-	public static GoogleAccount googleAccount(Component component) {
+	public static GoogleAccount googleAccount(Component p_component) {
 		synchronized (s_linkedComponents) {
 			for(GoogleAccount x_googleAccount: s_linkedComponents.keySet()) {
-				if(s_linkedComponents.get(x_googleAccount).contains(component.getId())) {
+				if(s_linkedComponents.get(x_googleAccount).contains(p_component.getId())) {
 					return x_googleAccount;
 				}
 			}

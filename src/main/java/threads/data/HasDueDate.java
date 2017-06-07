@@ -8,7 +8,12 @@ public interface HasDueDate {
 	ComponentType getType();
 	boolean isActive();
 	String getText();
+	void setText(String x_text);
 	Date getDueDate();
-	void setDueDate(Date dueDate);
+	void setDueDate(Date p_dueDate);
+	String getNotes();
+	void setNotes(String p_notes);
 	boolean isDue();
+	void addComponentChangeListener(ComponentChangeListener p_listener);
+	Date getModifiedDate();
 }

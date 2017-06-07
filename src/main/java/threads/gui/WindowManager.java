@@ -1,9 +1,10 @@
 package threads.gui;
 
+import com.apple.eawt.Application;
 import threads.data.Component;
 import threads.data.Search;
 import threads.data.Thread;
-import threads.util.SettingChangeListener;
+import threads.util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,9 +12,9 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.UUID;
 
+import static com.apple.eawt.Application.getApplication;
 import static threads.gui.GUIConstants.*;
 import static threads.util.FontUtil.standardiseFontSizes;
-import static threads.util.ImageUtil.addIcon;
 import static threads.util.Settings.*;
 
 public class WindowManager implements SettingChangeListener {
@@ -41,7 +42,11 @@ public class WindowManager implements SettingChangeListener {
 		standardiseFontSizes();
 
 		JFrame x_window = new JFrame("Threads");
-		addIcon(x_window);
+
+		Image x_image = ImageUtil.getThreadsImage();
+		getApplication().setDockIconImage(x_image);
+		x_window.setIconImage(x_image);
+
 		o_navigationAndComponentPanel = new NavigationAndComponentPanel(p_topLevelThread, x_window);
 		x_window.setContentPane(o_navigationAndComponentPanel);
 

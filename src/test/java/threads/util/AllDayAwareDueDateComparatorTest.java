@@ -94,6 +94,16 @@ public class AllDayAwareDueDateComparatorTest {
 			}
 
 			@Override
+			public void setText(String x_text) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public String getNotes() {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
 			public Date getDueDate() {
 				return calendar.getTime();
 			}
@@ -104,8 +114,23 @@ public class AllDayAwareDueDateComparatorTest {
 			}
 
 			@Override
+			public void setNotes(String p_notes) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
 			public boolean isDue() {
 				return isDue;
+			}
+
+			@Override
+			public void addComponentChangeListener(ComponentChangeListener p_listener) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public Date getModifiedDate() {
+				throw new UnsupportedOperationException();
 			}
 		};
 	}

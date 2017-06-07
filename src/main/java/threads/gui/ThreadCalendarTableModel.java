@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.System.arraycopy;
+import static java.util.Calendar.*;
 import static threads.data.LookupHelper.getAllComponents;
 
 class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
@@ -22,9 +24,9 @@ class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
 	ThreadCalendarTableModel(Thread p_thread) {
 		super(p_thread, new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"});
 
-		Calendar x_calendar = Calendar.getInstance();
-		o_year = x_calendar.get(Calendar.YEAR);
-		o_month = x_calendar.get(Calendar.MONTH);
+		Calendar x_calendar = getInstance();
+		o_year = x_calendar.get(YEAR);
+		o_month = x_calendar.get(MONTH);
 	}
 
 	@Override
@@ -44,7 +46,7 @@ class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
 			List<Component> x_components = getAllComponents(getComponent(), x_date, o_includeActions, o_includeUpdates, o_includeReminders);
 			Object[] x_value = new Object[x_components.size() + 1];
 			x_value[0] = x_date;
-			System.arraycopy(x_components.toArray(new Component[x_components.size()]), 0, x_value, 1, x_components.size());
+			arraycopy(x_components.toArray(new Component[x_components.size()]), 0, x_value, 1, x_components.size());
 			return x_value;
 		});
 	}
@@ -71,22 +73,22 @@ class ThreadCalendarTableModel extends ComponentTableModel<Thread, Date> {
 
 	@Override
 	Date getDataItem(int p_row, int p_col) {
-		Calendar x_calendar = Calendar.getInstance();
-		x_calendar.set(Calendar.YEAR, o_year);
-		x_calendar.set(Calendar.MONTH, o_month);
-		x_calendar.set(Calendar.DAY_OF_MONTH, 1);
-		x_calendar.set(Calendar.HOUR_OF_DAY, 0);
-		x_calendar.set(Calendar.MINUTE, 0);
-		x_calendar.set(Calendar.MILLISECOND, 0);
-		x_calendar.add(Calendar.DAY_OF_MONTH, p_col + (p_row * 7) + getOffset());
+		Calendar x_calendar = getInstance();
+		x_calendar.set(YEAR, o_year);
+		x_calendar.set(MONTH, o_month);
+		x_calendar.set(DAY_OF_MONTH, 1);
+		x_calendar.set(HOUR_OF_DAY, 0);
+		x_calendar.set(MINUTE, 0);
+		x_calendar.set(MILLISECOND, 0);
+		x_calendar.add(DAY_OF_MONTH, p_col + (p_row * 7) + getOffset());
 		return x_calendar.getTime();
 	}
 
 	private int getOffset() {
-		Calendar x_calendar = Calendar.getInstance();
-		x_calendar.set(Calendar.YEAR, o_year);
-		x_calendar.set(Calendar.MONTH, o_month);
-		x_calendar.set(Calendar.DAY_OF_MONTH, 0);
+		Calendar x_calendar = getInstance();
+		x_calendar.set(YEAR, o_year);
+		x_calendar.set(MONTH, o_month);
+		x_calendar.set(DAY_OF_MONTH, 0);
 		int x_firstDayOfWeek = x_calendar.get(Calendar.DAY_OF_WEEK);
 		return (x_firstDayOfWeek - 1) * -1;
 	}

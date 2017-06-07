@@ -27,15 +27,16 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
         super(new ItemReminderTableModel(p_item),  new ItemReminderCellRenderer());
         o_item = p_item;
 
-		JLabel o_calendarLabel = createLabel(getCalendarIcon(), "Show in Calendar", o_item, i -> i.getDueDate() != null, e -> {
+		JLabel x_calendarLabel = createLabel(getCalendarIcon(), "Show in Calendar", o_item, i -> i.getDueDate() != null, e -> {
 			Calendar x_calendar = Calendar.getInstance();
 			x_calendar.setTime(o_item.getDueDate());
 			updateSetting(s_TABINDEX, 5);
 			updateSetting(s_DATE, x_calendar.get(MONTH) + "_" + x_calendar.get(YEAR));
+			updateSetting(s_CALENDARACT, true);
 			WindowManager.getInstance().openComponent(o_item.getParentThread());
 		});
 
-		JLabel o_templateItemLabel = createLabel(getTemplateIcon(), "Create Action Template", o_item, i -> o_item.getDueDate() != null && o_item.getReminders().size() > 0, e -> new ActionTemplateBuilderDialog(o_item, p_frame));
+		JLabel x_templateItemLabel = createLabel(getTemplateIcon(), "Create Action Template", o_item, i -> o_item.getDueDate() != null && o_item.getReminders().size() > 0, e -> new ActionTemplateBuilderDialog(o_item, p_frame));
 		o_linkLabel = createLabel(getLinkIcon(), "Link to Google Calendar", o_item, i -> o_item.getDueDate() != null, e -> linkToGoogle(o_item, p_parentPanel));
 
 		fixColumnWidth(1, s_creationDateColumnWidth);
@@ -44,9 +45,9 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 
 
         JPanel x_panel = new JPanel(new BorderLayout());
-        x_panel.add(new ComponentInfoPanel(p_item, p_parentPanel, true, o_calendarLabel, o_templateItemLabel, o_linkLabel), NORTH);
+        x_panel.add(new ComponentInfoPanel(p_item, p_parentPanel, true, x_calendarLabel, x_templateItemLabel, o_linkLabel), NORTH);
         x_panel.add(new ItemDateSuggestionPanel(o_item, p_parentPanel), CENTER);
-		x_panel.add(new ItemNotesPanel(o_item), SOUTH);
+		x_panel.add(new HasDueDateNotesPanel(o_item), SOUTH);
 		x_panel.setBorder(createEmptyBorder(0, 0, 5, 0));
 
 		add(x_panel, NORTH);

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static threads.data.ComponentChangeEvent.Field.DUE_DATE;
+import static threads.data.ComponentChangeEvent.Field.NOTES;
 import static threads.util.DateUtil.*;
 
 public class Item extends ThreadItem<Reminder> implements HasDueDate {
@@ -17,8 +18,8 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
         this(UUID.randomUUID(), new Date(), new Date(), true, text, p_dueDate, null, null, null);
     }
     
-    public Item(UUID id, Date p_creationDate, Date p_modifledDate, boolean p_active, String p_text, Date p_dueDate, String p_notes, List<Reminder> p_reminders, File p_docFolder) {
-        super(id, p_creationDate, p_modifledDate, p_active, p_text, p_reminders, (obj1, obj2) -> obj1.getDueDate().compareTo(obj2.getDueDate()), p_docFolder);
+    public Item(UUID id, Date p_creationDate, Date p_modifiedDate, boolean p_active, String p_text, Date p_dueDate, String p_notes, List<Reminder> p_reminders, File p_docFolder) {
+        super(id, p_creationDate, p_modifiedDate, p_active, p_text, p_reminders, (obj1, obj2) -> obj1.getDueDate().compareTo(obj2.getDueDate()), p_docFolder);
 		o_dueDate = p_dueDate;
 		o_notes = p_notes;
     }
@@ -65,8 +66,13 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 		return o_notes;
 	}
 
-	public void setNotes(String o_notes) {
-		this.o_notes = o_notes;
+	public void setNotes(String p_notes) {
+		String x_oldValue = o_notes;
+
+		if(!same(x_oldValue, p_notes)) {
+			o_notes = p_notes;
+			changed(NOTES, x_oldValue, p_notes);
+		}
 	}
 
 	@Override
