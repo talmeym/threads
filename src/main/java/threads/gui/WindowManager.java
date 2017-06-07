@@ -1,10 +1,10 @@
 package threads.gui;
 
-import com.apple.eawt.Application;
 import threads.data.Component;
 import threads.data.Search;
 import threads.data.Thread;
-import threads.util.*;
+import threads.util.ImageUtil;
+import threads.util.SettingChangeListener;
 
 import javax.swing.*;
 import java.awt.*;

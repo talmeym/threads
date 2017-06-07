@@ -33,7 +33,7 @@ public class Loader {
 
         try {
             Document x_doc = x_builder.build(p_xmlFile);
-			return new Configuration(loadThread(x_doc.getRootElement().getChild(s_THREAD)), loadActionTemplates(x_doc.getRootElement()));
+			return new Configuration(p_xmlFile, loadThread(x_doc.getRootElement().getChild(s_THREAD)), loadActionTemplates(x_doc.getRootElement()));
         }        
         catch(Exception ioe) {
             System.err.println("Error loading threads file: " + ioe);
@@ -194,12 +194,18 @@ public class Loader {
     }
     
     public static class Configuration {
+    	private File o_xmlFile;
     	private Thread o_topLevelThread;
 		private List<ActionTemplate> o_actionTemplates;
 
-		public Configuration(Thread p_topLevelThread, List<ActionTemplate> p_actionTemplates) {
-			this.o_topLevelThread = p_topLevelThread;
-			this.o_actionTemplates = p_actionTemplates;
+		public Configuration(File p_xmlFile, Thread p_topLevelThread, List<ActionTemplate> p_actionTemplates) {
+			o_xmlFile = p_xmlFile;
+			o_topLevelThread = p_topLevelThread;
+			o_actionTemplates = p_actionTemplates;
+		}
+
+		public File getXmlFile() {
+			return o_xmlFile;
 		}
 
 		public Thread getTopLevelThread() {

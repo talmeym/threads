@@ -29,18 +29,18 @@ public class TimedSaver extends TimedActivity<TimedSaveListener> {
     }
 
 	private final Thread o_topThread;
-    private final File o_originalFile;
+    private final File o_dataFile;
 
-    private TimedSaver(Thread p_topThread, File p_orignalFile) {
+    private TimedSaver(Thread p_topThread, File p_dataFile) {
     	super(300000, false);
 		o_topThread = p_topThread;
-		o_originalFile = p_orignalFile;
+		o_dataFile = p_dataFile;
 		setDaemon(true);
         start();
     }
 
 	void action() {
-		saveDocument(o_topThread, getActionTemplates(), o_originalFile);
+		saveDocument(o_topThread, getActionTemplates(), o_dataFile);
 		saveDocument(o_topThread, getActionTemplates(), getBackupFile());
 
 		try {
@@ -61,8 +61,8 @@ public class TimedSaver extends TimedActivity<TimedSaveListener> {
 	}
 
 	private File getBackupFile() {
-		String x_fileName = o_originalFile.getName();
-		File x_originalFolder = o_originalFile.getParentFile();
+		String x_fileName = o_dataFile.getName();
+		File x_originalFolder = o_dataFile.getParentFile();
 		File x_backupFolder = new File(x_originalFolder, "backups");
 		x_backupFolder.mkdirs();
 		return new File(x_backupFolder, x_fileName.substring(0, x_fileName.indexOf(".xml")) + ".backup." + new SimpleDateFormat("yyMMddHH").format(new Date()) + ".xml");
