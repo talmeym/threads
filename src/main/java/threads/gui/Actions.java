@@ -2,10 +2,11 @@ package threads.gui;
 
 import threads.data.*;
 import threads.data.Thread;
-import threads.util.*;
+import threads.util.GoogleAccount;
+import threads.util.GoogleLinkTask;
+import threads.util.ProgressAdapter;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,14 +20,12 @@ import static threads.util.GoogleUtil.getGoogleAccounts;
 import static threads.util.GoogleUtil.isLinked;
 import static threads.util.ImageUtil.getGoogleIcon;
 import static threads.util.ImageUtil.getThreadsIcon;
-import static threads.util.Settings.registerForSetting;
-import static threads.util.Settings.s_GOOGLE;
+import static threads.util.Settings.Setting.GOOGLE;
 
 public class Actions {
-	private static java.util.List<ActionTemplate> s_actionTemplates = new ArrayList<>();
-
-	static Item addActionFromTemplate(ThreadItem p_threadItem, Thread p_startingThread, Date p_date, JPanel p_enclosingPanel, boolean p_openAfter) {
-		ActionTemplate x_template = (ActionTemplate) showInputDialog(p_enclosingPanel, "Choose a Template:", "Add From Template ?", INFORMATION_MESSAGE, getThreadsIcon(), s_actionTemplates.toArray(new Object[s_actionTemplates.size()]), s_actionTemplates.get(0));
+	static Item addActionFromTemplate(Configuration p_configuration, ThreadItem p_threadItem, Thread p_startingThread, Date p_date, JPanel p_enclosingPanel, boolean p_openAfter) {
+		List<ActionTemplate> x_actionTemplates = p_configuration.getActionTemplates();
+		ActionTemplate x_template = (ActionTemplate) showInputDialog(p_enclosingPanel, "Choose a Template:", "Add From Template ?", INFORMATION_MESSAGE, getThreadsIcon(), x_actionTemplates.toArray(new Object[x_actionTemplates.size()]), x_actionTemplates.get(0));
 
 		if(x_template != null) {
 			Thread x_thread;
@@ -176,32 +175,20 @@ public class Actions {
 		return x_threads.size() > 1 ? (Thread) showInputDialog(p_enclosingPanel, "Choose a Thread to add it to:", x_title, INFORMATION_MESSAGE, getThreadsIcon(), x_threads.toArray(new Object[x_threads.size()]), x_threads.get(0)) : p_startingThread;
 	}
 
-	static void linkToGoogle(Thread x_thread, JPanel p_enclosingPanel) {
-		if (checkGoogle(p_enclosingPanel)) {
-			return;
-		}
-
-		linkToGoogle(getHasDueDates(x_thread, false), p_enclosingPanel);
+	static void linkToGoogle(Thread x_thread, Configuration p_configuration, JPanel p_enclosingPanel) {
+		linkToGoogle(getHasDueDates(x_thread, false), p_configuration, p_enclosingPanel);
 	}
 
-	static void linkToGoogle(final Item p_item, final JPanel p_enclosingPanel) {
-		if (checkGoogle(p_enclosingPanel)) {
-			return;
-		}
-
-		linkToGoogle(getHasDueDates(p_item, false), p_enclosingPanel);
+	static void linkToGoogle(Item p_item, Configuration p_configuration, final JPanel p_enclosingPanel) {
+		linkToGoogle(getHasDueDates(p_item, false), p_configuration, p_enclosingPanel);
 	}
 
-	static void linkToGoogle(Reminder p_reminder, JPanel p_enclosingPanel) {
-		if (checkGoogle(p_enclosingPanel)) {
-			return;
-		}
-
-		linkToGoogle(singletonList(p_reminder), p_enclosingPanel);
+	static void linkToGoogle(Reminder p_reminder, Configuration p_configuration, JPanel p_enclosingPanel) {
+		linkToGoogle(singletonList(p_reminder), p_configuration, p_enclosingPanel);
 	}
 
-	static void linkToGoogle(List<HasDueDate> p_hasDueDates, final JPanel p_enclosingPanel) {
-		if (checkGoogle(p_enclosingPanel) || p_hasDueDates.size() == 0) {
+	static void linkToGoogle(List<HasDueDate> p_hasDueDates, Configuration p_configuration, final JPanel p_enclosingPanel) {
+		if (checkGoogle(p_configuration, p_enclosingPanel) || p_hasDueDates.size() == 0) {
 			return;
 		}
 
@@ -246,9 +233,13 @@ public class Actions {
 		}
 	}
 
-	private static boolean checkGoogle(JPanel p_enclosingPanel) {
-		if(!registerForSetting(s_GOOGLE, (p_name, p_value) -> { }, false)) {
-			showMessageDialog(p_enclosingPanel, "Google is disabled.", "No Can Do", INFORMATION_MESSAGE, getGoogleIcon());
+	private static boolean checkGoogle(Configuration p_configuration, JPanel p_enclosingPanel) {
+		if(!p_configuration.getSettings().getBooleanSetting(GOOGLE)) {
+			if(showConfirmDialog(p_enclosingPanel, "Google is disabled for '" + p_configuration.getXmlFile().getName() + "'. Would you like to enable it ?", "Enable Google ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+				p_configuration.getSettings().updateSetting(GOOGLE, true);
+				return false;
+			}
+
 			return true;
 		}
 
@@ -320,17 +311,5 @@ public class Actions {
 				showMessageDialog(p_enclosingPanel, "The top Thread cannot be removed.", "No can do", WARNING_MESSAGE, getThreadsIcon());
 			}
 		}
-	}
-
-	static void addActionTemplate(ActionTemplate p_actionTemplate) {
-		s_actionTemplates.add(p_actionTemplate);
-	}
-
-	public static void setActionTemplates(List<ActionTemplate> p_actionTemplate) {
-		s_actionTemplates = p_actionTemplate;
-	}
-
-	public static List<ActionTemplate> getActionTemplates() {
-		return s_actionTemplates;
 	}
 }

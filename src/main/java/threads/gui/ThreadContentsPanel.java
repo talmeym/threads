@@ -1,14 +1,16 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.Configuration;
+import threads.data.Item;
 import threads.data.Thread;
+import threads.data.ThreadItem;
 import threads.util.GoogleSyncer;
 
 import javax.swing.*;
-import java.awt.Component;
 import java.awt.*;
 
-import static java.awt.BorderLayout.*;
+import static java.awt.BorderLayout.NORTH;
+import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.JOptionPane.*;
@@ -16,7 +18,8 @@ import static threads.gui.Actions.*;
 import static threads.gui.GUIConstants.*;
 import static threads.gui.ItemDateSuggestionPanel.getDateSuggestion;
 import static threads.gui.WidgetFactory.createLabel;
-import static threads.util.ImageUtil.*;
+import static threads.util.ImageUtil.getPlusIcon;
+import static threads.util.ImageUtil.getThreadsIcon;
 
 class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 {
@@ -25,7 +28,7 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, true, null);
 	private final JLabel o_topLabel = new JLabel("0 Items");
 
-	ThreadContentsPanel(final Thread p_thread, JPanel p_parentPanel) {
+	ThreadContentsPanel(Configuration p_configuration, final Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadContentsTableModel(p_thread), new ThreadContentsCellRenderer());
         o_thread = p_thread;
 		o_parentPanel = p_parentPanel;
@@ -47,7 +50,7 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
         o_popupMenu.setDeactivateActionListener(e -> Actions.deactivateComponent(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setRemoveActionListener(e -> Actions.removeComponent(getSelectedObject(), p_parentPanel, false));
 		o_popupMenu.setMoveActionListener(e -> Actions.moveThreadItem(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setLinkActionListener(e -> link(getSelectedObject()));
+		o_popupMenu.setLinkActionListener(e -> link(getSelectedObject(), p_configuration));
 
         JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
         x_buttonPanel.add(x_addItemLabel);
@@ -70,14 +73,14 @@ class ThreadContentsPanel extends ComponentTablePanel<Thread, ThreadItem>
 		}
 	}
 
-	private void link(ThreadItem p_threadItem) {
+	private void link(ThreadItem p_threadItem, Configuration p_configuration) {
 		if(p_threadItem instanceof Item) {
-			linkToGoogle((Item) p_threadItem, o_parentPanel);
+			linkToGoogle((Item) p_threadItem, p_configuration, o_parentPanel);
 		}
 
 		if(p_threadItem instanceof Thread) {
 			final Thread x_thread = (Thread) p_threadItem;
-			linkToGoogle(x_thread, o_parentPanel);
+			linkToGoogle(x_thread, p_configuration, o_parentPanel);
 		}
 	}
 

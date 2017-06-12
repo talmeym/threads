@@ -1,11 +1,16 @@
 package threads.gui;
 
-import threads.data.*;
-import threads.util.*;
+import threads.data.Configuration;
+import threads.data.HasDueDate;
+import threads.data.Reminder;
+import threads.util.GoogleAccount;
+import threads.util.GoogleSyncListener;
+import threads.util.GoogleSyncer;
+import threads.util.Settings;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.util.Calendar;
 import java.util.List;
 
 import static java.awt.BorderLayout.*;
@@ -15,28 +20,29 @@ import static threads.gui.Actions.linkToGoogle;
 import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.GoogleUtil.googleAccount;
 import static threads.util.ImageUtil.*;
-import static threads.util.Settings.*;
+import static threads.util.Settings.Setting.*;
 
 class ReminderPanel extends JPanel implements GoogleSyncListener {
 	private final Reminder o_reminder;
 	private final JPanel o_parentPanel;
 	private final JLabel o_linkLabel;
 
-	ReminderPanel(final Reminder p_reminder, JPanel p_parentPanel) {
+	ReminderPanel(Configuration p_configuration, final Reminder p_reminder, JPanel p_parentPanel) {
         super(new BorderLayout());
 		o_reminder = p_reminder;
 		o_parentPanel = p_parentPanel;
+		Settings x_settings = p_configuration.getSettings();
 
 		JLabel x_calendarLabel = createLabel(getCalendarIcon(), "Show in Calendar", o_reminder, i -> true, e -> {
 			Calendar x_calendar = Calendar.getInstance();
 			x_calendar.setTime(o_reminder.getDueDate());
-			updateSetting(s_TABINDEX, 5);
-			updateSetting(s_DATE, x_calendar.get(MONTH) + "_" + x_calendar.get(YEAR));
-			updateSetting(s_CALENDARREM, true);
+			x_settings.updateSetting(TABINDEX, 5);
+			x_settings.updateSetting(DATE, x_calendar.get(MONTH) + "_" + x_calendar.get(YEAR));
+			x_settings.updateSetting(CALENDARREM, true);
 			WindowManager.getInstance().openComponent(o_reminder.getParentItem().getParentThread());
 		});
 
-		o_linkLabel = createLabel(getLinkIcon(), "Link to Google Calendar", true, e -> linkToGoogle(o_reminder, o_parentPanel));
+		o_linkLabel = createLabel(getLinkIcon(), "Link to Google Calendar", true, e -> linkToGoogle(o_reminder, p_configuration, o_parentPanel));
 
 		ComponentInfoPanel o_compInfoPanel = new ComponentInfoPanel(p_reminder, this, false, x_calendarLabel, o_linkLabel);
 		o_compInfoPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
@@ -70,7 +76,7 @@ class ReminderPanel extends JPanel implements GoogleSyncListener {
 		setLinkLabelText();
 	}
 
-	public void setLinkLabelText() {
+	private void setLinkLabelText() {
 		GoogleAccount x_account = googleAccount(o_reminder);
 		o_linkLabel.setIcon(x_account != null ? getGoogleSmallIcon() : getLinkIcon());
 		o_linkLabel.setToolTipText(x_account != null ? x_account.getName() : "Link to Google Calendar");

@@ -1,7 +1,6 @@
 package threads.util;
 
 import threads.data.HasDueDate;
-import threads.data.Thread;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -11,14 +10,13 @@ import static threads.util.GoogleUtil.syncWithGoogle;
 
 public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
     private static GoogleSyncer s_INSTANCE = null;
-	private final boolean o_enabled;
 
-	public static void initialise(Thread p_topLevelThread, boolean p_enabled) {
+	public static void initialise() {
 		if(s_INSTANCE != null) {
 			throw new IllegalStateException("Cannot initialise google syncer twice");
 		}
 
-		s_INSTANCE = new GoogleSyncer(p_topLevelThread, p_enabled);
+		s_INSTANCE = new GoogleSyncer();
 	}
 
 	public static GoogleSyncer getInstance() {
@@ -29,20 +27,17 @@ public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
 		return s_INSTANCE;
 	}
 
-    private GoogleSyncer(Thread p_topThread, boolean p_enabled) {
+    private GoogleSyncer() {
     	super(120000, true);
-		o_enabled = p_enabled;
 
-		if(p_enabled) {
-			try {
-				GoogleUtil.initialise(p_topThread);
-			} catch (GeneralSecurityException | IOException e) {
-				throw new RuntimeException("Error initialising google threads.util", e);
-			}
-
-			setDaemon(true);
-			start();
+		try {
+			GoogleUtil.initialise();
+		} catch (GeneralSecurityException | IOException e) {
+			throw new RuntimeException("Error initialising google threads.util", e);
 		}
+
+		setDaemon(true);
+		start();
     }
 
 	void action() {
@@ -61,9 +56,5 @@ public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
 
 	void componentsSynced(List<HasDueDate> p_hasDueDates) {
 		getListeners().forEach(l -> l.googleSynced(p_hasDueDates));
-	}
-
-	public boolean isGoogleEnabled() {
-		return o_enabled;
 	}
 }

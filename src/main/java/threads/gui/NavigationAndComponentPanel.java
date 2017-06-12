@@ -1,10 +1,8 @@
 package threads.gui;
 
 import threads.data.Component;
-import threads.data.Item;
-import threads.data.Reminder;
+import threads.data.*;
 import threads.data.Thread;
-import threads.util.SettingChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,9 +11,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
-import static threads.util.Settings.*;
+import static threads.util.Settings.Setting.NAVDIVLOC;
 
-class NavigationAndComponentPanel extends JPanel implements SettingChangeListener {
+class NavigationAndComponentPanel extends JPanel {
+    private final Configuration o_configuration;
+
 	private final CardLayout o_cardLayout = new CardLayout();
 	private final JPanel o_cardPanel = new JPanel(o_cardLayout);
 
@@ -23,20 +23,20 @@ class NavigationAndComponentPanel extends JPanel implements SettingChangeListene
 	private final NavigationPanel o_navigationPanel;
 	private final JFrame o_frame;
 
-	NavigationAndComponentPanel(Thread p_topLevelThread, JFrame p_frame) {
+	NavigationAndComponentPanel(Configuration p_configuration, JFrame p_frame) {
 		super(new BorderLayout());
 		o_frame = p_frame;
-
-		o_navigationPanel = new NavigationPanel(p_topLevelThread);
+		o_navigationPanel = new NavigationPanel(p_configuration);
+		o_configuration = p_configuration;
 
 		JSplitPane x_splitPane = new JSplitPane(HORIZONTAL_SPLIT);
 		x_splitPane.setLeftComponent(o_navigationPanel);
 		x_splitPane.setRightComponent(o_cardPanel);
-		x_splitPane.setDividerLocation(registerForSetting(s_NAVDIVLOC, this, 250));
+		x_splitPane.setDividerLocation(o_configuration.getSettings().getIntSetting(NAVDIVLOC));
 
 		x_splitPane.addPropertyChangeListener(propertyChangeEvent -> {
 			if(propertyChangeEvent.getPropertyName().equals("dividerLocation")) {
-				updateSetting(s_NAVDIVLOC, "" + propertyChangeEvent.getNewValue());
+				o_configuration.getSettings().updateSetting(NAVDIVLOC, "" + propertyChangeEvent.getNewValue());
 			}
 		});
 
@@ -63,22 +63,17 @@ class NavigationAndComponentPanel extends JPanel implements SettingChangeListene
 		JPanel x_panel = null;
 
 		if(p_component instanceof threads.data.Thread) {
-			x_panel = new ThreadPanel((Thread) p_component, this);
+			x_panel = new ThreadPanel(o_configuration, (Thread) p_component, this);
 		}
 
 		if(p_component instanceof Item) {
-			x_panel = new ItemAndReminderPanel((Item) p_component, this, o_frame);
+			x_panel = new ItemAndReminderPanel(o_configuration, (Item) p_component, this, o_frame);
 		}
 
 		if(p_component instanceof Reminder) {
-			x_panel = new ItemAndReminderPanel(((Reminder)p_component).getParentItem(), this, o_frame);
+			x_panel = new ItemAndReminderPanel(o_configuration, ((Reminder)p_component).getParentItem(), this, o_frame);
 		}
 
 		return x_panel;
-	}
-
-	@Override
-	public void settingChanged(String p_name, Object p_value) {
-		// do nothing
 	}
 }

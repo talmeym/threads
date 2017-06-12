@@ -13,7 +13,7 @@ public abstract class TimedActivity<LISTENER_TYPE extends ActivityListener> exte
 
 	TimedActivity(int p_frequency, boolean p_doImmediately) {
 		this.o_frequency = p_frequency;
-		o_nextSync = System.currentTimeMillis() + (p_doImmediately ? 2000 : p_frequency);
+		o_nextSync = System.currentTimeMillis() + (p_doImmediately ? 6000 : p_frequency);
 	}
 
 	public void addActivityListener(LISTENER_TYPE p_listener) {

@@ -2,6 +2,7 @@ package threads.gui;
 
 import threads.data.ActionTemplate;
 import threads.data.ActionTemplate.ReminderTemplate;
+import threads.data.Configuration;
 import threads.data.Item;
 import threads.data.Reminder;
 
@@ -40,7 +41,7 @@ class ActionTemplateBuilderDialog extends JDialog {
 
 	private String o_lastSelection = null;
 
-	ActionTemplateBuilderDialog(Item p_item, JFrame p_frame) {
+	ActionTemplateBuilderDialog(Configuration p_configuration, Item p_item, JFrame p_frame) {
 		super(p_frame, "Create an Action Template", true);
 		o_item = new Item(p_item, false);
 
@@ -220,7 +221,7 @@ class ActionTemplateBuilderDialog extends JDialog {
 				x_reminderTemplates.add(new ReminderTemplate(x_reminderFields.get(i).getText(), x_reminders.get(i).getDueDate().getTime() - o_item.getDueDate().getTime()));
 			}
 
-			Actions.addActionTemplate(new ActionTemplate(x_nameField.getText(), x_promptField.getText(), x_answerField.getText(), x_itemField.getText(), x_reminderTemplates));
+			p_configuration.getActionTemplates().add(new ActionTemplate(x_nameField.getText(), x_promptField.getText(), x_answerField.getText(), x_itemField.getText(), x_reminderTemplates));
 			setVisible(false);
 		});
 

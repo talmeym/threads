@@ -3,26 +3,32 @@ package threads.gui;
 import threads.data.Component;
 import threads.data.*;
 import threads.data.Thread;
-import threads.util.*;
+import threads.util.GoogleAccount;
+import threads.util.Settings;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.*;
-import java.text.*;
-import java.util.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static java.awt.BorderLayout.CENTER;
-import static java.awt.Color.*;
+import static java.awt.Color.black;
+import static java.awt.Color.gray;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static threads.data.LookupHelper.*;
 import static threads.gui.GUIConstants.*;
 import static threads.util.DateUtil.getDateStatus;
 import static threads.util.GoogleUtil.googleAccount;
-import static threads.util.Settings.*;
+import static threads.util.Settings.Setting.*;
 
-class SearchResults extends JFrame implements SettingChangeListener {
+class SearchResults extends JFrame {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
 
 	private List<String> s_columnNames = Arrays.asList("Creation Date", "Type", "Name", "Info", "");
@@ -30,7 +36,7 @@ class SearchResults extends JFrame implements SettingChangeListener {
 	private JTable o_table;
 	private TableDataCache<String> o_cache = new TableDataCache<>();
 
-	SearchResults(Thread p_topLevelThread, Search p_search, String p_searchTerm, List<Component> p_searchResults) {
+	SearchResults(Thread p_topLevelThread, Settings o_settings, Search p_search, String p_searchTerm, List<Component> p_searchResults) {
 		super("Search Results - '" + p_searchTerm + "' - " + p_searchResults.size() + " Items");
 		o_searchResults = p_searchResults;
 		TableModel x_tableModel = new TableModel();
@@ -75,10 +81,10 @@ class SearchResults extends JFrame implements SettingChangeListener {
 
 		setContentPane(x_contentPane);
 
-		int x_height = registerForSetting(s_WINH, this, s_windowHeight);
-		int x_x = registerForSetting(s_WINY, this, s_windowX);
-		int x_y = registerForSetting(s_WINY, this, s_windowY);
-		int x_splitDivider = registerForSetting(s_NAVDIVLOC, this, 250);
+		int x_height = o_settings.getIntSetting(WINH);
+		int x_x = o_settings.getIntSetting(WINY);
+		int x_y = o_settings.getIntSetting(WINY);
+		int x_splitDivider = o_settings.getIntSetting(NAVDIVLOC);
 
 		setSize(new Dimension(800, 400));
 		setLocation(new Point(x_x + x_splitDivider + 5, x_y + x_height - 470));
@@ -90,11 +96,6 @@ class SearchResults extends JFrame implements SettingChangeListener {
 		x_model.getColumn(p_column).setPreferredWidth(p_width);
 		x_model.getColumn(p_column).setMinWidth(p_width);
 		x_model.getColumn(p_column).setMaxWidth(p_width);
-	}
-
-	@Override
-	public void settingChanged(String p_name, Object p_value) {
-		// do nothing
 	}
 
 	private class TableModel extends DefaultTableModel {

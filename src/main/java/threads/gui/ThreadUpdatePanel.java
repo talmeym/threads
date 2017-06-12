@@ -1,5 +1,6 @@
 package threads.gui;
 
+import threads.data.Configuration;
 import threads.data.Item;
 import threads.data.Thread;
 import threads.util.TimedUpdater;
@@ -24,7 +25,7 @@ class ThreadUpdatePanel extends ComponentTablePanel<Thread, Item> {
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, false, Update);
 	private final JLabel o_topLabel = new JLabel("0 Updates");
 
-	ThreadUpdatePanel(Thread p_thread, JPanel p_parentPanel) {
+	ThreadUpdatePanel(Configuration p_configuration, Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadUpdateTableModel(p_thread), new BaseCellRenderer<>());
         o_thread = p_thread;
 		o_parentPanel = p_parentPanel;

@@ -1,6 +1,7 @@
 package threads.data;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public interface HasDueDate {
@@ -16,4 +17,5 @@ public interface HasDueDate {
 	boolean isDue();
 	void addComponentChangeListener(ComponentChangeListener p_listener);
 	Date getModifiedDate();
+	List<Component> getHierarchy();
 }

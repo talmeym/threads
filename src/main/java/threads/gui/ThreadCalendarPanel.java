@@ -1,17 +1,19 @@
 package threads.gui;
 
 import threads.data.Component;
-import threads.data.HasDueDate;
-import threads.data.Item;
+import threads.data.*;
 import threads.data.Thread;
-import threads.util.*;
+import threads.util.SettingChangeListener;
+import threads.util.Settings;
+import threads.util.Settings.Setting;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.font.TextAttribute;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static java.awt.Color.*;
@@ -33,27 +35,30 @@ import static threads.util.DateUtil.isAllDay;
 import static threads.util.FontUtil.makeStrikeThrough;
 import static threads.util.GoogleUtil.isLinked;
 import static threads.util.ImageUtil.*;
-import static threads.util.Settings.*;
+import static threads.util.Settings.Setting.*;
 
 class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements SettingChangeListener {
 	private static final String[] s_monthNames = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
 	private final Thread o_thread;
-
+	private final Configuration o_configuration;
 	private final JPanel o_parentPanel;
+
 	private final JCheckBox o_includeActionsCheckBox = new JCheckBox("Actions");
 	private final JCheckBox o_includeUpdatesCheckBox = new JCheckBox("Updates");
 	private final JCheckBox o_includeRemindersCheckBox = new JCheckBox("Reminders");
 	private final JCheckBox o_allCheckBox = new JCheckBox("All");
 	private final JLabel o_topLabel = new JLabel(getMonthLabel(Calendar.getInstance().get(YEAR), Calendar.getInstance().get(MONTH)));
 
-	ThreadCalendarPanel(Thread p_thread, JPanel p_parentPanel) {
+	ThreadCalendarPanel(Configuration p_configuration, Thread p_thread, JPanel p_parentPanel) {
 		super(new ThreadCalendarTableModel(p_thread), new ThreadCalendarCellRenderer());
 		o_thread = p_thread;
+		o_configuration = p_configuration;
 		o_parentPanel = p_parentPanel;
 
+		Settings x_settings = p_configuration.getSettings();
 		Calendar x_calendar = Calendar.getInstance();
-		setTime(registerForSetting(s_DATE, this, x_calendar.get(MONTH) + "_" + x_calendar.get(YEAR)));
+		setTime(x_settings.registerForStringSetting(DATE, this));
 		addTableSelectionListener(this);
 
 		addComponentListener(new ComponentAdapter() {
@@ -73,16 +78,16 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			int x_year = x_calendar.get(YEAR);
 			int x_month = x_calendar.get(MONTH);
 			setTime(x_year, x_month);
-			updateSetting(s_DATE, x_month + "_" + x_year);
+			x_settings.updateSetting(DATE, x_month + "_" + x_year);
 		});
 
 		o_topLabel.setHorizontalAlignment(JLabel.CENTER);
 		o_topLabel.setBorder(createEmptyBorder(0, 5, 5, 5));
 
 		ThreadCalendarTableModel x_tableModel = (ThreadCalendarTableModel) o_table.getModel();
-		x_tableModel.setIncludeActions(registerForSetting(s_CALENDARACT, this, true));
-		x_tableModel.setIncludeUpdates(registerForSetting(s_CALENDARUP, this, false));
-		x_tableModel.setIncludeReminders(registerForSetting(s_CALENDARREM, this, false));
+		x_tableModel.setIncludeActions(x_settings.registerForBooleanSetting(CALENDARACT, this));
+		x_tableModel.setIncludeUpdates(x_settings.registerForBooleanSetting(CALENDARUP, this));
+		x_tableModel.setIncludeReminders(x_settings.registerForBooleanSetting(CALENDARREM, this));
 
 		o_includeActionsCheckBox.setSelected(x_tableModel.includeActions());
 		o_includeUpdatesCheckBox.setSelected(x_tableModel.includeUpdates());
@@ -102,19 +107,19 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		o_includeActionsCheckBox.addActionListener(e -> {
 			setAllCheckbox();
 			x_tableModel.setIncludeActions(o_includeActionsCheckBox.isSelected());
-			updateSetting(s_CALENDARACT, o_includeActionsCheckBox.isSelected());
+			x_settings.updateSetting(CALENDARACT, o_includeActionsCheckBox.isSelected());
 		});
 
 		o_includeUpdatesCheckBox.addActionListener(e -> {
 			setAllCheckbox();
 			x_tableModel.setIncludeUpdates(o_includeUpdatesCheckBox.isSelected());
-			updateSetting(s_CALENDARUP, o_includeUpdatesCheckBox.isSelected());
+			x_settings.updateSetting(CALENDARUP, o_includeUpdatesCheckBox.isSelected());
 		});
 
 		o_includeRemindersCheckBox.addActionListener(e -> {
 			setAllCheckbox();
 			x_tableModel.setIncludeReminders(o_includeRemindersCheckBox.isSelected());
-			updateSetting(s_CALENDARREM, o_includeRemindersCheckBox.isSelected());
+			x_settings.updateSetting(CALENDARREM, o_includeRemindersCheckBox.isSelected());
 		});
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
@@ -144,7 +149,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 		int x_year = up ? x_currentMonth == 11 ? x_currentYear + 1 : x_currentYear : x_currentMonth == 0 ? x_currentYear - 1 : x_currentYear;
 		int x_month = up ? x_currentMonth == 11 ? 0 : x_currentMonth + 1 : x_currentMonth == 0 ? 11 : x_currentMonth - 1;
 		setTime(x_year, x_month);
-		updateSetting(s_DATE, x_month + "_" + x_year);
+		o_configuration.getSettings().updateSetting(DATE, x_month + "_" + x_year);
 	}
 
 	private void setTime(String x_date) {
@@ -213,14 +218,14 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 
 		JMenuItem x_addFromTemplateMenuItem = new JMenuItem("Add From Template", getTemplateSmallIcon());
 		x_addFromTemplateMenuItem.setForeground(gray);
-		x_addFromTemplateMenuItem.addActionListener(e -> addActionFromTemplate(null, o_thread, p_date, o_parentPanel, false));
+		x_addFromTemplateMenuItem.addActionListener(e -> addActionFromTemplate(o_configuration, null, o_thread, p_date, o_parentPanel, false));
 		x_menu.add(x_addFromTemplateMenuItem);
 
 		if(x_components.size() > 0) {
 			JMenuItem x_linkMenuItem = new JMenuItem("Link to Google", getLinkSmallIcon());
 			x_linkMenuItem.setForeground(gray);
 			x_menu.add(x_linkMenuItem);
-			x_linkMenuItem.addActionListener(e -> linkToGoogle(getHasDueDates(x_components), o_parentPanel));
+			x_linkMenuItem.addActionListener(e -> linkToGoogle(getHasDueDates(x_components), o_configuration, o_parentPanel));
 
 			JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", getTickSmallIcon());
 			x_makeInactiveItem.setForeground(gray);
@@ -237,25 +242,25 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 	}
 
 	@Override
-	public void settingChanged(String p_name, Object p_value) {
-		if(p_name.equals(s_DATE)) {
+	public void settingChanged(Setting p_setting, Object p_value) {
+		if(p_setting == DATE) {
 			setTime((String) p_value);
 			return;
 		}
 
 		boolean x_value = (boolean) p_value;
 
-		if(p_name.equals(s_CALENDARACT)) {
+		if(p_setting == CALENDARACT) {
 			((ThreadCalendarTableModel)o_table.getModel()).setIncludeActions(x_value);
 			o_includeActionsCheckBox.setSelected(x_value);
 		}
 
-		if(p_name.equals(s_CALENDARUP)) {
+		if(p_setting == CALENDARUP) {
 			((ThreadCalendarTableModel)o_table.getModel()).setIncludeUpdates(x_value);
 			o_includeUpdatesCheckBox.setSelected(x_value);
 		}
 
-		if(p_name.equals(s_CALENDARREM)) {
+		if(p_setting == CALENDARREM) {
 			((ThreadCalendarTableModel)o_table.getModel()).setIncludeReminders(x_value);
 			o_includeRemindersCheckBox.setSelected(x_value);
 		}

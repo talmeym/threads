@@ -132,6 +132,11 @@ public class AllDayAwareDueDateComparatorTest {
 			public Date getModifiedDate() {
 				throw new UnsupportedOperationException();
 			}
+
+			@Override
+			public List<Component> getHierarchy() {
+				throw new UnsupportedOperationException();
+			}
 		};
 	}
 }

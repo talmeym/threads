@@ -14,8 +14,8 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.*;
 import threads.Threads;
+import threads.data.Configuration;
 import threads.data.Item;
-import threads.data.Loader.Configuration;
 import threads.data.Thread;
 
 import java.io.File;
@@ -54,7 +54,7 @@ public class Importer {
 
         CalendarList x_feed = s_client.calendarList().list().execute();
 
-        Thread x_archive = new Thread("Archive");
+        Thread x_topLevelThread = new Thread("Archive");
 
         if (x_feed.getItems() != null) {
             for (CalendarListEntry x_entry : x_feed.getItems()) {
@@ -62,7 +62,7 @@ public class Importer {
 
                 if(!x_summary.contains("Threads")) {
                     Thread x_thread = new Thread(x_summary);
-                    x_archive.addThreadItem(x_thread);
+                    x_topLevelThread.addThreadItem(x_thread);
 
                     List<Event> x_eventList = getEvents(x_entry.getId());
 
@@ -91,7 +91,8 @@ public class Importer {
             }
         }
 
-        new Threads(new File("archive.xml"), new Configuration(x_archive, new ArrayList<>()));
+        File x_file = new File("archive.xml");
+        new Threads(new Configuration(x_file, x_topLevelThread, new ArrayList<>()));
     }
 
     private static List<Event> getEvents(String calendarId) throws IOException {

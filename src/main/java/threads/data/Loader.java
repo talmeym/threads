@@ -19,7 +19,7 @@ import java.util.UUID;
 import static threads.data.XmlConstants.*;
 
 public class Loader {
-    public static Configuration loadConfiguration(File p_xmlFile) {
+    public static Configuration loadConfiguration(File p_xmlFile) throws LoadException {
         SAXBuilder x_builder = new SAXBuilder(true);
         x_builder.setFeature("http://apache.org/xml/features/validation/schema", true);
         x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
@@ -36,11 +36,8 @@ public class Loader {
 			return new Configuration(p_xmlFile, loadThread(x_doc.getRootElement().getChild(s_THREAD)), loadActionTemplates(x_doc.getRootElement()));
         }        
         catch(Exception ioe) {
-            System.err.println("Error loading threads file: " + ioe);
-            System.exit(1);
+            throw new LoadException(ioe);
         }
-        
-        return null;
     }
 
 	private static List<ActionTemplate> loadActionTemplates(Element p_element) {
@@ -192,28 +189,4 @@ public class Loader {
         
         return x_docFolder;
     }
-    
-    public static class Configuration {
-    	private File o_xmlFile;
-    	private Thread o_topLevelThread;
-		private List<ActionTemplate> o_actionTemplates;
-
-		public Configuration(File p_xmlFile, Thread p_topLevelThread, List<ActionTemplate> p_actionTemplates) {
-			o_xmlFile = p_xmlFile;
-			o_topLevelThread = p_topLevelThread;
-			o_actionTemplates = p_actionTemplates;
-		}
-
-		public File getXmlFile() {
-			return o_xmlFile;
-		}
-
-		public Thread getTopLevelThread() {
-			return o_topLevelThread;
-		}
-
-		public List<ActionTemplate> getActionTemplates() {
-			return o_actionTemplates;
-		}
-	}
 }

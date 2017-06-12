@@ -1,7 +1,8 @@
 package threads.gui;
 
+import threads.data.Configuration;
 import threads.data.Thread;
-import threads.util.TimedUpdater;
+import threads.util.Settings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,17 +18,19 @@ import static threads.gui.GUIConstants.s_statsColumnWidth;
 import static threads.gui.GUIConstants.s_threadColumnWidth;
 import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.ImageUtil.getPlusIcon;
-import static threads.util.Settings.s_SEVENDAYS;
-import static threads.util.Settings.updateSetting;
+import static threads.util.Settings.Setting.SEVENDAYS;
+import static threads.util.Settings.Setting.TABINDEX;
 
 class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
     private final Thread o_thread;
+	private final Settings o_settings;
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(true, true, Thread);
 	private final JLabel o_topLabel = new JLabel("0 Threads");
 
-    ThreadThreadPanel(Thread p_thread, JPanel p_parentPanel) {
+    ThreadThreadPanel(Configuration p_configuration, Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadThreadTableModel(p_thread), new BaseCellRenderer());
 		o_thread = p_thread;
+		o_settings = p_configuration.getSettings();
 		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
 
         fixColumnWidth(0, s_threadColumnWidth);
@@ -46,7 +49,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
 		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivateComponent(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setRemoveActionListener(e -> Actions.removeComponent(getSelectedObject(), p_parentPanel, false));
 		o_popupMenu.setMoveActionListener(e -> Actions.moveThreadItem(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_configuration, p_parentPanel));
 
 		JPanel x_buttonPanel = new JPanel(new FlowLayout(LEFT));
 		x_buttonPanel.add(x_addLabel);
@@ -76,10 +79,10 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
 
 				if(p_col > 1) {
 					if(p_col == 4) {
-						updateSetting(s_SEVENDAYS, false);
+						o_settings.updateSetting(SEVENDAYS, false);
 					}
 
-					ThreadPanel.setTabIndex(p_col - 1);
+					o_settings.updateSetting(TABINDEX, "" + (p_col - 1));
 				}
 		}
     }

@@ -1,23 +1,21 @@
 package threads.util;
 
-import threads.data.Thread;
+import threads.data.Configuration;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import static threads.data.Saver.saveDocument;
-import static threads.gui.Actions.getActionTemplates;
 
 public class TimedSaver extends TimedActivity<TimedSaveListener> {
     private static TimedSaver s_INSTANCE = null;
 
-	public static void initialise(Thread p_topLevelThread, File p_dataFile) {
+	public static void initialise() {
 		if(s_INSTANCE != null) {
 			throw new IllegalStateException("Cannot initialise timed saver twice");
 		}
 
-		s_INSTANCE = new TimedSaver(p_topLevelThread, p_dataFile);
+		s_INSTANCE = new TimedSaver();
 	}
 
 	public static TimedSaver getInstance() {
@@ -28,20 +26,29 @@ public class TimedSaver extends TimedActivity<TimedSaveListener> {
 		return s_INSTANCE;
     }
 
-	private final Thread o_topThread;
-    private final File o_dataFile;
+	private final List<Configuration> o_configurations;
 
-    private TimedSaver(Thread p_topThread, File p_dataFile) {
+    private TimedSaver() {
     	super(300000, false);
-		o_topThread = p_topThread;
-		o_dataFile = p_dataFile;
+		o_configurations = new ArrayList<>();
 		setDaemon(true);
         start();
     }
 
+    public void addConfiguration(Configuration p_configuration) {
+    	o_configurations.add(p_configuration);
+	}
+
+	public void removeConfiguration(Configuration p_configuration) {
+        saveDocument(p_configuration, false);
+    	o_configurations.remove(p_configuration);
+	}
+
 	void action() {
-		saveDocument(o_topThread, getActionTemplates(), o_dataFile);
-		saveDocument(o_topThread, getActionTemplates(), getBackupFile());
+    	for(Configuration x_configuration: o_configurations) {
+			saveDocument(x_configuration, false);
+			saveDocument(x_configuration, true);
+		}
 
 		try {
 			sleep(1000);
@@ -58,13 +65,5 @@ public class TimedSaver extends TimedActivity<TimedSaveListener> {
 	@Override
 	void informOfFinish(TimedSaveListener p_listener) {
 		p_listener.saved();
-	}
-
-	private File getBackupFile() {
-		String x_fileName = o_dataFile.getName();
-		File x_originalFolder = o_dataFile.getParentFile();
-		File x_backupFolder = new File(x_originalFolder, "backups");
-		x_backupFolder.mkdirs();
-		return new File(x_backupFolder, x_fileName.substring(0, x_fileName.indexOf(".xml")) + ".backup." + new SimpleDateFormat("yyMMddHH").format(new Date()) + ".xml");
 	}
 }

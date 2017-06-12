@@ -2,11 +2,11 @@ package threads.gui;
 
 import threads.data.Component;
 import threads.data.ComponentChangeEvent;
+import threads.data.Configuration;
 import threads.data.HasDueDate;
-import threads.data.Thread;
 import threads.util.GoogleSyncListener;
 import threads.util.GoogleSyncer;
-import threads.util.SettingChangeListener;
+import threads.util.Settings;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -27,20 +27,21 @@ import static threads.gui.GUIConstants.*;
 import static threads.util.DateUtil.isAllDay;
 import static threads.util.ImageUtil.getGoogleSmallIcon;
 import static threads.util.ImageUtil.getIconForType;
-import static threads.util.Settings.*;
+import static threads.util.Settings.Setting.*;
 
-class ActionLog extends JFrame implements SettingChangeListener {
+class ActionLog extends JFrame {
 	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
 
+	private final Settings o_settings;
 	private List<Action> o_log = new ArrayList<>();
 
-	ActionLog(Thread p_topLevelThread) {
-		super("Action Log");
-
+	ActionLog(Configuration p_configuration) {
+		super("Action Log - " + p_configuration.getXmlFile().getName());
+		o_settings = p_configuration.getSettings();
 		TableModel x_tableModel = new TableModel();
 
-		p_topLevelThread.addComponentChangeListener(e -> {
+		p_configuration.getTopLevelThread().addComponentChangeListener(e -> {
 			if(e.getField() != CONTENT) {
 				o_log.add(buildAction(e));
 				x_tableModel.fireTableDataChanged();
@@ -115,16 +116,11 @@ class ActionLog extends JFrame implements SettingChangeListener {
 		x_model.getColumn(p_column).setMaxWidth(p_width);
 	}
 
-	@Override
-	public void settingChanged(String p_name, Object p_value) {
-		// do nothing
-	}
-
 	void showLog() {
-		int x_height = registerForSetting(s_WINH, this, s_windowHeight);
-		int x_x = registerForSetting(s_WINY, this, s_windowX);
-		int x_y = registerForSetting(s_WINY, this, s_windowY);
-		int x_splitDivider = registerForSetting(s_NAVDIVLOC, this, 250);
+		int x_height = o_settings.getIntSetting(WINH);
+		int x_x = o_settings.getIntSetting(WINY);
+		int x_y = o_settings.getIntSetting(WINY);
+		int x_splitDivider = o_settings.getIntSetting(NAVDIVLOC);
 
 		setSize(new Dimension(1000, 400));
 		setLocation(new Point(x_x + x_splitDivider + 5, x_y + x_height - 470));

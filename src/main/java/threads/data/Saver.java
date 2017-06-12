@@ -7,23 +7,21 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import threads.data.ActionTemplate.ReminderTemplate;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
-import java.util.List;
 
 import static threads.data.XmlConstants.*;
 
 public class Saver {
-    public static void saveDocument(Thread p_topThread, List<ActionTemplate> p_actionTemplates, File p_xmlFile) {
+    public static void saveDocument(Configuration p_configuration, boolean p_backup) {
         try {
             Element x_rootElem = new Element(s_THREADS);
-            x_rootElem.addContent(addThread(p_topThread));
-            p_actionTemplates.forEach(a -> x_rootElem.addContent(addActionTemplate(a)));
+            x_rootElem.addContent(addThread(p_configuration.getTopLevelThread()));
+            p_configuration.getActionTemplates().forEach(a -> x_rootElem.addContent(addActionTemplate(a)));
             Document x_doc = new Document(x_rootElem);
             addSchema(x_doc);
             XMLOutputter x_outputter = new XMLOutputter(Format.getPrettyFormat());
-            x_outputter.output(x_doc, new FileOutputStream(p_xmlFile));
+            x_outputter.output(x_doc, new FileOutputStream(p_backup ? p_configuration.getBackupFile() : p_configuration.getXmlFile()));
         } catch(Exception ioe) {
             System.err.println("Error saving threads file: " + ioe);
             System.exit(1);

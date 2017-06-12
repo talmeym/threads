@@ -1,30 +1,35 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.Configuration;
+import threads.data.Reminder;
 import threads.data.Thread;
-import threads.util.*;
+import threads.util.GoogleSyncer;
+import threads.util.Settings;
+import threads.util.TimedUpdater;
 
 import javax.swing.*;
-import java.awt.Component;
 import java.awt.*;
 
-import static java.awt.BorderLayout.*;
+import static java.awt.BorderLayout.NORTH;
+import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static threads.data.ComponentType.Reminder;
 import static threads.gui.Actions.linkToGoogle;
 import static threads.gui.GUIConstants.*;
-import static threads.util.Settings.*;
+import static threads.util.Settings.Setting.ONLYDUE;
 
-class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implements SettingChangeListener {
+class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> {
 	private final JRadioButton o_showDueRadioButton;
 	private final JRadioButton o_showAllRadioButton;
 	private final ContextualPopupMenu o_popupMenu = new ContextualPopupMenu(false, true, Reminder);
 	private final JLabel o_topLabel = new JLabel("0 Reminders");
 
-	ThreadReminderPanel(Thread p_thread, JPanel p_parentPanel) {
+	ThreadReminderPanel(Configuration p_configuration, Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadReminderTableModel(p_thread), new ThreadReminderCellRenderer());
 		p_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
+
+		Settings x_settings = p_configuration.getSettings();
 
 		fixColumnWidth(0, s_threadColumnWidth);
         fixColumnWidth(2, s_dateStatusColumnWidth);
@@ -34,19 +39,24 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 		o_popupMenu.setActivateActionListener(e -> Actions.activateComponent(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setDeactivateActionListener(e -> Actions.deactivateComponent(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setRemoveActionListener(e -> Actions.removeComponent(getSelectedObject(), p_parentPanel, false));
-		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_configuration, p_parentPanel));
 
-		boolean x_onlyDue = registerForSetting(s_ONLYDUE, this, true);
 		ThreadReminderTableModel x_tableModel = (ThreadReminderTableModel) o_table.getModel();
-		x_tableModel.setOnlyDueReminders(x_onlyDue);
-
 		o_showDueRadioButton = new JRadioButton("Due", x_tableModel.onlyDueReminders());
 		o_showAllRadioButton = new JRadioButton("All", !x_tableModel.onlyDueReminders());
+
+		boolean x_onlyDue = x_settings.registerForBooleanSetting(ONLYDUE, (k, v) -> {
+			((ThreadReminderTableModel)o_table.getModel()).setOnlyDueReminders((Boolean) v);
+			o_showDueRadioButton.setSelected((boolean)v);
+			o_showAllRadioButton.setSelected(!(boolean)v);
+		});
+
+		x_tableModel.setOnlyDueReminders(x_onlyDue);
 
 		o_showDueRadioButton.addChangeListener(e -> {
 			boolean x_selected = o_showDueRadioButton.isSelected();
 			x_tableModel.setOnlyDueReminders(x_selected);
-			updateSetting(s_ONLYDUE, x_selected);
+			x_settings.updateSetting(ONLYDUE, x_selected);
             o_topLabel.setText(o_table.getModel().getRowCount() + " Reminders");
         });
 
@@ -92,12 +102,4 @@ class ThreadReminderPanel extends ComponentTablePanel<Thread, Reminder> implemen
 			default: WindowManager.getInstance().openComponent(p_reminder); break;
         }
     }
-
-	@Override
-	public void settingChanged(String p_name, Object p_value) {
-		boolean x_onlyDue = (Boolean) p_value;
-		((ThreadReminderTableModel)o_table.getModel()).setOnlyDueReminders(x_onlyDue);
-		o_showDueRadioButton.setSelected(x_onlyDue);
-		o_showAllRadioButton.setSelected(!x_onlyDue);
-	}
 }

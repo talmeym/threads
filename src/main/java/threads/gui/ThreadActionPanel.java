@@ -3,6 +3,7 @@ package threads.gui;
 import threads.data.*;
 import threads.data.Thread;
 import threads.util.*;
+import threads.util.Settings.Setting;
 
 import javax.swing.*;
 import java.awt.Component;
@@ -17,7 +18,7 @@ import static threads.gui.Actions.*;
 import static threads.gui.GUIConstants.*;
 import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.ImageUtil.*;
-import static threads.util.Settings.*;
+import static threads.util.Settings.Setting.*;
 
 class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements SettingChangeListener {
     private final Thread o_thread;
@@ -26,10 +27,12 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 	private final JRadioButton o_showAllRadioButton;
 	private final JLabel o_topLabel = new JLabel("0 Actions");
 
-	ThreadActionPanel(Thread p_thread, JPanel p_parentPanel) {
+	ThreadActionPanel(Configuration p_configuration, Thread p_thread, JPanel p_parentPanel) {
         super(new ThreadActionTableModel(p_thread), new ThreadActionCellRenderer());
         o_thread = p_thread;
 		o_thread.addComponentChangeListener(e -> tableRowClicked(-1, -1, null));
+
+		Settings x_settings = p_configuration.getSettings();
 
         fixColumnWidth(0, s_threadColumnWidth);
         fixColumnWidth(2, s_dateStatusColumnWidth);
@@ -37,15 +40,15 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
         fixColumnWidth(4, s_googleStatusColumnWidth);
 
 		JLabel x_addLabel = createLabel(getPlusIcon(), "Add Action", true, e -> addAction(getSelectedObject(), o_thread, ItemDateSuggestionPanel.getDateSuggestion(), p_parentPanel, true));
-		JLabel x_addTemplateLabel = createLabel(getTemplateIcon(), "Add From Template", true, e -> addActionFromTemplate(getSelectedObject(), o_thread, ItemDateSuggestionPanel.getDateSuggestion(), p_parentPanel, true));
+		JLabel x_addTemplateLabel = createLabel(getTemplateIcon(), "Add From Template", true, e -> addActionFromTemplate(p_configuration, getSelectedObject(), o_thread, ItemDateSuggestionPanel.getDateSuggestion(), p_parentPanel, true));
 
 		o_popupMenu.setActivateActionListener(e -> activateComponent(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setDeactivateActionListener(e -> deactivateComponent(getSelectedObject(), p_parentPanel));
 		o_popupMenu.setRemoveActionListener(e -> removeComponent(getSelectedObject(), p_parentPanel, false));
 		o_popupMenu.setMoveActionListener(e -> moveThreadItem(getSelectedObject(), p_parentPanel));
-		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_parentPanel));
+		o_popupMenu.setLinkActionListener(e -> linkToGoogle(getSelectedObject(), p_configuration, p_parentPanel));
 
-		boolean x_sevenDays = registerForSetting(s_SEVENDAYS, this, true);
+		boolean x_sevenDays = x_settings.registerForBooleanSetting(SEVENDAYS, this);
 		ThreadActionTableModel x_tableModel = (ThreadActionTableModel) o_table.getModel();
 		x_tableModel.setOnlyNext7Days(x_sevenDays);
 
@@ -54,7 +57,7 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
 
 		o_showNext7DaysRadioButton.addChangeListener(e -> {
 			x_tableModel.setOnlyNext7Days(o_showNext7DaysRadioButton.isSelected());
-			updateSetting(s_SEVENDAYS, o_showNext7DaysRadioButton.isSelected());
+			x_settings.updateSetting(SEVENDAYS, o_showNext7DaysRadioButton.isSelected());
             o_topLabel.setText(o_table.getModel().getRowCount() + " Actions");
 		});
 
@@ -105,7 +108,7 @@ class ThreadActionPanel extends ComponentTablePanel<Thread, Item> implements Set
     }
 
 	@Override
-	public void settingChanged(String p_name, Object p_value) {
+	public void settingChanged(Setting p_setting, Object p_value) {
 		boolean x_sevenDays = (Boolean) p_value;
 		((ThreadActionTableModel)o_table.getModel()).setOnlyNext7Days(x_sevenDays);
 		o_showNext7DaysRadioButton.setSelected(x_sevenDays);

@@ -6,82 +6,107 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
+import static java.util.Calendar.getInstance;
+
 public class Settings {
-	public static final String s_TABINDEX = "tabindex";
-	public static final String s_DATE = "date";
-	public static final String s_DIVLOC = "divloc";
-	public static final String s_NAVDIVLOC = "navdivloc";
-	public static final String s_WINW = "winw";
-	public static final String s_WINH = "winh";
-	public static final String s_WINX = "winx";
-	public static final String s_WINY = "winy";
-	public static final String s_UUID = "uuid";
-	public static final String s_CALENDARACT = "calendaract";
-	public static final String s_CALENDARUP = "calendarup";
-	public static final String s_CALENDARREM = "calendarrem";
-	public static final String s_ONLYDUE = "onlydue";
-	public static final String s_SEVENDAYS = "sevendays";
-	public static final String s_GOOGLE = "google";
-	public static final String s_SEARCHNOTES = "searchnotes";
-	public static final String s_SEARCHCASE = "searchcase";
+    public enum Setting {
+        TABINDEX("tabindex", "0"),
+        DATE("date", getInstance().get(MONTH) + "_" + getInstance().get(YEAR)),
+        DIVLOC("divloc", "350"),
+        NAVDIVLOC("navdivloc", "250"),
+        WINW("winw", "1200"),
+        WINH("winh", "800"),
+        WINX("winx", "150"),
+        WINY("winy", "150"),
+        UUID("uuid", null),
+        CALENDARACT("calendaract", "true"),
+        CALENDARUP("calendarup", "false"),
+        CALENDARREM("calendarrem", "false"),
+        ONLYDUE("onlydue", "true"),
+        SEVENDAYS("sevendays", "true"),
+        GOOGLE("google", "false"),
+        SEARCHNOTES("searchnotes", "false"),
+        SEARCHCASE("searchcase", "false");
 
-	private static Map<String, List<SettingChangeListener>> interestedParties = new HashMap<>();
-	private static Properties settings = new Properties();
+        private String o_name;
+        private String o_defaultValue;
 
-	public static int registerForSetting(String name, SettingChangeListener listener, int defaultValue) {
-		if(!settings.containsKey(name)) {
-			settings.put(name, String.valueOf(defaultValue));
-		}
+        Setting(String p_name, String p_defaultValue) {
+            o_name = p_name;
+            o_defaultValue = p_defaultValue;
+        }
+    }
 
-		getInterestedParties(name).add(listener);
-		return Integer.parseInt((String)settings.get(name));
+    private final File o_settingsFile;
+    private final Properties o_settings = new Properties();
+	private final Map<Setting, List<SettingChangeListener>> interestedParties = new HashMap<>();
+
+    public Settings(File p_settingsFile) {
+        o_settingsFile = p_settingsFile;
+
+        if(o_settingsFile.exists()) {
+            try {
+                o_settings.load(new FileInputStream(o_settingsFile));
+            } catch(Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public Integer registerForIntSetting(Setting p_setting, SettingChangeListener p_listener) {
+        getInterestedParties(p_setting).add(p_listener);
+        return getIntSetting(p_setting);
+    }
+
+    public Integer getIntSetting(Setting p_setting) {
+        return handleDefault(p_setting) ? parseInt((String)o_settings.get(p_setting.o_name)) : null;
+    }
+
+    public String registerForStringSetting(Setting p_setting, SettingChangeListener p_listener) {
+		getInterestedParties(p_setting).add(p_listener);
+		return getStringSetting(p_setting);
 	}
 
-	public static String registerForSetting(String name, SettingChangeListener listener, String defaultValue) {
-		if(!settings.containsKey(name)) {
-			settings.put(name, defaultValue);
-		}
+    public String getStringSetting(Setting p_setting) {
+        return handleDefault(p_setting) ? (String) o_settings.get(p_setting.o_name) : null;
+    }
 
-		getInterestedParties(name).add(listener);
-		return (String) settings.get(name);
+    public Boolean registerForBooleanSetting(Setting p_setting, SettingChangeListener p_listener) {
+		getInterestedParties(p_setting).add(p_listener);
+		return getBooleanSetting(p_setting);
 	}
 
-	public static Boolean registerForSetting(String name, SettingChangeListener listener, boolean defaultValue) {
-		if(!settings.containsKey(name)) {
-			settings.put(name, String.valueOf(defaultValue));
-		}
+    public Boolean getBooleanSetting(Setting p_setting) {
+        return handleDefault(p_setting) ? parseBoolean((String)o_settings.get(p_setting.o_name)) :  null;
+    }
 
-		getInterestedParties(name).add(listener);
-		return Boolean.parseBoolean((String)settings.get(name));
+    private boolean handleDefault(Setting p_setting) {
+        if(!o_settings.containsKey(p_setting.o_name)) {
+            if(p_setting.o_defaultValue != null) {
+                o_settings.put(p_setting.o_name, p_setting.o_defaultValue);
+            }
+        }
+
+        return o_settings.containsKey(p_setting.o_name);
+    }
+
+	public void updateSetting(Setting p_setting, Object value) {
+		o_settings.put(p_setting.o_name, String.valueOf(value));
+		getInterestedParties(p_setting).forEach(listener -> listener.settingChanged(p_setting, value));
 	}
 
-
-	public static void updateSetting(String name, Object value) {
-		settings.put(name, String.valueOf(value));
-		getInterestedParties(name).forEach(listener -> listener.settingChanged(name, value));
+	private List<SettingChangeListener> getInterestedParties(Setting p_setting) {
+        interestedParties.computeIfAbsent(p_setting, (k) -> new ArrayList<>());
+		return interestedParties.get(p_setting);
 	}
 
-	private static List<SettingChangeListener> getInterestedParties(String name) {
-		if(!interestedParties.containsKey(name)) {
-			interestedParties.put(name, new ArrayList<>());
-		}
-
-		return interestedParties.get(name);
-	}
-
-	public static void load(File file) {
-		if(file.exists()) {
-			try {
-				settings.load(new FileInputStream(file));
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-
-	public static void save(File file) {
+	public void save() {
 		try {
-			settings.store(new FileWriter(file), "Threads Settings");
+			o_settings.store(new FileWriter(o_settingsFile), "Threads Settings");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,6 +1,7 @@
 package threads.util;
 
 import threads.data.Component;
+import threads.data.Configuration;
 import threads.data.Thread;
 
 import java.util.ArrayList;
@@ -13,12 +14,12 @@ import static threads.data.LookupHelper.getAllActiveReminders;
 public class NotificationUpdater {
 	private static NotificationUpdater s_INSTANCE = null;
 
-	public static void initialise(Thread p_topLevelThread) {
+	public static void initialise() {
 		if(s_INSTANCE != null) {
 			throw new IllegalStateException("Cannot initialise notification updater twice");
 		}
 
-		s_INSTANCE = new NotificationUpdater(p_topLevelThread);
+		s_INSTANCE = new NotificationUpdater();
 	}
 
 	public static NotificationUpdater getInstance() {
@@ -31,11 +32,19 @@ public class NotificationUpdater {
 
 	private final List<NotificationListener> o_notificationListeners = new ArrayList<>();
 	private final List<Component> o_alertedComponents = new ArrayList<>();
-	private final Thread o_topLevelThread;
+	private final List<Configuration> o_configurations;
 
-	private NotificationUpdater(Thread p_topLevelThread) {
-		o_topLevelThread = p_topLevelThread;
+	private NotificationUpdater() {
+		o_configurations = new ArrayList<>();
 		TimedUpdater.getInstance().addActivityListener(this::processAlerts);
+	}
+
+	public void addConfiguration(Configuration p_configuration) {
+		o_configurations.add(p_configuration);
+	}
+
+	public void removeConfiguration(Configuration p_configuration) {
+		o_configurations.remove(p_configuration);
 	}
 
 	synchronized void addNotificationListener(NotificationListener p_listener) {
@@ -45,19 +54,22 @@ public class NotificationUpdater {
 
 	private void processAlerts() {
 		List<Component> x_dueComponents = new ArrayList<>();
-		x_dueComponents.addAll(getAllActiveReminders(o_topLevelThread, true));
-		x_dueComponents.addAll(getAllActiveDueActions(o_topLevelThread));
-		x_dueComponents.removeAll(o_alertedComponents);
+		for(Configuration x_configuration: o_configurations) {
+			Thread x_topLevelThread = x_configuration.getTopLevelThread();
+			x_dueComponents.addAll(getAllActiveReminders(x_topLevelThread, true));
+			x_dueComponents.addAll(getAllActiveDueActions(x_topLevelThread));
+			x_dueComponents.removeAll(o_alertedComponents);
 
-		if(x_dueComponents.size() > 0) {
-			o_notificationListeners.forEach(x_listener -> x_listener.componentsDue(x_dueComponents));
-			o_alertedComponents.addAll(x_dueComponents);
+			if (x_dueComponents.size() > 0) {
+				o_notificationListeners.forEach(x_listener -> x_listener.componentsDue(x_dueComponents));
+				o_alertedComponents.addAll(x_dueComponents);
 
-			x_dueComponents.forEach(x_component -> x_component.addComponentChangeListener(e -> {
-				if (e.getSource() == x_component && e.getField() == DUE_DATE) {
-					o_alertedComponents.remove(x_component);
-				}
-			}));
+				x_dueComponents.forEach(x_component -> x_component.addComponentChangeListener(e -> {
+					if (e.getSource() == x_component && e.getField() == DUE_DATE) {
+						o_alertedComponents.remove(x_component);
+					}
+				}));
+			}
 		}
 	}
 }

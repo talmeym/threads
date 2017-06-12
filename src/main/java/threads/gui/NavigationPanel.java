@@ -1,9 +1,8 @@
 package threads.gui;
 
+import threads.data.*;
 import threads.data.Component;
-import threads.data.Reminder;
 import threads.data.Thread;
-import threads.data.ThreadItem;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -18,10 +17,11 @@ import static java.awt.BorderLayout.SOUTH;
 class NavigationPanel extends JPanel implements TreeSelectionListener {
 	private final JTree o_navigationTree;
 
-	NavigationPanel(Thread p_topLevelThread) {
+	NavigationPanel(Configuration p_configuration) {
 		super(new BorderLayout());
+		Thread x_topLevelThread = p_configuration.getTopLevelThread();
 
-		o_navigationTree = new JTree(new ThreadTreeModel(p_topLevelThread));
+		o_navigationTree = new JTree(new ThreadTreeModel(x_topLevelThread));
 		o_navigationTree.setCellRenderer(new ThreadTreeCellRenderer());
 		o_navigationTree.addTreeSelectionListener(this);
 
@@ -30,8 +30,8 @@ class NavigationPanel extends JPanel implements TreeSelectionListener {
 		x_treePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		JPanel x_panel = new JPanel(new BorderLayout());
-		x_panel.add(new SearchPanel(p_topLevelThread), CENTER);
-		x_panel.add(new StatusPanel(p_topLevelThread), SOUTH);
+		x_panel.add(new SearchPanel(p_configuration), CENTER);
+		x_panel.add(new StatusPanel(p_configuration), SOUTH);
 
 		add(x_treePanel, CENTER);
 		add(x_panel, SOUTH);
