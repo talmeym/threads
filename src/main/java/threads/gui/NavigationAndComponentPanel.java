@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
 import static threads.util.Settings.Setting.NAVDIVLOC;
@@ -19,7 +18,7 @@ class NavigationAndComponentPanel extends JPanel {
 	private final CardLayout o_cardLayout = new CardLayout();
 	private final JPanel o_cardPanel = new JPanel(o_cardLayout);
 
-	private final Map<UUID, JPanel> o_componentPanels = new HashMap<>();
+	private final Map<Component, JPanel> o_componentPanels = new HashMap<>();
 	private final NavigationPanel o_navigationPanel;
 	private final JFrame o_frame;
 
@@ -44,15 +43,15 @@ class NavigationAndComponentPanel extends JPanel {
 	}
 
 	void showComponent(Component p_component) {
-		if(!o_componentPanels.containsKey(p_component.getId())) {
+		if(!o_componentPanels.containsKey(p_component)) {
 			JPanel x_panel = makeComponentPanel(p_component);
 			o_cardPanel.add(x_panel, p_component.getId().toString());
-			o_componentPanels.put(p_component.getId(), x_panel);
+			o_componentPanels.put(p_component, x_panel);
 		}
 
 		// TODO better way to select reminder in ItemReminderPanel panel, other than this hack?
 		if(p_component instanceof Reminder) {
-			((ItemAndReminderPanel)o_componentPanels.get(p_component.getId())).showReminder((Reminder)p_component);
+			((ItemAndReminderPanel)o_componentPanels.get(p_component)).showReminder((Reminder)p_component);
 		}
 
 		o_cardLayout.show(o_cardPanel, p_component.getId().toString());

@@ -34,8 +34,9 @@ import static threads.util.ImageUtil.getThreadsImage;
 public class SystemTrayUtil {
     private static final PopupMenu s_popUpMenu = new PopupMenu();
     private static TrayIcon x_trayIcon = new TrayIcon(getThreadsImage(), "Threads", s_popUpMenu);
-    private static final Map<Configuration, Menu> s_configurationMenus = new HashMap<>();
     private static final Menu x_recentFilesMenu = new Menu("Open Recent");
+
+    private static final Map<Configuration, Menu> s_configurationMenus = new HashMap<>();
     private static final Map<File, MenuItem> s_recentMenuItems = new HashMap<>();
 
     public static void initialise() {
@@ -116,8 +117,7 @@ public class SystemTrayUtil {
 			NotificationUpdater.getInstance().addNotificationListener(p_dueComponents -> {
 				if (p_dueComponents.size() == 1) {
 					Component x_component = p_dueComponents.get(0);
-					String caption = x_component instanceof Item ? "Action Overdue" : "Reminder";
-					x_trayIcon.displayMessage(caption, x_component.getText(), INFO);
+                    x_trayIcon.displayMessage(x_component instanceof Item ? "Action Overdue" : "Reminder", x_component.getText(), INFO);
 				} else if (p_dueComponents.size() > 1) {
 					x_trayIcon.displayMessage("Threads", "You have " + p_dueComponents.size() + " new notifications.", INFO);
 				}
@@ -155,21 +155,21 @@ public class SystemTrayUtil {
 	public static void addConfiguration(Configuration p_configuration) {
         Thread x_topLevelThread = p_configuration.getTopLevelThread();
 
-        MenuItem x_addActionItem = new MenuItem("Add Action");
-        x_addActionItem.addActionListener(e -> addAction(null, x_topLevelThread, getDateSuggestion(), null, true));
-
-        MenuItem x_addUpdateItem = new MenuItem("Add Update");
-        x_addUpdateItem.addActionListener(e -> addUpdate(null, x_topLevelThread, null));
-
-        MenuItem x_closeItem = new MenuItem("Close File");
-        x_closeItem.addActionListener(e -> WindowManager.getInstance().closeConfiguration(p_configuration));
-
         File x_xmlFile = p_configuration.getXmlFile().getAbsoluteFile();
         storeRecentFile(x_xmlFile);
 
         Menu x_menu = new Menu(x_xmlFile.getName());
+
+        MenuItem x_addActionItem = new MenuItem("Add Action");
+        x_addActionItem.addActionListener(e -> addAction(null, x_topLevelThread, getDateSuggestion(), null, true));
         x_menu.add(x_addActionItem);
+
+        MenuItem x_addUpdateItem = new MenuItem("Add Update");
+        x_addUpdateItem.addActionListener(e -> addUpdate(null, x_topLevelThread, null));
         x_menu.add(x_addUpdateItem);
+
+        MenuItem x_closeItem = new MenuItem("Close File");
+        x_closeItem.addActionListener(e -> WindowManager.getInstance().closeConfiguration(p_configuration));
         x_menu.add(x_closeItem);
 
         s_configurationMenus.put(p_configuration, x_menu);
