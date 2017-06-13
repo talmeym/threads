@@ -117,7 +117,7 @@ class ActionLog extends JFrame {
         String x_new = (String) p_action.o_data[6];
         File x_xmlFile = p_configuation.getXmlFile();
         File x_logFile = new File(x_xmlFile.getParentFile(), x_xmlFile.getName() + ".log");
-        logToFile(x_logFile, x_date + ", " + x_xmlFile.getName() + ", " + (x_name.length() > 0 ? "'" + x_name + "' " : "") + x_action + " " + (x_old.equals("-") ? "" : x_old) + (x_arrow.length() > 0 ? " " + x_arrow + " " : "") + (x_new.equals("-") ? "" : x_new));
+        logToFile(x_logFile, x_date + ", " + (x_name.length() > 0 ? "'" + x_name + "' " : "") + x_action + " " + (x_old.equals("-") ? "" : x_old) + (x_arrow.length() > 0 ? " " + x_arrow + " " : "") + (x_new.equals("-") ? "" : x_new));
     }
 
 	private String getString(Object p_value) {
