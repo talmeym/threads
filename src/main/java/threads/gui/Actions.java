@@ -208,7 +208,7 @@ public class Actions {
 			}
 
 			if(x_googleAccount != null) {
-				String x_deltaString = x_unlinkedHasDueDates.size() != p_hasDueDates.size() ? " (of " + p_hasDueDates.size() + " Items)" : "";
+				String x_deltaString = x_unlinkedHasDueDates.size() != p_hasDueDates.size()  && x_unlinkedHasDueDates.size() > 1 ? " (of " + p_hasDueDates.size() + ")" : "";
 				String x_confirmMessage = x_unlinkedHasDueDates.size() > 1 ? "Link " + x_unlinkedHasDueDates.size() + " item" + (x_unlinkedHasDueDates.size() > 1 ? "s" : "") + x_deltaString + " to '" + x_googleAccount + "' ?" : "Link '" + x_unlinkedHasDueDates.get(0) + "'" + x_deltaString + " to '" + x_googleAccount + "' ?";
 				String x_successMessage = x_unlinkedHasDueDates.size() > 1 ? x_unlinkedHasDueDates.size() + " Item" + (x_unlinkedHasDueDates.size() > 1 ? "s were" : " was") + " linked to '" + x_googleAccount + "'" : "'" + x_unlinkedHasDueDates.get(0).getText() + "' was linked to '" + x_googleAccount + "'";
 

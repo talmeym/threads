@@ -58,6 +58,7 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 		fireTableDataChanged();
 	}
 
+	@Override
 	public void googleSynced(List<HasDueDate> p_hasDueDates) {
 		fireTableDataChanged();
 	}

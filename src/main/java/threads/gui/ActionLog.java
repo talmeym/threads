@@ -46,7 +46,7 @@ class ActionLog extends JFrame {
 		p_configuration.getTopLevelThread().addComponentChangeListener(e -> {
 			if(e.getField() != CONTENT) {
                 Action x_action = buildAction(e);
-                logAction(p_configuration, x_action);
+                logActionToDisk(p_configuration, x_action);
                 o_log.add(x_action);
 				x_tableModel.fireTableDataChanged();
 			}
@@ -57,7 +57,7 @@ class ActionLog extends JFrame {
 			public void googleSyncStarted() {
                 Action x_action = new Action(new Date(), getGoogleSmallIcon(), "", "Google Sync started ...", "", "", "");
                 o_log.add(x_action);
-                logAction(p_configuration, x_action);
+                logActionToDisk(p_configuration, x_action);
 				x_tableModel.fireTableDataChanged();
 			}
 
@@ -65,7 +65,7 @@ class ActionLog extends JFrame {
 			public void googleSynced() {
                 Action x_action = new Action(new Date(), getGoogleSmallIcon(), "", "Google Sync Completed", "", "", "");
                 o_log.add(x_action);
-                logAction(p_configuration, x_action);
+                logActionToDisk(p_configuration, x_action);
 				x_tableModel.fireTableDataChanged();
 			}
 
@@ -108,7 +108,23 @@ class ActionLog extends JFrame {
 		return new Action(new Date(), getIconForType(x_source.getType()), x_source.getText(), getActionString(e), getString(e.getOldValue()), e.isValueChange() ? "=>" : "", getString(e.getNewValue()));
 	}
 
-	private void logAction(Configuration p_configuation, Action p_action) {
+	private String getActionString(ComponentChangeEvent p_event) {
+		if(p_event.isValueChange()) {
+			return "Changed '" + p_event.getField() + "'";
+		}
+
+		if(p_event.isComponentRemoved()) {
+			return "Removed From";
+		}
+
+		if(p_event.isComponentAdded()) {
+			return "Added To";
+		}
+
+		return null; // never get here
+	}
+
+	private void logActionToDisk(Configuration p_configuation, Action p_action) {
 	    String x_date = new SimpleDateFormat("dd MMM yy HH:mm").format((Date)p_action.o_data[0]);
         String x_name = (String) p_action.o_data[2];
         String x_action = (String) p_action.o_data[3];
@@ -183,22 +199,6 @@ class ActionLog extends JFrame {
 		public boolean isCellEditable(int row, int column) {
 			return false;
 		}
-	}
-
-	private String getActionString(ComponentChangeEvent p_event) {
-		if(p_event.isValueChange()) {
-			return "Changed '" + p_event.getField() + "'";
-		}
-
-		if(p_event.isComponentRemoved()) {
-			return "Removed From";
-		}
-
-		if(p_event.isComponentAdded()) {
-			return "Added To";
-		}
-
-		return null; // never get here
 	}
 
 	private class Action {
