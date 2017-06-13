@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static threads.data.ComponentChangeEvent.Field.CONTENT;
 import static threads.gui.GUIConstants.*;
 import static threads.util.DateUtil.isAllDay;
+import static threads.util.FileUtil.logToFile;
 import static threads.util.ImageUtil.getGoogleSmallIcon;
 import static threads.util.ImageUtil.getIconForType;
 import static threads.util.Settings.Setting.*;
@@ -43,7 +45,9 @@ class ActionLog extends JFrame {
 
 		p_configuration.getTopLevelThread().addComponentChangeListener(e -> {
 			if(e.getField() != CONTENT) {
-				o_log.add(buildAction(e));
+                Action x_action = buildAction(e);
+                logAction(p_configuration, x_action);
+                o_log.add(x_action);
 				x_tableModel.fireTableDataChanged();
 			}
 		});
@@ -51,13 +55,17 @@ class ActionLog extends JFrame {
 		GoogleSyncer.getInstance().addActivityListener(new GoogleSyncListener() {
 			@Override
 			public void googleSyncStarted() {
-				o_log.add(new Action(new Date(), getGoogleSmallIcon(), "", "Google Sync started ...", "", "", ""));
+                Action x_action = new Action(new Date(), getGoogleSmallIcon(), "", "Google Sync started ...", "", "", "");
+                o_log.add(x_action);
+                logAction(p_configuration, x_action);
 				x_tableModel.fireTableDataChanged();
 			}
 
 			@Override
 			public void googleSynced() {
-				o_log.add(new Action(new Date(), getGoogleSmallIcon(), "", "Google Sync Completed", "", "", ""));
+                Action x_action = new Action(new Date(), getGoogleSmallIcon(), "", "Google Sync Completed", "", "", "");
+                o_log.add(x_action);
+                logAction(p_configuration, x_action);
 				x_tableModel.fireTableDataChanged();
 			}
 
@@ -95,10 +103,22 @@ class ActionLog extends JFrame {
 		setContentPane(x_contentPane);
 	}
 
-	private Action buildAction(ComponentChangeEvent e) {
+    private Action buildAction(ComponentChangeEvent e) {
 		Component x_source = e.getSource();
 		return new Action(new Date(), getIconForType(x_source.getType()), x_source.getText(), getActionString(e), getString(e.getOldValue()), e.isValueChange() ? "=>" : "", getString(e.getNewValue()));
 	}
+
+	private void logAction(Configuration p_configuation, Action p_action) {
+	    String x_date = new SimpleDateFormat("dd MMM yy HH:mm").format((Date)p_action.o_data[0]);
+        String x_name = (String) p_action.o_data[2];
+        String x_action = (String) p_action.o_data[3];
+        String x_old = (String) p_action.o_data[4];
+        String x_arrow = (String) p_action.o_data[5];
+        String x_new = (String) p_action.o_data[6];
+        File x_xmlFile = p_configuation.getXmlFile();
+        File x_logFile = new File(x_xmlFile.getParentFile(), x_xmlFile.getName() + ".log");
+        logToFile(x_logFile, x_date + ", " + x_xmlFile.getName() + ", " + (x_name.length() > 0 ? "'" + x_name + "' " : "") + x_action + " " + (x_old.equals("-") ? "" : x_old) + (x_arrow.length() > 0 ? " " + x_arrow + " " : "") + (x_new.equals("-") ? "" : x_new));
+    }
 
 	private String getString(Object p_value) {
 		p_value = p_value instanceof Date ? getDueDateText(((Date)p_value)) : p_value;

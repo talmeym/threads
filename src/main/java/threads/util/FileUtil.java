@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-class FileUtil {
+public class FileUtil {
     private static final File s_recentFile = new File(new File("."), ".threadsrecent");
 
     static List<File> getRecentFiles() {
@@ -33,8 +33,8 @@ class FileUtil {
     }
 
     static void storeRecentFile(File x_file) {
-        List<File> x_files = getRecentFiles();
         try {
+            List<File> x_files = getRecentFiles();
             BufferedWriter x_writer = new BufferedWriter(new FileWriter(s_recentFile));
 
             if(!x_files.contains(x_file)) {
@@ -46,6 +46,18 @@ class FileUtil {
                 x_writer.newLine();
             }
 
+            x_writer.flush();
+            x_writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void logToFile(File p_file, String p_entry) {
+        try {
+            BufferedWriter x_writer = new BufferedWriter(new FileWriter(p_file, true));
+            x_writer.write(p_entry);
+            x_writer.newLine();
             x_writer.flush();
             x_writer.close();
         } catch (IOException e) {

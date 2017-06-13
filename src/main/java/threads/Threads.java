@@ -24,12 +24,7 @@ public class Threads {
 
 		for(String x_arg: args) {
 			File x_xmlFile = new File(x_arg);
-
-			if(x_xmlFile.exists()) {
-			    new Threads(loadConfiguration(x_xmlFile));
-            } else {
-                new Threads(new Configuration(x_xmlFile, new Thread(x_xmlFile.getName()), new ArrayList<>()));
-            }
+			new Threads(x_xmlFile.exists() ? loadConfiguration(x_xmlFile) : new Configuration(x_xmlFile, new Thread(x_xmlFile.getName()), new ArrayList<>()));
 		}
 	}
 
