@@ -34,8 +34,7 @@ public class Loader {
         try {
             Document x_doc = x_builder.build(p_xmlFile);
 			return new Configuration(p_xmlFile, loadThread(x_doc.getRootElement().getChild(s_THREAD)), loadActionTemplates(x_doc.getRootElement()));
-        }        
-        catch(Exception ioe) {
+        } catch(Exception ioe) {
             throw new LoadException(ioe);
         }
     }
@@ -46,7 +45,6 @@ public class Loader {
 
 		for(Object x_actionTemplate: x_actionTemplates) {
 			Element x_element = (Element) x_actionTemplate;
-
 			x_result.add(loadActionTemplate(x_element));
 		}
 
