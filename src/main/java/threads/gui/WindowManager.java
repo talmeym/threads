@@ -1,14 +1,10 @@
 package threads.gui;
 
-import threads.data.Component;
-import threads.data.Configuration;
+import threads.data.*;
 import threads.data.Thread;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.event.*;
+import java.util.*;
 
 import static com.apple.eawt.Application.getApplication;
 import static threads.util.FontUtil.standardiseFontSizes;
@@ -49,7 +45,7 @@ public class WindowManager {
         x_threadWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                p_listener.windowClosing(e);
+				p_listener.windowClosing(e);
             }
         });
 

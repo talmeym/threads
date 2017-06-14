@@ -5,7 +5,7 @@ import threads.data.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static threads.data.Saver.saveDocument;
+import static threads.data.Saver.saveConfiguration;
 
 public class TimedSaver extends TimedActivity<TimedSaveListener> {
     private static TimedSaver s_INSTANCE = null;
@@ -40,14 +40,14 @@ public class TimedSaver extends TimedActivity<TimedSaveListener> {
 	}
 
 	public void removeConfiguration(Configuration p_configuration) {
-        saveDocument(p_configuration, false);
+        saveConfiguration(p_configuration, false);
     	o_configurations.remove(p_configuration);
 	}
 
 	void action() {
     	for(Configuration x_configuration: o_configurations) {
-			saveDocument(x_configuration, false);
-			saveDocument(x_configuration, true);
+			saveConfiguration(x_configuration, false);
+			saveConfiguration(x_configuration, true);
 		}
 
 		try {

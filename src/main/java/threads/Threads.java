@@ -12,6 +12,7 @@ import java.util.*;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static threads.data.Loader.loadConfiguration;
+import static threads.data.Saver.saveConfiguration;
 import static threads.util.FileUtil.getCurrentFiles;
 
 public class Threads {
@@ -39,6 +40,8 @@ public class Threads {
 		WindowManager.getInstance().openConfiguration(p_configuration, new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+            	saveConfiguration(p_configuration, false);
+
                 TimedSaver.getInstance().removeConfiguration(p_configuration);
                 NotificationUpdater.getInstance().removeConfiguration(p_configuration);
                 SystemTrayUtil.removeConfiguration(p_configuration);

@@ -1,21 +1,17 @@
 package threads.gui;
 
 import threads.data.Component;
-import threads.data.Configuration;
+import threads.data.*;
 import threads.util.Settings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
-import static threads.data.Saver.saveDocument;
 import static threads.util.ImageUtil.getThreadsImage;
 import static threads.util.Settings.Setting.*;
 
-public class ThreadsWindow extends JFrame {
+class ThreadsWindow extends JFrame {
     private final Settings o_settings;
     private final NavigationAndComponentPanel o_navigationAndComponentPanel;
 
@@ -35,14 +31,6 @@ public class ThreadsWindow extends JFrame {
                 o_settings.updateSetting(WINY, "" + new Double(getLocation().getY()).intValue());
                 o_settings.updateSetting(WINW, "" + new Double(getSize().getWidth()).intValue());
                 o_settings.updateSetting(WINH, "" + new Double(getSize().getHeight()).intValue());
-            }
-        });
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                saveDocument(p_configuration, false);
-                o_settings.save();
             }
         });
 

@@ -13,7 +13,7 @@ import java.util.Date;
 import static threads.data.XmlConstants.*;
 
 public class Saver {
-    public static void saveDocument(Configuration p_configuration, boolean p_backup) {
+    public static void saveConfiguration(Configuration p_configuration, boolean p_backup) {
         try {
             Element x_rootElem = new Element(s_THREADS);
             x_rootElem.addContent(addThread(p_configuration.getTopLevelThread()));
@@ -26,6 +26,8 @@ public class Saver {
             System.err.println("Error saving threads file: " + ioe);
             System.exit(1);
         }
+
+        p_configuration.getSettings().save();
     }
 
 	private static Element addActionTemplate(ActionTemplate p_actionTemplate) {

@@ -94,9 +94,9 @@ public class Settings {
         return o_settings.containsKey(p_setting.o_name);
     }
 
-	public void updateSetting(Setting p_setting, Object value) {
-		o_settings.put(p_setting.o_name, String.valueOf(value));
-		getInterestedParties(p_setting).forEach(listener -> listener.settingChanged(p_setting, value));
+	public void updateSetting(Setting p_setting, Object p_value) {
+		o_settings.put(p_setting.o_name, String.valueOf(p_value));
+		getInterestedParties(p_setting).forEach(listener -> listener.settingChanged(p_setting, p_value));
 	}
 
 	private List<SettingChangeListener> getInterestedParties(Setting p_setting) {
