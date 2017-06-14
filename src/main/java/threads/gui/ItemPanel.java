@@ -25,6 +25,7 @@ import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.GoogleUtil.googleAccount;
 import static threads.util.ImageUtil.*;
 import static threads.util.Settings.Setting.CALENDARACT;
+import static threads.util.Settings.Setting.CALENDARUP;
 import static threads.util.Settings.Setting.TABINDEX;
 
 class ItemPanel extends ComponentTablePanel<Item, Reminder> {
@@ -36,12 +37,12 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
         o_item = p_item;
 		Settings x_settings = p_configuration.getSettings();
 
-		JLabel x_calendarLabel = createLabel(getCalendarIcon(), "Show in Calendar", o_item, i -> i.getDueDate() != null, e -> {
-			Calendar x_calendar = Calendar.getInstance();
-			x_calendar.setTime(o_item.getDueDate());
+		JLabel x_calendarLabel = createLabel(getCalendarIcon(), "Show in Calendar", o_item, i -> true, e -> {
 			x_settings.updateSetting(TABINDEX, 5);
+			Calendar x_calendar = Calendar.getInstance();
+			x_calendar.setTime(o_item.getDueDate() != null ? o_item.getDueDate() : o_item.getModifiedDate());
 			x_settings.updateSetting(Settings.Setting.DATE, x_calendar.get(MONTH) + "_" + x_calendar.get(YEAR));
-			x_settings.updateSetting(CALENDARACT, true);
+			x_settings.updateSetting(o_item.getDueDate() != null ? CALENDARACT : CALENDARUP, true);
 			WindowManager.getInstance().openComponent(o_item.getParentThread());
 		});
 
