@@ -1,17 +1,18 @@
 package threads;
 
-import threads.data.Configuration;
-import threads.data.LoadException;
+import threads.data.*;
 import threads.data.Thread;
 import threads.gui.WindowManager;
 import threads.util.*;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 import static threads.data.Loader.loadConfiguration;
+import static threads.util.FileUtil.getCurrentFiles;
 
 public class Threads {
     public static void main(String[] args) throws LoadException {
@@ -22,9 +23,10 @@ public class Threads {
 		SystemTrayUtil.initialise();
 		WindowManager.initialise();
 
-		for(String x_arg: args) {
-			File x_xmlFile = new File(x_arg);
-			new Threads(x_xmlFile.exists() ? loadConfiguration(x_xmlFile) : new Configuration(x_xmlFile, new Thread(x_xmlFile.getName()), new ArrayList<>()));
+		List<File> x_args = args.length == 0 ? getCurrentFiles() : stream(args).map(File::new).collect(toList());
+
+		for(File x_file: x_args) {
+			new Threads(x_file.exists() ? loadConfiguration(x_file) : new Configuration(x_file, new Thread(x_file.getName()), new ArrayList<>()));
 		}
 	}
 

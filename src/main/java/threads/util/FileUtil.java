@@ -6,13 +6,22 @@ import java.util.List;
 
 public class FileUtil {
     private static final File s_recentFile = new File(new File("."), ".threadsrecent");
+    private static final File s_currentFiles = new File(new File("."), ".threadscurrent");
+
+    public static List<File> getCurrentFiles() {
+        return loadFromFile(s_currentFiles);
+    }
 
     static List<File> getRecentFiles() {
+        return loadFromFile(s_recentFile);
+    }
+
+    private static List<File> loadFromFile(File x_file) {
         List<File> x_files = new ArrayList<>();
 
-        if(s_recentFile.exists()) {
+        if(x_file.exists()) {
             try {
-                BufferedReader x_reader = new BufferedReader(new FileReader(s_recentFile));
+                BufferedReader x_reader = new BufferedReader(new FileReader(x_file));
                 String x_line;
 
                 while((x_line = x_reader.readLine()) != null) {
@@ -33,27 +42,36 @@ public class FileUtil {
     }
 
     static void storeRecentFile(File x_file) {
-        try {
-            List<File> x_files = getRecentFiles();
-            BufferedWriter x_writer = new BufferedWriter(new FileWriter(s_recentFile));
+		List<File> x_files = getRecentFiles();
 
-            if(!x_files.contains(x_file)) {
-                x_files.add(x_file);
-            }
+		if(!x_files.contains(x_file)) {
+			x_files.add(x_file);
+		}
 
-            for(File x_f : x_files) {
-                x_writer.write(x_f.getAbsolutePath());
-                x_writer.newLine();
-            }
+		writeToFile(x_files, s_recentFile);
+	}
 
-            x_writer.flush();
-            x_writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    static void storeCurrentFiles(List<File> x_files) {
+		writeToFile(x_files, FileUtil.s_currentFiles);
+	}
 
-    public static void logToFile(File p_file, String p_entry) {
+	private static void writeToFile(List<File> x_files, File x_file) {
+		try {
+			BufferedWriter x_writer = new BufferedWriter(new FileWriter(x_file));
+
+			for(File x_f : x_files) {
+				x_writer.write(x_f.getAbsolutePath());
+				x_writer.newLine();
+			}
+
+			x_writer.flush();
+			x_writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void logToFile(File p_file, String p_entry) {
         try {
             BufferedWriter x_writer = new BufferedWriter(new FileWriter(p_file, true));
             x_writer.write(p_entry);

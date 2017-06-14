@@ -2,8 +2,7 @@ package threads.util;
 
 import threads.Threads;
 import threads.data.Component;
-import threads.data.Configuration;
-import threads.data.Item;
+import threads.data.*;
 import threads.data.Thread;
 import threads.gui.WindowManager;
 
@@ -11,25 +10,21 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.awt.SystemTray.getSystemTray;
 import static java.awt.TrayIcon.MessageType.ERROR;
-import static java.awt.TrayIcon.MessageType.INFO;
+import static java.awt.TrayIcon.MessageType.*;
 import static java.lang.System.getProperty;
-import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
-import static javax.swing.JOptionPane.showInputDialog;
+import static java.util.stream.Collectors.toList;
+import static javax.swing.JOptionPane.*;
 import static threads.data.ComponentChangeEvent.Field.TEXT;
 import static threads.data.Loader.loadConfiguration;
-import static threads.gui.Actions.addAction;
-import static threads.gui.Actions.addUpdate;
+import static threads.gui.Actions.*;
 import static threads.gui.ItemDateSuggestionPanel.getDateSuggestion;
-import static threads.util.FileUtil.getRecentFiles;
-import static threads.util.FileUtil.storeRecentFile;
+import static threads.util.FileUtil.*;
 import static threads.util.GoogleUtil.addNewGoogleAccount;
-import static threads.util.ImageUtil.getThreadsIcon;
-import static threads.util.ImageUtil.getThreadsImage;
+import static threads.util.ImageUtil.*;
 
 public class SystemTrayUtil {
     private static final PopupMenu s_popUpMenu = new PopupMenu();
@@ -102,7 +97,8 @@ public class SystemTrayUtil {
             MenuItem x_quitItem = new MenuItem("Quit Threads");
 
 			x_quitItem.addActionListener(e -> {
-			    WindowManager.getInstance().closeAllWindows();
+				storeCurrentFiles(s_configurationMenus.keySet().stream().map(Configuration::getXmlFile).collect(toList()));
+				WindowManager.getInstance().closeAllWindows();
                 TimedSaver.getInstance().stopRunning();
                 GoogleSyncer.getInstance().stopRunning();
                 TimedUpdater.getInstance().stopRunning();
