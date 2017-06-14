@@ -1,20 +1,16 @@
 package threads.gui;
 
-import threads.data.Configuration;
-import threads.data.HasDueDate;
+import threads.data.*;
 import threads.util.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.awt.event.*;
+import java.text.*;
+import java.util.*;
 import java.util.List;
 
-import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.WEST;
+import static java.awt.BorderLayout.*;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
 import static threads.gui.WidgetFactory.setUpButtonLabel;
@@ -22,6 +18,7 @@ import static threads.util.ImageUtil.*;
 
 class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, GoogleSyncListener, TimedSaveListener {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm");
+	private static final DateFormat s_timeFormat = new SimpleDateFormat("HH:mm");
 
 	private final ActionLog o_actionLog;
 
@@ -35,15 +32,18 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 	private long o_lastGoogle = currentTimeMillis();
 	private long o_lastSave = currentTimeMillis();
 
+	private JLabel o_updateLabel = new JLabel(getTimeUpdateIcon());
+	private JLabel o_googleLabel = new JLabel(getGoogleVerySmallIcon());
+	private JLabel o_saveLabel = new JLabel(getSaveIcon());
 
 	StatusPanel(Configuration p_configuration) {
 		super(new GridLayout(0, 1, 5, 5));
 		o_actionLog = new ActionLog(p_configuration);
 		o_updateProgress.setMinimum(0);
 
-        JLabel x_updateLabel = new JLabel(getTimeUpdateIcon());
-        x_updateLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-		x_updateLabel.addMouseListener(new MouseAdapter() {
+		o_updateLabel.setToolTipText("Last Updated: N/A");
+		o_updateLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+		o_updateLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
 				TimedUpdater.getInstance().doAction();
@@ -51,7 +51,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		});
 
 		JPanel x_updatePanel = new JPanel(new BorderLayout());
-        x_updatePanel.add(setUpButtonLabel(x_updateLabel), WEST);
+        x_updatePanel.add(setUpButtonLabel(o_updateLabel), WEST);
 		x_updatePanel.add(o_updateProgress, CENTER);
 		x_updatePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		add(x_updatePanel);
@@ -59,9 +59,9 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 
 		o_googleProgress.setMinimum(0);
 
-		JLabel x_googleLabel = new JLabel(getGoogleVerySmallIcon());
-		x_googleLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-		x_googleLabel.addMouseListener(new MouseAdapter() {
+		o_googleLabel.setToolTipText("Last Sync: N/A");
+		o_googleLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		o_googleLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
 				new SwingWorker<Void, Void>() {
@@ -76,16 +76,16 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		});
 
 		JPanel x_googlePanel = new JPanel(new BorderLayout());
-		x_googlePanel.add(setUpButtonLabel(x_googleLabel), WEST);
+		x_googlePanel.add(setUpButtonLabel(o_googleLabel), WEST);
 		x_googlePanel.add(o_googleProgress, CENTER);
 		x_googlePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		add(x_googlePanel);
 
 		o_saveProgress.setMinimum(0);
 
-		JLabel x_saveLabel = new JLabel(getSaveIcon());
-        x_saveLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-		x_saveLabel.addMouseListener(new MouseAdapter() {
+		o_saveLabel.setToolTipText("Last Saved: N/A");
+        o_saveLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		o_saveLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
 				new SwingWorker<Void, Void>() {
@@ -99,7 +99,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		});
 
 		JPanel x_savePanel = new JPanel(new BorderLayout());
-        x_savePanel.add(setUpButtonLabel(x_saveLabel), WEST);
+        x_savePanel.add(setUpButtonLabel(o_saveLabel), WEST);
 		x_savePanel.add(o_saveProgress, CENTER);
 		x_savePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 		add(x_savePanel);
@@ -127,6 +127,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 	@Override
 	public void timeUpdate() {
 		o_lastUpdate = currentTimeMillis();
+		o_updateLabel.setToolTipText("Last Updated: Today " + s_timeFormat.format(new Date(o_lastUpdate)));
 	}
 
 	@Override
@@ -140,6 +141,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		o_statusLabel.setText(s_dateFormat.format(new Date()));
 		o_statusLabel.setIcon(null);
 		o_lastGoogle = currentTimeMillis();
+		o_googleLabel.setToolTipText("Last Sync: Today " + s_timeFormat.format(new Date(o_lastGoogle)));
 	}
 
 	@Override
@@ -158,6 +160,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		o_statusLabel.setText(s_dateFormat.format(new Date()));
 		o_statusLabel.setIcon(null);
 		o_lastSave = currentTimeMillis();
+		o_saveLabel.setToolTipText("Last Saved: Today " + s_timeFormat.format(new Date(o_lastSave)));
 	}
 
 	@Override
