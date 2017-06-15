@@ -69,6 +69,7 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 		this.o_hasDueDate = p_hasDueDate;
 
 		o_dueDateField.setText(getDueDateText(o_hasDueDate.getDueDate()));
+		o_dueDateField.setForeground(s_defaultTextString.equals(o_dueDateField.getText()) ? gray : black);
 		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
 		o_dueDateField.getDocument().addDocumentListener(x_listener);
 		o_dueDateField.setToolTipText("Press enter to set");
