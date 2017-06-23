@@ -124,22 +124,24 @@ public class SystemTrayUtil {
 						x_menuItems.put(x_component, x_menuItem);
 
 						x_menuItem.addActionListener(e -> WindowManager.getInstance().openComponent(x_component));
+                        Menu x_menu = getMenu(x_component);
 
 						x_component.addComponentChangeListener(e -> {
 							if(e.getSource() == x_component) {
 								if(e.isComponentRemoved()) {
-									s_popUpMenu.remove(x_menuItems.get(x_component));
-								} else if(e.getField() == TEXT) {
+                                    MenuItem x_removed = x_menuItems.remove(x_component);
+                                    x_menu.remove(x_removed);
+                                } else if(e.getField() == TEXT) {
 									x_menuItems.get(x_component).setLabel(getMenuItemText(x_component));
 								}
 							}
 						});
 
-						if(s_popUpMenu.getItemCount() == 3) {
-							s_popUpMenu.addSeparator();
+						if(x_menu.getItemCount() == 3) {
+							x_menu.addSeparator();
 						}
 
-						s_popUpMenu.add(x_menuItem);
+						x_menu.add(x_menuItem);
 					}
 				}
 			});
@@ -147,6 +149,18 @@ public class SystemTrayUtil {
 			// do nothing for now TODO ??
 		}
 	}
+
+	static Menu getMenu(Component p_component) {
+        Component x_topLevelThread = p_component.getHierarchy().get(0);
+
+        for(Configuration x_configuration: s_configurationMenus.keySet()) {
+            if(x_configuration.getTopLevelThread() == x_topLevelThread) {
+                return s_configurationMenus.get(x_configuration);
+            }
+        }
+
+        throw new IllegalStateException("Problems ...");
+    }
 
 	public static void addConfiguration(Configuration p_configuration) {
         Thread x_topLevelThread = p_configuration.getTopLevelThread();
