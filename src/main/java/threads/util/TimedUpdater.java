@@ -20,7 +20,7 @@ public class TimedUpdater extends TimedActivity<TimedUpdateListener> {
 	}
 
     private TimedUpdater() {
-    	super(60000, false);
+    	super(60000, true);
 		setDaemon(true);
 		start();
     }
