@@ -129,4 +129,6 @@ public abstract class Component {
 	static boolean same(Object obj1, Object obj2) {
 		return (obj1 == null) == (obj2 == null) && (obj1 == null || obj1.equals(obj2));
 	}
+
+	public abstract Component duplicate(boolean p_addCopyText);
 }

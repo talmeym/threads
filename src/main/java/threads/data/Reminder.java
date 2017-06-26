@@ -76,4 +76,11 @@ public class Reminder extends Component implements HasDueDate
 	public List<Component> search(Search p_search) {
 		return p_search.check(this) ? singletonList(this) : emptyList();
 	}
+
+	@Override
+	public Component duplicate(boolean p_addCopyText) {
+		Reminder x_reminder = new Reminder(this, p_addCopyText);
+		getParentItem().addReminder(x_reminder);
+		return x_reminder;
+	}
 }

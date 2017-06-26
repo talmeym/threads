@@ -1,8 +1,8 @@
 package threads.gui;
 
 import threads.data.Component;
-import threads.data.*;
-import threads.data.Thread;
+import threads.data.Reminder;
+import threads.data.ThreadItem;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -178,24 +178,7 @@ class ComponentInfoPanel extends JPanel {
 			public void mouseClicked(MouseEvent p_me) {
 				if (o_component.getParentComponent() != null) {
 					if (showConfirmDialog(p_parentPanel, "Create duplicate of '" + o_component.getText() + "' ?", "Duplicate ?", OK_CANCEL_OPTION, INFORMATION_MESSAGE, getThreadsIcon()) == OK_OPTION) {
-						Component x_newComponent = null;
-
-						if (o_component instanceof Thread) {
-							x_newComponent = new Thread((Thread) o_component, true);
-							((Thread) o_component.getParentComponent()).addThreadItem((Thread) x_newComponent);
-						}
-
-						if (o_component instanceof Item) {
-							x_newComponent = new Item((Item) o_component, true);
-							((Thread) o_component.getParentComponent()).addThreadItem((Item) x_newComponent);
-						}
-
-						if (o_component instanceof Reminder) {
-							x_newComponent = new Reminder((Reminder) o_component, true);
-							((Item) o_component.getParentComponent()).addReminder((Reminder) x_newComponent);
-						}
-
-						WindowManager.getInstance().openComponent(x_newComponent);
+						WindowManager.getInstance().openComponent(o_component.duplicate(true));
 					}
 				} else {
 					showMessageDialog(p_parentPanel, "The top Thread cannot be duplicated.", "No can do", WARNING_MESSAGE, getThreadsIcon());

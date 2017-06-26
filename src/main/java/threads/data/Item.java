@@ -85,4 +85,11 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
 	public ComponentType getType() {
 		return o_dueDate != null ? ComponentType.Action : ComponentType.Update;
 	}
+
+	@Override
+	public Component duplicate(boolean p_addCopyText) {
+    	Item x_item = new Item(this, p_addCopyText);
+    	getParentThread().addThreadItem(x_item);
+		return x_item;
+	}
 }

@@ -41,6 +41,11 @@ public class ComponentTest {
 		public List<Component> search(Search p_search) {
 			return null;
 		}
+
+		@Override
+		public Component duplicate(boolean p_addCopyText) {
+			return null;
+		}
 	}
 
 	@Test

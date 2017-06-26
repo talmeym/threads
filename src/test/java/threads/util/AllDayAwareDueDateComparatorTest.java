@@ -137,6 +137,11 @@ public class AllDayAwareDueDateComparatorTest {
 			public List<Component> getHierarchy() {
 				throw new UnsupportedOperationException();
 			}
+
+			@Override
+			public Component duplicate(boolean p_addCopyText) {
+				throw new UnsupportedOperationException();
+			}
 		};
 	}
 }

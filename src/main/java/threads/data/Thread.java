@@ -40,4 +40,11 @@ public class Thread extends ThreadItem<ThreadItem> {
 	public ComponentType getType() {
 		return ComponentType.Thread;
 	}
+
+	@Override
+	public Component duplicate(boolean p_addCopyText) {
+		Thread x_thread = new Thread(this, p_addCopyText);
+		getParentThread().addThreadItem(x_thread);
+		return x_thread;
+	}
 }

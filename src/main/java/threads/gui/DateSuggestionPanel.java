@@ -39,7 +39,8 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 
 	final JTextField o_dueDateField = new JTextField();
 
-	private final JComboBox<String> o_pushBackBox = new JComboBox<>(new String[] {"An Hour", "A Day", "A Week", "A Month", "A Year"});
+	private final JComboBox<String> o_pushBackBox = new JComboBox<>(new String[] {"1 Hour", "1 Day", "1 Week", "2 Weeks", "1 Month", "3 months", "6 months", "A Year"});
+	private final JCheckBox o_pushBackDupeBox = new JCheckBox("Leave Duplicate");
 	private final JLabel o_setLabel = createLabel(getReturnIcon(), "Apply Change", false, e -> set());
 	private final JLabel o_revertLabel = createLabel(getCrossIcon(), "Revert Change", false);
 	final JPanel o_panelsPanel;
@@ -136,6 +137,7 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 
 		JPanel x_pushbackPanel = new JPanel(new GridLayout(1, 0, 5, 5));
 		x_pushbackPanel.add(o_pushBackBox);
+		x_pushbackPanel.add(o_pushBackDupeBox);
 		x_pushbackPanel.add(x_pushBackButton);
 		x_pushbackPanel.setBorder(createTitledBorder("Push Back"));
 
@@ -158,6 +160,10 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 			Date x_date = parseDate(x_text);
 
 			if(x_date != null) {
+			    if(o_pushBackDupeBox.isSelected()) {
+                    o_hasDueDate.duplicate(false);
+                }
+
 				Calendar x_calendar = Calendar.getInstance();
 				x_calendar.setTime(x_date);
 				x_calendar.set(Calendar.SECOND, 0);
@@ -167,7 +173,10 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 					case 0: x_calendar.add(Calendar.HOUR_OF_DAY, 1); break;
 					case 1: x_calendar.add(Calendar.DATE, 1); break;
 					case 2: x_calendar.add(Calendar.DATE, 7); break;
-					case 3: x_calendar.add(Calendar.MONTH, 1); break;
+					case 3: x_calendar.add(Calendar.DATE, 14); break;
+					case 4: x_calendar.add(Calendar.MONTH, 1); break;
+					case 5: x_calendar.add(Calendar.MONTH, 3); break;
+					case 6: x_calendar.add(Calendar.MONTH, 6); break;
 					default: x_calendar.add(Calendar.YEAR, 1); break;
 				}
 

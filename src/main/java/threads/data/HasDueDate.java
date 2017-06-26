@@ -18,4 +18,5 @@ public interface HasDueDate {
 	void addComponentChangeListener(ComponentChangeListener p_listener);
 	Date getModifiedDate();
 	List<Component> getHierarchy();
+	Component duplicate(boolean p_addCopyText);
 }
