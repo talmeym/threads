@@ -15,12 +15,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.awt.Color.*;
 import static java.awt.FlowLayout.LEFT;
 import static java.lang.Integer.parseInt;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.YEAR;
+import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.JOptionPane.*;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
@@ -231,10 +233,17 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			x_makeInactiveItem.setForeground(gray);
 			x_menu.add(x_makeInactiveItem);
 
+            List<Component> x_activeComponents = x_components.stream().filter(Component::isActive).collect(toList());
+            x_makeInactiveItem.setEnabled(x_activeComponents.size() > 0);
+
 			x_makeInactiveItem.addActionListener(e -> {
-				if (showConfirmDialog(o_parentPanel, "Set " + x_components.size() + " Item" + (x_components.size() > 1 ? "s" : "") + " inactive ?", "Set inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
-					x_components.forEach(c -> c.setActive(false));
-				}
+                if(x_activeComponents.size() > 0) {
+                    String x_deltaString = x_activeComponents.size() != x_components.size() ? " (of " + x_components.size() + ")" : "";
+
+                    if (showConfirmDialog(o_parentPanel, "Set " + x_activeComponents.size() + " item" + (x_activeComponents.size() > 1 ? "s" : "") + x_deltaString + " inactive ?", "Set inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+                        x_activeComponents.forEach(c -> c.setActive(false));
+                    }
+                }
 			});
 		}
 
