@@ -178,6 +178,10 @@ public class SystemTrayUtil {
         x_addUpdateItem.addActionListener(e -> addUpdate(null, x_topLevelThread, null));
         x_menu.add(x_addUpdateItem);
 
+        MenuItem x_showItem = new MenuItem("Show File");
+        x_showItem.addActionListener(e -> WindowManager.getInstance().showConfiguration(p_configuration));
+        x_menu.add(x_showItem);
+
         MenuItem x_closeItem = new MenuItem("Close File");
         x_closeItem.addActionListener(e -> WindowManager.getInstance().closeConfiguration(p_configuration));
         x_menu.add(x_closeItem);

@@ -41,14 +41,12 @@ public class WindowManager {
         ThreadsWindow x_threadWindow = new ThreadsWindow(p_configuration);
         o_threadsWindows.put(p_configuration.getTopLevelThread(), x_threadWindow);
         o_windowListeners.put(x_threadWindow, p_listener);
+        x_threadWindow.setVisible(true);
+    }
 
-        x_threadWindow.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-				p_listener.windowClosing(e);
-            }
-        });
-
+    public void showConfiguration(Configuration p_configuration) {
+        Thread x_topLevelThread = p_configuration.getTopLevelThread();
+        ThreadsWindow x_threadWindow = o_threadsWindows.get(x_topLevelThread);
         x_threadWindow.setVisible(true);
     }
 
