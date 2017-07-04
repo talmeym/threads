@@ -69,6 +69,12 @@ public class WindowManager {
     }
 
     public void openComponent(Component p_component) {
-        o_threadsWindows.get(p_component.getHierarchy().get(0)).openComponent(p_component);
+        ThreadsWindow x_threadsWindow = o_threadsWindows.get(p_component.getHierarchy().get(0));
+
+        if(!x_threadsWindow.isVisible()) {
+            x_threadsWindow.setVisible(true);
+        }
+
+        x_threadsWindow.openComponent(p_component);
     }
 }
