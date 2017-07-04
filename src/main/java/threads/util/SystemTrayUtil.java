@@ -137,7 +137,7 @@ public class SystemTrayUtil {
 							}
 						});
 
-						if(x_menu.getItemCount() == 3) {
+						if(x_menu.getItemCount() == 4) {
 							x_menu.addSeparator();
 						}
 
