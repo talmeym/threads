@@ -49,7 +49,7 @@ public class LookupHelper {
 		}
 
 		p_thread.getThreadItems().stream()
-				.filter(ti -> ti instanceof Thread)
+				.filter(ti -> ti instanceof Thread && ti.isActive())
 				.forEach(t -> x_result.addAll(getAllComponents((Thread) t, p_referenceDate, p_includeActions, p_includeUpdates, p_includeReminders)));
 		Collections.sort(x_result, new ActiveAwareUpdateOrHasDueDateComparator());
 		return x_result;
