@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.emarte.threads</groupId>
 	<artifactId>threads</artifactId>
-	<version>0.1.9</version>
+	<version>0.1.10</version>
 	<packaging>jar</packaging>
 	<name>Threads</name>
 

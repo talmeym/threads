@@ -183,8 +183,8 @@ public class Actions {
 		linkToGoogle(getHasDueDates(p_item, false), p_configuration, p_enclosingPanel);
 	}
 
-	static void linkToGoogle(Reminder p_reminder, Configuration p_configuration, JPanel p_enclosingPanel) {
-		linkToGoogle(singletonList(p_reminder), p_configuration, p_enclosingPanel);
+	static void linkToGoogle(HasDueDate p_hasDueDate, Configuration p_configuration, JPanel p_enclosingPanel) {
+		linkToGoogle(singletonList(p_hasDueDate), p_configuration, p_enclosingPanel);
 	}
 
 	static void linkToGoogle(List<HasDueDate> p_hasDueDates, Configuration p_configuration, final JPanel p_enclosingPanel) {

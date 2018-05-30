@@ -83,4 +83,9 @@ public class Reminder extends Component implements HasDueDate
 		getParentItem().addReminder(x_reminder);
 		return x_reminder;
 	}
+
+	@Override
+	public Component component() {
+		return this;
+	}
 }

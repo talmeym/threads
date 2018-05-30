@@ -1,5 +1,6 @@
 package threads.gui;
 
+import threads.data.Configuration;
 import threads.data.Reminder;
 
 import javax.swing.*;
@@ -41,8 +42,8 @@ class ReminderDateSuggestionPanel extends DateSuggestionPanel<Reminder> {
     private final JComboBox<DateItem> o_dayBox = new JComboBox<>(s_dayItems);
     private final JComboBox<DateItem> o_weekBox = new JComboBox<>(s_weekItems);
 
-	ReminderDateSuggestionPanel(Reminder p_reminder) {
-        super(p_reminder, new BorderLayout());
+	ReminderDateSuggestionPanel(Configuration p_configuration, Reminder p_reminder, JPanel p_parentPanel) {
+        super(p_configuration, p_reminder, new BorderLayout(), p_parentPanel);
 
 		p_reminder.addComponentChangeListener(e -> {
 			if(e.getSource() == p_reminder && e.getField() == DUE_DATE) {

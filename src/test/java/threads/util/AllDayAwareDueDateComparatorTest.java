@@ -89,6 +89,11 @@ public class AllDayAwareDueDateComparatorTest {
 			}
 
 			@Override
+			public void setActive(boolean active) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
 			public String getText() {
 				throw new UnsupportedOperationException();
 			}
@@ -140,6 +145,11 @@ public class AllDayAwareDueDateComparatorTest {
 
 			@Override
 			public Component duplicate(boolean p_addCopyText) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public Component component() {
 				throw new UnsupportedOperationException();
 			}
 		};

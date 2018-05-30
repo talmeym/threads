@@ -1,6 +1,7 @@
 package threads.gui;
 
-import threads.data.HasDueDate;
+import threads.data.*;
+import threads.util.GoogleUtil;
 import threads.util.StringUtils;
 
 import javax.swing.*;
@@ -24,10 +25,16 @@ import static java.awt.Color.*;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.BorderFactory.*;
 import static javax.swing.BoxLayout.Y_AXIS;
+import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
+import static javax.swing.JOptionPane.OK_OPTION;
+import static javax.swing.JOptionPane.WARNING_MESSAGE;
+import static javax.swing.JOptionPane.showConfirmDialog;
+import static threads.gui.Actions.linkToGoogle;
 import static threads.gui.ColourConstants.s_editedColour;
 import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.DateUtil.isAllDay;
 import static threads.util.ImageUtil.getCrossIcon;
+import static threads.util.ImageUtil.getGoogleIcon;
 import static threads.util.ImageUtil.getReturnIcon;
 
 abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
@@ -35,14 +42,16 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
 	private static final String s_defaultTextString = "dd/mm/yy [hh:mm]";
 
-	final TYPE o_hasDueDate;
+    final TYPE o_hasDueDate;
 
-	final JTextField o_dueDateField = new JTextField();
+    final JTextField o_dueDateField = new JTextField();
 
 	private final JComboBox<String> o_pushBackBox = new JComboBox<>(new String[] {"1 Hour", "1 Day", "1 Week", "2 Weeks", "1 Month", "3 months", "6 months", "A Year"});
 	private final JCheckBox o_pushBackDupeBox = new JCheckBox("Leave Duplicate");
 	private final JLabel o_setLabel = createLabel(getReturnIcon(), "Apply Change", false, e -> set());
 	private final JLabel o_revertLabel = createLabel(getCrossIcon(), "Revert Change", false);
+    final JPanel o_parentPanel;
+    final Configuration o_configuration;
 	final JPanel o_panelsPanel;
 
 	final DocumentListener x_listener = new DocumentListener() {
@@ -65,11 +74,13 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 		}
 	};
 
-	DateSuggestionPanel(TYPE p_hasDueDate, LayoutManager p_layout) {
+	DateSuggestionPanel(Configuration p_configuration, TYPE p_hasDueDate, LayoutManager p_layout, JPanel p_parentPanel) {
 		super(p_layout);
-		this.o_hasDueDate = p_hasDueDate;
+        this.o_configuration = p_configuration;
+        this.o_hasDueDate = p_hasDueDate;
+        this.o_parentPanel = p_parentPanel;
 
-		o_dueDateField.setText(getDueDateText(o_hasDueDate.getDueDate()));
+        o_dueDateField.setText(getDueDateText(o_hasDueDate.getDueDate()));
 		o_dueDateField.setForeground(s_defaultTextString.equals(o_dueDateField.getText()) ? gray : black);
 		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
 		o_dueDateField.getDocument().addDocumentListener(x_listener);
@@ -160,8 +171,14 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 			Date x_date = parseDate(x_text);
 
 			if(x_date != null) {
-			    if(o_pushBackDupeBox.isSelected()) {
-                    o_hasDueDate.duplicate(false);
+                if(o_pushBackDupeBox.isSelected()) {
+                    threads.data.Component x_component = o_hasDueDate.duplicate(false);
+
+                    if(GoogleUtil.isLinked(o_hasDueDate.component())) {
+                        if (showConfirmDialog(o_parentPanel, "Your " + o_hasDueDate.getType() + " is linked to Google. Link duplicate to Google ?", "Link to Google Calendar ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+                            linkToGoogle((HasDueDate) x_component, o_configuration, o_parentPanel);
+                        }
+					}
                 }
 
 				Calendar x_calendar = Calendar.getInstance();
@@ -183,7 +200,13 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 				o_dueDateField.setText(getDueDateText(x_calendar.getTime()));
 				o_dueDateField.setForeground(o_hasDueDate.isActive() ? black : gray);
 				set();
-			}
+
+                if(!o_hasDueDate.isActive()) {
+                    if (showConfirmDialog(o_parentPanel, "Your " + o_hasDueDate.getType() + " is inactive. Set active ?", "Set active ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+                        o_hasDueDate.setActive(true);
+                    }
+                }
+            }
 		}
 	}
 

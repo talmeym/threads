@@ -92,4 +92,9 @@ public class Item extends ThreadItem<Reminder> implements HasDueDate {
     	getParentThread().addThreadItem(x_item);
 		return x_item;
 	}
+
+	@Override
+	public Component component() {
+		return this;
+	}
 }

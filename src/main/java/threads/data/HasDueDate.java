@@ -8,6 +8,7 @@ public interface HasDueDate {
 	UUID getId();
 	ComponentType getType();
 	boolean isActive();
+	void setActive(boolean active);
 	String getText();
 	void setText(String x_text);
 	Date getDueDate();
@@ -19,4 +20,5 @@ public interface HasDueDate {
 	Date getModifiedDate();
 	List<Component> getHierarchy();
 	Component duplicate(boolean p_addCopyText);
+	Component component();
 }

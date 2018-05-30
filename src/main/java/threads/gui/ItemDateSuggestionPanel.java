@@ -1,5 +1,6 @@
 package threads.gui;
 
+import threads.data.Configuration;
 import threads.data.Item;
 import threads.data.Reminder;
 import threads.util.StringUtils;
@@ -17,7 +18,7 @@ import static javax.swing.JOptionPane.*;
 import static threads.util.ImageUtil.getThreadsIcon;
 
 public class ItemDateSuggestionPanel extends DateSuggestionPanel<Item> implements TimedUpdateListener {
-	private static final DateItem[] s_timeItems = new DateItem[]{new DateItem("Anytime", 0), new DateItem("9 AM", 9), new DateItem("Midday", 12), new DateItem("C.O.B.", 18)};
+	private static final DateItem[] s_timeItems = new DateItem[]{new DateItem("Anytime", 0), new DateItem("9 AM", 9), new DateItem("Midday", 12), new DateItem("C.O.B.", 18), new DateItem("9 PM", 21)};
     private static final DateItem[] s_weekItems = new DateItem[]{new DateItem("This", 0), new DateItem("Next", 7), new DateItem("A week", 14), new DateItem("2 Weeks", 21), new DateItem("3 Weeks", 28), new DateItem("4 Weeks", 35)};
     private static final DateItem[] s_dayItems = new DateItem[]{new DateItem("Mon", 2), new DateItem("Tues", 3), new DateItem("Wed", 4), new DateItem("Thur", 5), new DateItem("Fri", 6), new DateItem("Sat", 7), new DateItem("Sun", 1)};
 
@@ -25,11 +26,8 @@ public class ItemDateSuggestionPanel extends DateSuggestionPanel<Item> implement
     private final JComboBox<DateItem> o_weekBox = new JComboBox<>(s_weekItems);
     private final JComboBox<DateItem> o_dayBox = new JComboBox<>(s_dayItems);
 
-	private final JPanel o_parentPanel;
-
-    ItemDateSuggestionPanel(Item p_item, final JPanel p_parentPanel) {
-        super(p_item, new BorderLayout());
-		o_parentPanel = p_parentPanel;
+    ItemDateSuggestionPanel(Configuration p_configuration, Item p_item, final JPanel p_parentPanel) {
+        super(p_configuration, p_item, new BorderLayout(), p_parentPanel);
 
 		p_item.addComponentChangeListener(e -> {
 			if(e.getSource() == p_item && e.isValueChange()) {
@@ -76,6 +74,10 @@ public class ItemDateSuggestionPanel extends DateSuggestionPanel<Item> implement
 		}
 
 		if(x_hour > 17) {
+			o_timeBox.setSelectedIndex(4);
+		}
+
+		if(x_hour > 21) {
 			o_timeBox.setSelectedIndex(0);
 
 			if(o_dayBox.getSelectedIndex() == 6) {
@@ -104,6 +106,10 @@ public class ItemDateSuggestionPanel extends DateSuggestionPanel<Item> implement
 		}
 
 		if(x_hour > 17) {
+			x_calendar.set(Calendar.HOUR_OF_DAY, 21);
+		}
+
+		if(x_hour > 21) {
 			x_calendar.set(Calendar.HOUR_OF_DAY, 0);
 			x_calendar.add(Calendar.DATE, 1);
 		}
