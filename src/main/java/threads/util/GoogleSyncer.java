@@ -32,8 +32,8 @@ public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
 
 		try {
 			GoogleUtil.initialise();
-		} catch (GeneralSecurityException | IOException e) {
-			throw new RuntimeException("Error initialising google threads.util", e);
+		} catch (Exception e) {
+			throw new IllegalStateException("Error initialising google util", e);
 		}
 
 		setDaemon(true);
