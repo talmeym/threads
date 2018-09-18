@@ -1,6 +1,7 @@
 package threads.gui;
 
 import threads.data.*;
+import threads.util.DateUtil;
 import threads.util.GoogleUtil;
 import threads.util.StringUtils;
 
@@ -202,7 +203,9 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 				set();
 
                 if(!o_hasDueDate.isActive()) {
-                    if (showConfirmDialog(o_parentPanel, "Your " + o_hasDueDate.getType() + " is inactive. Set active ?", "Set active ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+                	boolean dueDateInFuture = o_hasDueDate.getDueDate().after(new Date());
+
+                    if (dueDateInFuture && showConfirmDialog(o_parentPanel, "Your " + o_hasDueDate.getType() + " is inactive. Set active ?", "Set active ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
                         o_hasDueDate.setActive(true);
                     }
                 }
