@@ -82,7 +82,7 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
         this.o_parentPanel = p_parentPanel;
 
         o_dueDateField.setText(getDueDateText(o_hasDueDate.getDueDate()));
-		o_dueDateField.setForeground(s_defaultTextString.equals(o_dueDateField.getText()) ? gray : black);
+		o_dueDateField.setForeground(s_defaultTextString.equals(o_dueDateField.getText()) || !o_hasDueDate.isActive() ? gray : black);
 		o_dueDateField.setHorizontalAlignment(JTextField.CENTER);
 		o_dueDateField.getDocument().addDocumentListener(x_listener);
 		o_dueDateField.setToolTipText("Press enter to set");
@@ -201,14 +201,6 @@ abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 				o_dueDateField.setText(getDueDateText(x_calendar.getTime()));
 				o_dueDateField.setForeground(o_hasDueDate.isActive() ? black : gray);
 				set();
-
-                if(!o_hasDueDate.isActive()) {
-                	boolean dueDateInFuture = o_hasDueDate.getDueDate().after(new Date());
-
-                    if (dueDateInFuture && showConfirmDialog(o_parentPanel, "Your " + o_hasDueDate.getType() + " is inactive. Set active ?", "Set active ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
-                        o_hasDueDate.setActive(true);
-                    }
-                }
             }
 		}
 	}

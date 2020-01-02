@@ -33,11 +33,11 @@ import static threads.util.DateUtil.isAllDay;
 import static threads.util.DateUtil.makeStartOfDay;
 
 public class GoogleUtil {
+	public static final String s_FROM_GOOGLE = "From Google";
 
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy'T'HH:mm");
 
-	private static final String s_FROM_GOOGLE = "From Google";
 	private static final String s_APP_NAME = "Threads";
 	private static final String s_THREADS_ID = "ThreadsID";
 

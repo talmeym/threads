@@ -53,7 +53,6 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
         fixColumnWidth(2, s_dateStatusColumnWidth);
         fixColumnWidth(3, 30);
 
-
         JPanel x_panel = new JPanel(new BorderLayout());
         x_panel.add(new ComponentInfoPanel(p_item, p_parentPanel, true, x_calendarLabel, x_templateItemLabel, o_linkLabel), NORTH);
         x_panel.add(new ItemDateSuggestionPanel(p_configuration, o_item, p_parentPanel), CENTER);

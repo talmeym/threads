@@ -1,6 +1,7 @@
 package threads.gui;
 
 import threads.data.Item;
+import threads.data.Thread;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -8,6 +9,7 @@ import java.awt.*;
 
 import static java.awt.Color.*;
 import static threads.gui.ColourConstants.s_selectedColour;
+import static threads.util.GoogleUtil.s_FROM_GOOGLE;
 import static threads.util.ImageUtil.*;
 
 class ThreadTreeCellRenderer extends DefaultTreeCellRenderer {
@@ -41,8 +43,14 @@ class ThreadTreeCellRenderer extends DefaultTreeCellRenderer {
 			} else {
 				setIcon(o_updateIcon);
 			}
-		} else {
-			setIcon(getClosedIcon());
+		} else if(p_value instanceof Thread) {
+			Thread x_thread = (Thread) p_value;
+
+			if(x_thread.getText().equals(s_FROM_GOOGLE)) {
+				setIcon(getGoogleVerySmallIcon());
+			} else {
+				setIcon(getThreadIcon());
+			}
 		}
 
 		return x_component;

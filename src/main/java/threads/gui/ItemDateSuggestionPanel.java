@@ -15,6 +15,7 @@ import java.util.Date;
 import static java.awt.Color.black;
 import static java.awt.Color.gray;
 import static javax.swing.JOptionPane.*;
+import static threads.util.ImageUtil.getGoogleIcon;
 import static threads.util.ImageUtil.getThreadsIcon;
 
 public class ItemDateSuggestionPanel extends DateSuggestionPanel<Item> implements TimedUpdateListener {
@@ -151,6 +152,17 @@ public class ItemDateSuggestionPanel extends DateSuggestionPanel<Item> implement
 						for(Reminder x_reminder: o_hasDueDate.getReminders()) {
 							x_reminder.setDueDate(new Date(x_dueDate.getTime() + (x_reminder.getDueDate().getTime() - x_currentDate.getTime())));
 						}
+					}
+
+					boolean x_isActive = o_hasDueDate.isActive();
+					boolean dueDateInFuture = x_dueDate.after(new Date());
+
+					if(!x_isActive && dueDateInFuture && showConfirmDialog(o_parentPanel, "Your action is in the future. Set it active ?", "Set active ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+						o_hasDueDate.setActive(true);
+					}
+
+					if(x_isActive && !dueDateInFuture && showConfirmDialog(o_parentPanel, "Your action is in the past. Set it inactive ?", "Set inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+						o_hasDueDate.setActive(false);
 					}
 				}
 			}
