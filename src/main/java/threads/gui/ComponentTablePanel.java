@@ -102,7 +102,7 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 	}
 
 	@Override
-	public void googleSynced(List<HasDueDate> p_hasDueDates) {
+	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
 		tableRowClicked(-1, -1, null);
 	}
 }

@@ -31,14 +31,14 @@ import static threads.util.ImageUtil.getGoogleSmallIcon;
 import static threads.util.ImageUtil.getIconForType;
 import static threads.util.Settings.Setting.*;
 
-class ActionLog extends JFrame {
+class ActionLogWindow extends JFrame {
 	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd/MM/yy");
 
 	private final Settings o_settings;
 	private List<Action> o_log = new ArrayList<>();
 
-	ActionLog(Configuration p_configuration) {
+	ActionLogWindow(Configuration p_configuration) {
 		super("Action Log - " + p_configuration.getXmlFile().getName());
 		o_settings = p_configuration.getSettings();
 		TableModel x_tableModel = new TableModel();
@@ -70,12 +70,16 @@ class ActionLog extends JFrame {
 			}
 
 			@Override
-			public void googleSynced(List<HasDueDate> p_hasDueDates) {
-				if(p_hasDueDates.size() == 1) {
-					HasDueDate x_hasDueDate = p_hasDueDates.get(0);
-					o_log.add(new Action(new Date(), getIconForType(x_hasDueDate.getType()), x_hasDueDate.getText(), "Linked to Google Calendar", "", "", ""));
+			public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_imports) {
+				if(p_imports) {
+                    o_log.add(new Action(new Date(), getGoogleSmallIcon(), p_hasDueDates.size() + " item(s)", "Imported from Google Calendar", "", "", ""));
 				} else {
-					o_log.add(new Action(new Date(), getGoogleSmallIcon(), p_hasDueDates.size() + " items", "Linked to Google Calendar", "", "", ""));
+					if (p_hasDueDates.size() == 1) {
+						HasDueDate x_hasDueDate = p_hasDueDates.get(0);
+						o_log.add(new Action(new Date(), getIconForType(x_hasDueDate.getType()), x_hasDueDate.getText(), "Linked to Google Calendar", "", "", ""));
+					} else {
+						o_log.add(new Action(new Date(), getGoogleSmallIcon(), p_hasDueDates.size() + " item(s)", "Linked to Google Calendar", "", "", ""));
+					}
 				}
 
 				x_tableModel.fireTableDataChanged();

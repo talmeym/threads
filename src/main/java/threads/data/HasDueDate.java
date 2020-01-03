@@ -15,6 +15,7 @@ public interface HasDueDate {
 	void setDueDate(Date p_dueDate);
 	String getNotes();
 	void setNotes(String p_notes);
+	Thread getParentThread();
 	boolean isDue();
 	void addComponentChangeListener(ComponentChangeListener p_listener);
 	Date getModifiedDate();

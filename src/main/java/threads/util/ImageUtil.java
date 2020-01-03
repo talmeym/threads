@@ -179,6 +179,10 @@ public class ImageUtil {
 		return new ImageIcon(getImage("/template12x12.png"));
 	}
 
+	public static Icon getAutoSortIcon() {
+		return new ImageIcon(getImage("/autoSort19x19.png"));
+	}
+
 	public static Icon getIconForType(ComponentType p_type) {
 		if(p_type == Thread) {
 			return getThreadIcon();

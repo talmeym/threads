@@ -72,7 +72,7 @@ class ReminderPanel extends JPanel implements GoogleSyncListener {
 		setLinkLabelText();
 	}
 
-	public void googleSynced(List<HasDueDate> p_hasDueDates) {
+	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
 		setLinkLabelText();
 	}
 

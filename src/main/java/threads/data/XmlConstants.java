@@ -25,4 +25,8 @@ class XmlConstants {
 	static final String s_TEXT_TEMPLATE = "text_template";
 	static final String s_REMINDER_TEMPLATE = "reminder_template";
 	static final String s_OFFSET = "offset";
+	static final String s_AUTO_SORT_RULE = "auto_sort_rule";
+	static final String s_TEXT_TOKEN = "text_token";
+	static final String s_TO_THREAD_ID = "to_thread_id";
+	static final String s_MATCHER = "matcher";
 }

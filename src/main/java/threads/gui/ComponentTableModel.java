@@ -59,7 +59,7 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 	}
 
 	@Override
-	public void googleSynced(List<HasDueDate> p_hasDueDates) {
+	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
 		fireTableDataChanged();
 	}
 

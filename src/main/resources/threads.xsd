@@ -6,9 +6,18 @@
 			<xs:sequence>
 				<xs:element name="thread" type="thread"/>
 				<xs:element name="action_template" type="action_template" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="auto_sort_rule" type="auto_sort_rule" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+
+	<xs:complexType name="auto_sort_rule">
+		<xs:sequence>
+			<xs:element name="text_token" type="xs:string"/>
+			<xs:element name="to_thread_id" type="xs:string"/>
+			<xs:element name="matcher" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
 
 	<xs:complexType name="action_template">
 		<xs:sequence>

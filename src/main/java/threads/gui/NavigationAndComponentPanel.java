@@ -25,7 +25,7 @@ class NavigationAndComponentPanel extends JPanel {
 	NavigationAndComponentPanel(Configuration p_configuration, JFrame p_frame) {
 		super(new BorderLayout());
 		o_frame = p_frame;
-		o_navigationPanel = new NavigationPanel(p_configuration);
+		o_navigationPanel = new NavigationPanel(p_configuration, p_frame);
 		o_configuration = p_configuration;
 
 		JSplitPane x_splitPane = new JSplitPane(HORIZONTAL_SPLIT);
@@ -62,7 +62,7 @@ class NavigationAndComponentPanel extends JPanel {
 		JPanel x_panel = null;
 
 		if(p_component instanceof threads.data.Thread) {
-			x_panel = new ThreadPanel(o_configuration, (Thread) p_component, this);
+			x_panel = new ThreadPanel(o_configuration, (Thread) p_component, this, o_frame);
 		}
 
 		if(p_component instanceof Item) {

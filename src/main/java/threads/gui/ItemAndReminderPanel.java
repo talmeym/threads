@@ -140,7 +140,7 @@ class ItemAndReminderPanel extends JPanel implements TableSelectionListener<Remi
 	}
 
 	@Override
-	public void googleSynced(List<HasDueDate> p_hasDueDates) {
+	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
 		tableRowClicked(-1, -1, null);
 	}
 }

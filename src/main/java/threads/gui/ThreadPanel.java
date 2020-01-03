@@ -1,5 +1,7 @@
 package threads.gui;
 
+import threads.data.AutoSortRule;
+import threads.data.AutoSortRule.Matcher;
 import threads.data.Configuration;
 import threads.data.Thread;
 import threads.util.Settings;
@@ -8,7 +10,6 @@ import threads.util.TimedUpdater;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -17,6 +18,7 @@ import static java.awt.BorderLayout.NORTH;
 import static java.awt.Color.*;
 import static java.lang.Integer.parseInt;
 import static javax.swing.BorderFactory.createEmptyBorder;
+import static javax.swing.JOptionPane.*;
 import static threads.data.LookupHelper.*;
 import static threads.gui.Actions.linkToGoogle;
 import static threads.gui.WidgetFactory.createLabel;
@@ -27,10 +29,9 @@ class ThreadPanel extends JPanel implements TimedUpdateListener {
 	private final Thread o_thread;
 	private final JTabbedPane o_tabs = new JTabbedPane();
 
-	ThreadPanel(Configuration p_configuration, Thread p_thread, JPanel p_parentPanel) {
+	ThreadPanel(Configuration p_configuration, Thread p_thread, JPanel p_parentPanel, JFrame p_frame) {
         super(new BorderLayout());
         o_thread = p_thread;
-
 
 		o_thread.addComponentChangeListener(e -> {
 			setActionTabBackground();
@@ -45,6 +46,36 @@ class ThreadPanel extends JPanel implements TimedUpdateListener {
         addTab("Calendar", "A calendar view of all Items", getCalendarSmallIcon(), new ThreadCalendarPanel(p_configuration, p_thread, p_parentPanel), white);
 
         Settings x_settings = p_configuration.getSettings();
+
+        JLabel x_autoSortLabel = createLabel(getAutoSortIcon(), "Google Auto-Sort Rule", true);
+
+		x_autoSortLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent p_me) {
+				JPopupMenu x_popupMenu = new JPopupMenu();
+
+				JMenuItem x_createItem = new JMenuItem("Create");
+				x_createItem.addActionListener(e -> {
+					String x_text = (String) showInputDialog(p_parentPanel, "Enter Token:", "Create Google Auto-Sort Rule", INFORMATION_MESSAGE, getThreadsIcon(), null, p_thread.getText());
+
+					if(x_text != null) {
+						p_configuration.getAutoSortRules().add(new AutoSortRule(x_text, p_thread.getId(), Matcher.contains));
+						showMessageDialog(p_parentPanel, "Google Auto-Sort Rule created. All imported Google Items containing '" + x_text + "' will be directed to Thread '" + p_thread.getText() + "'.", "All Good", INFORMATION_MESSAGE, getThreadsIcon());
+					}
+				});
+
+				JMenuItem x_seeAllItem = new JMenuItem("See All");
+				x_seeAllItem.addActionListener(e -> {
+					new ShowAutoSortRulesDialog(p_configuration, p_frame);
+				});
+
+				x_popupMenu.add(x_createItem);
+				x_popupMenu.add(x_seeAllItem);
+
+				x_popupMenu.show(x_autoSortLabel, p_me.getX(), p_me.getY());
+			}
+		});
+
 		JLabel x_linkLabel = createLabel(getLinkIcon(), "Link to Google Calendar", true);
 
 		x_linkLabel.addMouseListener(new MouseAdapter() {
@@ -65,7 +96,7 @@ class ThreadPanel extends JPanel implements TimedUpdateListener {
 			}
 		});
 
-		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_parentPanel, true, x_linkLabel);
+		ComponentInfoPanel componentInfoPanel = new ComponentInfoPanel(p_thread, p_parentPanel, true, x_autoSortLabel, x_linkLabel);
 		componentInfoPanel.setBorder(createEmptyBorder(5, 3, 0, 3));
 		add(componentInfoPanel, NORTH);
         add(o_tabs, CENTER);

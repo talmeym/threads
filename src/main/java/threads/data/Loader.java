@@ -5,11 +5,10 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import threads.data.ActionTemplate.ReminderTemplate;
+import threads.data.AutoSortRule.Matcher;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +24,7 @@ public class Loader {
         x_builder.setFeature("http://apache.org/xml/features/validation/schema-full-checking", true);
         x_builder.setEntityResolver(new EntityResolver() {
 			@Override
-			public InputSource resolveEntity(String something, String entityPath) throws SAXException, IOException {
+			public InputSource resolveEntity(String something, String entityPath) {
 			    entityPath = entityPath.indexOf('/') != -1 ? entityPath.substring(entityPath.lastIndexOf('/')) : entityPath;
 				return new InputSource(getClass().getResourceAsStream(entityPath));
 			}
@@ -33,11 +32,32 @@ public class Loader {
 
         try {
             Document x_doc = x_builder.build(p_xmlFile);
-			return new Configuration(p_xmlFile, loadThread(x_doc.getRootElement().getChild(s_THREAD)), loadActionTemplates(x_doc.getRootElement()));
+			Element x_rootElement = x_doc.getRootElement();
+			return new Configuration(p_xmlFile, loadThread(x_rootElement.getChild(s_THREAD)), loadActionTemplates(x_rootElement), loadSortRules(x_rootElement));
         } catch(Exception ioe) {
             throw new LoadException(ioe);
         }
     }
+
+    private static List<AutoSortRule> loadSortRules(Element p_element) {
+		List x_sortRules = p_element.getChildren(s_AUTO_SORT_RULE);
+		List<AutoSortRule> x_result = new ArrayList<>();
+
+		for(Object x_sortRule: x_sortRules) {
+			Element x_element = (Element) x_sortRule;
+			x_result.add(loadSortRule(x_element));
+		}
+
+		return x_result;
+
+	}
+
+	private static AutoSortRule loadSortRule(Element p_element) {
+		String x_textToken = p_element.getChildText(s_TEXT_TOKEN);
+		String x_toThreadIdStr = p_element.getChildText(s_TO_THREAD_ID);
+		String x_matcherStr = p_element.getChildText(s_MATCHER);
+		return new AutoSortRule(x_textToken, UUID.fromString(x_toThreadIdStr), Matcher.valueOf(x_matcherStr));
+	}
 
 	private static List<ActionTemplate> loadActionTemplates(Element p_element) {
 		List x_actionTemplates = p_element.getChildren(s_ACTION_TEMPLATE);

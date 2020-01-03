@@ -104,6 +104,7 @@ public class GoogleUtil {
 
 	static synchronized void syncWithGoogle() {
 		List<UUID> x_syncedComponents = new ArrayList<>();
+		List<HasDueDate> x_createdComponents = new ArrayList<>();
 
 		try {
 			for (GoogleAccount x_googleAccount: s_googleAccounts) {
@@ -155,10 +156,11 @@ public class GoogleUtil {
                                 Item x_item = new Item(x_summary, x_start);
                                 x_item.setNotes(x_event.getDescription());
                                 x_syncedComponents.add(x_item.getId());
+                                x_createdComponents.add(x_item);
                                 Thread x_threadToAddTo = null;
 
                                 for (ThreadItem x_threadItem : x_topLevelThread.getThreadItems()) {
-                                    if (x_threadItem.getText().equals(s_FROM_GOOGLE) && x_threadItem instanceof Thread) {
+                                    if (x_threadItem instanceof Thread && x_threadItem.getText().equals(s_FROM_GOOGLE)) {
                                         x_threadToAddTo = (Thread) x_threadItem;
                                         break;
                                     }
@@ -185,6 +187,10 @@ public class GoogleUtil {
 					s_linkedComponents.computeIfAbsent(x_googleAccount, k -> new ArrayList<>());
 					s_linkedComponents.get(x_googleAccount).clear();
 					s_linkedComponents.get(x_googleAccount).addAll(x_syncedComponents);
+				}
+
+				if(x_createdComponents.size() > 0) {
+					GoogleSyncer.getInstance().componentsImported(x_createdComponents);
 				}
 			}
 		} catch(Throwable t){

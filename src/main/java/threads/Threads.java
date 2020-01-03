@@ -27,7 +27,7 @@ public class Threads {
 		List<File> x_args = args.length == 0 ? getCurrentFiles() : stream(args).map(File::new).collect(toList());
 
 		for(File x_file: x_args) {
-			new Threads(x_file.exists() ? loadConfiguration(x_file) : new Configuration(x_file, new Thread(x_file.getName()), new ArrayList<>()));
+			new Threads(x_file.exists() ? loadConfiguration(x_file) : new Configuration(x_file, new Thread(x_file.getName()), new ArrayList<>(), new ArrayList<>()));
 		}
 	}
 

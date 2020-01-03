@@ -92,7 +92,7 @@ public class Importer {
         }
 
         File x_file = new File("archive.xml");
-        new Threads(new Configuration(x_file, x_topLevelThread, new ArrayList<>()));
+        new Threads(new Configuration(x_file, x_topLevelThread, new ArrayList<>(), new ArrayList<>()));
     }
 
     private static List<Event> getEvents(String calendarId) throws IOException {

@@ -14,9 +14,11 @@ public class Configuration {
     private final Settings o_settings;
     private final Thread o_topLevelThread;
     private final List<ActionTemplate> o_actionTemplates;
+    private final List<AutoSortRule> o_autoSortRules;
 
-    public Configuration(File p_xmlFile, Thread p_topLevelThread, List<ActionTemplate> p_actionTemplates) {
+    public Configuration(File p_xmlFile, Thread p_topLevelThread, List<ActionTemplate> p_actionTemplates, List<AutoSortRule> p_autoSortRules) {
         o_xmlFile = p_xmlFile;
+        o_autoSortRules = p_autoSortRules;
         o_settings = new Settings(new File(o_xmlFile.getParentFile(), o_xmlFile.getName() + ".properties"));
         o_topLevelThread = p_topLevelThread;
         o_actionTemplates = p_actionTemplates;
@@ -32,6 +34,10 @@ public class Configuration {
 
     public List<ActionTemplate> getActionTemplates() {
         return o_actionTemplates;
+    }
+
+    public List<AutoSortRule> getAutoSortRules() {
+        return o_autoSortRules;
     }
 
     File getBackupFile() {

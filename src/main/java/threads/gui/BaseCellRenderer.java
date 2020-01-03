@@ -39,8 +39,7 @@ class BaseCellRenderer<COMPONENT extends threads.data.Component, DATA_TYPE> exte
 			setIcon(getGoogleSmallIcon());
 			setHorizontalAlignment(CENTER);
 			setToolTipText(((GoogleAccount)p_value).getName());
-		}
-		else {
+		} else {
 			setText(p_value == null ? "" : valueOf(p_value));
 		}
 	}

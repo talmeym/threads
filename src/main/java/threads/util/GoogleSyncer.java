@@ -2,8 +2,6 @@ package threads.util;
 
 import threads.data.HasDueDate;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.List;
 
 import static threads.util.GoogleUtil.syncWithGoogle;
@@ -55,6 +53,10 @@ public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
 	}
 
 	void componentsSynced(List<HasDueDate> p_hasDueDates) {
-		getListeners().forEach(l -> l.googleSynced(p_hasDueDates));
+		getListeners().forEach(l -> l.googleSynced(p_hasDueDates, false));
+	}
+
+	void componentsImported(List<HasDueDate> p_hasDueDates) {
+		getListeners().forEach(l -> l.googleSynced(p_hasDueDates, true));
 	}
 }

@@ -1,16 +1,21 @@
 package threads.gui;
 
+import threads.data.Thread;
 import threads.data.*;
 import threads.util.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.text.*;
-import java.util.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import static java.awt.BorderLayout.*;
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.WEST;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
 import static threads.gui.WidgetFactory.setUpButtonLabel;
@@ -20,7 +25,9 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm");
 	private static final DateFormat s_timeFormat = new SimpleDateFormat("HH:mm");
 
-	private final ActionLog o_actionLog;
+	private final ActionLogWindow o_actionLogWindow;
+	private Configuration o_configuration;
+	private final JFrame o_frame;
 
 	private final JProgressBar o_updateProgress = new JProgressBar(JProgressBar.HORIZONTAL);
 	private final JProgressBar o_googleProgress = new JProgressBar(JProgressBar.HORIZONTAL);
@@ -36,9 +43,13 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 	private JLabel o_googleLabel = new JLabel(getGoogleVerySmallIcon());
 	private JLabel o_saveLabel = new JLabel(getSaveIcon());
 
-	StatusPanel(Configuration p_configuration) {
+	StatusPanel(Configuration p_configuration, JFrame p_frame) {
 		super(new GridLayout(0, 1, 5, 5));
-		o_actionLog = new ActionLog(p_configuration);
+
+		o_configuration = p_configuration;
+		o_frame = p_frame;
+
+		o_actionLogWindow = new ActionLogWindow(p_configuration);
 		o_updateProgress.setMinimum(0);
 
 		o_updateLabel.setToolTipText("Last Updated: N/A");
@@ -111,7 +122,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 		o_statusLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent p_me) {
-				o_actionLog.showLog();
+				o_actionLogWindow.showLog();
 			}
 		});
 
@@ -145,13 +156,30 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 	}
 
 	@Override
-	public void googleSynced(List<HasDueDate> p_hasDueDates) {
-		// do nothing
+	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
+		if(p_import) {
+			Thread x_topLevelThread = o_configuration.getTopLevelThread();
+			List<HasDueDate> x_hasDueDates = new ArrayList<>();
+			List<Thread> x_threads = new ArrayList<>();
+
+			p_hasDueDates.forEach(hdd -> {
+				o_configuration.getAutoSortRules().forEach(r -> {
+					if(r.getMatcher().matches(hdd.getText(), r.getTextToken())) {
+						x_hasDueDates.add(hdd);
+						x_threads.add((Thread) x_topLevelThread.search(new Search.Builder().withId(r.getThreadId()).build()).get(0));
+					}
+				});
+			});
+
+			if(x_hasDueDates.size() > 0) {
+				new ConfirmAutoSortDialog(x_hasDueDates, x_threads, o_frame);
+			}
+		}
 	}
 
 	@Override
 	public void saveStarted() {
-		o_statusLabel.setText("Saving threads.data to Local Disc ...");
+		o_statusLabel.setText("Saving threads data to Local Disc ...");
 		o_statusLabel.setIcon(getSaveIcon());
 	}
 

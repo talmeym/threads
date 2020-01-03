@@ -32,11 +32,11 @@ public class ActionTemplate {
 		return o_tokenDefault;
 	}
 
-	String getTextTemplate() {
+	public String getTextTemplate() {
 		return o_textTemplate;
 	}
 
-	List<ReminderTemplate> getReminderTemplates() {
+	public List<ReminderTemplate> getReminderTemplates() {
 		return o_reminderTemplates;
 	}
 
@@ -49,11 +49,11 @@ public class ActionTemplate {
 			this.o_offset = o_offset;
 		}
 
-		String getTextTemplate() {
+		public String getTextTemplate() {
 			return o_textTemplate;
 		}
 
-		long getOffset() {
+		public long getOffset() {
 			return o_offset;
 		}
 	}

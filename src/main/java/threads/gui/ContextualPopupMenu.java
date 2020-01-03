@@ -107,5 +107,4 @@ class ContextualPopupMenu {
 
 		x_menu.show(p_origin, p_point.x, p_point.y);
 	}
-
 }

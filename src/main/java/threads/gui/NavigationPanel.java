@@ -17,7 +17,7 @@ import static java.awt.BorderLayout.SOUTH;
 class NavigationPanel extends JPanel implements TreeSelectionListener {
 	private final JTree o_navigationTree;
 
-	NavigationPanel(Configuration p_configuration) {
+	NavigationPanel(Configuration p_configuration, JFrame p_frame) {
 		super(new BorderLayout());
 		Thread x_topLevelThread = p_configuration.getTopLevelThread();
 
@@ -31,7 +31,7 @@ class NavigationPanel extends JPanel implements TreeSelectionListener {
 
 		JPanel x_panel = new JPanel(new BorderLayout());
 		x_panel.add(new SearchPanel(p_configuration), CENTER);
-		x_panel.add(new StatusPanel(p_configuration), SOUTH);
+		x_panel.add(new StatusPanel(p_configuration, p_frame), SOUTH);
 
 		add(x_treePanel, CENTER);
 		add(x_panel, SOUTH);

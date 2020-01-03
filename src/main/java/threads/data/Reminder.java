@@ -63,6 +63,11 @@ public class Reminder extends Component implements HasDueDate
 	}
 
 	@Override
+	public Thread getParentThread() {
+		return (Thread) getParentComponent();
+	}
+
+	@Override
 	public boolean isDue() {
 		return isActive() && (isAllDay(o_dueDate) ? o_dueDate.before(getFirstThing(TODAY)) : o_dueDate.before(new Date()));
 	}

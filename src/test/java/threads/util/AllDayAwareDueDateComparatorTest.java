@@ -2,7 +2,7 @@ package threads.util;
 
 import threads.data.*;
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import threads.data.Thread;
 
 import java.util.*;
 
@@ -115,11 +115,16 @@ public class AllDayAwareDueDateComparatorTest {
 
 			@Override
 			public void setDueDate(Date dueDate) {
-				throw new NotImplementedException();
+				throw new UnsupportedOperationException();
 			}
 
 			@Override
 			public void setNotes(String p_notes) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public Thread getParentThread() {
 				throw new UnsupportedOperationException();
 			}
 

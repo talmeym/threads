@@ -28,7 +28,7 @@ import static threads.util.DateUtil.getDateStatus;
 import static threads.util.GoogleUtil.googleAccount;
 import static threads.util.Settings.Setting.*;
 
-class SearchResults extends JFrame {
+class SearchResultsWindow extends JFrame {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");
 
 	private List<String> s_columnNames = Arrays.asList("Creation Date", "Type", "Name", "Info", "");
@@ -36,7 +36,7 @@ class SearchResults extends JFrame {
 	private JTable o_table;
 	private TableDataCache<String> o_cache = new TableDataCache<>();
 
-	SearchResults(Thread p_topLevelThread, Settings o_settings, Search p_search, String p_searchTerm, List<Component> p_searchResults) {
+	SearchResultsWindow(Thread p_topLevelThread, Settings o_settings, Search p_search, String p_searchTerm, List<Component> p_searchResults) {
 		super("Search Results - '" + p_searchTerm + "' - " + p_searchResults.size() + " Items");
 		o_searchResults = p_searchResults;
 		TableModel x_tableModel = new TableModel();

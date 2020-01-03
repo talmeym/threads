@@ -18,6 +18,7 @@ public class Saver {
             Element x_rootElem = new Element(s_THREADS);
             x_rootElem.addContent(addThread(p_configuration.getTopLevelThread()));
             p_configuration.getActionTemplates().forEach(a -> x_rootElem.addContent(addActionTemplate(a)));
+            p_configuration.getAutoSortRules().forEach(a -> x_rootElem.addContent(addAutoSortRule(a)));
             Document x_doc = new Document(x_rootElem);
             addSchema(x_doc);
             XMLOutputter x_outputter = new XMLOutputter(Format.getPrettyFormat());
@@ -28,6 +29,14 @@ public class Saver {
         }
 
         p_configuration.getSettings().save();
+    }
+
+    private static Element addAutoSortRule(AutoSortRule p_autoSortRule) {
+        Element x_autoSortRuleElem = new Element(s_AUTO_SORT_RULE);
+        addContent(x_autoSortRuleElem, s_TEXT_TOKEN, p_autoSortRule.getTextToken());
+        addContent(x_autoSortRuleElem, s_TO_THREAD_ID, p_autoSortRule.getThreadId().toString());
+        addContent(x_autoSortRuleElem, s_MATCHER, p_autoSortRule.getMatcher().name());
+        return x_autoSortRuleElem;
     }
 
 	private static Element addActionTemplate(ActionTemplate p_actionTemplate) {
