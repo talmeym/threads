@@ -14,4 +14,9 @@ public abstract class ThreadItem <CONTENTS extends Component> extends Collection
     public Thread getParentThread() {
         return (Thread) getParentComponent();
     }
+
+    public void moveTo(Thread p_thread) {
+        getParentThread().removeThreadItem(this);
+        p_thread.addThreadItem(this);
+    }
 }

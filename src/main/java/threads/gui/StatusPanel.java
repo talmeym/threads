@@ -1,5 +1,6 @@
 package threads.gui;
 
+import threads.data.Component;
 import threads.data.Thread;
 import threads.data.*;
 import threads.util.*;
@@ -18,6 +19,8 @@ import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.WEST;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.showMessageDialog;
 import static threads.gui.WidgetFactory.setUpButtonLabel;
 import static threads.util.ImageUtil.*;
 
@@ -159,21 +162,55 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
 		if(p_import) {
 			Thread x_topLevelThread = o_configuration.getTopLevelThread();
-			List<HasDueDate> x_hasDueDates = new ArrayList<>();
-			List<Thread> x_threads = new ArrayList<>();
+			processAutoSortPrefixes(x_topLevelThread, p_hasDueDates);
+			processAutoSortRules(x_topLevelThread, p_hasDueDates);
+		}
+	}
 
-			p_hasDueDates.forEach(hdd -> {
-				o_configuration.getAutoSortRules().forEach(r -> {
-					if(r.getMatcher().matches(hdd.getText(), r.getTextToken())) {
-						x_hasDueDates.add(hdd);
-						x_threads.add((Thread) x_topLevelThread.search(new Search.Builder().withId(r.getThreadId()).build()).get(0));
-					}
-				});
-			});
+	private void processAutoSortPrefixes(Thread x_topLevelThread, List<HasDueDate> p_hasDueDates) {
+		boolean x_someMultiMatch = false;
+		List<HasDueDate> x_processed = new ArrayList<>();
 
-			if(x_hasDueDates.size() > 0) {
-				new ConfirmAutoSortDialog(x_hasDueDates, x_threads, o_frame);
+		for(HasDueDate x_hasDueDate: p_hasDueDates) {
+			String x_text = x_hasDueDate.getText();
+			int x_index = x_text.indexOf(':');
+
+			if(x_index > 0) {
+				String x_threadName = x_text.substring(0, x_index);
+				List<Component> x_threads = x_topLevelThread.search(new Search.Builder().ofType(ComponentType.Thread).withText(x_threadName).exactText(true).build());
+
+				if(x_threads.size() == 1) {
+					x_hasDueDate.setText(x_text.substring(x_index + 1));
+                    ((ThreadItem) x_hasDueDate).moveTo((Thread) x_threads.get(0));
+					x_processed.add(x_hasDueDate);
+				} else {
+					x_someMultiMatch = true;
+				}
 			}
+		}
+
+		p_hasDueDates.removeAll(x_processed);
+
+		if(x_someMultiMatch) {
+			showMessageDialog(o_frame.getContentPane(), "Some prefixed items couldn't be sorted to new locations due to multiple thread matches", "Google Auto-Sort", INFORMATION_MESSAGE, getThreadsIcon());
+		}
+	}
+
+	private void processAutoSortRules(Thread x_topLevelThread, List<HasDueDate> p_hasDueDates) {
+		List<HasDueDate> x_toProcess = new ArrayList<>();
+		List<Thread> x_threads = new ArrayList<>();
+
+		p_hasDueDates.forEach(hdd -> {
+			o_configuration.getAutoSortRules().forEach(r -> {
+				if(r.getMatcher().matches(hdd.getText(), r.getTextToken())) {
+					x_toProcess.add(hdd);
+					x_threads.add((Thread) x_topLevelThread.search(new Search.Builder().withId(r.getThreadId()).build()).get(0));
+				}
+			});
+		});
+
+		if(x_toProcess.size() > 0) {
+			new ConfirmAutoSortDialog(x_toProcess, x_threads, o_frame);
 		}
 	}
 

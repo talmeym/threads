@@ -267,8 +267,7 @@ public class Actions {
 			}
 
 			if (x_thread != null) {
-				p_threadItem.getParentThread().removeThreadItem(p_threadItem);
-				x_thread.addThreadItem(p_threadItem);
+				p_threadItem.moveTo(x_thread);
 			}
 		}
 	}

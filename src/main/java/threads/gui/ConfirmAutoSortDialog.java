@@ -51,9 +51,7 @@ class ConfirmAutoSortDialog extends JDialog {
         JButton x_moveButton = new JButton("Sort All");
         x_moveButton.addActionListener(e -> {
             for(int i = 0; i < o_hasDueDates.size(); i++) {
-                Item x_item = (Item) o_hasDueDates.get(i);
-                x_item.getParentThread().removeThreadItem(x_item);
-                o_destinations.get(i).addThreadItem(x_item);
+                ((Item) o_hasDueDates.get(i)).moveTo(o_destinations.get(i));
             }
 
             setVisible(false);
