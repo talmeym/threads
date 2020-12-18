@@ -9,6 +9,8 @@ import java.awt.*;
 import java.util.Date;
 
 import static java.awt.BorderLayout.*;
+import static java.awt.Color.black;
+import static java.awt.Color.gray;
 import static javax.swing.BorderFactory.createCompoundBorder;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static threads.data.ComponentChangeEvent.Field.DUE_DATE;
@@ -46,10 +48,11 @@ class ReminderDateSuggestionPanel extends DateSuggestionPanel<Reminder> {
         super(p_configuration, p_reminder, new BorderLayout(), p_parentPanel);
 
 		p_reminder.addComponentChangeListener(e -> {
-			if(e.getSource() == p_reminder && e.getField() == DUE_DATE) {
+			if(e.getSource() == p_reminder && e.isValueChange()) {
 				o_dueDateField.getDocument().removeDocumentListener(x_listener);
 				o_dueDateField.setText(getDueDateText(p_reminder.getDueDate()));
 				o_dueDateField.getDocument().addDocumentListener(x_listener);
+				o_dueDateField.setForeground(p_reminder.getDueDate() != null && p_reminder.isActive() ? black : gray);
 			}
 		});
 

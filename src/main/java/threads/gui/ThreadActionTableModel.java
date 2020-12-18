@@ -1,17 +1,21 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.Item;
 import threads.data.Thread;
+import threads.data.View;
 import threads.util.TimedUpdater;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 import static threads.data.LookupHelper.getAllActiveActions;
-import static threads.util.DateUtil.*;
+import static threads.data.View.SEVENDAYS;
+import static threads.util.DateUtil.getDateStatus;
+import static threads.util.DateUtil.getFormattedDate;
 import static threads.util.GoogleUtil.googleAccount;
 
 class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
-	private boolean o_onlyNext7Days = true;
+	private View o_view = SEVENDAYS;
 
 	ThreadActionTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Thread", "Action", "Due Date", "Due", ""});
@@ -41,15 +45,15 @@ class ThreadActionTableModel extends ComponentTableModel<Thread, Item> {
 
     @Override
 	List<Item> getDataItems() {
-		return getAllActiveActions(getComponent(), o_onlyNext7Days);
+		return getAllActiveActions(getComponent(), o_view == null ? SEVENDAYS : o_view);
 	}
 
-	boolean onlyNext7Days() {
-		return o_onlyNext7Days;
+	View getView() {
+		return o_view;
 	}
 
-	void setOnlyNext7Days(boolean p_onlyNext7Days) {
-		o_onlyNext7Days = p_onlyNext7Days;
+	void setView(View p_view) {
+		o_view = p_view;
 		reloadData();
 	}
 }

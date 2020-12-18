@@ -3,6 +3,7 @@ package threads.gui;
 import threads.data.Configuration;
 import threads.data.Item;
 import threads.data.Reminder;
+import threads.util.DateUtil;
 import threads.util.StringUtils;
 import threads.util.TimedUpdateListener;
 import threads.util.TimedUpdater;
@@ -15,6 +16,8 @@ import java.util.Date;
 import static java.awt.Color.black;
 import static java.awt.Color.gray;
 import static javax.swing.JOptionPane.*;
+import static threads.util.DateUtil.TODAY;
+import static threads.util.DateUtil.isAllDay;
 import static threads.util.ImageUtil.getGoogleIcon;
 import static threads.util.ImageUtil.getThreadsIcon;
 
@@ -155,7 +158,7 @@ public class ItemDateSuggestionPanel extends DateSuggestionPanel<Item> implement
 					}
 
 					boolean x_isActive = o_hasDueDate.isActive();
-					boolean dueDateInFuture = x_dueDate.after(new Date());
+					boolean dueDateInFuture = isAllDay(x_dueDate) ? !x_dueDate.before(DateUtil.getFirstThing(TODAY)) : x_dueDate.after(new Date());
 
 					if(!x_isActive && dueDateInFuture && showConfirmDialog(o_parentPanel, "Your action is in the future. Set it active ?", "Set active ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
 						o_hasDueDate.setActive(true);

@@ -15,9 +15,11 @@ import java.util.*;
 import static java.awt.SystemTray.getSystemTray;
 import static java.awt.TrayIcon.MessageType.ERROR;
 import static java.awt.TrayIcon.MessageType.*;
+import static java.lang.Boolean.FALSE;
 import static java.lang.System.getProperty;
 import static java.util.stream.Collectors.toList;
 import static javax.swing.JOptionPane.*;
+import static threads.data.ComponentChangeEvent.Field.ACTIVE;
 import static threads.data.ComponentChangeEvent.Field.TEXT;
 import static threads.data.Loader.loadConfiguration;
 import static threads.gui.Actions.*;
@@ -128,7 +130,7 @@ public class SystemTrayUtil {
 
 						x_component.addComponentChangeListener(e -> {
 							if(e.getSource() == x_component) {
-								if(e.isComponentRemoved()) {
+								if(e.isComponentRemoved() || (e.getField() == ACTIVE && e.getNewValue().equals(FALSE))) {
                                     MenuItem x_removed = x_menuItems.remove(x_component);
                                     x_menu.remove(x_removed);
                                 } else if(e.getField() == TEXT) {

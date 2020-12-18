@@ -6,6 +6,7 @@ import threads.data.Thread;
 import java.util.*;
 
 import static threads.data.LookupHelper.*;
+import static threads.data.View.ALL;
 import static threads.util.DateUtil.getDateStatus;
 import static threads.util.GoogleUtil.googleAccount;
 
@@ -42,7 +43,7 @@ class ThreadContentsTableModel extends ComponentTableModel<Thread, ThreadItem> {
 		if(x_threadItem instanceof Thread) {
 			int x_th = getAllActiveThreads((Thread) x_threadItem).size();
 			int x_up = getAllActiveUpdates((Thread) x_threadItem).size();
-			int x_ac = getAllActiveActions((Thread) x_threadItem, false).size();
+			int x_ac = getAllActiveActions((Thread) x_threadItem, ALL).size();
 			return x_th + " ths, " + x_up + " ups, " + x_ac + " acs";
 		}
 

@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static threads.util.DateUtil.isBefore7DaysFromNow;
+import static threads.data.View.ALL;
 import static threads.util.DateUtil.isSameDay;
 
 public class LookupHelper {
@@ -23,12 +23,12 @@ public class LookupHelper {
 		return x_result;
 	}
 
-	public static List<Item> getAllActiveActions(Thread p_thread, boolean p_onlyNext7Days) {
+	public static List<Item> getAllActiveActions(Thread p_thread, View p_view) {
 		List<Item> x_result = new ArrayList<>();
-		x_result.addAll(getActiveActions(p_thread, p_onlyNext7Days));
+		x_result.addAll(getActiveActions(p_thread, p_view));
 		p_thread.getThreadItems().stream()
 				.filter(ti -> ti.isActive() && ti instanceof Thread)
-				.forEach(ti -> x_result.addAll(getAllActiveActions((Thread) ti, p_onlyNext7Days)));
+				.forEach(ti -> x_result.addAll(getAllActiveActions((Thread) ti, p_view)));
 		Collections.sort(x_result, new AllDayAwareDueDateComparator());
 		return x_result;
 	}
@@ -68,22 +68,12 @@ public class LookupHelper {
 		return x_result;
 	}
 
-	public static List<Item> getAllActiveDueActions(Thread p_thread) {
-		List<Item> x_result = new ArrayList<>();
-		x_result.addAll(getActiveDueActions(p_thread));
-		p_thread.getThreadItems().stream()
-				.filter(ti -> ti.isActive() && ti instanceof Thread)
-				.forEach(ti -> x_result.addAll(getAllActiveDueActions((Thread) ti)));
-		Collections.sort(x_result, new AllDayAwareDueDateComparator());
-		return x_result;
-	}
-
-	public static List<Reminder> getAllActiveReminders(Thread p_thread, boolean p_onlyIfDue) {
+	public static List<Reminder> getAllActiveReminders(Thread p_thread, View p_view) {
 		List<Reminder> x_result = new ArrayList<>();
-		x_result.addAll(getActiveReminders(p_thread, p_onlyIfDue));
+		x_result.addAll(getActiveReminders(p_thread, p_view));
 		p_thread.getThreadItems().stream()
 				.filter(ti -> ti.isActive() && ti instanceof Thread)
-				.forEach(ti -> x_result.addAll(getAllActiveReminders((Thread) ti, p_onlyIfDue)));
+				.forEach(ti -> x_result.addAll(getAllActiveReminders((Thread) ti, p_view)));
 		Collections.sort(x_result, (obj1, obj2) -> obj1.getDueDate().compareTo(obj2.getDueDate()));
 		return x_result;
 	}
@@ -96,11 +86,11 @@ public class LookupHelper {
 				.collect(Collectors.toList());
 	}
 
-	public static List<Item> getActiveActions(Thread p_thread, boolean p_onlyNext7DaysOrBefore) {
+	public static List<Item> getActiveActions(Thread p_thread, View p_view) {
 		return p_thread.getThreadItems().stream()
 				.filter(ti -> ti instanceof Item && ti.isActive())
 				.map(ti -> (Item) ti)
-				.filter(i -> i.getDueDate() != null && (!p_onlyNext7DaysOrBefore || isBefore7DaysFromNow(i.getDueDate())))
+				.filter(i -> i.getDueDate() != null && p_view.accept(i))
 				.collect(Collectors.toList());
 	}
 
@@ -128,27 +118,19 @@ public class LookupHelper {
 				.collect(Collectors.toList());
 	}
 
-	static List<Item> getActiveDueActions(Thread p_thread) {
-		return p_thread.getThreadItems().stream()
-				.filter(ti -> ti instanceof Item)
-				.map(ti -> (Item) ti)
-				.filter(i -> i.isActive() && i.isDue())
-				.collect(Collectors.toList());
-	}
-
-	private static List<Reminder> getActiveReminders(Thread p_thread, boolean p_onlyIfDue) {
+	private static List<Reminder> getActiveReminders(Thread p_thread, View p_view) {
 		List<Reminder> x_reminders = new ArrayList<>();
 		p_thread.getThreadItems().stream()
 				.filter(ti -> ti instanceof Item)
 				.map(ti -> (Item) ti)
 				.filter(i -> i.isActive() && i.getDueDate() != null)
-				.forEach(i -> x_reminders.addAll(getActiveReminders(i, p_onlyIfDue)));
+				.forEach(i -> x_reminders.addAll(getActiveReminders(i, p_view)));
 		return x_reminders;
 	}
 
-	static List<Reminder> getActiveReminders(Item p_item, boolean p_onlyIfDue) {
+	static List<Reminder> getActiveReminders(Item p_item, View p_view) {
 		return p_item.getReminders().stream()
-				.filter(r -> r.isActive() && (!p_onlyIfDue || r.isDue()))
+				.filter(r -> r.isActive() && p_view.accept(r))
 				.collect(Collectors.toList());
 	}
 
@@ -191,7 +173,7 @@ public class LookupHelper {
 			x_hasDueDates.add(p_item);
 		}
 
-		x_hasDueDates.addAll(p_onlyActive ? getActiveReminders(p_item, false) : p_item.getReminders());
+		x_hasDueDates.addAll(p_onlyActive ? getActiveReminders(p_item, ALL) : p_item.getReminders());
 		return x_hasDueDates;
 	}
 

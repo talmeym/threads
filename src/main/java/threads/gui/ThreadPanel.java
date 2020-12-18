@@ -4,6 +4,7 @@ import threads.data.AutoSortRule;
 import threads.data.AutoSortRule.Matcher;
 import threads.data.Configuration;
 import threads.data.Thread;
+import threads.data.View;
 import threads.util.Settings;
 import threads.util.TimedUpdateListener;
 import threads.util.TimedUpdater;
@@ -20,6 +21,7 @@ import static java.lang.Integer.parseInt;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.JOptionPane.*;
 import static threads.data.LookupHelper.*;
+import static threads.data.View.DUE;
 import static threads.gui.Actions.linkToGoogle;
 import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.ImageUtil.*;
@@ -121,13 +123,13 @@ class ThreadPanel extends JPanel implements TimedUpdateListener {
     }
 
 	private void setActionTabBackground() {
-        boolean x_dueActions = getAllActiveDueActions(o_thread).size() > 0;
+        boolean x_dueActions = getAllActiveActions(o_thread, DUE).size() > 0;
         o_tabs.setTitleAt(3, x_dueActions ? "Actions *" : "Actions");
         o_tabs.setBackgroundAt(3, x_dueActions ? red : o_tabs.getBackgroundAt(1));
     }
 
     private void setReminderTabBackground() {
-        boolean x_dueReminders = getAllActiveReminders(o_thread, true).size() > 0;
+        boolean x_dueReminders = getAllActiveReminders(o_thread, DUE).size() > 0;
         o_tabs.setTitleAt(4, x_dueReminders ? "Reminders *" : "Reminders");
         o_tabs.setBackgroundAt(4, x_dueReminders ? red : o_tabs.getBackgroundAt(1));
     }

@@ -89,11 +89,6 @@ public class AllDayAwareDueDateComparatorTest {
 			}
 
 			@Override
-			public void setActive(boolean active) {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
 			public String getText() {
 				throw new UnsupportedOperationException();
 			}
@@ -120,11 +115,6 @@ public class AllDayAwareDueDateComparatorTest {
 
 			@Override
 			public void setNotes(String p_notes) {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
-			public Thread getParentThread() {
 				throw new UnsupportedOperationException();
 			}
 

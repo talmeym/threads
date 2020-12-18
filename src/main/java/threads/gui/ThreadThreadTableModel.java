@@ -5,6 +5,7 @@ import threads.data.Thread;
 import java.util.List;
 
 import static threads.data.LookupHelper.*;
+import static threads.data.View.ALL;
 
 class ThreadThreadTableModel extends ComponentTableModel<Thread, Thread> {
 	private TableDataCache<Integer> o_cache = new TableDataCache<>();
@@ -27,7 +28,7 @@ class ThreadThreadTableModel extends ComponentTableModel<Thread, Thread> {
 			case 1: return x_thread.getText();
 			case 2: return o_cache.fillOrGet(row, col, () -> getAllActiveThreads(x_thread).size());
 			case 3: return o_cache.fillOrGet(row, col, () -> getActiveUpdates(x_thread).size());
-			default: return o_cache.fillOrGet(row, col, () -> getActiveActions(x_thread, false).size());
+			default: return o_cache.fillOrGet(row, col, () -> getActiveActions(x_thread, ALL).size());
         }
     }
 

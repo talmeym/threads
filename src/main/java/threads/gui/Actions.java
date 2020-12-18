@@ -48,7 +48,8 @@ public class Actions {
 				}
 
 				if (x_proceed) {
-					Item x_action = x_template.buildAction(p_date, x_text);
+					Date x_derivedDate = deriveDate(x_text, p_date);
+					Item x_action = x_template.buildAction(x_derivedDate != null ? x_text.substring(x_text.indexOf(" ") + 1) : x_text, x_derivedDate != null ? x_derivedDate : p_date);
 					x_thread.addThreadItem(x_action);
 
 					if (p_openAfter) {

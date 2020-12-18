@@ -1,17 +1,20 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.Reminder;
 import threads.data.Thread;
+import threads.data.View;
 import threads.util.TimedUpdater;
 
 import java.util.List;
 
 import static threads.data.LookupHelper.getAllActiveReminders;
-import static threads.util.DateUtil.*;
+import static threads.data.View.ALL;
+import static threads.util.DateUtil.getDateStatus;
+import static threads.util.DateUtil.getFormattedDate;
 import static threads.util.GoogleUtil.googleAccount;
 
 class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
-	private boolean o_onlyDueReminders = true;
+	private View o_view = ALL;
 
 	ThreadReminderTableModel(Thread p_thread) {
         super(p_thread, new String[] {"Action", "Reminder", "Due Date", "Due", ""});
@@ -38,15 +41,15 @@ class ThreadReminderTableModel extends ComponentTableModel<Thread, Reminder> {
 
     @Override
 	List<Reminder> getDataItems() {
-    	return getAllActiveReminders(getComponent(), o_onlyDueReminders);
+    	return getAllActiveReminders(getComponent(), o_view == null ? ALL : o_view);
 	}
 
-	boolean onlyDueReminders() {
-		return o_onlyDueReminders;
+	View getView() {
+		return o_view;
 	}
 
-	void setOnlyDueReminders(boolean p_onlyDueReminders) {
-		o_onlyDueReminders = p_onlyDueReminders;
+	void setView(View p_view) {
+		o_view = p_view;
 		reloadData();
 	}
 }

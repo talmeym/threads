@@ -144,7 +144,7 @@ public class GoogleUtil {
                                         }
                                     } else {
                                         if (!(nullProofEqual(x_summary, x_hasDueDate.getText()) && nullProofEqual(x_description, x_hasDueDate.getNotes()) && nullProofEqual(x_start, x_hasDueDate.getDueDate()))) {
-                                            x_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getNotes(), x_hasDueDate.getDueDate())).execute();
+                                            x_client.events().update(x_calendarId, x_event.getId(), populateEvent(x_event, x_hasDueDate)).execute();
                                             x_stats[s_EVENT_UPDATED] += 1;
                                         }
                                     }
@@ -244,7 +244,7 @@ public class GoogleUtil {
 
 			for(HasDueDate x_hasDueDate : p_hasDueDates) {
                 if(findEvent(x_events, x_hasDueDate) == null) {
-					x_client.events().insert(x_calendarId, populateEvent(new Event(), x_hasDueDate.getId(), x_hasDueDate.getText(), x_hasDueDate.getNotes(), x_hasDueDate.getDueDate())).execute();
+					x_client.events().insert(x_calendarId, populateEvent(new Event(), x_hasDueDate)).execute();
 				}
 
 				callBack(p_callbacks, c -> c.progress(x_hasDueDate.getText()));
@@ -321,17 +321,18 @@ public class GoogleUtil {
         return null;
     }
 
-    private static Event populateEvent(Event p_event, UUID p_id, String p_text, String p_notes, Date p_dueDate) {
-		addThreadsIdToEvent(p_id, p_event);
-		p_event.setSummary(p_text);
-		p_event.setDescription(p_notes);
+    private static Event populateEvent(Event x_event, HasDueDate x_hasDueDate) {
+		Date p_dueDate = x_hasDueDate.getDueDate();
+		addThreadsIdToEvent(x_hasDueDate.getId(), x_event);
+		x_event.setSummary(x_hasDueDate.getText());
+		x_event.setDescription(x_hasDueDate.getNotes());
 
 		if(isAllDay(p_dueDate)) {
-			p_event.setStart(new EventDateTime().set("date", new DateTime(s_dateFormat.format(p_dueDate))));
-			p_event.setEnd(new EventDateTime().set("date", new DateTime(s_dateFormat.format(p_dueDate))));
+			x_event.setStart(new EventDateTime().set("date", new DateTime(s_dateFormat.format(p_dueDate))));
+			x_event.setEnd(new EventDateTime().set("date", new DateTime(s_dateFormat.format(p_dueDate))));
 		} else {
-			p_event.setStart(new EventDateTime().setDateTime(new DateTime(p_dueDate)));
-			p_event.setEnd(new EventDateTime().setDateTime(new DateTime(p_dueDate)));
+			x_event.setStart(new EventDateTime().setDateTime(new DateTime(p_dueDate)));
+			x_event.setEnd(new EventDateTime().setDateTime(new DateTime(p_dueDate)));
 		}
 
 		EventReminder x_popupReminder = new EventReminder();
@@ -341,9 +342,9 @@ public class GoogleUtil {
 		Event.Reminders x_reminders = new Event.Reminders();
 		x_reminders.setOverrides(singletonList(x_popupReminder));
 		x_reminders.setUseDefault(false);
-		p_event.setReminders(x_reminders);
+		x_event.setReminders(x_reminders);
 
-		return p_event;
+		return x_event;
 	}
 
 	private static List<Event> getEvents(com.google.api.services.calendar.Calendar x_client, String p_calendarId) throws IOException {

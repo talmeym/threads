@@ -58,9 +58,9 @@ public class ActionTemplate {
 		}
 	}
 
-	public Item buildAction(Date p_startingDate, String p_replacementText) {
-		Item x_item = new Item(getReplacementText(this.o_textTemplate, p_replacementText), p_startingDate);
-		o_reminderTemplates.forEach(r -> x_item.addReminder(new Reminder(getReplacementText(r.o_textTemplate, p_replacementText), new Date(p_startingDate.getTime() + r.o_offset))));
+	public Item buildAction(String p_text, Date p_dueDate) {
+		Item x_item = new Item(getReplacementText(this.o_textTemplate, p_text), p_dueDate);
+		o_reminderTemplates.forEach(r -> x_item.addReminder(new Reminder(getReplacementText(r.o_textTemplate, p_text), new Date(p_dueDate.getTime() + r.o_offset))));
 		return x_item;
 	}
 

@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static threads.data.ComponentChangeEvent.Field.DUE_DATE;
-import static threads.data.LookupHelper.getAllActiveDueActions;
+import static threads.data.LookupHelper.getAllActiveActions;
 import static threads.data.LookupHelper.getAllActiveReminders;
+import static threads.data.View.DUE;
 
 public class NotificationUpdater {
 	private static NotificationUpdater s_INSTANCE = null;
@@ -56,8 +57,8 @@ public class NotificationUpdater {
 		List<Component> x_dueComponents = new ArrayList<>();
 		for(Configuration x_configuration: o_configurations) {
 			Thread x_topLevelThread = x_configuration.getTopLevelThread();
-			x_dueComponents.addAll(getAllActiveReminders(x_topLevelThread, true));
-			x_dueComponents.addAll(getAllActiveDueActions(x_topLevelThread));
+			x_dueComponents.addAll(getAllActiveReminders(x_topLevelThread, DUE));
+			x_dueComponents.addAll(getAllActiveActions(x_topLevelThread, DUE));
 			x_dueComponents.removeAll(o_alertedComponents);
 
 			if (x_dueComponents.size() > 0) {

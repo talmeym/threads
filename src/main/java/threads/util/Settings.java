@@ -26,8 +26,8 @@ public class Settings {
         CALENDARACT("calendaract", "true"),
         CALENDARUP("calendarup", "false"),
         CALENDARREM("calendarrem", "false"),
-        ONLYDUE("onlydue", "true"),
-        SEVENDAYS("sevendays", "true"),
+        REMINDERVIEW("remview", "DUE"),
+        ACTIONVIEW("actview", "SEVENDAYS"),
         GOOGLE("google", "false"),
         SEARCHNOTES("searchnotes", "false"),
         SEARCHCASE("searchcase", "false");

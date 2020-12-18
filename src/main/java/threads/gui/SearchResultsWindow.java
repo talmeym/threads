@@ -23,6 +23,7 @@ import static java.awt.Color.black;
 import static java.awt.Color.gray;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static threads.data.LookupHelper.*;
+import static threads.data.View.ALL;
 import static threads.gui.GUIConstants.*;
 import static threads.util.DateUtil.getDateStatus;
 import static threads.util.GoogleUtil.googleAccount;
@@ -141,7 +142,7 @@ class SearchResultsWindow extends JFrame {
 			if(x_component instanceof Thread) {
 				int x_th = getAllActiveThreads((Thread) x_component).size();
 				int x_up = getAllActiveUpdates((Thread) x_component).size();
-				int x_ac = getAllActiveActions((Thread) x_component, false).size();
+				int x_ac = getAllActiveActions((Thread) x_component, ALL).size();
 				return x_th + " ths, " + x_up + " ups, " + x_ac + " acs";
 			}
 

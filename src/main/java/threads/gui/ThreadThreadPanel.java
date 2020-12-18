@@ -2,6 +2,7 @@ package threads.gui;
 
 import threads.data.Configuration;
 import threads.data.Thread;
+import threads.data.View;
 import threads.util.Settings;
 
 import javax.swing.*;
@@ -12,14 +13,14 @@ import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static threads.data.ComponentType.Thread;
+import static threads.data.View.ALL;
 import static threads.gui.Actions.addThread;
 import static threads.gui.Actions.linkToGoogle;
 import static threads.gui.GUIConstants.s_statsColumnWidth;
 import static threads.gui.GUIConstants.s_threadColumnWidth;
 import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.ImageUtil.getPlusIcon;
-import static threads.util.Settings.Setting.SEVENDAYS;
-import static threads.util.Settings.Setting.TABINDEX;
+import static threads.util.Settings.Setting.*;
 
 class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
     private final Thread o_thread;
@@ -79,7 +80,7 @@ class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
 
 				if(p_col > 1) {
 					if(p_col == 4) {
-						o_settings.updateSetting(SEVENDAYS, false);
+						o_settings.updateSetting(ACTIONVIEW, ALL);
 					}
 
 					o_settings.updateSetting(TABINDEX, "" + (p_col - 1));
