@@ -20,7 +20,8 @@ import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 import static threads.util.ImageUtil.getThreadsIcon;
-import static threads.util.Settings.Setting.*;
+import static threads.util.Settings.Setting.SEARCHCASE;
+import static threads.util.Settings.Setting.SEARCHNOTES;
 
 class SearchPanel extends JPanel {
 	private static final String s_defaultTextString = " Search ...";

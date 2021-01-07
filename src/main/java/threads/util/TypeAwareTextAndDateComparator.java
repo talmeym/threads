@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import static threads.data.ComponentType.*;
 import static threads.data.ComponentType.Thread;
+import static threads.data.ComponentType.*;
 
 public class TypeAwareTextAndDateComparator<TYPE extends Component> implements Comparator<TYPE> {
     public int compare(TYPE obj1, TYPE obj2) {

@@ -1,5 +1,6 @@
 package threads.gui;
 
+import com.google.api.services.calendar.model.Event;
 import threads.data.Component;
 import threads.data.Thread;
 import threads.data.*;
@@ -151,7 +152,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 	}
 
 	@Override
-	public void googleSynced() {
+	public void googleSyncFinished() {
 		o_statusLabel.setText(s_dateFormat.format(new Date()));
 		o_statusLabel.setIcon(null);
 		o_lastGoogle = currentTimeMillis();
@@ -159,12 +160,15 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 	}
 
 	@Override
-	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
-		if(p_import) {
+	public void itemsLinked(List<HasDueDate> p_hasDueDates) {
+		// do nothing
+	}
+
+	@Override
+	public void googleSynced(List<HasDueDate> p_itemsCreated, List<Event> p_eventsDeleted) {
 			Thread x_topLevelThread = o_configuration.getTopLevelThread();
-			processAutoSortPrefixes(x_topLevelThread, p_hasDueDates);
-			processAutoSortRules(x_topLevelThread, p_hasDueDates);
-		}
+			processAutoSortPrefixes(x_topLevelThread, p_itemsCreated);
+			processAutoSortRules(x_topLevelThread, p_itemsCreated);
 	}
 
 	private void processAutoSortPrefixes(Thread x_topLevelThread, List<HasDueDate> p_hasDueDates) {
@@ -180,7 +184,7 @@ class StatusPanel extends JPanel implements Runnable, TimedUpdateListener, Googl
 				List<Component> x_threads = x_topLevelThread.search(new Search.Builder().ofType(ComponentType.Thread).withText(x_threadName).exactText(true).build());
 
 				if(x_threads.size() == 1) {
-					x_hasDueDate.setText(x_text.substring(x_index + 1));
+					x_hasDueDate.setText(x_text.substring(x_index + 1).trim());
                     ((ThreadItem) x_hasDueDate).moveTo((Thread) x_threads.get(0));
 					x_processed.add(x_hasDueDate);
 				} else {

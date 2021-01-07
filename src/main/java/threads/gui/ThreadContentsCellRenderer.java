@@ -1,11 +1,12 @@
 package threads.gui;
 
 import threads.data.Thread;
-import threads.data.*;
+import threads.data.ThreadItem;
 
 import javax.swing.*;
 
-import static java.awt.Color.*;
+import static java.awt.Color.black;
+import static java.awt.Color.gray;
 
 class ThreadContentsCellRenderer extends BaseCellRenderer<Thread, ThreadItem> {
 	@Override

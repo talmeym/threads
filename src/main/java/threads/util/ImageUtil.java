@@ -5,12 +5,14 @@ import threads.data.ComponentType;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import static javax.imageio.ImageIO.read;
-import static threads.data.ComponentType.*;
 import static threads.data.ComponentType.Thread;
+import static threads.data.ComponentType.*;
 
 public class ImageUtil {
 	private static Map<String, Image> p_imageCache = new HashMap<>();

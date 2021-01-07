@@ -2,7 +2,6 @@ package threads.gui;
 
 import threads.data.Configuration;
 import threads.data.Thread;
-import threads.data.View;
 import threads.util.Settings;
 
 import javax.swing.*;
@@ -20,7 +19,8 @@ import static threads.gui.GUIConstants.s_statsColumnWidth;
 import static threads.gui.GUIConstants.s_threadColumnWidth;
 import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.ImageUtil.getPlusIcon;
-import static threads.util.Settings.Setting.*;
+import static threads.util.Settings.Setting.ACTIONVIEW;
+import static threads.util.Settings.Setting.TABINDEX;
 
 class ThreadThreadPanel extends ComponentTablePanel<Thread, Thread> {
     private final Thread o_thread;

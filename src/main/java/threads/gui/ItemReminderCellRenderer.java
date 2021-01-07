@@ -1,10 +1,12 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.Item;
+import threads.data.Reminder;
 
 import javax.swing.*;
 
-import static java.awt.Color.*;
+import static java.awt.Color.black;
+import static java.awt.Color.gray;
 
 class ItemReminderCellRenderer extends BaseCellRenderer<Item, Reminder> {
 	@Override

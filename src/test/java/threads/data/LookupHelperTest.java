@@ -174,10 +174,6 @@ public class LookupHelperTest {
 		return getDate(10);
 	}
 
-	private Date get10DaysAgo() {
-		return getDate(-10);
-	}
-
 	private Date getDate(int p_daysToAdd) {
 		Calendar x_calendar = Calendar.getInstance();
 		x_calendar.add(DAY_OF_MONTH, p_daysToAdd);

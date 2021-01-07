@@ -1,10 +1,12 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.Item;
+import threads.data.Reminder;
 
 import java.util.List;
 
-import static threads.util.DateUtil.*;
+import static threads.util.DateUtil.getDateStatus;
+import static threads.util.DateUtil.getFormattedDate;
 import static threads.util.GoogleUtil.googleAccount;
 
 class ItemReminderTableModel extends ComponentTableModel<Item, Reminder> {

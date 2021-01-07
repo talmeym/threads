@@ -1,15 +1,13 @@
 package threads.gui;
 
-import threads.data.*;
-import threads.util.DateUtil;
+import threads.data.Configuration;
+import threads.data.HasDueDate;
 import threads.util.GoogleUtil;
 import threads.util.StringUtils;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -26,17 +24,12 @@ import static java.awt.Color.*;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.BorderFactory.*;
 import static javax.swing.BoxLayout.Y_AXIS;
-import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
-import static javax.swing.JOptionPane.OK_OPTION;
-import static javax.swing.JOptionPane.WARNING_MESSAGE;
-import static javax.swing.JOptionPane.showConfirmDialog;
+import static javax.swing.JOptionPane.*;
 import static threads.gui.Actions.linkToGoogle;
 import static threads.gui.ColourConstants.s_editedColour;
 import static threads.gui.WidgetFactory.createLabel;
 import static threads.util.DateUtil.isAllDay;
-import static threads.util.ImageUtil.getCrossIcon;
-import static threads.util.ImageUtil.getGoogleIcon;
-import static threads.util.ImageUtil.getReturnIcon;
+import static threads.util.ImageUtil.*;
 
 abstract class DateSuggestionPanel<TYPE extends HasDueDate> extends JPanel {
 	private static final DateFormat s_dateTimeFormat = new SimpleDateFormat("dd/MM/yy HH:mm");

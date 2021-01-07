@@ -1,13 +1,16 @@
 package threads;
 
-import threads.data.*;
+import threads.data.Configuration;
+import threads.data.LoadException;
 import threads.data.Thread;
 import threads.gui.WindowManager;
 import threads.util.*;
 
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;

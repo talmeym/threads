@@ -1,14 +1,20 @@
 package threads.gui;
 
+import com.google.api.services.calendar.model.Event;
 import threads.data.Component;
-import threads.data.*;
-import threads.util.*;
+import threads.data.ComponentType;
+import threads.data.HasDueDate;
+import threads.util.GoogleAccount;
+import threads.util.GoogleSyncListener;
+import threads.util.TimedUpdateListener;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
@@ -97,12 +103,17 @@ abstract class ComponentTablePanel <COMPONENT extends Component, TYPE> extends J
 	}
 
 	@Override
-	public void googleSynced() {
+	public void googleSyncFinished() {
 		tableRowClicked(-1, -1, null);
 	}
 
 	@Override
-	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
+	public void itemsLinked(List<HasDueDate> p_hasDueDatesSynced) {
+		tableRowClicked(-1, -1, null);
+	}
+
+	@Override
+	public void googleSynced(List<HasDueDate> p_itemsCreated, List<Event> p_eventsDeleted) {
 		tableRowClicked(-1, -1, null);
 	}
 }

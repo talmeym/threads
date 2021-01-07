@@ -4,7 +4,6 @@ import threads.data.AutoSortRule;
 import threads.data.AutoSortRule.Matcher;
 import threads.data.Configuration;
 import threads.data.Thread;
-import threads.data.View;
 import threads.util.Settings;
 import threads.util.TimedUpdateListener;
 import threads.util.TimedUpdater;

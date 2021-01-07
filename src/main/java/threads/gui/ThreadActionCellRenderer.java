@@ -1,6 +1,6 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.Item;
 import threads.data.Thread;
 
 import javax.swing.*;

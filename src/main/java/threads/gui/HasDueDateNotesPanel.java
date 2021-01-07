@@ -1,11 +1,10 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.HasDueDate;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.BorderLayout;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

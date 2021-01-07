@@ -1,26 +1,29 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.Configuration;
+import threads.data.Item;
 import threads.data.Thread;
-import threads.util.*;
+import threads.data.View;
+import threads.util.GoogleSyncer;
+import threads.util.Settings;
+import threads.util.TimedUpdater;
 
 import javax.swing.*;
-import java.awt.Component;
 import java.awt.*;
 
-import static java.awt.BorderLayout.*;
+import static java.awt.BorderLayout.NORTH;
+import static java.awt.BorderLayout.SOUTH;
 import static java.awt.FlowLayout.LEFT;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.SwingConstants.VERTICAL;
 import static threads.data.ComponentType.Action;
-import static threads.data.View.ALL;
-import static threads.data.View.DUE;
-import static threads.data.View.SEVENDAYS;
+import static threads.data.View.*;
 import static threads.gui.Actions.*;
 import static threads.gui.GUIConstants.*;
 import static threads.gui.WidgetFactory.createLabel;
-import static threads.util.ImageUtil.*;
-import static threads.util.Settings.Setting.*;
+import static threads.util.ImageUtil.getPlusIcon;
+import static threads.util.ImageUtil.getTemplateIcon;
+import static threads.util.Settings.Setting.ACTIONVIEW;
 
 class ThreadActionPanel extends ComponentTablePanel<Thread, Item> {
     private final Thread o_thread;

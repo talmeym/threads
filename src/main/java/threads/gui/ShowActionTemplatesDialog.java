@@ -1,6 +1,7 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.ActionTemplate;
+import threads.data.Configuration;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,7 +17,8 @@ import java.util.List;
 import static java.awt.BorderLayout.CENTER;
 import static java.awt.BorderLayout.SOUTH;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
-import static threads.gui.GUIConstants.*;
+import static threads.gui.GUIConstants.s_tableRowHeight;
+import static threads.gui.GUIConstants.s_threadColumnWidth;
 
 
 class ShowActionTemplatesDialog extends JDialog {

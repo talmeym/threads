@@ -4,7 +4,6 @@ import threads.data.Configuration;
 import threads.data.Reminder;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
 import java.awt.*;
 import java.util.Date;
 
@@ -13,7 +12,6 @@ import static java.awt.Color.black;
 import static java.awt.Color.gray;
 import static javax.swing.BorderFactory.createCompoundBorder;
 import static javax.swing.BorderFactory.createEmptyBorder;
-import static threads.data.ComponentChangeEvent.Field.DUE_DATE;
 
 class ReminderDateSuggestionPanel extends DateSuggestionPanel<Reminder> {
     private static final DateItem[] s_weekItems = new DateItem[5];

@@ -1,10 +1,12 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.Component;
+import threads.data.Configuration;
 import threads.data.Thread;
 
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.WindowListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.apple.eawt.Application.getApplication;
 import static threads.util.FontUtil.standardiseFontSizes;

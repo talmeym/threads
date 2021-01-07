@@ -14,10 +14,12 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.*;
 import com.google.api.services.calendar.model.Event.ExtendedProperties;
-import threads.data.*;
 import threads.data.Thread;
+import threads.data.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -105,6 +107,7 @@ public class GoogleUtil {
 	static synchronized void syncWithGoogle() {
 		List<UUID> x_syncedComponents = new ArrayList<>();
 		List<HasDueDate> x_createdComponents = new ArrayList<>();
+		List<Event> x_deletedEvents = new ArrayList<>();
 
 		try {
 			for (GoogleAccount x_googleAccount: s_googleAccounts) {
@@ -151,6 +154,7 @@ public class GoogleUtil {
                                 } else {
                                     x_client.events().delete(x_calendarId, x_event.getId()).execute();
                                     x_stats[s_EVENT_DELETED] += 1;
+                                    x_deletedEvents.add(x_event);
                                 }
                             } else {
                                 Item x_item = new Item(x_summary, x_start);
@@ -189,8 +193,8 @@ public class GoogleUtil {
 					s_linkedComponents.get(x_googleAccount).addAll(x_syncedComponents);
 				}
 
-				if(x_createdComponents.size() > 0) {
-					GoogleSyncer.getInstance().componentsImported(x_createdComponents);
+				if(x_createdComponents.size() > 0 || x_deletedEvents.size() > 0) {
+					GoogleSyncer.getInstance().componentsSynced(x_createdComponents, x_deletedEvents);
 				}
 			}
 		} catch(Throwable t){
@@ -207,7 +211,7 @@ public class GoogleUtil {
 		return x_threadsId;
 	}
 
-	private static Date getDate(EventDateTime x_startEvent) {
+	public static Date getDate(EventDateTime x_startEvent) {
 		DateTime x_date = x_startEvent.getDate();
 		DateTime x_dateTime = x_startEvent.getDateTime();
 		Date x_start = new Date(x_date != null ? x_date.getValue() : x_dateTime.getValue());
@@ -255,7 +259,7 @@ public class GoogleUtil {
 			}
 
 			callBack(p_callbacks, ProgressCallBack::success);
-			GoogleSyncer.getInstance().componentsSynced(p_hasDueDates);
+			GoogleSyncer.getInstance().componentsLinked(p_hasDueDates);
 		} catch (Throwable t) {
 			callBack(p_callbacks, c -> c.error(t.getMessage()));
 		}

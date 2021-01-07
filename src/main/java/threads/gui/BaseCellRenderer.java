@@ -6,14 +6,17 @@ import threads.util.GoogleAccount;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.text.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static java.awt.Color.*;
+import static java.awt.Color.black;
+import static java.awt.Color.white;
 import static java.lang.String.valueOf;
 import static threads.gui.ColourConstants.*;
 import static threads.util.DateUtil.*;
-import static threads.util.ImageUtil.*;
+import static threads.util.ImageUtil.getGoogleSmallIcon;
+import static threads.util.ImageUtil.getIconForType;
 
 class BaseCellRenderer<COMPONENT extends threads.data.Component, DATA_TYPE> extends DefaultTableCellRenderer {
 	private static final DateFormat s_dateFormat = new SimpleDateFormat("dd MMM yy HH:mm");

@@ -1,8 +1,8 @@
 package threads.gui;
 
 import threads.data.Component;
-import threads.data.*;
 import threads.data.Thread;
+import threads.data.*;
 import threads.util.SettingChangeListener;
 import threads.util.Settings;
 import threads.util.Settings.Setting;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.awt.Color.*;
 import static java.awt.FlowLayout.LEFT;

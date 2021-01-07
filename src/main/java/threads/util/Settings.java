@@ -8,9 +8,7 @@ import java.util.*;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
-import static java.util.Calendar.MONTH;
-import static java.util.Calendar.YEAR;
-import static java.util.Calendar.getInstance;
+import static java.util.Calendar.*;
 
 public class Settings {
     public enum Setting {

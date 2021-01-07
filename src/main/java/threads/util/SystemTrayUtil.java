@@ -2,7 +2,8 @@ package threads.util;
 
 import threads.Threads;
 import threads.data.Component;
-import threads.data.*;
+import threads.data.Configuration;
+import threads.data.Item;
 import threads.data.Thread;
 import threads.gui.WindowManager;
 
@@ -10,23 +11,27 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.awt.SystemTray.getSystemTray;
 import static java.awt.TrayIcon.MessageType.ERROR;
-import static java.awt.TrayIcon.MessageType.*;
+import static java.awt.TrayIcon.MessageType.INFO;
 import static java.lang.Boolean.FALSE;
 import static java.lang.System.getProperty;
 import static java.util.stream.Collectors.toList;
-import static javax.swing.JOptionPane.*;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.showInputDialog;
 import static threads.data.ComponentChangeEvent.Field.ACTIVE;
 import static threads.data.ComponentChangeEvent.Field.TEXT;
 import static threads.data.Loader.loadConfiguration;
-import static threads.gui.Actions.*;
+import static threads.gui.Actions.addAction;
+import static threads.gui.Actions.addUpdate;
 import static threads.gui.ItemDateSuggestionPanel.getDateSuggestion;
 import static threads.util.FileUtil.*;
 import static threads.util.GoogleUtil.addNewGoogleAccount;
-import static threads.util.ImageUtil.*;
+import static threads.util.ImageUtil.getThreadsIcon;
+import static threads.util.ImageUtil.getThreadsImage;
 
 public class SystemTrayUtil {
     private static final PopupMenu s_popUpMenu = new PopupMenu();

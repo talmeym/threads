@@ -1,5 +1,6 @@
 package threads.gui;
 
+import com.google.api.services.calendar.model.Event;
 import threads.data.Configuration;
 import threads.data.HasDueDate;
 import threads.data.Reminder;
@@ -9,7 +10,7 @@ import threads.util.GoogleSyncer;
 import threads.util.Settings;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.util.Calendar;
 import java.util.List;
 
@@ -59,7 +60,7 @@ class ReminderPanel extends JPanel implements GoogleSyncListener {
 		add(x_panel, NORTH);
 
 		GoogleSyncer.getInstance().addActivityListener(this);
-		googleSynced();
+		googleSyncFinished();
 	}
 
 	@Override
@@ -68,11 +69,17 @@ class ReminderPanel extends JPanel implements GoogleSyncListener {
 	}
 
 	@Override
-	public void googleSynced() {
+	public void googleSyncFinished() {
 		setLinkLabelText();
 	}
 
-	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
+	@Override
+	public void itemsLinked(List<HasDueDate> p_hasDueDatesSynced) {
+		setLinkLabelText();
+	}
+
+	@Override
+	public void googleSynced(List<HasDueDate> p_itemsCreated, List<Event> p_eventsDeleted) {
 		setLinkLabelText();
 	}
 

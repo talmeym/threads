@@ -1,10 +1,10 @@
 package threads.gui;
 
+import com.google.api.services.calendar.model.Event;
 import threads.data.Component;
 import threads.data.HasDueDate;
 import threads.util.GoogleSyncListener;
 import threads.util.GoogleSyncer;
-import threads.util.TimedUpdater;
 
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
@@ -54,12 +54,17 @@ abstract class ComponentTableModel <COMPONENT extends Component, DATA_TYPE> exte
 	}
 
 	@Override
-	public void googleSynced() {
+	public void googleSyncFinished() {
 		fireTableDataChanged();
 	}
 
 	@Override
-	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
+	public void itemsLinked(List<HasDueDate> p_hasDueDates) {
+		fireTableDataChanged();
+	}
+
+	@Override
+	public void googleSynced(List<HasDueDate> p_itemsCreated, List<Event> p_eventsDeleted) {
 		fireTableDataChanged();
 	}
 

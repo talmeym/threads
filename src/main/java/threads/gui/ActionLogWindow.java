@@ -1,5 +1,6 @@
 package threads.gui;
 
+import com.google.api.services.calendar.model.Event;
 import threads.data.Component;
 import threads.data.ComponentChangeEvent;
 import threads.data.Configuration;
@@ -24,9 +25,11 @@ import java.util.List;
 import static java.awt.BorderLayout.CENTER;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static threads.data.ComponentChangeEvent.Field.CONTENT;
+import static threads.data.ComponentChangeEvent.Field.DUE_DATE;
 import static threads.gui.GUIConstants.*;
 import static threads.util.DateUtil.isAllDay;
 import static threads.util.FileUtil.logToFile;
+import static threads.util.GoogleUtil.getDate;
 import static threads.util.ImageUtil.getGoogleSmallIcon;
 import static threads.util.ImageUtil.getIconForType;
 import static threads.util.Settings.Setting.*;
@@ -55,31 +58,37 @@ class ActionLogWindow extends JFrame {
 		GoogleSyncer.getInstance().addActivityListener(new GoogleSyncListener() {
 			@Override
 			public void googleSyncStarted() {
-                Action x_action = new Action(new Date(), getGoogleSmallIcon(), "", "Google Sync started ...", "", "", "");
+                Action x_action = new Action(new Date(), getGoogleSmallIcon(), "", "", "Google Sync Started", "", "", "");
                 o_log.add(x_action);
                 logActionToDisk(p_configuration, x_action);
 				x_tableModel.fireTableDataChanged();
 			}
 
 			@Override
-			public void googleSynced() {
-                Action x_action = new Action(new Date(), getGoogleSmallIcon(), "", "Google Sync Completed", "", "", "");
+			public void googleSyncFinished() {
+                Action x_action = new Action(new Date(), getGoogleSmallIcon(), "", "", "Google Sync Completed", "", "", "");
                 o_log.add(x_action);
                 logActionToDisk(p_configuration, x_action);
 				x_tableModel.fireTableDataChanged();
 			}
 
 			@Override
-			public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_imports) {
-				if(p_imports) {
-                    o_log.add(new Action(new Date(), getGoogleSmallIcon(), p_hasDueDates.size() + " item(s)", "Imported from Google Calendar", "", "", ""));
-				} else {
-					if (p_hasDueDates.size() == 1) {
-						HasDueDate x_hasDueDate = p_hasDueDates.get(0);
-						o_log.add(new Action(new Date(), getIconForType(x_hasDueDate.getType()), x_hasDueDate.getText(), "Linked to Google Calendar", "", "", ""));
-					} else {
-						o_log.add(new Action(new Date(), getGoogleSmallIcon(), p_hasDueDates.size() + " item(s)", "Linked to Google Calendar", "", "", ""));
-					}
+			public void itemsLinked(List<HasDueDate> p_hasDueDates) {
+				for(HasDueDate x_hasDueDate: p_hasDueDates) {
+					Action x_action = new Action(new Date(), getIconForType(x_hasDueDate.getType()), x_hasDueDate.getText(), getString(x_hasDueDate.getDueDate()), "Linked to Google Calendar", "", "", "");
+					o_log.add(x_action);
+					logActionToDisk(p_configuration, x_action);
+				}
+
+				x_tableModel.fireTableDataChanged();
+			}
+
+			@Override
+			public void googleSynced(List<HasDueDate> p_hasDueDates, List<Event> p_events) {
+				for(Event x_event: p_events) {
+					Action x_action = new Action(new Date(), getGoogleSmallIcon(), x_event.getSummary(), getString(getDate(x_event.getStart())), "Deleted from Google Calendar", "", "", "");
+					o_log.add(x_action);
+					logActionToDisk(p_configuration, x_action);
 				}
 
 				x_tableModel.fireTableDataChanged();
@@ -90,7 +99,7 @@ class ActionLogWindow extends JFrame {
 
 		fixColumnWidth(x_table, 0, s_creationDateColumnWidth);
 		fixColumnWidth(x_table, 1, s_typeColumnWidth);
-		fixColumnWidth(x_table, 5, s_typeColumnWidth);
+		fixColumnWidth(x_table, 6, s_typeColumnWidth);
 
 		TableCellRenderer x_cellRenderer = new BaseCellRenderer();
 		x_table.setDefaultRenderer(Date.class, x_cellRenderer);
@@ -109,7 +118,17 @@ class ActionLogWindow extends JFrame {
 
     private Action buildAction(ComponentChangeEvent e) {
 		Component x_source = e.getSource();
-		return new Action(new Date(), getIconForType(x_source.getType()), x_source.getText(), getActionString(e), getString(e.getOldValue()), e.isValueChange() ? "=>" : "", getString(e.getNewValue()));
+		Date x_dueDate = null;
+
+		if(x_source instanceof HasDueDate) {
+			x_dueDate = ((HasDueDate)x_source).getDueDate();
+
+			if(e.isValueChange() && e.getField() == DUE_DATE) {
+				x_dueDate = (Date) e.getOldValue();
+			}
+		}
+
+		return new Action(new Date(), getIconForType(x_source.getType()), x_source.getText(), getString(x_dueDate), getActionString(e), getString(e.getOldValue()), e.isValueChange() ? "=>" : "", getString(e.getNewValue()));
 	}
 
 	private String getActionString(ComponentChangeEvent p_event) {
@@ -131,13 +150,14 @@ class ActionLogWindow extends JFrame {
 	private void logActionToDisk(Configuration p_configuation, Action p_action) {
 	    String x_date = new SimpleDateFormat("dd MMM yy HH:mm").format((Date)p_action.o_data[0]);
         String x_name = (String) p_action.o_data[2];
-        String x_action = (String) p_action.o_data[3];
-        String x_old = (String) p_action.o_data[4];
-        String x_arrow = (String) p_action.o_data[5];
-        String x_new = (String) p_action.o_data[6];
+        String x_info = (String) p_action.o_data[3];
+        String x_action = (String) p_action.o_data[4];
+        String x_old = (String) p_action.o_data[5];
+        String x_arrow = (String) p_action.o_data[6];
+        String x_new = (String) p_action.o_data[7];
         File x_xmlFile = p_configuation.getXmlFile();
         File x_logFile = new File(x_xmlFile.getParentFile(), x_xmlFile.getName() + ".log");
-        logToFile(x_logFile, x_date + ", " + (x_name.length() > 0 ? "'" + x_name + "' " : "") + x_action + " " + (x_old.equals("-") ? "" : x_old) + (x_arrow.length() > 0 ? " " + x_arrow + " " : "") + (x_new.equals("-") ? "" : x_new));
+        logToFile(x_logFile, x_date + ", " + (x_name.length() > 0 ? "'" + x_name + "' " : "") + (x_info.length() > 0 ? "'" + x_info + "' " : "") + x_action + " " + (x_old.equals("-") ? "" : x_old) + (x_arrow.length() > 0 ? " " + x_arrow + " " : "") + (x_new.equals("-") ? "" : x_new));
     }
 
 	private String getString(Object p_value) {
@@ -168,7 +188,7 @@ class ActionLogWindow extends JFrame {
 	}
 
 	private class TableModel extends DefaultTableModel {
-		private List<String> s_columnNames = Arrays.asList("Date", "Type", "Name", "Action", "From", "", "To");
+		private List<String> s_columnNames = Arrays.asList("Date", "Type", "Name", "Info", "Action", "From", "", "To");
 
 		@Override
 		public int getRowCount() {
@@ -208,8 +228,8 @@ class ActionLogWindow extends JFrame {
 	private class Action {
 		private Object[] o_data;
 
-		public Action(Date p_date, Icon p_type, String p_name, String p_action, String p_oldValue, String p_arrow, String p_newValue) {
-			o_data = new Object[]{p_date, p_type, p_name, p_action, p_oldValue, p_arrow, p_newValue};
+		public Action(Date p_date, Icon p_type, String p_name, String p_info, String p_action, String p_oldValue, String p_arrow, String p_newValue) {
+			o_data = new Object[]{p_date, p_type, p_name, p_info, p_action, p_oldValue, p_arrow, p_newValue};
 		}
 	}
 }

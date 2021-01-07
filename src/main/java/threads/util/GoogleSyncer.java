@@ -1,5 +1,6 @@
 package threads.util;
 
+import com.google.api.services.calendar.model.Event;
 import threads.data.HasDueDate;
 
 import java.util.List;
@@ -49,14 +50,14 @@ public class GoogleSyncer extends TimedActivity<GoogleSyncListener> {
 
 	@Override
 	void informOfFinish(GoogleSyncListener p_listener) {
-		p_listener.googleSynced();
+		p_listener.googleSyncFinished();
 	}
 
-	void componentsSynced(List<HasDueDate> p_hasDueDates) {
-		getListeners().forEach(l -> l.googleSynced(p_hasDueDates, false));
+	void componentsLinked(List<HasDueDate> p_hasDueDates) {
+		getListeners().forEach(l -> l.itemsLinked(p_hasDueDates));
 	}
 
-	void componentsImported(List<HasDueDate> p_hasDueDates) {
-		getListeners().forEach(l -> l.googleSynced(p_hasDueDates, true));
+	void componentsSynced(List<HasDueDate> p_hasDueDates, List<Event> p_events) {
+		getListeners().forEach(l -> l.googleSynced(p_hasDueDates, p_events));
 	}
 }

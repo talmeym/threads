@@ -1,14 +1,17 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.HasDueDate;
+import threads.data.Reminder;
 import threads.data.Thread;
 
 import javax.swing.*;
-import java.awt.Component;
+import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
 
-import static java.awt.Color.*;
+import static java.awt.Color.black;
+import static java.awt.Color.white;
 import static java.util.Calendar.*;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static threads.gui.ColourConstants.*;

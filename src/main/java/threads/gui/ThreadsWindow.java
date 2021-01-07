@@ -1,12 +1,13 @@
 package threads.gui;
 
 import threads.data.Component;
-import threads.data.*;
+import threads.data.Configuration;
 import threads.util.Settings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import static threads.util.ImageUtil.getThreadsImage;
 import static threads.util.Settings.Setting.*;

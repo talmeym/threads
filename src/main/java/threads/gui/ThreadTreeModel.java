@@ -1,7 +1,7 @@
 package threads.gui;
 
-import threads.data.*;
 import threads.data.Thread;
+import threads.data.*;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;

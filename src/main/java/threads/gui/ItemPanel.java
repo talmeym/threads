@@ -1,5 +1,6 @@
 package threads.gui;
 
+import com.google.api.services.calendar.model.Event;
 import threads.data.Configuration;
 import threads.data.HasDueDate;
 import threads.data.Item;
@@ -85,7 +86,7 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 		add(x_panel, NORTH);
 
 		GoogleSyncer.getInstance().addActivityListener(this);
-		googleSynced();
+		googleSyncFinished();
     }
 
 	@Override
@@ -94,12 +95,17 @@ class ItemPanel extends ComponentTablePanel<Item, Reminder> {
 	}
 
 	@Override
-	public void googleSynced() {
+	public void googleSyncFinished() {
 		setLinkLabelText();
 	}
 
 	@Override
-	public void googleSynced(List<HasDueDate> p_hasDueDates, boolean p_import) {
+	public void itemsLinked(List<HasDueDate> p_hasDueDatesSynced) {
+		setLinkLabelText();
+	}
+
+	@Override
+	public void googleSynced(List<HasDueDate> p_itemsCreated, List<Event> p_eventsDeleted) {
 		setLinkLabelText();
 	}
 

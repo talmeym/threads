@@ -1,7 +1,7 @@
 package threads.gui;
 
-import threads.data.*;
 import threads.data.Thread;
+import threads.data.*;
 import threads.util.GoogleAccount;
 import threads.util.GoogleLinkTask;
 import threads.util.ProgressAdapter;

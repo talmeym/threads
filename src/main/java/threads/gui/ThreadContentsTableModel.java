@@ -1,9 +1,12 @@
 package threads.gui;
 
-import threads.data.*;
+import threads.data.ComponentType;
+import threads.data.Item;
 import threads.data.Thread;
+import threads.data.ThreadItem;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 import static threads.data.LookupHelper.*;
 import static threads.data.View.ALL;
