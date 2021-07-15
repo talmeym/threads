@@ -330,4 +330,8 @@ public class DateUtil {
 
 		return null;
 	}
+
+	public static boolean isDue(Date p_dueDate) {
+		return p_dueDate != null && (isAllDay(p_dueDate) ? p_dueDate.before(getFirstThing(TODAY)) : p_dueDate.before(new Date()));
+	}
 }

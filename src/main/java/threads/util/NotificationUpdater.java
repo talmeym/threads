@@ -7,6 +7,7 @@ import threads.data.Thread;
 import java.util.ArrayList;
 import java.util.List;
 
+import static threads.data.ComponentChangeEvent.Field.ACTIVE;
 import static threads.data.ComponentChangeEvent.Field.DUE_DATE;
 import static threads.data.LookupHelper.getAllActiveActions;
 import static threads.data.LookupHelper.getAllActiveReminders;
@@ -66,7 +67,7 @@ public class NotificationUpdater {
 				o_alertedComponents.addAll(x_dueComponents);
 
 				x_dueComponents.forEach(x_component -> x_component.addComponentChangeListener(e -> {
-					if (e.getSource() == x_component && e.getField() == DUE_DATE) {
+					if (e.getSource() == x_component && (e.getField() == DUE_DATE || e.getField() == ACTIVE)) {
 						o_alertedComponents.remove(x_component);
 					}
 				}));

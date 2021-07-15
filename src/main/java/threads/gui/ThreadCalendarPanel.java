@@ -3,6 +3,7 @@ package threads.gui;
 import threads.data.Component;
 import threads.data.Thread;
 import threads.data.*;
+import threads.util.DateUtil;
 import threads.util.SettingChangeListener;
 import threads.util.Settings;
 import threads.util.Settings.Setting;
@@ -217,7 +218,7 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 
 		x_menu.add(x_addMenuItem);
 
-		JMenuItem x_addFromTemplateMenuItem = new JMenuItem("Add From Template", getTemplateSmallIcon());
+		JMenuItem x_addFromTemplateMenuItem = new JMenuItem("Add from Template", getTemplateSmallIcon());
 		x_addFromTemplateMenuItem.setForeground(gray);
 		x_addFromTemplateMenuItem.addActionListener(e -> addActionFromTemplate(o_configuration, null, o_thread, p_date, o_parentPanel, false));
 		x_menu.add(x_addFromTemplateMenuItem);
@@ -228,18 +229,35 @@ class ThreadCalendarPanel extends ComponentTablePanel<Thread, Date> implements S
 			x_menu.add(x_linkMenuItem);
 			x_linkMenuItem.addActionListener(e -> linkToGoogle(getHasDueDates(x_components), o_configuration, o_parentPanel));
 
-			JMenuItem x_makeInactiveItem = new JMenuItem("Set Inactive", getTickSmallIcon());
-			x_makeInactiveItem.setForeground(gray);
-			x_menu.add(x_makeInactiveItem);
+			JMenuItem x_setDayInactiveItem = new JMenuItem("Set day Inactive", getTickSmallIcon());
+			x_setDayInactiveItem.setForeground(gray);
+			x_menu.add(x_setDayInactiveItem);
+
+			List<Component> x_activeDayComponents = x_components.stream().filter(Component::isActive).filter(x_c -> x_c.getType() == ComponentType.Action && DateUtil.isAllDay(((HasDueDate)x_c).getDueDate())).collect(toList());
+			x_setDayInactiveItem.setEnabled(x_activeDayComponents.size() > 0);
+
+			x_setDayInactiveItem.addActionListener(e -> {
+				if(x_activeDayComponents.size() > 0) {
+					String x_deltaString = x_activeDayComponents.size() != x_components.size() ? " (of " + x_components.size() + ")" : "";
+
+					if (showConfirmDialog(o_parentPanel, "Set " + x_activeDayComponents.size() + " item" + (x_activeDayComponents.size() > 1 ? "s" : "") + x_deltaString + " inactive ?", "Set all-day actions inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+						x_activeDayComponents.forEach(c -> c.setActive(false));
+					}
+				}
+			});
+
+			JMenuItem x_setAllInactiveItem = new JMenuItem("Set all Inactive", getTickSmallIcon());
+			x_setAllInactiveItem.setForeground(gray);
+			x_menu.add(x_setAllInactiveItem);
 
             List<Component> x_activeComponents = x_components.stream().filter(Component::isActive).collect(toList());
-            x_makeInactiveItem.setEnabled(x_activeComponents.size() > 0);
+            x_setAllInactiveItem.setEnabled(x_activeComponents.size() > 0);
 
-			x_makeInactiveItem.addActionListener(e -> {
+			x_setAllInactiveItem.addActionListener(e -> {
                 if(x_activeComponents.size() > 0) {
                     String x_deltaString = x_activeComponents.size() != x_components.size() ? " (of " + x_components.size() + ")" : "";
 
-                    if (showConfirmDialog(o_parentPanel, "Set " + x_activeComponents.size() + " item" + (x_activeComponents.size() > 1 ? "s" : "") + x_deltaString + " inactive ?", "Set inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
+                    if (showConfirmDialog(o_parentPanel, "Set " + x_activeComponents.size() + " item" + (x_activeComponents.size() > 1 ? "s" : "") + x_deltaString + " inactive ?", "Set all items inactive ?", OK_CANCEL_OPTION, WARNING_MESSAGE, getGoogleIcon()) == OK_OPTION) {
                         x_activeComponents.forEach(c -> c.setActive(false));
                     }
                 }

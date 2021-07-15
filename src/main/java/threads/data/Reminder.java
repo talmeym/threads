@@ -1,5 +1,7 @@
 package threads.data;
 
+import threads.util.DateUtil;
+
 import java.io.File;
 import java.util.Date;
 import java.util.List;
@@ -9,7 +11,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static threads.data.ComponentChangeEvent.Field.DUE_DATE;
 import static threads.data.ComponentChangeEvent.Field.NOTES;
-import static threads.util.DateUtil.*;
 
 public class Reminder extends Component implements HasDueDate
 {
@@ -64,7 +65,7 @@ public class Reminder extends Component implements HasDueDate
 
 	@Override
 	public boolean isDue() {
-		return isActive() && (isAllDay(o_dueDate) ? o_dueDate.before(getFirstThing(TODAY)) : o_dueDate.before(new Date()));
+		return isActive() && DateUtil.isDue(o_dueDate);
 	}
 
 	@Override

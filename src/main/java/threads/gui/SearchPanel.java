@@ -75,11 +75,11 @@ class SearchPanel extends JPanel {
 
 	private void search() {
 		String x_text = o_searchField.getText();
-        Search.Builder x_builder = new Search.Builder().withText(x_text).includeNotes(o_includeNotesCheckBox.isSelected()).caseSensitive(o_caseSensitiveCheckBox.isSelected());
-        List<Component> x_results = o_topLevelThread.search(x_builder.build());
+		Search x_search = new Search.Builder().withText(x_text).includeNotes(o_includeNotesCheckBox.isSelected()).caseSensitive(o_caseSensitiveCheckBox.isSelected()).build();
+		List<Component> x_results = o_topLevelThread.search(x_search);
 
 		if(x_results.size() > 0) {
-			new SearchResultsWindow(o_topLevelThread, o_settings, x_builder.build(), x_text, x_results);
+			new SearchResultsWindow(o_topLevelThread, o_settings, x_search, x_text, x_results);
 		} else {
 			showMessageDialog(this, "'" + x_text + "' not found.", "No Can Do", INFORMATION_MESSAGE, getThreadsIcon());
 		}

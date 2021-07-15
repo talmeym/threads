@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,8 +23,7 @@ import static java.lang.System.getProperty;
 import static java.util.stream.Collectors.toList;
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import static javax.swing.JOptionPane.showInputDialog;
-import static threads.data.ComponentChangeEvent.Field.ACTIVE;
-import static threads.data.ComponentChangeEvent.Field.TEXT;
+import static threads.data.ComponentChangeEvent.Field.*;
 import static threads.data.Loader.loadConfiguration;
 import static threads.gui.Actions.addAction;
 import static threads.gui.Actions.addUpdate;
@@ -135,7 +135,7 @@ public class SystemTrayUtil {
 
 						x_component.addComponentChangeListener(e -> {
 							if(e.getSource() == x_component) {
-								if(e.isComponentRemoved() || (e.getField() == ACTIVE && e.getNewValue().equals(FALSE))) {
+								if(e.isComponentRemoved() || (e.getField() == ACTIVE && e.getNewValue().equals(FALSE)) || (e.getField() == DUE_DATE && !DateUtil.isDue((Date)e.getNewValue()))) {
                                     MenuItem x_removed = x_menuItems.remove(x_component);
                                     x_menu.remove(x_removed);
                                 } else if(e.getField() == TEXT) {
